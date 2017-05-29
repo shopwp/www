@@ -1,0 +1,142 @@
+.header {
+  margin: 0 0 $space-xl 0;
+  padding: $space-xxs 0;
+  background: color(white);
+  // box-shadow: 0 18px 17px -23px rgba(0,0,0,.2);
+
+  @include shadow();
+
+  .btn {
+    margin-top: 0;
+  }
+}
+
+.page-header {
+  // margin-top: $space-xl;
+  margin: $space-xl 0 $space-m 0;
+  padding-bottom: $space-xs;
+
+  &:after {
+    content: '';
+    margin: $space-s auto 0 auto;
+    display: block;
+    height: 1px;
+    width: 100px;
+    background-color: color(dark-grey);
+  }
+
+  .has-icon {
+    margin-left: -$space-xs;
+  }
+
+  .icon-small {
+    width: 35px;
+    height: 35px;
+    position: relative;
+    top: 3px;
+    left: -2px;
+  }
+
+}
+
+.flexboxtweener .logos {
+  display: none;
+}
+
+
+.logo-shopify {
+  max-width: 110px;
+  margin: 0 auto;
+  display: block;
+  margin-right: auto;
+  margin-left: 1em;
+  opacity: $opacity-hard;
+
+  @include device(500, 'max') {
+    max-width: 86px;
+  }
+}
+
+.logo-wordpress {
+  max-width: 155px;
+  margin-left: auto;
+  margin-right: 1em;
+  display: block;
+  opacity: $opacity-hard;
+  position: relative;
+  top: 3px;
+
+  @include device(500, 'max') {
+    max-width: 130px;
+  }
+}
+
+
+.flexboxtweener {
+  .marquee {
+    left: 50px;
+  }
+}
+
+.marquee-wrapper {
+  margin-top: 0;
+}
+
+
+
+
+.logo-header {
+  width: auto;
+  height: 50px;
+  position: relative;
+  top: 3px;
+}
+
+.logo-link {
+  border: none;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+
+.header-cart-link {
+  margin-top: 0;
+  margin-left: $space-l;
+  text-decoration: none;
+  position: relative;
+
+  .fa-shopping-cart {
+    color: color(base);
+    font-size: $font-s*2;
+  }
+
+  .header-cart-quantity {
+    border-radius: 50%;
+    color: color(white);
+    background-color: color(primary);
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    display: inline-block;
+    margin: 0;
+    top: -10px;
+    right: -20px;
+    font-size: 13px;
+    text-align: center;
+  }
+
+}
+
+
+.menu-item-back {
+  a {
+    &:before {
+      content: '\f177';
+      display: inline-block;
+      font-family: FontAwesome;
+      margin-right: $space-s;
+    }
+  }
+}

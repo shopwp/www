@@ -1,0 +1,160 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/*
+
+Get the stored Auth data
+Returns: Promise
+
+*/
+function getStoredAuthData() {
+
+  var options = {
+    method: 'GET',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: 'wps_check_valid_nonce'
+    }
+  };
+
+  return $.ajax(options);
+};
+
+/*
+
+Set the Auth data
+Returns: Promise
+
+*/
+function saveAuthData(data) {
+
+  var options = {
+    method: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: 'wps_save_auth_data',
+      data: data
+    }
+  };
+
+  return $.ajax(options);
+};
+
+/*
+
+Get docs data
+Returns: Promise
+
+*/
+function getDoc(docId) {
+
+  var options = {
+    method: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'HTML',
+    data: {
+      action: 'wps_get_doc',
+      docId: docId
+    }
+  };
+
+  return $.ajax(options);
+};
+
+/*
+
+Get docs data
+Returns: Promise
+
+*/
+function getAccountCat(catSlug) {
+
+  var options = {
+    method: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'HTML',
+    data: {
+      action: 'wps_get_account_cat',
+      cat: catSlug
+    }
+  };
+
+  return $.ajax(options);
+};
+
+/*
+
+Get docs data
+Returns: Promise
+
+*/
+function getForgotPassForm() {
+
+  var options = {
+    method: 'GET',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'HTML',
+    data: {
+      action: 'wps_get_forgot_pass_form'
+    }
+  };
+
+  return $.ajax(options);
+};
+
+/*
+
+MC: Get list by ID
+Returns promise
+
+*/
+function getMailchimpListById() {
+
+  var emailVal = $("#mailinglist-email").val(),
+      emailnonce = $("#mailinglist-form #_wpnonce").val();
+
+  var options = {
+    type: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: "mailinglist_signup",
+      email: emailVal,
+      nonce: emailnonce
+    }
+  };
+
+  return $.ajax(options);
+}
+
+/*
+
+Check for existing user by email
+
+*/
+function getUserByEmail(email) {
+
+  var options = {
+    type: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: "wps_check_existing_username",
+      email: email
+    }
+  };
+
+  return $.ajax(options);
+}
+
+exports.getStoredAuthData = getStoredAuthData;
+exports.saveAuthData = saveAuthData;
+exports.getDoc = getDoc;
+exports.getAccountCat = getAccountCat;
+exports.getForgotPassForm = getForgotPassForm;
+exports.getMailchimpListById = getMailchimpListById;
+exports.getUserByEmail = getUserByEmail;

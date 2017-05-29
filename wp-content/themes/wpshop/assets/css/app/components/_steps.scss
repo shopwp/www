@@ -1,0 +1,118 @@
+.component-steps {
+  margin-top: 0;
+  width: 100%;
+  background-color: transparent;
+  margin-top: $space-l;
+  z-index: 99999;
+
+  &.is-stuck {
+    display: block;
+    width: 100% !important;
+    left: 0 !important;
+    top: 52px !important;
+
+    .step {
+      float: left;
+      font-size: 14px;
+      padding: $space-xxxs;
+      border-top: 1px solid color(primary);
+      border-bottom: 1px solid color(primary);
+      border-left: 1px solid color(primary);
+      border-right: none;
+
+      &:last-child,
+      &:first-child {
+        border-radius: 0;
+      }
+
+      &:last-child {
+        border-right: 0;
+      }
+
+      &:first-child {
+        border-left: 0;
+      }
+
+      &.is-active {
+        &:after {
+          display: none;
+        }
+      }
+
+    }
+  }
+}
+
+.step {
+  width: calc(100%/3);
+  max-width: calc(100%/3);
+  flex: 0 0 calc(100%/3);
+  color: color(base);
+  margin: 0;
+  text-align: center;
+  padding: $space-m;
+
+
+  &:first-child {
+    border-radius: 10px 0 0 10px;
+  }
+
+  &:last-child {
+    border-radius: 0 10px 10px 0;
+  }
+
+
+  &.is-active {
+    background-color: color(primary);
+    color: color(white);
+    position: relative;
+
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      bottom: -10px;
+      right: calc(50% - 10px);
+      width: 20px;
+      height: 20px;
+      background: url('../../imgs/icon-triangle.svg');
+      background-size: cover;
+      background-position: 50% 50%;
+    }
+
+  }
+
+  &.is-inactive {
+    background-color: color(white);
+
+    .step-text {
+      opacity: $opacity-hard;
+    }
+  }
+
+  &.is-completed {
+    background-color: darken(color(primary), 15);
+    color: color(white);
+
+    .step-text {
+      display: inline-block;
+      position: relative;
+      margin-left: -$space-m;
+
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 3px;
+        right: -$space-xl;
+        width: 20px;
+        height: 20px;
+        background: url('../../imgs/icon-check-white.svg');
+        background-size: cover;
+        background-position: 50% 50%;
+      }
+    }
+
+  }
+
+}

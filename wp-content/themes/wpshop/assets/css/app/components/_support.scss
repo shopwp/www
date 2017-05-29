@@ -1,0 +1,19 @@
+.component-support {
+  background-color: color(notice-light);
+  padding: $space-l $space-l*2;
+  text-align: center;
+  border-radius: 10px;
+
+  a {
+    color: color(base);
+
+    &:hover {
+      opacity: $opacity-soft;
+    }
+
+  }
+
+  h2 {
+    font-weight: normal;
+  }
+}

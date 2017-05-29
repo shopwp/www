@@ -1,0 +1,89 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.initCheckoutSteps = undefined;
+
+var _localstorage = require('../ws/localstorage');
+
+/*
+
+Set Step
+
+*/
+function getStepOnInit() {
+
+  if ((0, _localstorage.getCheckoutStep)() === null) {
+    (0, _localstorage.setCheckoutStep)(1);
+    return (0, _localstorage.getCheckoutStep)();
+  } else {
+    return (0, _localstorage.getCheckoutStep)();
+  }
+}
+
+/*
+
+Set Step
+
+*/
+function setActiveStep() {
+
+  var step = (0, _localstorage.getCheckoutStep)();
+  var selector = '.component-steps .step:nth-child(' + step + ')';
+
+  $(selector).removeClass('is-completed is-inactive').addClass('is-active');
+}
+
+/*
+
+Set Completed Steps
+
+*/
+function findCompletedSteps() {
+
+  var currentStep = (0, _localstorage.getCheckoutStep)();
+  var totalSteps = $('.component-steps .step').length;
+
+  if (currentStep > 1) {
+    var completedSteps = totalSteps - currentStep;
+
+    setCompletedSteps(completedSteps);
+  }
+}
+
+/*
+
+Sets the completed steps
+
+*/
+function setCompletedSteps(completedSteps) {
+
+  var selector = '.component-steps .step:nth-child(-n+' + completedSteps + ')';
+  $(selector).removeClass('is-inactive is-active').addClass('is-completed');
+}
+
+/*
+
+Set Inactive Steps
+
+*/
+function setInactiveSteps() {}
+
+/*
+
+Init Account
+
+*/
+function initCheckoutSteps() {
+
+  // if($('.wrap').hasClass('.is-registered-and-purchasing')) {
+  //   setCheckoutStep(2);
+  // }
+
+  getStepOnInit();
+  findCompletedSteps();
+  setActiveStep();
+}
+
+exports.initCheckoutSteps = initCheckoutSteps;

@@ -1,0 +1,436 @@
+.form,
+.edd_form,
+.search-form {
+  width: 100%;
+  max-width: 700px;
+  margin-top: 0;
+  position: relative;
+
+  // @include device(1000, 'max') {
+  //   width: 90%;
+  // }
+  //
+  // @include device(600, 'max') {
+  //   width: 100%;
+  // }
+
+  a {
+    color: color(base);
+  }
+
+  .description {
+    display: block;
+    margin-top: $space-l;
+  }
+
+}
+
+.form-lg {
+  .form-input,
+  .btn {
+
+  }
+}
+
+.form-control {
+  position: relative;
+  margin-right: 10px;
+  margin-top: 0;
+
+  p {
+    margin: 0;
+  }
+
+  input {
+    margin: 0;
+    border-radius: 10px;
+  }
+}
+
+.form-label {
+  position: absolute;
+  left: $space-m;
+  top: 1.1em;
+  font-size: $font-m;
+  opacity: $opacity-hard;
+  transition: all 0.2s ease;
+
+  @include device(900, 'max') {
+    top: 15px;
+  }
+
+  &:hover {
+    cursor: text;
+  }
+}
+
+.form-label-l {
+  font-size: $font-l;
+
+  @include device(900, 'max') {
+    font-size: $font-m;
+  }
+
+}
+
+
+
+.is-focused {
+
+  .form-label {
+    font-size: 18px;
+    opacity: 1;
+    left: -50px;
+    top: -50px;
+    color: color(base);
+    padding: 10px 15px;
+    border-radius: 5px;
+
+    @include device(800, 'max') {
+      left: -10px;
+      top: -40px;
+      font-size: 16px;
+    }
+
+    &:hover {
+      cursor: text;
+    }
+  }
+
+  .form-input {
+    border: none;
+  }
+
+}
+
+.form-input {
+  position: relative;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: $space-m;
+  border-radius: 5px;
+  font-size: $font-m;
+  border: none;
+  background: color(white);
+  color: color(base);
+  margin-top: 0;
+
+  &:focus {
+    outline: none;
+  }
+
+  &.valid:not([type="submit"]) {
+    @include validInput();
+  }
+
+  @include device(900, 'max') {
+    font-size: 1em;
+  }
+
+  &:disabled {
+    background-color: color(medium-grey);
+    @include dim($opacity-hard);
+
+    &:hover {
+      opacity: $opacity-hard;
+      cursor: not-allowed;
+      background-color: color(medium-grey);
+      transform: scale(1);
+    }
+  }
+
+}
+
+input[type="number"] {
+  max-width: 50px;
+  text-align: center;
+}
+
+input[type="submit"] {
+  width: auto;
+  height: auto;
+}
+
+input[type="search"] {
+  border-radius: 10px;
+}
+
+input.valid {
+  animation-duration: 2s;
+}
+
+form input:read-only {
+  @include validInput();
+  opacity: $opacity-hard;
+
+  + .is-valid {
+    &:after {
+      opacity: $opacity-hard;
+    }
+  }
+}
+
+select[aria-invalid="true"],
+input[aria-invalid="true"] {
+  @include invalidInput();
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: $space-s;
+  display: block;
+}
+
+.msg-error,
+.edd-alert-error,
+.edd_errors,
+label.error {
+  background: color(error);
+  display: inline-block;
+  color: color(white);
+  // font-size: 13px;
+  padding: $space-s $space-m*2;
+  border-radius: 10px;
+  font-weight: normal;
+  // animation-duration: 0.1s;
+  // animation-delay: 0.1s;
+  // animation-fill-mode: both;
+  // animation-name: zoomIn;
+  text-align: center;
+  margin-bottom: $space-xl;
+  margin-top: $space-m;
+  position: relative;
+
+  &:after {
+    content: '';
+    display: block;
+  }
+
+  a {
+    color: color(white);
+  }
+
+}
+
+legend {
+  font-size: $heading-2;
+  margin: 0 auto;
+  border: none;
+  padding-bottom: $space-xs;
+  width: 100%;
+  text-align: center;
+  position: relative;
+
+  p {
+    font-size: $font-xxxs;
+    font-style: italic;
+  }
+
+  &:after {
+    content: '';
+    margin: $space-s auto 0 auto;
+    display: block;
+    height: 1px;
+    width: 100px;
+    background-color: color(dark-grey);
+  }
+
+  @include device(600, 'max') {
+    font-size: $heading-4;
+  }
+
+}
+
+select {
+  height: 60px;
+  text-indent: 10px;
+}
+
+
+.form-input-l {
+  font-size: $font-l;
+
+  @include device(900, 'max') {
+    font-size: $font-m;
+  }
+}
+
+#mailinglist-email {
+  width: 100%;
+  outline: none;
+  margin-bottom: 1em;
+}
+
+#mailinglist-form {
+  margin-top: 1em;
+
+  .form-control {
+    margin-right: 0;
+  }
+
+  .btn {
+    margin: 0 auto;
+  }
+}
+
+.form-message {
+  text-align: center;
+
+  &.is-visible {
+    padding:  0 0.5em 1em .5em;
+    border-radius: 40px;
+  }
+}
+
+.form-error {
+  color: color(error);
+}
+
+.form-success {
+  color: color(success);
+}
+
+
+.is-submitted {
+
+  .form-messages,
+  .form-message {
+    margin-top: 0;
+
+    .fa {
+      margin-top: 0;
+    }
+  }
+
+  .form-control {
+    display: none;
+  }
+
+  .form-success.is-visible {
+    min-height: 200px;
+  }
+
+}
+
+.is-submitting {
+  .form-label {
+    display: none !important;
+  }
+
+  .spinner {
+    display: block;
+  }
+}
+
+#edd_profile_submit_wrap {
+  margin-top: $space-xl;
+}
+
+.edd-login-remember {
+
+  label {
+    display: block;
+    padding-left: 15px;
+    text-indent: -15px;
+    margin-bottom: 0;
+  }
+
+  input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+  }
+
+}
+
+#form-forgot-pass {
+  width: 100%;
+}
+
+#edd-stripe-payment-errors {
+  text-align: center;
+}
+
+.form-note {
+  width: 100%;
+  display: block;
+  text-align: center;;
+  margin-top: $space-xxs;
+  margin-bottom: $space-m;
+}
+
+.form-note-invalid-field {
+  text-align: center;
+  color: color(error);
+  margin-bottom: $space-xxs;
+}
+
+
+#edd_login_form {
+
+  legend {
+    display: none;
+  }
+
+  .edd-login-remember {
+    margin-bottom: 0;
+  }
+
+  .edd-login-submit {
+    text-align: center;
+    margin-bottom: $space-xxs;
+  }
+
+}
+
+.edd-lost-password a,
+#edd-user-login-submit + a {
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+#edd_checkout_form_wrap {
+  margin-top: $space-xl*2;
+}
+
+
+
+
+.wps-checkout-login-spacer {
+  display: none;
+  margin-top: 0;
+
+  &.is-stuck {
+    display: block;
+  }
+
+}
+
+
+// .form-account {
+//   .spinner {
+//     top: calc(50% - 80px);
+//     right: calc(50% - 15px);
+//   }
+// }
+
+#edd_sl_license_keys2 {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#edd_sl_license_keys {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

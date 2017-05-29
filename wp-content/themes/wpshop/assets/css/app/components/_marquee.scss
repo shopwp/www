@@ -1,0 +1,29 @@
+.component-marquee {
+  width: 100%;
+  min-height: 70vh;
+}
+
+.marquee-img {
+  max-width: 60vw;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  top: 15vh;
+}
+
+.marquee-content {
+  position: relative;
+  text-align: center;
+  top: 11vh;
+}
+
+.marquee-heading {
+  max-width: 80vw;
+  font-size: $font-xxxl*2;
+  font-weight: bold;
+}
+
+.marquee-short-desc {
+  margin: $space-l auto $space-xxl;
+  font-size: $font-xxl;
+}

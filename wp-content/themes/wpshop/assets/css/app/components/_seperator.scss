@@ -1,0 +1,52 @@
+.seperator {
+  width: 100px;
+  transform: rotate(180deg);
+  margin: $space-xxl auto;
+
+  @include device(1500, 'max') {
+    margin: $space-m auto;
+  }
+
+  @include device(600, 'max') {
+    margin: $space-xl auto;
+  }
+
+}
+
+.diamonds {
+  border: none;
+  height: 40px;
+  margin: 0 50px;
+  background: linear-gradient(-135deg, rgba(255, 255, 255, 1) 20px, rgba(0, 0, 0, 0) 0) 0 5px, linear-gradient(135deg, rgba(0, 0, 0, 0.2) 20px, transparent 0) 0 5px;
+  background-color: rgba(0, 0, 0, 0);
+  background-position: center bottom;
+  background-repeat: repeat-x;
+  background-size: 26px 60px;
+  z-index: 50;
+  margin-top: -60px;
+}
+
+
+.line {
+  height: 20px;
+  position: relative;
+  // width: 100%;
+  // background: color(white);
+
+  @include device(500, 'max') {
+    height: 1px;
+  }
+
+  &:after {
+    content: '';
+    width: 160px;
+    height: 60px;
+    bottom: -25px;
+    left: calc(50% - 80px);
+    position: absolute;
+    background: url('../../imgs/wave-shape.svg');
+    background-size: contain;
+    background-position: 50% 50%;
+  }
+
+}

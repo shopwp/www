@@ -1,0 +1,124 @@
+/*
+
+Responsive generator
+
+*/
+@mixin device($breakpoint, $size) {
+  @if map-has-key($breakpoints, $breakpoint) {
+
+    @if($size == 'max') {
+      @media (max-width: #{map-get($breakpoints, $breakpoint)}) {
+        @content;
+      }
+    } @else {
+      @media (min-width: #{map-get($breakpoints, $breakpoint)}) {
+        @content;
+      }
+    }
+
+  }
+
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Please make sure it is defined in `$breakpoints` map.";
+  }
+}
+
+
+/*
+
+Grid generator
+
+*/
+@mixin row($cols) {
+
+  @if ($cols == 1) {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
+
+  } @else {
+    flex: 0 0 calc((100% / #{$cols}));
+    max-width: calc((100% / #{$cols}));
+    width: calc((100% / #{$cols}));
+  }
+
+}
+
+/*
+
+Grow
+
+*/
+@mixin grow() {
+  transition: all $speed-fast linear;
+
+  &:hover {
+    transform: scale(1.08);
+    box-shadow: 0 3px 35px -10px rgba(0,0,0,.25);
+    cursor: pointer;
+  }
+}
+
+/*
+
+Shrink
+
+*/
+@mixin shrink() {
+  transition: transform $speed-fast ease-in-out;
+
+  &:hover {
+    transform: scale(0.95);
+  }
+}
+
+
+/*
+
+Drop Shadow
+
+*/
+@mixin drop-shadow() {
+  box-shadow: 0 6px 12px 0 rgba(0,0,0,.12);
+}
+
+
+/*
+
+Dim
+
+*/
+@mixin dim($opacity) {
+  opacity: $opacity;
+}
+
+
+/*
+
+Dim
+
+*/
+@mixin validInput() {
+  box-shadow: 0px 0px 0px 1px color(primary);
+}
+
+
+/*
+
+Dim
+
+*/
+@mixin invalidInput() {
+  box-shadow: 0px 0px 0px 1px color(error);
+}
+
+
+/*
+
+Shadow
+
+*/
+@mixin shadow() {
+  box-shadow: 0 3px 6px 0px rgba(0,0,0,.1);
+}

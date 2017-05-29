@@ -1,0 +1,22 @@
+.is-visible {
+  visibility: visible;
+  opacity: 1;
+  display: block !important;
+}
+
+// Disabled
+.is-disabled {
+  @include dim($opacity-hard);
+
+  &:hover {
+    cursor: not-allowed;
+  }
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.is-fixed {
+  position: fixed;
+}

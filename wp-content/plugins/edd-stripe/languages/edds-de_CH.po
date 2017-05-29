@@ -1,0 +1,428 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Digital Downloads - Stripe Payment Gateway\n"
+"POT-Creation-Date: 2016-02-08 15:15+0100\n"
+"PO-Revision-Date: 2016-02-08 15:24+0100\n"
+"Last-Translator: \n"
+"Language-Team: John Parris <public@johnparris.com>\n"
+"Language: de_CH\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: edd-stripe.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: edd-stripe.php:76
+msgid "Credit Card"
+msgstr "Kreditkarte"
+
+#: edd-stripe.php:121
+msgid "Credit Card Info"
+msgstr "Kreditkarten Informationen"
+
+#: edd-stripe.php:125
+msgid "This is a secure SSL encrypted payment."
+msgstr "Dies ist eine sichere, SSL verschlüsselte Zahlung."
+
+#: edd-stripe.php:130
+msgid "Card Number"
+msgstr "Kartennummer"
+
+#: edd-stripe.php:134
+msgid "The (typically) 16 digits on the front of your credit card."
+msgstr "Die (üblicherweise) 16 Ziffern auf der Vorderseite deiner Kreditkarte."
+
+#: edd-stripe.php:135
+msgid "Card number"
+msgstr "Kartennummer"
+
+#: edd-stripe.php:139
+msgid "CVC"
+msgstr "Sicherheitscode"
+
+#: edd-stripe.php:142
+msgid "The 3 digit (back) or 4 digit (front) value on your card."
+msgstr ""
+"Die 3-stellige (Rückseite) oder 4 stetige (Vorderseite) auf deiner Karte."
+
+#: edd-stripe.php:143
+msgid "Security code"
+msgstr "Sicherheitscode"
+
+#: edd-stripe.php:147
+msgid "Name on the Card"
+msgstr "Name auf der Kreditkarte"
+
+#: edd-stripe.php:150
+msgid "The name printed on the front of your credit card."
+msgstr "Der vollständige Name auf der Vorderseite deiner Kreditkarte."
+
+#: edd-stripe.php:151
+msgid "Card name"
+msgstr "Name des Karteninhabers"
+
+#: edd-stripe.php:156
+msgid "Expiration (MM/YY)"
+msgstr "Ablauf (MM/JJ)"
+
+#: edd-stripe.php:159
+msgid "The date your credit card expires, typically on the front of the card."
+msgstr ""
+"Ablaufdatum der Kreditkarte (In der Regel auf der Vorderseite der Karte)"
+
+#: edd-stripe.php:238 edd-stripe.php:1121
+msgid "Missing Stripe token. Please contact support."
+msgstr "Fehlender Stripe-Token. Bitte wende dich an den Support."
+
+#: edd-stripe.php:239 edd-stripe.php:1122
+msgid "Missing Stripe Token"
+msgstr "Fehlender Stripe-Token"
+
+#: edd-stripe.php:239 edd-stripe.php:1122
+msgid ""
+"A Stripe token failed to be generated. Please check Stripe logs for more "
+"information"
+msgstr ""
+"Ein Stripe-Token konnte nicht erstellt werden. Bitte überprüfe die Strippe "
+"Logdateien für mehr Informationen"
+
+#: edd-stripe.php:452 edd-stripe.php:637 edd-stripe.php:1206
+msgid ""
+"There was an error processing your payment, please ensure you have entered "
+"your card number correctly."
+msgstr ""
+"Es gab einen Fehler bei der Verarbeitung deiner Zahlung. Bitte überprüfe die "
+"Eingabe der Kartennummer."
+
+#: edd-stripe.php:455 edd-stripe.php:463 edd-stripe.php:487 edd-stripe.php:640
+#: edd-stripe.php:654
+msgid "Stripe Error"
+msgstr "Stripe Fehler"
+
+#: edd-stripe.php:455 edd-stripe.php:640
+#, php-format
+msgid "There was an error while processing a Stripe payment. Payment data: %s"
+msgstr ""
+"Es gab einen Fehler bei der Verarbeitung einer Stripe Zahlung. "
+"Zahlungsdaten: %s"
+
+#: edd-stripe.php:462 edd-stripe.php:653 edd-stripe.php:1214
+msgid ""
+"There was an error processing your payment (Stripe's API is down), please "
+"try again"
+msgstr ""
+"Es gab einen Fehler bei der Verarbeitung deiner Zahlung (Stripe API ist "
+"nicht verfügbar). Bitte versuche es erneut"
+
+#: edd-stripe.php:463 edd-stripe.php:654
+#, php-format
+msgid ""
+"There was an error processing your payment (Stripe's API was down). Error: %s"
+msgstr ""
+"Es gab einen Fehler bei der Verarbeitung deiner Zahlung (Stripe API ist "
+"nicht verfügbar). Fehler: %s"
+
+#: edd-stripe.php:474 edd-stripe.php:691
+#, php-format
+msgid "The Stripe API request was invalid, please try again. Error: %s"
+msgstr ""
+"Die Anfrage an die Stripe API war fehlerhaft. Bitte versuche es erneut. "
+"Fehler: %s"
+
+#: edd-stripe.php:485 edd-stripe.php:671 edd-stripe.php:689 edd-stripe.php:1225
+#: edd-stripe.php:1237
+msgid "The Stripe API request was invalid, please try again"
+msgstr ""
+"Die Anfrage an die Stripe API war fehlerhaft. Bitte versuche es erneut."
+
+#: edd-stripe.php:487
+msgid "There was an error with Stripe's API: "
+msgstr "Es gab einen Fehler bei der Kommunikation mit der Strippe API:"
+
+#: edd-stripe.php:498 edd-stripe.php:708 edd-stripe.php:1249
+msgid "The API keys entered in settings are incorrect"
+msgstr "Die in den Einstellungen eingegeben API-Schlüssel sind nicht korrekt"
+
+#: edd-stripe.php:510 edd-stripe.php:521 edd-stripe.php:726 edd-stripe.php:742
+#: edd-stripe.php:1261
+msgid "Something went wrong."
+msgstr "Irgendwas ist schilfgelaufen."
+
+#: edd-stripe.php:577
+msgid "Customer Creation Failed"
+msgstr "Die Erstellung des Kundenkontos ist fehlgeschlagen"
+
+#: edd-stripe.php:577
+#, php-format
+msgid "Customer creation failed while processing a payment. Payment Data: %s"
+msgstr ""
+"Die Erstellung des Kundenkontos während eines Bezahlvorgangs ist "
+"fehlgeschlagen. Zahlungsinformationen: %s"
+
+#: edd-stripe.php:623
+msgid ""
+"Your payment could not be recorded, please contact the site administrator."
+msgstr ""
+"Deine Zahlung konnte nicht durchgeführt werden. Bitte wende dich an den "
+"Administrator der Seite."
+
+#: edd-stripe.php:643 edd-stripe.php:657 edd-stripe.php:675 edd-stripe.php:694
+#: edd-stripe.php:712 edd-stripe.php:730 edd-stripe.php:746
+msgid "Card Processing Error"
+msgstr "Kreditkarten Informationen"
+
+#: edd-stripe.php:817 edd-stripe.php:835
+msgid "Stripe requires that the Times option be set to 0."
+msgstr "Stripe erfordert, dass die „Zeit-Einstellung“ auf 0 gesetzt wurde."
+
+#: edd-stripe.php:817 edd-stripe.php:835 edd-stripe.php:891 edd-stripe.php:1021
+#: edd-stripe.php:2008
+msgid "Error"
+msgstr "Fehler"
+
+#: edd-stripe.php:891
+msgid "There was an error creating a payment plan with Stripe."
+msgstr ""
+"Es gab einen Fehler bei der Erstellung eines Zahlungsplanes über Strippe."
+
+#: edd-stripe.php:972
+msgid "Cancel your subscription"
+msgstr "Kündigen"
+
+#: edd-stripe.php:973
+msgid "Cancel Subscription"
+msgstr "Beschreibung abbrechen"
+
+#: edd-stripe.php:976
+msgid ""
+"Do you really want to cancel your subscription? You will retain access for "
+"the length of time you have paid for."
+msgstr ""
+"Willst du dein Abonnement wirklich kündigen? Du hast weiterhin - für den "
+"Zeitraum deiner bisherigen Zahlung - uneingeschränkten Zugriff."
+
+#: edd-stripe.php:1098
+msgid "Unable to verify payment update."
+msgstr "Aktualisierung der Zahlungsinformationen nicht möglich."
+
+#: edd-stripe.php:1265
+msgid ""
+"There was an error with this payment method. Please try with another card."
+msgstr ""
+"Es gab einen Fehler mit dieser Zahlungsmethode. Bitte versuche es mit einer "
+"anderen Karte."
+
+#: edd-stripe.php:1293
+msgctxt "Preapproved payment"
+msgid "Preapproved"
+msgstr "Vorabautorisiert"
+
+#: edd-stripe.php:1298 edd-stripe.php:1306
+#, php-format
+msgid "Active <span class=\"count\">(%s)</span>"
+msgid_plural "Active <span class=\"count\">(%s)</span>"
+msgstr[0] "Aktiv <span class=\"count\">(%s)</span>"
+msgstr[1] "Aktiv <span class=\"count\">(%s)</span>"
+
+#: edd-stripe.php:1301
+msgctxt "Cancelled payment"
+msgid "Cancelled"
+msgstr "Storniert"
+
+#: edd-stripe.php:1319
+msgid "Preapproved"
+msgstr "Vorabautorisiert"
+
+#: edd-stripe.php:1320 edd-stripe.php:1356
+msgid "Cancelled"
+msgstr "Storniert"
+
+#: edd-stripe.php:1337
+msgid "Preapproval"
+msgstr "Vorabautorisierung"
+
+#: edd-stripe.php:1355
+msgid "Preapproval Pending"
+msgstr "Vorabautorisierung ausstehend"
+
+#: edd-stripe.php:1391
+msgid "Process Payment"
+msgstr "Zahlungsprozess"
+
+#: edd-stripe.php:1392
+msgid "Cancel Preapproval"
+msgstr "Vorabautorisierung abbrechen"
+
+#: edd-stripe.php:1454
+msgid "Preapproval cancelled"
+msgstr "Vorabautorisierung abgebrochen"
+
+#: edd-stripe.php:1524
+#, php-format
+msgid "Preapproved charge for purchase %s from %s"
+msgstr "Alternativformulierungen kostenlos zum Kauf %s von %s"
+
+#: edd-stripe.php:1537 edd-stripe.php:1544 edd-stripe.php:1551
+#: edd-stripe.php:1558 edd-stripe.php:1564 edd-stripe.php:1571
+#: edd-stripe.php:1579
+msgid "There was an error processing this charge"
+msgstr "Es gab einen Fehler bei der Verarbeitung dieser Gebühr"
+
+#: edd-stripe.php:1608
+msgid "The preapproved payment was successfully charged."
+msgstr ""
+"Die Zahlung der Vorabautorisierungs-Gebühr wurde erfolgreich durchgeführt."
+
+#: edd-stripe.php:1611
+msgid ""
+"The preapproved payment failed to be charged. View order details for further "
+"details."
+msgstr ""
+"Die Zahlung der Vorabautorisierungs-Gebühr konnte nicht durchgeführt werden. "
+"Bestelldetails anzeigen für weitere Informationen."
+
+#: edd-stripe.php:1614
+msgid "The preapproved payment was successfully cancelled."
+msgstr ""
+"Die Zahlung der Vorabautorisierungs-Gebühr wurde erfolgreich abgebrochen."
+
+#: edd-stripe.php:1766
+msgid "Charge refunded in Stripe."
+msgstr "Die Gebühren wurden in Stripe erstattet."
+
+#: edd-stripe.php:1803
+msgid "Stripe Settings"
+msgstr "Stripe (Zahlungssystem) Einstellungen:"
+
+#: edd-stripe.php:1804
+msgid "Configure the Stripe settings"
+msgstr "Stripe-Einstellungen durchführen"
+
+#: edd-stripe.php:1809
+msgid "Live Secret Key"
+msgstr "Live Secret Key"
+
+#: edd-stripe.php:1810
+msgid "Enter your live secret key, found in your Stripe Account Settings"
+msgstr "„Live Secret Key“ aus deinen Stripe-Kontoeinstellungen eingeben"
+
+#: edd-stripe.php:1816
+msgid "Live Publishable Key"
+msgstr "Live Publishable Key"
+
+#: edd-stripe.php:1817
+msgid "Enter your live publishable key, found in your Stripe Account Settings"
+msgstr "„Live Publishable Key“ aus deinen Stripe-Kontoeinstellungen eingeben"
+
+#: edd-stripe.php:1823
+msgid "Test Secret Key"
+msgstr "Test Secret Key"
+
+#: edd-stripe.php:1824
+msgid "Enter your test secret key, found in your Stripe Account Settings"
+msgstr "„Test Secret Key“ aus deinen Stripe-Kontoeinstellungen eingeben"
+
+#: edd-stripe.php:1830
+msgid "Test Publishable Key"
+msgstr "Test Publishable Key"
+
+#: edd-stripe.php:1831
+msgid "Enter your test publishable key, found in your Stripe Account Settings"
+msgstr "„Test Publishable Key“ aus deinen Stripe-Kontoeinstellungen eingeben"
+
+#: edd-stripe.php:1837
+msgid "Stripe JS Fallback Support"
+msgstr "Stripe JS Fallback-Unterstützung"
+
+#: edd-stripe.php:1838
+msgid ""
+"Check this if your site has problems with processing cards using Stripe JS. "
+"This option makes card processing slightly less secure."
+msgstr ""
+"Aktivieren, wenn du Probleme bei der Durchführung von Kreditkarten-"
+"Bezahlungen mit Stripe JS feststellst. Diese Option reduziert die "
+"Sicherheitsstufe von Kreditkarten-Zahlungen ein wenig."
+
+#: edd-stripe.php:1849
+msgid "Accept Alipay in Stripe Checkout"
+msgstr "„Alipay“ im Stripe-Bezahlvorgang akzeptieren"
+
+#: edd-stripe.php:1850
+msgid ""
+"Check this box if you would like to permit your customers to pay with an "
+"Alipay account. Supported by Buy Now buttons only."
+msgstr ""
+"Aktivieren, um du die Zahlung über ein „Alipay“ Kundenkonto zu erlauben. Nur "
+"für Sofortkauf Buttons."
+
+#: edd-stripe.php:1855
+msgid "Preapprove Only?"
+msgstr "Nur vorabautorisieren?"
+
+#: edd-stripe.php:1856
+msgid ""
+"Check this if you would like to preapprove payments but not charge until a "
+"later date."
+msgstr ""
+"Aktivieren, um Zahlungen vorab zu autorisieren, aber erst zu einem späteren "
+"Zeitpunkt zu durchzuführen."
+
+#: edd-stripe.php:1897
+msgid ""
+"Stripe publishable key missing. Please enter your publishable key in "
+"Settings."
+msgstr ""
+"Stripe „Publishable Key“ wurde nicht gefunden. Bitte aktualisiere deine "
+"Einstellungen."
+
+#: edd-stripe.php:1994
+msgid "Charge refunded in Stripe"
+msgstr "Die Gebühren wurden in Stripe erstattet"
+
+#: edd-stripe.php:2005
+msgid "Something went wrong while refunding the Charge in Stripe."
+msgstr "Bei der Erstattung der Gebühren in Stripe ist etwas schilfgelaufen."
+
+#: edd-stripe.php:2321
+msgid "Please enter a name for the credit card."
+msgstr "Bitte den Namen, wie er auf der Kreditkarte angezeigt wird, eingeben."
+
+#: edd-stripe.php:2324
+msgid "Please enter a credit card number."
+msgstr "Bitte eine gültige Kreditkartennummer eingeben."
+
+#: edd-stripe.php:2327
+msgid "Please enter a CVC/CVV for the credit card."
+msgstr "Bitte den Sicherheitscode für die Kreditkarte eingeben."
+
+#: edd-stripe.php:2330
+msgid "Please enter a expiration month."
+msgstr "Bitte des Monat des Ablaufdatums eingeben."
+
+#: edd-stripe.php:2333
+msgid "Please enter a expiration year."
+msgstr "Bitte das Jahr des Ablaufdatums eingeben."
+
+#. Plugin Name of the plugin/theme
+msgid "Easy Digital Downloads - Stripe Payment Gateway"
+msgstr "Easy Digital Downloads - Stripe Payment Gateway"
+
+#. Description of the plugin/theme
+msgid "Adds a payment gateway for Stripe.com"
+msgstr "Zahlungs-Schnittstelle für Stripe.com"
+
+#. Author of the plugin/theme
+msgid "Pippin Williamson"
+msgstr "Pippin Williamson"
+
+#. Author URI of the plugin/theme
+msgid "http://pippinsplugins.com"
+msgstr "http://pippinsplugins.com"

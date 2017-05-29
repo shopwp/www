@@ -1,0 +1,25 @@
+.footer {
+  text-align: center;
+  padding: $space-xl*6 0 $space-l 0;
+  position: relative;
+  font-size: $font-s;
+  background: color(offwhite);
+
+  @include device(800, 'max') {}
+}
+
+.footer-social-link {
+  font-size: $font-xxxl;
+  padding: 0 $space-xxxs;
+  text-decoration: none;
+  border: none;
+  color: color(base);
+
+  &:hover {
+    @include dim($opacity-soft);
+  }
+}
+
+.footer-attr {
+  margin-top: $space-xxs;
+}

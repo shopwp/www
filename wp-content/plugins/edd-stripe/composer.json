@@ -1,0 +1,18 @@
+{
+ 	"name": "pippin/easy-digital-downloads-stripe",
+ 	"type": "wordpress-plugin",
+	"description": "Adds a payment gateway for Stripe.com",
+	"keywords": [ "edd", "pippin"],
+	"homepage": "https://easydigitaldownloads.com/downloads/stripe-gateway/",
+	"authors": [
+	    {
+	      	"name": "Pippin Williamson",
+	      	"email": "pippin@pippinsplugins.com",
+	      	"homepage": "https://easydigitaldownloads.com/"
+	    }
+	],
+   	"require": {
+     	"composer/installers": "~1.0.6",
+     	"stripe/stripe-php": "4.*"
+   	}
+}

@@ -1,0 +1,18 @@
+.icon {
+  float: left;
+}
+
+.page-header {
+  .icon {
+    width: 1em;
+    margin-right: $space-xxs/2;
+  }
+}
+
+.icon-key {
+  width: 25px;
+  height: 25px;
+  margin-right: 9px;
+  position: relative;
+  top: 3px;
+}

@@ -1,0 +1,36 @@
+.nav,
+.nav-primary {
+  margin: 0;
+}
+
+.menu-item {
+  margin: 0 $space-m;
+  display: flex;
+  align-items: center;
+
+  a {
+    border: none;
+    text-decoration: none;
+    // text-transform: uppercase;
+    font-size: $font-l;
+    letter-spacing: 0.04em;
+    color: color(base);
+  }
+}
+
+.nav {
+  list-style: none;
+}
+
+.nav-primary {
+  .menu-item {
+    &:last-child {
+      margin-right: $space-xxl;
+    }
+  }
+}
+
+.link-account {
+  margin-top: 0;
+  margin-left: $space-s;
+}

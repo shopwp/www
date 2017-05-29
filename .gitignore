@@ -1,0 +1,36 @@
+# WordPress Core Files
+wp
+wp-config.php
+
+# Misc
+.cache-require-paths.json
+node_modules
+npm-debug.log
+.hot-update.json
+
+# Content files
+wp-content/uploads
+
+# useless plugins file
+wp-content/plugins/hello.php
+wp-content/plugins/wp-shopify
+
+# packaged files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# log files and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store
+ehthumbs.db
+Thumbs.db

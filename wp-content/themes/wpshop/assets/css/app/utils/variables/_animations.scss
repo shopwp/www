@@ -1,0 +1,243 @@
+/*
+
+Animation speeds
+
+*/
+$speed-fast: 0.1s;
+$speed-slow: 0.6s;
+
+
+/*
+
+Spin
+
+*/
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+/*
+
+Wave
+
+*/
+@keyframes waveSway {
+
+  0% {
+    transform: translateX(0px);
+  }
+
+  50% {
+    transform: translateX(50px);
+  }
+
+  100% {
+    transform: translateX(0px);
+  }
+
+}
+
+
+
+
+
+/*
+
+Cloud sway
+
+*/
+@keyframes cloudSway {
+  0% {
+    transform: translateX(0px);
+  }
+
+  50% {
+    transform: translateX(200px);
+  }
+
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.waves {
+	width: 100%;
+	height: 25vh;
+  min-height: 14em;
+  position: absolute;
+  overflow: hidden;
+  top: -7%;
+  left: 0px;
+  transform: rotate(180deg);
+  margin: 0;
+  z-index: 99;
+
+  @include device(1000, 'max') {
+    top: -6%;
+  }
+
+  @include device(500, 'max') {
+    top: -4%;
+  }
+
+}
+
+.flexboxtweener .waves {
+  // display: none;
+}
+
+.wave {
+	width:calc( 100% + 4em );
+	height:100%;
+	position:absolute;
+	left:-2em;
+	background:bottom center repeat-x;
+	animation-iteration-count:infinite;
+	animation-timing-function:linear;
+  margin: 0;
+}
+
+/* Individual wave layers */
+
+.wave_1 {
+  animation-name: wave_1;
+  animation-duration: 4500ms;
+  animation-delay: -1200ms;
+  top: -3em;
+  z-index: 1;
+  opacity: 0.10;
+  background-image:url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22246%22%20height%3D%222000%22%20viewBox%3D%220%200%20246%202000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23153C65%22%20d%3D%22M0%202000c50.43%200%2072.57-20.522%20123-20.522%2050.43%200%2071.34%2020.522%20123%2020.522V0H0v2000z%22/%3E%3C/svg%3E');
+  background-position: bottom left;
+  margin: 0;
+}
+
+.wave_2 {
+  animation-name: wave_2;
+  animation-duration: 4100ms;
+  animation-delay: -600ms;
+  top: -4.0em;
+  z-index: 2;
+  opacity: 0.25;
+  background-image:url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22307%22%20height%3D%222000%22%20viewBox%3D%220%200%20307%202000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23153C65%22%20d%3D%22M0%200h307v2000c-64.47%200-90.563-25.623-153.5-25.623C90.565%201974.377%2062.935%202000%200%202000V0z%22/%3E%3C/svg%3E');
+  background-position: bottom right;
+  margin: 0;
+}
+
+.wave_3 {
+  animation-name: wave_3;
+  animation-duration: 3700ms;
+  animation-delay: -100ms;
+  top: -7.8em;
+  z-index: 3;
+  opacity: 0.50;
+  background-image:url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22384%22%20height%3D%222000%22%20viewBox%3D%220%200%20384%202000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23153C65%22%20d%3D%22M0%200h384v2000c-80.64%200-113.28-32.047-192-32.047S78.72%202000%200%202000V0z%22/%3E%3C/svg%3E');
+  background-position: bottom center;
+  margin: 0;
+}
+
+.wave_4 {
+  animation-name:wave_4;
+  animation-duration:4000ms;
+  animation-delay:-1800ms;
+  top: -4.2em;
+  z-index:4;
+  opacity:0.75;
+  background-image:url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22480%22%20height%3D%222000%22%20viewBox%3D%220%200%20480%202000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%23153C65%22%20d%3D%22M480%202000c-100.8%200-141.6-39.892-240-39.892S98.4%202000%200%202000V0h480v2000z%22/%3E%3C/svg%3E');
+  background-position: bottom left;
+  margin: 0;
+}
+
+.wave_5 {
+  animation-name:wave_5;
+  animation-duration:4000ms;
+  animation-delay:-3000ms;
+  top:-4.5em;
+  z-index:5;
+  opacity: 1;
+  background-image:url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22600%22%20height%3D%222000%22%20viewBox%3D%220%200%20600%202000%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%2312375F%22%20d%3D%22M0%202000c123%200%20177-49.866%20300-49.866S474%202000%20600%202000V0H0v2000z%22/%3E%3C/svg%3E');
+  background-position: bottom right;
+  margin: 0;
+}
+
+/* Wave animations */
+
+@keyframes wave_1
+{
+	from { transform: rotate(0deg)   translatey(-0.61em) rotate(0deg)    ; }
+	to   { transform: rotate(360deg) translatey(-0.61em) rotate(-360deg) ; }
+}
+
+@keyframes wave_2
+{
+	from { transform: rotate(0deg)   translatey(-0.77em) rotate(0deg)    ; }
+	to   { transform: rotate(360deg) translatey(-0.77em) rotate(-360deg) ; }
+}
+
+@keyframes wave_3
+{
+	from { transform: rotate(0deg)   translatey(-0.96em) rotate(0deg)    ; }
+	to   { transform: rotate(360deg) translatey(-0.96em) rotate(-360deg) ; }
+}
+
+@keyframes wave_4
+{
+	from { transform: rotate(0deg)   translatey(-1.2em) rotate(0deg)    ; }
+	to   { transform: rotate(360deg) translatey(-1.2em) rotate(-360deg) ; }
+}
+
+@keyframes wave_5
+{
+	from { transform: rotate(0deg)   translatey(-1.5em) rotate(0deg)    ; }
+	to   { transform: rotate(360deg) translatey(-1.5em) rotate(-360deg) ; }
+}

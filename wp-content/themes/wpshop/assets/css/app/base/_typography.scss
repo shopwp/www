@@ -1,0 +1,75 @@
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-secondary;
+  line-height: 1.1;
+  color: color(base);
+  margin: 0 0 $space-xxs;
+
+  a {
+    text-decoration: none;
+    color: color(base);
+  }
+}
+
+h1 {
+  font-size: $heading-1;
+
+  @include device(600, 'max') {
+    font-size: $font-xxxl;
+  }
+}
+
+h2 {
+  font-size: $heading-2;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: $heading-3;
+}
+
+h4 {
+  font-size: $heading-4;
+}
+
+h5 {
+  font-size: $heading-5;
+}
+
+h6 {
+  font-size: $heading-6;
+}
+
+a {
+  color: color(primary);
+
+  &:hover {
+    opacity: $opacity-hard;
+  }
+}
+
+p {
+  font-size: 1em;
+  margin-top: 0;
+  width: 100%;
+
+  + h1,
+  + h2,
+  + h3,
+  + h4,
+  + h5,
+  + h6 {
+    margin-top: $space-m;
+  }
+
+  @include device(1500, 'max') {
+    font-size: 1em;
+  }
+
+  @include device(600, 'max') {
+    font-size: 1em;
+  }
+}
+
+.heading-center {
+  text-align: center;
+}

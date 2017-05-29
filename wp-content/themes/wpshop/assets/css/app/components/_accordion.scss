@@ -1,0 +1,23 @@
+.accordion-heading {
+  // background: color(grey);
+  // padding: $space-s;
+  margin-bottom: $space-l;
+  
+  &.is-open {
+    // margin-bottom: $space-l;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .fa {
+    font-size: $font-s;
+    margin-right: $space-xxxs;
+  }
+
+}
+
+.accordion-content {
+  display: none;
+}

@@ -1,0 +1,27 @@
+SyntaxError: Unexpected token, expected ; (31:14)
+
+[0m [90m 29 | [39m      console[33m.[39mlog([32m'inside stop'[39m)[33m;[39m
+ [90m 30 | [39m
+[31m[1m>[22m[39m[90m 31 | [39m      [36mvar[39m data[33m.[39mcontent [33m=[39m await getDoc( $doc[33m.[39mdata([32m'doc-id'[39m) )[33m;[39m
+ [90m    | [39m              [31m[1m^[22m[39m
+ [90m 32 | [39m      console[33m.[39mlog([32m"data.content: "[39m[33m,[39m data[33m.[39mcontent)[33m;[39m
+ [90m 33 | [39m      showDocContent(data[33m.[39mcontent)[33m;[39m
+ [90m 34 | [39m[0m
+
+Error
+    at transpile (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/babel-loader/lib/index.js:52:13)
+    at Object.module.exports (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/babel-loader/lib/index.js:133:12)
+    at applySyncOrAsync (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/applyLoaders.js:341:21)
+    at apply (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/applyLoaders.js:268:5)
+    at /Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/applyLoaders.js:131:7
+    at applyPitchLoader (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/applyLoaders.js:184:14)
+    at applyPitchLoader (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/applyLoaders.js:192:14)
+    at applyPitchLoaders (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/applyLoaders.js:222:4)
+    at applyLoaders (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/applyLoaders.js:116:3)
+    at HappyWorker.compile (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/HappyWorker.js:32:3)
+    at Object.compile (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/HappyForegroundThreadPool.js:61:14)
+    at HappyPlugin.compileAndUpdateCache (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/HappyPlugin.js:344:14)
+    at HappyPlugin.compileInForeground (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/HappyPlugin.js:321:25)
+    at HappyPlugin.compile (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/HappyPlugin.js:237:32)
+    at Object.HappyLoader (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/happypack/lib/HappyLoader.js:42:15)
+    at LOADER_EXECUTION (/Users/arobbins/www/wpshop/public/wp-content/themes/wpshop/node_modules/loader-runner/lib/LoaderRunner.js:119:14)

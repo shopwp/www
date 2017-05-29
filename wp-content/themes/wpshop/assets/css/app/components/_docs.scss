@@ -1,0 +1,27 @@
+.docs {}
+
+.doc-terms {
+  margin-top: 0;
+  margin-left: $space-xl;
+}
+
+.doc-terms,
+.doc-cats {
+  list-style: none;
+  margin: 0;
+}
+
+.doc-cat {
+  font-size: $font-l;
+  font-weight: bold;
+}
+
+.doc-term {
+  margin-top: $space-xxs;
+
+  &:hover {
+    cursor: pointer;
+
+    @include dim($opacity-hard);
+  }
+}

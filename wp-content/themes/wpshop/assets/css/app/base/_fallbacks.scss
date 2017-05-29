@@ -1,0 +1,291 @@
+//
+// IE9
+//
+.no-flexbox {
+
+  body {
+    width: 100%;
+  }
+
+  .cf:before,
+  .cf:after {
+    content: " ";
+    display: table;
+  }
+
+  .cf:after {
+    clear: both;
+  }
+
+   .l-row,
+   .l-col {
+      display: table;
+      table-layout: fixed;
+      vertical-align: top;
+   }
+
+   .l-fill,
+   .l-box-1,
+   .l-box-2,
+   .l-box-3,
+   .l-box-4,
+   .l-box-5,
+   .l-box-6,
+   .l-box-7 {
+      vertical-align: top;
+      display: table-cell;
+   }
+
+   .l-box-1 {
+      width: 100%;
+   }
+
+   .l-box-2 {
+      width: 50%;
+   }
+
+   .l-box-3 {
+      width: 30%;
+   }
+
+   .l-box-4 {
+      width: 23%;
+   }
+
+   .l-box-5 {
+      width: 17%;
+   }
+
+   .l-box-6 {
+      width: 14.666666667%;
+   }
+
+   .l-box-7 {
+      width: 12.285714286%;
+   }
+
+   .nav-wrapper {
+      width: 70%;
+   }
+
+   .l-fill {
+     width: 100%;
+   }
+
+   .logo,
+   .logo-mark {
+     float: left;
+
+     img {
+       width: 100%;
+       margin-top: 12px;
+       display: inline-block;
+     }
+   }
+
+   .logo-mark {
+     display: none;
+   }
+
+   .author-wrapper {
+     float: left;
+     width: 20%;
+   }
+
+   .widget {
+     float: left;
+     width: 25%;
+   }
+
+   .navigation.posts-navigation .nav-links {
+     width: 400px;
+     text-align: center;
+     margin: 0 auto;
+   }
+
+   .nav-primary {
+      width: 60%;
+      float: right;
+      margin-top: 18px;
+      margin-right: 0;
+
+      .nav {
+        float: right;
+        width: 70%;
+        display: block;
+      }
+   }
+
+   .l-box.card,
+   .menu-secondary-navigation-container .icon,
+   .menu-item {
+      display: inline-block;
+   }
+
+   .nav-secondary {
+      float: left;
+      width: 100%;
+      text-align: right;
+      margin-right: 3em;
+
+      .menu-item {}
+   }
+
+   .byline-time,
+   .byline-author,
+   .team-social-item {
+      float: left;
+      width: auto;
+   }
+
+   .component-heading {
+      text-align: center;
+   }
+
+   .testimonial {
+      margin: 0 auto;
+   }
+
+   .card-heading span {
+      width: 80%;
+   }
+
+   .card {
+      min-height: 380px;
+   }
+
+   .card.card-secondary {
+      min-height: 430px;
+   }
+
+   .client-name + a {
+      display: block;
+      text-align: center;
+      margin: 0 auto;
+   }
+
+   .main {
+     display: block;
+
+     main {
+       float: left;
+       width: 66%;
+       display: block;
+     }
+   }
+
+   .sidebar {
+     float: left;
+     width: 28%;
+     display: block;
+   }
+
+}
+
+.flexboxlegacy {}
+
+
+.ie-11 {
+
+  .widget {
+    width: 21%;
+    flex: 0 0 21%;
+  }
+
+  .slideout-panel {
+    display: block !important;
+  }
+
+  .component-unpacked {
+    display: block;
+  }
+
+  /* Legacy layout fixes */
+  .main {
+    flex: 1 0 auto;
+  }
+
+  .author-wrapper {
+    display: block;
+  }
+
+  .main > .l-fill {
+    // flex: none;
+  }
+
+  body, html {
+    min-height: 100vh;
+    height: 100%;
+  }
+
+}
+
+.ie-10 {
+
+  .widget {
+    width: 21%;
+    flex: 0 0 21%;
+  }
+
+  .component-unpacked {
+    display: block;
+  }
+
+  .slideout-panel {
+    display: block !important;
+  }
+
+  /* Legacy layout fixes */
+  .main {
+    flex: 1 0 auto;
+  }
+
+  .author-wrapper {
+    text-align:center;
+  }
+
+  .author-image-wrapper {
+    display: block;
+    text-align:center;
+
+    .author-cat-link {
+      display: inline-block;
+      width: 50px;
+      margin: 0 auto;
+
+      img {
+        top: 34px;
+      }
+    }
+  }
+
+  #content {
+    height: 100vh;
+  }
+
+}
+
+.ie-9 {
+
+  .components-jump-links {
+    display: block;
+    margin-left: 3em;
+  }
+
+  .jump-link {
+    float: left;
+    width: 250px;
+  }
+
+  .main {
+    .l-fill {
+      width: 100%;
+      display: block;
+    }
+  }
+}
+
+.flexboxtweener,
+.flexboxtweener body {
+  height: 100%;
+}

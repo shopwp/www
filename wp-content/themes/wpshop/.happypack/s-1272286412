@@ -1,0 +1,97 @@
+"use strict";
+
+var _regenerator = require("babel-runtime/regenerator");
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _ws = require("../ws/ws");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+
+On account cat click
+
+*/
+function onAccountCatClick() {
+
+  window.paceOptions = {
+    ajax: {
+      trackMethods: ["GET", "POST"]
+    }
+  };
+
+  $('.account-cat').on('click', function (e) {
+
+    var $element = $(this);
+
+    Pace.track((0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+      var stuff;
+      return _regenerator2.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return (0, _ws.getAccountCat)($element.data('account-cat'));
+
+            case 2:
+              stuff = _context.sent;
+
+
+              console.log("stuffstuffstuff: ", stuff);
+              $('.content').html($(stuff));
+              // console.log('account-cat: ', $(this).data('account-cat'));
+
+            case 5:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    })));
+  });
+}
+
+//
+// function onAccountDownloads() {
+//
+// }
+//
+// function onAccountLicenses() {
+//
+// }
+//
+// function onAccountOrders() {
+//
+// }
+//
+// function onAccountProfile() {
+//
+// }
+
+//
+// function onAccountCatLinks() {
+//   onAccountBilling();
+//   onAccountDownloads();
+//   onAccountLicenses();
+//   onAccountOrders();
+//   onAccountProfile();
+// }
+
+
+/*
+
+Init Account
+
+*/
+function initAccount() {
+  onAccountCatClick();
+}
+
+console.log('Account page');
+
+initAccount();

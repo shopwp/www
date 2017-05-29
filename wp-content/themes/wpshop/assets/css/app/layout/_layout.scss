@@ -1,0 +1,86 @@
+.main {
+  width: 100%;
+  margin-bottom: 3em;
+  margin: $space-l auto;
+  position: relative;
+
+  @include device(800, 'max') {
+    padding: 0 $space-m;
+  }
+
+}
+
+.wrap {
+  margin-top: 0;
+}
+
+.content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+#wpadminbar {
+  display: none;
+}
+
+.component {
+  // width: 100%;
+}
+
+
+.docs-template-default {
+  .docs {
+    width: 100%;
+  }
+
+  .docs,
+  .entry-content {
+    max-width: 100%;
+
+    img {
+      margin-bottom: 1em;
+    }
+
+  }
+
+  .entry-content {
+    width: 100%;
+    
+    ul li {
+      margin-top: 0;
+    }
+
+    ul {
+      margin-left: 2em;
+      margin-bottom: 1em;
+    }
+  }
+
+
+  h2 {
+    border-bottom: 1px solid color(medium-grey);
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+  }
+
+
+
+
+}
+
+.docs-heading {
+  font-size: $font-l;
+  margin-bottom: $space-s;
+  margin-top: $space-l;
+}
+
+.docs-heading-description {
+  margin-bottom: 5px;
+}
+
+
+.docs-list-parameters {
+  margin-top: 0;
+  position: relative;
+  top: -10px;
+}

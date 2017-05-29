@@ -1,0 +1,60 @@
+.account-cat {
+  font-size: $font-l;
+  // font-weight: bold;
+  margin: 0;
+  padding: $space-s 0;
+  border-bottom: 1px solid color(light-grey);
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+    border: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+    opacity: $opacity-hard;
+  }
+}
+
+.component[class*="component-account"] {
+  animation-duration: 0.5s;
+  margin-bottom: $space-l;
+}
+
+.component-account-licenses-upgrades {
+  margin-top: 0;
+}
+
+.component-account-sub {
+  margin-bottom: $space-xl*2;
+}
+
+.user-info {
+  margin-top: $space-m;
+}
+
+.view-key-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.component-heading {
+  // margin-bottom: $space-xxl;
+}
+
+
+.component-account-heading {
+  margin-bottom: $space-xs;
+
+  .fa {
+    font-size: $font-s;
+    margin-right: $space-xxxs;
+    position: relative;
+    top: -1px;
+  }
+
+}

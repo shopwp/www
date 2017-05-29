@@ -1,0 +1,543 @@
+'use strict';
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _debounce = require('lodash/debounce');
+
+var _debounce2 = _interopRequireDefault(_debounce);
+
+var _utils = require('../utils/utils');
+
+var _steps = require('./steps');
+
+var _ws = require('../ws/ws');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+
+On account cat click
+
+*/
+function onAskExisting() {
+
+  var $loginForm = $("#edd_checkout_login_register"),
+      $registerForm = $("#edd_checkout_user_info"),
+      $submitContainer = $("#edd_purchase_submit");
+
+  $('#edd-user-login-submit .button').val('Login and checkout');
+  // $registerForm.addClass('animated bounceInTop');
+
+  $("#card_number").attr('type', 'text');
+
+  var heigtheight = $('#edd_checkout_user_info').height();
+
+  // TODO: Put somewhere that makes sense
+  $registerForm.addClass('animated zoomIn');
+  $('.wps-checkout-login-container').height(heigtheight);
+
+  $('.component-ask-existing').on('click', '.button', function () {
+    var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee(e) {
+      var $element, $parent;
+      return _regenerator2.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+
+              e.preventDefault();
+
+              $element = $(this);
+              $parent = $element.parent();
+
+
+              $loginForm.removeClass('animated bounceInTop');
+              $registerForm.removeClass('animated bounceInTop');
+              $submitContainer.removeClass('is-visible');
+
+              $parent.children().removeClass('is-active is-disabled');
+              $element.addClass('is-active');
+              $parent.find('.button:not(.is-active)').addClass('is-disabled');
+
+              if ($element.data('checkout-path') === 'login') {
+                $loginForm.addClass('animated bounceInTop');
+                $submitContainer.removeClass('is-visible');
+              } else {
+                $registerForm.addClass('animated bounceInTop');
+                $submitContainer.addClass('is-visible');
+              }
+
+            case 10:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }());
+}
+
+/*
+
+Save Checkout State
+
+*/
+function saveCheckoutState() {
+
+  var $ccFields = $('#edd_cc_fields'),
+      $ccAddress = $('#edd_cc_address').prop('outerHTML'),
+      $ccSubmit = $('#edd_purchase_submit').prop('outerHTML');
+
+  $ccFields.find("#card_number").val('');
+  $ccFields = $ccFields.prop('outerHTML');
+
+  localStorage.setItem('wps-checkout-form', $ccFields + $ccAddress + $ccSubmit);
+}
+
+/*
+
+Insert Saved Checkout Form
+
+*/
+function insertSavedCheckoutForm() {
+  $('.wps-checkout-login-container').after($(localStorage.getItem('wps-checkout-form')));
+}
+
+/*
+
+Removing Billing Inputs
+
+*/
+function removeBillingInputs() {
+  $('#edd_cc_fields').remove();
+  $('#edd_cc_address').remove();
+  $('#edd_purchase_submit').remove();
+}
+
+/*
+
+On Login Link
+
+*/
+function onLoginLink() {
+
+  var $loginForm = $("#edd_checkout_login_register"),
+      $registerForm = $("#edd_checkout_user_info"),
+      $submitContainer = $("#edd_purchase_submit");
+
+  $('.wps-welcome-link').on('click', function (e) {
+    e.preventDefault();
+
+    var $activeContainer = $(this).closest('.animated');
+
+    if ($activeContainer.attr('id') === 'edd_checkout_login_register') {
+
+      insertSavedCheckoutForm();
+      setScrollScene();
+
+      $activeContainer.animateCss('zoomOut', function () {
+        $activeContainer.removeClass('animated zoomIn zoomOut');
+      });
+
+      $registerForm.animateCss('zoomIn', function () {
+        console.log('done reg');
+      });
+    } else {
+
+      $activeContainer.animateCss('zoomOut', function () {
+        console.log('done active');
+        $activeContainer.removeClass('animated zoomIn zoomOut');
+      });
+
+      /*
+       Reset sticky
+       */
+      removeBillingInputs();
+
+      $loginForm.animateCss('zoomIn', function () {
+        console.log('done login');
+      });
+    }
+  });
+}
+
+/*
+
+Setting the Scroll Magic sticky nav
+
+*/
+function setScrollScene() {
+
+  var controller = new ScrollMagic.Controller();
+
+  // Scene1 Handler
+  var scene1 = new ScrollMagic.Scene({
+    duration: 0,
+    triggerElement: '#edd_cc_fields',
+    triggerHook: 0
+  }).setClassToggle("#edd_checkout_cart_form", "is-stuck").on('start', function () {
+    console.log('111');
+    $('#edd_checkout_cart_form').toggleClass('animated fadeIn');
+  }).setPin("#edd_checkout_cart_form");
+
+  // Add Scenes to ScrollMagic Controller
+  controller.addScene([scene1]);
+
+  detectDestroy(controller, scene1);
+}
+
+/*
+
+Scroll Magic Scene Destroy Handler
+
+*/
+function detectDestroy(controller, scene) {
+
+  $('.wps-welcome-link').on('click', function (e) {
+    e.preventDefault();
+
+    var $activeContainer = $(this).closest('.animated');
+
+    if ($activeContainer.attr('id') === 'edd_checkout_login_register') {} else {
+      controller.destroy();
+      scene.destroy();
+    }
+  });
+}
+
+/*
+
+Modify all default form attributes here
+
+*/
+function initFormState() {
+  $('.is-registered-and-purchasing #edd_checkout_user_info input').prop('readonly', true);
+  $('#card_exp_month, #card_exp_year').attr('name', 'cardExpYear');
+  $('#card_number').attr('name', 'edd_credit_card');
+  $('#card_cvc').attr('name', 'edd_cvc');
+  $('#card_name').attr('name', 'edd_card_name');
+
+  $('#edd-purchase-button').prop('disabled', true);
+
+  // allCheckoutFieldsValid();
+}
+
+/*
+
+Is Form Valid
+
+*/
+function isFormValid(valid) {
+
+  if (valid) {
+    console.log("final - valid");
+    $('#edd-purchase-button').prop('disabled', false);
+  } else {
+    console.log("final - not valid");
+    $('#edd-purchase-button').prop('disabled', true);
+  }
+}
+
+/*
+
+Validate Checkout Form
+
+*/
+function validateCheckoutForm() {
+
+  var validate = $("#edd_purchase_form").validate({
+    rules: {
+      cardExpYear: {
+        CCExp: {
+          month: '#card_exp_month'
+        }
+      },
+      edd_card_name: {
+        required: true
+      },
+      card_address: {
+        required: true
+      },
+      card_city: {
+        required: true
+      },
+      card_zip: {
+        required: true
+      },
+      billing_country: {
+        required: true
+      },
+      edd_credit_card: {
+        creditcard: true,
+        required: true
+      },
+      edd_email: {
+        remote: {
+          url: "/wp/wp-admin/admin-ajax.php",
+          type: "post",
+          data: {
+            action: 'wps_check_existing_username',
+            email: function email() {
+              return $("#edd-email").val();
+            }
+          }
+        },
+        email: true,
+        required: true
+      },
+      edd_cvc: {
+        required: true,
+        pattern: /^[0-9]{3,4}$/
+      },
+      edd_first: {
+        required: true
+      }
+    },
+    messages: {
+      cardExpYear: "Please choose a valid date",
+      CCExp: {
+        month: 'Valid month required'
+      },
+      edd_email: {
+        email: "Please enter a valid email address",
+        required: "Email is required",
+        remote: 'Email address already taken. Do you want to <a href="" class="wps-welcome-link">login</a> instead?'
+      },
+      edd_credit_card: {
+        creditcard: "Please enter a valid credit card",
+        required: "Credit card is required"
+      },
+      edd_first: {
+        required: "First name is required"
+      },
+      edd_cvc: {
+        required: "CVC is required",
+        pattern: "Must be a number between 3-4 digits long"
+      },
+      edd_card_name: {
+        required: "Name is required"
+      },
+      card_address: {
+        required: "Billing Address is required"
+      },
+      card_city: {
+        required: "Billing City is required"
+      },
+      card_zip: {
+        required: "Billing Zip is required"
+      },
+      billing_country: {
+        required: "Country is required"
+      },
+      card_state: {
+        required: "State / province is required"
+      }
+    },
+    highlight: function highlight(element) {
+
+      // console.log('has error', element);
+      $(element).parent().find('.is-valid').remove();
+
+      // validate.showErrors();
+    },
+    unhighlight: function unhighlight(element) {
+
+      // console.log('corrected error', element);
+
+      if ($(element).attr('name') === 'edd_email') {
+
+        // $(element).prop('disabled', true);
+
+        setTimeout(function () {
+          if (!$(element).parent().find('label.error').is(':visible') && !$(element).hasClass('error')) {
+            // console.log('valid');
+            $(element).parent().find('.is-valid').remove();
+            $(element).parent().find('label.error').hide();
+            $(element).parent().append('<span class="is-valid"></span>');
+          } else {
+            // console.log('NOT valid');
+
+          }
+        }, 250);
+      } else {
+        var okoko = $(element).parent().find('label.error').is(':visible');
+        // console.log("okoko: ", okoko);
+
+        if (!$(element).parent().find('label.error').is(':visible') && !$(element).hasClass('error')) {
+          // console.log('valid');
+          $(element).parent().find('.is-valid').remove();
+          $(element).parent().find('label.error').hide();
+          $(element).parent().append('<span class="is-valid"></span>');
+        } else {
+          // console.log('NOT valid');
+          // $(element)[0].setCustomValidity('Invalid');
+        }
+      }
+    }
+
+  });
+
+  checkFormValiditity(validate);
+}
+
+/*
+
+checkFields
+
+*/
+function checkFields() {
+
+  var $requiredFields = $("#edd_purchase_form input.required, #edd_purchase_form select.required");
+
+  var remainingRequiredFields = $requiredFields.filter(function () {
+    return !this.value;
+  });
+  // console.log("Required fields: ", remainingRequiredFields);
+
+  if (remainingRequiredFields.length) {
+    console.log('Has empty required fields', remainingRequiredFields);
+  } else {
+    console.log('All required filled', remainingRequiredFields);
+
+    console.log('eeeeerrrrrrs: ', validate.errorList);
+
+    if (validate.errorList.length) {
+
+      // console.log('Has errors: ', validate.errorList);
+
+      $('#edd-purchase-button').prop('disabled', true);
+    } else {
+
+      // console.log("Required fields: ", $requiredFields);
+      $('#edd-purchase-button').prop('disabled', false);
+    }
+  }
+}
+
+/*
+
+checkFormValiditity
+
+*/
+function checkFormValiditity(validate) {
+
+  var $allFields = $("#edd_purchase_form input, #edd_purchase_form select");
+
+  $allFields.on('keyup change blur', (0, _debounce2.default)(checkFields, 150));
+}
+
+/*
+
+Toggle Checkout Form State During Submit
+
+*/
+function toggleCheckoutFormStateDuringSubmit() {
+  var $errorsContainer = $('#edd-stripe-payment-errors'),
+      $checkoutSubmitButton = $("#edd-purchase-button");
+
+  $checkoutSubmitButton.on('click', function () {
+
+    $errorsContainer.empty();
+
+    var $button = $(this);
+
+    var loop = setInterval(function checkFormState() {
+      var $errorContainer = $button.closest('form').find("#edd-stripe-payment-errors .edd_errors");
+
+      var errortest = $button.closest('form').find("#edd-email-error").is(':visible');
+
+      if ($errorContainer.length || errortest) {
+        console.log('here');
+        (0, _utils.enableForm)($button.closest('form'));
+        (0, _utils.hideLoader)($button.closest('form'));;
+        clearInterval(loop);
+      } else {
+        console.log('sfssdfhere');
+        (0, _utils.disableForm)($button.closest('form'));
+        (0, _utils.showLoader)($button.closest('form'));
+      }
+    }, 200);
+  });
+}
+
+/*
+
+On account cat click
+
+*/
+function onForgotPass() {
+
+  $('.ajax-forgot-pass').on('click', function () {
+    var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(e) {
+      var $element, $parentForm, forgotPassForm;
+      return _regenerator2.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+
+              e.preventDefault();
+              $element = $(this);
+              $parentForm = $element.closest('#edd_purchase_form');
+
+
+              (0, _utils.disableForm)($parentForm);
+              (0, _utils.showLoader)($parentForm);
+
+              _context2.next = 7;
+              return (0, _ws.getForgotPassForm)();
+
+            case 7:
+              forgotPassForm = _context2.sent;
+
+
+              (0, _utils.hideLoader)($parentForm);
+              (0, _utils.enableForm)($parentForm);
+
+              console.log("forgotPassForm: ", forgotPassForm);
+
+              $parentForm.after($(forgotPassForm));
+
+            case 12:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, _callee2, this);
+    }));
+
+    return function (_x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }());
+}
+
+/*
+
+Init Checkout
+
+*/
+function initCheckout() {
+
+  onAskExisting();
+  onLoginLink();
+  (0, _steps.initCheckoutSteps)();
+  setScrollScene();
+  initFormState();
+  validateCheckoutForm();
+  toggleCheckoutFormStateDuringSubmit();
+  saveCheckoutState();
+  onForgotPass();
+}
+
+console.log('Checkout page');
+// export { initCheckout }
+initCheckout();

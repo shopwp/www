@@ -1,0 +1,124 @@
+.btn,
+.button,
+a.button.edd-slg-social-unlink-profile,
+.edd_submit,
+.search-submit {
+  padding: $space-m $space-xl;
+  color: color(white);
+  background-color: color(primary);
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 1em;
+  font-family: $font-primary;
+  display: inline-block;
+  border-radius: 30px;
+  line-height: 1;
+  // font-weight: bold;
+  border: none;
+  outline: none;
+  z-index: 2;
+  text-align: center;
+  margin: 0;
+  margin-top: $space-s;
+  letter-spacing: 0.04em;
+  
+  @include shadow();
+  // @include shrink();
+  // @include grow();
+
+  @include device(500, 'max') {
+    font-size: 1em;
+  }
+
+  &:hover {
+    // @include dim($opacity-soft);
+    // box-shadow: none;
+    opacity: 1;
+    background-color: darken(color(primary), 12);
+  }
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
+
+  &.is-disabled {
+    background-color: color(medium-grey);
+
+    &:hover {
+      opacity: 0.4;
+      background-color: color(medium-grey);
+      transform: scale(1);
+    }
+
+  }
+
+  &.is-loading {
+    position: relative;
+    padding: $space-m $space-xl $space-m $space-xl*2;
+
+    &:before {
+      display: block;
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      width: 1.3em;
+      height: 1.3em;
+      left: 1.5em;
+      top: 1.1em;
+      border: .15em solid color(white);
+      border-top-color: transparent;
+      animation: spin $speed-slow infinite linear;
+    }
+
+  }
+
+  .fa {
+    margin-right: $space-xxxs;
+    // opacity: $opacity-soft;
+  }
+
+}
+
+.btn-secondary {
+  background-color: color(secondary);
+
+  &:hover {
+    background-color: darken(color(secondary), 12);
+  }
+}
+
+.btn-group {
+  position: relative;
+
+  .btn {
+    margin-right: $space-m;
+  }
+
+  // @include shrink();
+  // @include grow();
+}
+
+.btn-l,
+#edd-purchase-button {
+  font-size: $font-l;
+}
+
+.btn-s,
+a.button.edd-slg-social-unlink-profile {
+  font-size: $font-s;
+}
+
+
+.btn-wrap {
+  position: relative;
+
+  .spinner {
+    top: 5px;
+  }
+}
+
+.btn-wrap-center {
+  text-align: center;
+}

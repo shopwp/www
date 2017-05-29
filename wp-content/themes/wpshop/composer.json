@@ -1,0 +1,6 @@
+{
+    "require": {
+        "drewm/mailchimp-api": "^2.2",
+        "guzzlehttp/guzzle": "^6.2"
+    }
+}

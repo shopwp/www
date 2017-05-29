@@ -1,0 +1,263 @@
+/*
+
+Get the stored Auth data
+Returns: Promise
+
+*/
+function getStoredAuthData() {
+
+  var options = {
+    method: 'GET',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: 'wps_check_valid_nonce'
+    }
+  };
+
+  return jQuery.ajax(options);
+
+};
+
+
+/*
+
+Set the Auth data
+Returns: Promise
+
+*/
+function saveAuthData(data) {
+
+  var options = {
+    method: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: 'wps_save_auth_data',
+      data: data
+    }
+  };
+
+  return jQuery.ajax(options);
+
+};
+
+
+/*
+
+Get docs data
+Returns: Promise
+
+*/
+function getDoc(docId) {
+
+  var options = {
+    method: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'HTML',
+    data: {
+      action: 'wps_get_doc',
+      docId: docId
+    }
+  };
+
+  return jQuery.ajax(options);
+
+};
+
+
+/*
+
+Get docs data
+Returns: Promise
+
+*/
+function getAccountCat(catSlug) {
+
+  var options = {
+    method: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'HTML',
+    data: {
+      action: 'wps_get_account_cat',
+      cat: catSlug
+    }
+  };
+
+  return jQuery.ajax(options);
+
+};
+
+
+/*
+
+Get docs data
+Returns: Promise
+
+*/
+function getForgotPassForm() {
+
+  var options = {
+    method: 'GET',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'HTML',
+    data: {
+      action: 'wps_get_forgot_pass_form'
+    }
+  };
+
+  return jQuery.ajax(options);
+
+};
+
+
+/*
+
+MC: Get list by ID
+Returns promise
+
+*/
+function getMailchimpListById() {
+
+  var emailVal = $("#mailinglist-email").val(),
+      emailnonce = $("#mailinglist-form #_wpnonce").val();
+
+  var options = {
+    type: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: "mailinglist_signup",
+      email: emailVal,
+      nonce: emailnonce
+    }
+  };
+
+  return jQuery.ajax(options);
+
+}
+
+
+/*
+
+Check for existing user by email
+
+*/
+function getUserByEmail(email) {
+
+  var options = {
+    type: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: "wps_check_existing_username",
+      email: email
+    }
+  };
+
+  return jQuery.ajax(options);
+
+}
+
+
+/*
+
+Account - Update profile
+
+*/
+function updateAccountProfile(data) {
+
+  var options = {
+    type: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: "wps_account_update_profile",
+      data: data
+    }
+  };
+
+  return jQuery.ajax(options);
+
+}
+
+
+/*
+
+Account - Update profile
+
+*/
+function updateAccountPassword(data) {
+
+  var options = {
+    type: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: "wps_change_customer_password",
+      data: data
+    }
+  };
+
+  return jQuery.ajax(options);
+
+}
+
+
+/*
+
+Account - Start Reset Password Process
+
+*/
+function forgotPassword(data) {
+
+  var options = {
+    type: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: "wps_account_forgot_password",
+      data: data
+    }
+  };
+
+  return jQuery.ajax(options);
+
+}
+
+
+/*
+
+Account - Fnish Reset Password Process
+
+*/
+function resetPassword(data) {
+
+  var options = {
+    type: 'POST',
+    url: '/wp/wp-admin/admin-ajax.php',
+    dataType: 'json',
+    data: {
+      action: "wps_account_reset_password",
+      data: data
+    }
+  };
+
+  return jQuery.ajax(options);
+
+}
+
+
+export {
+  getStoredAuthData,
+  saveAuthData,
+  getDoc,
+  getAccountCat,
+  getForgotPassForm,
+  getMailchimpListById,
+  getUserByEmail,
+  updateAccountProfile,
+  updateAccountPassword,
+  forgotPassword,
+  resetPassword
+}

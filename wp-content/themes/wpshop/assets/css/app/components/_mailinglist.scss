@@ -1,0 +1,54 @@
+.component-mailinglist {
+  background-color: color(water);
+  padding: 5em 1em 10em;
+  border-radius: 5px;
+  position: relative;
+  color: color(white);
+
+  &:after {
+    content: '';
+    width: 160px;
+    height: 60px;
+    bottom: 20px;
+    left: calc(50% - 80px);
+    position: absolute;
+    background: url('../../imgs/wave-shape.svg');
+    background-size: contain;
+    background-position: 50% 50%;
+    opacity: $opacity-hard;
+  }
+
+}
+
+.mailinglist-group-copy {
+  color: color(white);
+  z-index: 9999999999999;
+
+  @include device(600, 'max') {
+    z-index: 999;
+  }
+
+}
+
+.mailinglist-heading {
+  color: color(white);
+  margin-bottom: 0;
+
+  @include device(600, 'max') {
+    font-size: $font-xxxl;
+  }
+
+  @include device(400, 'max') {
+    font-size: $font-xl;
+  }
+
+}
+
+.mailinglist-copy {
+  margin-top: $space-xxxs;
+  text-align: center;
+
+  @include device(400, 'max') {
+    font-size: 1em;
+  }
+}

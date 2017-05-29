@@ -1,0 +1,319 @@
+[
+    {
+        "name": "composer/installers",
+        "version": "v1.0.7",
+        "version_normalized": "1.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/composer/installers.git",
+            "reference": "d792632d27e1980d921cbbba12eab7b888338d4c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/composer/installers/zipball/d792632d27e1980d921cbbba12eab7b888338d4c",
+            "reference": "d792632d27e1980d921cbbba12eab7b888338d4c",
+            "shasum": ""
+        },
+        "replace": {
+            "shama/baton": "*"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*@dev",
+            "phpunit/phpunit": "3.7.*"
+        },
+        "time": "2013-10-24 16:13:49",
+        "type": "composer-installer",
+        "extra": {
+            "class": "Composer\\Installers\\Installer",
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Composer\\Installers\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kyle Robinson Young",
+                "email": "kyle@dontkry.com",
+                "homepage": "https://github.com/shama",
+                "role": "Developer"
+            }
+        ],
+        "description": "A multi-framework Composer library installer",
+        "homepage": "http://composer.github.com/installers/",
+        "keywords": [
+            "TYPO3 CMS",
+            "TYPO3 Flow",
+            "TYPO3 Neos",
+            "agl",
+            "cakephp",
+            "codeigniter",
+            "concrete5",
+            "drupal",
+            "fuelphp",
+            "installer",
+            "joomla",
+            "kohana",
+            "laravel",
+            "li3",
+            "lithium",
+            "mako",
+            "modulework",
+            "phpbb",
+            "ppi",
+            "silverstripe",
+            "symfony",
+            "wordpress",
+            "zend"
+        ]
+    },
+    {
+        "name": "deliciousbrains/wp-migrate-db-pro",
+        "version": "1.4.6",
+        "version_normalized": "1.4.6.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://deliciousbrains.com/dl/wp-migrate-db-pro-latest.zip?licence_key=9de541cb-d301-44ea-b13f-886c47d8dcae&site_url=andrew.dev",
+            "reference": null,
+            "shasum": null
+        },
+        "require": {
+            "composer/installers": "v1.0.7"
+        },
+        "type": "wordpress-plugin",
+        "installation-source": "dist"
+    },
+    {
+        "name": "deliciousbrains/wp-migrate-db-pro-media-files",
+        "version": "1.3.1",
+        "version_normalized": "1.3.1.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://deliciousbrains.com/dl/wp-migrate-db-pro-media-files-latest.zip?licence_key=9de541cb-d301-44ea-b13f-886c47d8dcae&site_url=andrew.dev",
+            "reference": null,
+            "shasum": null
+        },
+        "require": {
+            "composer/installers": "v1.0.7"
+        },
+        "type": "wordpress-plugin",
+        "installation-source": "dist"
+    },
+    {
+        "name": "deliciousbrains/wp-migrate-db-pro-cli",
+        "version": "1.1",
+        "version_normalized": "1.1.0.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://deliciousbrains.com/dl/wp-migrate-db-pro-cli-latest.zip?licence_key=9de541cb-d301-44ea-b13f-886c47d8dcae&site_url=andrew.dev",
+            "reference": null,
+            "shasum": null
+        },
+        "require": {
+            "composer/installers": "v1.0.7"
+        },
+        "type": "wordpress-plugin",
+        "installation-source": "dist"
+    },
+    {
+        "name": "vlucas/phpdotenv",
+        "version": "v2.3.0",
+        "version_normalized": "2.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/vlucas/phpdotenv.git",
+            "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/9ca5644c536654e9509b9d257f53c58630eb2a6a",
+            "reference": "9ca5644c536654e9509b9d257f53c58630eb2a6a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.9"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8 || ^5.0"
+        },
+        "time": "2016-06-14 14:14:52",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Dotenv\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause-Attribution"
+        ],
+        "authors": [
+            {
+                "name": "Vance Lucas",
+                "email": "vance@vancelucas.com",
+                "homepage": "http://www.vancelucas.com"
+            }
+        ],
+        "description": "Loads environment variables from `.env` to `getenv()`, `$_ENV` and `$_SERVER` automagically.",
+        "keywords": [
+            "dotenv",
+            "env",
+            "environment"
+        ]
+    },
+    {
+        "name": "philippbaschke/acf-pro-installer",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/PhilippBaschke/acf-pro-installer.git",
+            "reference": "045980ffb3f60f02fba31623edfdc363945bd482"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/PhilippBaschke/acf-pro-installer/zipball/045980ffb3f60f02fba31623edfdc363945bd482",
+            "reference": "045980ffb3f60f02fba31623edfdc363945bd482",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1.0",
+            "php": ">=5.5",
+            "vlucas/phpdotenv": "^2.2"
+        },
+        "require-dev": {
+            "composer/composer": "1.0.*",
+            "phpunit/phpunit": "4.8.*",
+            "satooshi/php-coveralls": "1.*",
+            "squizlabs/php_codesniffer": "2.*"
+        },
+        "time": "2016-05-19 07:34:23",
+        "type": "composer-plugin",
+        "extra": {
+            "class": "PhilippBaschke\\ACFProInstaller\\Plugin"
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "PhilippBaschke\\ACFProInstaller\\": "src/ACFProInstaller"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Philipp Baschke",
+                "email": "philipp@baschke.com"
+            }
+        ],
+        "description": "An install helper for Advanced Custom Fields PRO",
+        "keywords": [
+            "acf",
+            "composer",
+            "env",
+            "plugin",
+            "pro",
+            "wordpress",
+            "wp"
+        ]
+    },
+    {
+        "name": "advanced-custom-fields/advanced-custom-fields-pro",
+        "version": "5.3.8.1",
+        "version_normalized": "5.3.8.1",
+        "dist": {
+            "type": "zip",
+            "url": "https://connect.advancedcustomfields.com/index.php?p=pro&a=download&t=5.3.8.1",
+            "reference": null,
+            "shasum": null
+        },
+        "require": {
+            "composer/installers": "^1.0",
+            "philippbaschke/acf-pro-installer": "^1.0"
+        },
+        "type": "wordpress-plugin",
+        "installation-source": "dist"
+    },
+    {
+        "name": "wpackagist-plugin/updraftplus",
+        "version": "1.12.15",
+        "version_normalized": "1.12.15.0",
+        "source": {
+            "type": "svn",
+            "url": "https://plugins.svn.wordpress.org/updraftplus/",
+            "reference": "tags/1.12.15"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://downloads.wordpress.org/plugin/updraftplus.1.12.15.zip",
+            "reference": null,
+            "shasum": null
+        },
+        "require": {
+            "composer/installers": "~1.0"
+        },
+        "type": "wordpress-plugin",
+        "installation-source": "dist",
+        "homepage": "https://wordpress.org/plugins/updraftplus/"
+    },
+    {
+        "name": "wpackagist-plugin/redirection",
+        "version": "2.4.5",
+        "version_normalized": "2.4.5.0",
+        "source": {
+            "type": "svn",
+            "url": "https://plugins.svn.wordpress.org/redirection/",
+            "reference": "tags/2.4.5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://downloads.wordpress.org/plugin/redirection.2.4.5.zip",
+            "reference": null,
+            "shasum": null
+        },
+        "require": {
+            "composer/installers": "~1.0"
+        },
+        "type": "wordpress-plugin",
+        "installation-source": "dist",
+        "homepage": "https://wordpress.org/plugins/redirection/"
+    },
+    {
+        "name": "wpackagist-plugin/wordfence",
+        "version": "6.1.10",
+        "version_normalized": "6.1.10.0",
+        "source": {
+            "type": "svn",
+            "url": "https://plugins.svn.wordpress.org/wordfence/",
+            "reference": "tags/6.1.10"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://downloads.wordpress.org/plugin/wordfence.6.1.10.zip",
+            "reference": null,
+            "shasum": null
+        },
+        "require": {
+            "composer/installers": "~1.0"
+        },
+        "type": "wordpress-plugin",
+        "installation-source": "dist",
+        "homepage": "https://wordpress.org/plugins/wordfence/"
+    }
+]

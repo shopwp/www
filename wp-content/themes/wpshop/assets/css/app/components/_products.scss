@@ -1,0 +1,36 @@
+.component-products {
+  width: 100%;
+}
+
+.component-products-header {
+  text-align: center;
+}
+
+.component-products-purchase {
+  margin-top: $space-l;
+}
+
+.products {
+  list-style: none;
+  margin: 0;
+}
+
+.product {
+  margin: 0;
+  width: 32%;
+  max-width: 32%;
+  padding: $space-l;
+}
+
+.product-name,
+.product-price {
+  text-align: center;
+}
+
+.product-name {
+  font-size: $font-xxl;
+}
+
+.product-price {
+  font-size: $font-l;
+}
