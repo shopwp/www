@@ -89,6 +89,10 @@ add_action('template_redirect', 'wps_reset_pass_redirect');
 
 
 
+function wps_identifier_for_post($post) {
+  return $post->ID;
+}
+
 
 
 
@@ -175,10 +179,12 @@ function testtetteeeerrr() {
 // add_action( 'wps_before_products_item', 'testtetteeeerrr' );
 
 
-add_action( 'wps_products_before', 'your_callback' );
 
-function your_callback($query) {
 
-  // your code here ...
-
-}
+// function your_function($product_data) {
+//
+//   echo get_the_field('your_custom_field', $post_id);
+//
+// }
+//
+// add_action( 'wps_after_last_product_img', 'your_function' );

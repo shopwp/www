@@ -80,7 +80,7 @@ Drop Shadow
 
 */
 @mixin drop-shadow() {
-  box-shadow: 0 6px 12px 0 rgba(0,0,0,.12);
+  box-shadow: 0 2px 8px -1px rgba(0,0,0,.1);
 }
 
 

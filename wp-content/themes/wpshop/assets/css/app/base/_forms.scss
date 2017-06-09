@@ -183,6 +183,58 @@ label {
   font-weight: bold;
   margin-bottom: $space-s;
   display: block;
+
+  & + small {
+    margin-bottom: 10px;
+    display: block;
+    margin-top: 0;
+  }
+
+}
+
+label[for="wps_customer_password_new"] {
+  margin-top: $space-xxxl;
+}
+
+
+
+.notice-inline {
+  margin-top: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  transition: 0.5s all ease;
+  opacity: 0;
+
+  &.is-notifying {
+    opacity: 1;
+    transform: translateY(-50px);
+  }
+
+}
+
+.view-key-wrapper {
+  position: relative;
+
+  .fa {
+    position: absolute;
+    right: 15px;
+    top: -6px;
+    // opacity: 0.6;
+    color: color(warning);
+    // font-weight: bold;
+  }
+
+}
+
+#license-key {
+  user-select: all;
+  background: none;
+  border: 1px solid #dddddd;
+
+  &:hover {
+    cursor: text;
+  }
 }
 
 .msg-error,

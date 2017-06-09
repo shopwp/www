@@ -218,8 +218,8 @@ Pace
   display: block;
   position: fixed;
   z-index: 2000;
-  top: 15px;
-  right: 15px;
+  top: 3px;
+  right: 30px;
   width: 14px;
   height: 14px;
   border: solid 2px transparent;
@@ -363,6 +363,7 @@ EDD
   #edd_checkout_cart {
     width: 80%;
     margin: 0 auto;
+    box-shadow: none;
   }
 
   tfoot {
@@ -477,7 +478,15 @@ EDD
   .msg-notice {
     width: 100%;
     margin-top: 0;
+    background-color: color(notice-light);
+    color: color(base);
+
+     a {
+       color: color(base);
+     }
+
   }
+
 }
 
 
@@ -832,7 +841,7 @@ select + .is-valid:after {
 
 .edd_cart_item_price {
   em {
-    background-color: color(warning);
+    background-color: color(notice-light);
     padding: 5px 15px;
     border-radius: 5px;
     font-size: 13px;
@@ -930,4 +939,16 @@ Gravity Forms
     top: 8px;
     left: -10px;
   }
+}
+
+
+
+#disqus_thread {
+  margin-top: $space-xxl * 2;
+  width: 100%;
+}
+
+
+#dsq-content {
+  display: none;
 }

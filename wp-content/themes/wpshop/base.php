@@ -33,7 +33,13 @@ use Roots\Sage\Wrapper;
       get_template_part('templates/header');
     ?>
 
-    <div class="wrap container l-fill l-row <?php echo is_page_template('template-narrow.php') ? 'l-contain-narrow' : 'l-contain'; ?> <?php echo isRegisteredAndPurchasing() ? 'is-registered-and-purchasing' : ''; ?>" role="document">
+    <?php if (is_front_page()) { ?>
+      <div class="wrap container l-fill l-row <?php echo isRegisteredAndPurchasing() ? 'is-registered-and-purchasing' : ''; ?>" role="document">
+
+    <?php } else { ?>
+      <div class="wrap container l-fill l-row <?php echo is_page_template('template-narrow.php') ? 'l-contain-narrow' : 'l-contain'; ?> <?php echo isRegisteredAndPurchasing() ? 'is-registered-and-purchasing' : ''; ?>" role="document">
+
+    <?php } ?>
 
       <?php if (is_page('docs') || get_post_type( get_the_ID() ) === 'docs' ) : ?>
         <aside class="sidebar">

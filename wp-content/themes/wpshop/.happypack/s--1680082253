@@ -56,7 +56,7 @@ function onDocClick($) {
 
               data = JSON.parse(data);
 
-              console.log("data.content: ", data);
+              console.log("data.content: ", $doc.data('doc-id').toString());
               showDocContent(data.content);
 
               url = "/docs/" + data.slug;
@@ -64,7 +64,15 @@ function onDocClick($) {
 
               window.history.pushState("object or string", "Title", url);
 
-            case 9:
+              DISQUS.reset({
+                reload: true,
+                config: function config() {
+                  this.page.identifier = $doc.data('doc-id').toString();
+                  this.page.url = "http://wpshop.dev/#!newthread";
+                }
+              });
+
+            case 10:
             case 'end':
               return _context.stop();
           }
@@ -82,6 +90,7 @@ Show Doc Content
 function showDocContent(docContent) {
 
   jQuery('.main').empty().append(jQuery('<div class="entry-content">' + docContent + '</div>'));
+  jQuery('.entry-content').after(jQuery('<div id="disqus_thread"></div>'));
 
   Prism.highlightAll(true, function () {
     console.log('Doneeeeeeeeeee highlighting');

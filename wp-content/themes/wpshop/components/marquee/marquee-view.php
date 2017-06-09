@@ -2,7 +2,7 @@
 
   <div class="marquee-content">
 
-    <h1 class="marquee-heading">WordPress <i class="fa fa-refresh fa-spin fa-fw"></i> Shopify</h1>
+    <h1 class="marquee-heading"><span class="wordpress">WordPress</span> <i class="fa fa-refresh fa-spin fa-fw"></i> <span class="shopify">Shopify</span></h1>
 
     <div class="marquee-short-desc l-contain-narrow">
       <?php the_sub_field('short_description'); ?>
@@ -16,39 +16,45 @@
 
   <!-- <img src="<?php the_sub_field('image'); ?>" alt="" class="marquee-img"> -->
 
-
 </section>
 
 
-<section class="component component-snippet l-row l-row-center">
+<section class="component component-snippet l-col l-col-center l-row-center">
+  <div class="wow"></div>
+  <div class="snippet l-box-2">
+    <div class="snippet-image">
+      <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-brand.svg">
+    </div>
 
-  <div class="l-box-2 snippet-image">
-    <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-brand.svg">
+    <div class="l-col l-row-center snippet-content">
+      <h2 class="snippet-heading">Free your brand.</h2>
+      <p class="snippet-copy">Keep your brand consistent Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Maecenas malesuada. Morbi nec metus. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent congue erat at massa.</p>
+    </div>
   </div>
 
-  <div class="l-box-2 l-col l-row-center">
-    <h2 class="snippet-heading">Free your brand</h2>
-    <p class="snippet-copy">Keep your brand consistent Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Maecenas malesuada. Morbi nec metus. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent congue erat at massa.</p>
+  <div class="snippet l-box-2">
+    <div class="snippet-image">
+      <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-sync.svg">
+    </div>
+
+    <div class="l-col l-row-center snippet-content">
+      <h2 class="snippet-heading">Sync what you need,<br>display what you want.</h2>
+      <p class="snippet-copy">Donec id justo. Nunc interdum lacus sit amet orci. Praesent ac massa at ligula laoreet iaculis. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem. Fusce fermentum odio nec arcu.</p>
+    </div>
   </div>
 
-  <div class="l-box-2 l-col l-row-center">
-    <h2 class="snippet-heading">Sync what you need<br>Display what you want</h2>
-    <p class="snippet-copy">Donec id justo. Nunc interdum lacus sit amet orci. Praesent ac massa at ligula laoreet iaculis. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem. Fusce fermentum odio nec arcu.</p>
+  <div class="snippet l-box-2">
+    <div class="snippet-image">
+      <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-code.svg">
+    </div>
+
+    <div class="l-col l-row-center snippet-content">
+      <h2 class="snippet-heading">Made with developers in mind.</h2>
+      <p class="snippet-copy">Praesent egestas neque eu enim. Curabitur turpis. Sed aliquam ultrices mauris. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin magna.</p>
+    </div>
   </div>
 
-  <div class="l-box-2 snippet-image">
-    <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-sync.svg">
-  </div>
-
-
-  <div class="l-box-2 snippet-image">
-    <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-code.svg">
-  </div>
-
-  <div class="l-box-2 l-col l-row-center">
-    <h2 class="snippet-heading">Made with developers and designers in mind</h2>
-    <p class="snippet-copy">Praesent egestas neque eu enim. Curabitur turpis. Sed aliquam ultrices mauris. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin magna.</p>
-  </div>
+  <a href="#" class="btn">Learn more</a>
 
 </section>
 

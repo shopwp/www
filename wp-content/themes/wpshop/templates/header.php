@@ -4,11 +4,13 @@
 
     <a class="logo-link" href="<?= esc_url(home_url('/')); ?>">
 
-      <?php if( is_page('home') ) { ?>
+      <!-- <?php if( is_page('home') ) { ?>
         <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header">
       <?php } else { ?>
         <img src="<?php the_field('theme_logo_primary', 'option'); ?>" alt="WP Shopify" class="logo-header">
-      <?php } ?>
+      <?php } ?> -->
+
+      <img src="<?php the_field('theme_logo_primary', 'option'); ?>" alt="WP Shopify" class="logo-header">
 
     </a>
 

@@ -50,7 +50,7 @@ function setup() {
 
   // Use main stylesheet for visual editor
   // To add custom styles edit /assets/styles/layouts/_tinymce.scss
-  add_editor_style(Assets\asset_path('styles/main.css'));
+  // add_editor_style(Assets\asset_path('styles/main.css'));
 }
 
 add_action('after_setup_theme', __NAMESPACE__ . '\\setup');
@@ -112,10 +112,10 @@ Theme assets
 */
 function assets() {
 
-  wp_enqueue_style('Animate CSS', 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);
-  wp_enqueue_style('Font Awesome CSS', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', false, null);
+  wp_enqueue_style('Animate CSS', '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);
+  wp_enqueue_style('Font Awesome CSS', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', false, null);
 
-  wp_enqueue_style('WPS Fonts', 'https://fonts.googleapis.com/css?family=Open+Sans:400,700|Catamaran:400,700', false, null);
+  wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Open+Sans:400,700|Catamaran:400,700', false, null);
 
 
   // TODO: Enque within plugin?
@@ -132,18 +132,18 @@ function assets() {
 
 
   // Scroll magic
-  wp_enqueue_script('Scroll magic', 'http://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js', ['jquery'], null, true);
+  wp_enqueue_script('Scroll magic', '//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js', ['jquery'], null, true);
+
+  wp_enqueue_script('Clipboard', '//cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js', ['jquery'], null, true);
 
   // WPS Vendor Commons
   wp_enqueue_script('WPS Vendor Commons', Assets\asset_path('prod/js/vendor.min.js'), [], null, true);
 
-
+  // jQuery Validate Additional Methods
+  wp_enqueue_script('jQuery Validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js', [], null, true);
 
   // jQuery Validate Additional Methods
-  wp_enqueue_script('jQuery Validate', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js', [], null, true);
-
-  // jQuery Validate Additional Methods
-  wp_enqueue_script('jQuery Validate Additional Methods', 'https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/additional-methods.min.js', ['jQuery Validate'], null, true);
+  wp_enqueue_script('jQuery Validate Additional Methods', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/additional-methods.min.js', ['jQuery Validate'], null, true);
 
 
   wp_enqueue_script('WPS App', Assets\asset_path('prod/js/app.min.js'), [], null, true);

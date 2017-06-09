@@ -1,6 +1,49 @@
 .component-marquee {
   width: 100%;
   min-height: 70vh;
+
+
+    .wordpress {
+      position: relative;
+
+      &:before {
+        position: absolute;
+        top: 5.3em;
+        left: 4.6em;
+        content: '';
+        display: block;
+        background-image: url('../../imgs/icon-wp.svg');
+        width: 40px;
+        opacity: 0.4;
+        height: 40px;
+      }
+
+    }
+
+    .shopify {
+      position: relative;
+
+      &:before {
+        position: absolute;
+        top: 5.3em;
+        right: 4.35em;
+        content: '';
+        opacity: 0.4;
+        display: block;
+        background-image: url('../../imgs/icon-shopify.svg');
+        width: 40px;
+        height: 40px;
+      }
+
+    }
+
+    .fa-fw {
+      width: 1.6em;
+    }
+
+    .btn:last-of-type {
+      margin-right: 0;
+    }
 }
 
 .marquee-img {
@@ -14,16 +57,16 @@
 .marquee-content {
   position: relative;
   text-align: center;
-  top: 11vh;
+  top: 3vh;
 }
 
 .marquee-heading {
   max-width: 80vw;
-  font-size: $font-xxxl*2;
+  font-size: $font-xxl*2.8;
   font-weight: bold;
 }
 
 .marquee-short-desc {
-  margin: $space-l auto $space-xxl;
+  margin: $space-xl auto;
   font-size: $font-xxl;
 }

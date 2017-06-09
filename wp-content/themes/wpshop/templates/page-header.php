@@ -24,8 +24,6 @@ if(is_page('Purchase Confirmation')) {
 
 ?>
 
-
-
 <?php if(!get_field('page_settings_hide_title')) { ?>
 
   <div class="page-header">

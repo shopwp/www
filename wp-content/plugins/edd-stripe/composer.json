@@ -1,13 +1,13 @@
 {
- 	"name": "pippin/easy-digital-downloads-stripe",
+ 	"name": "easy-digital-downloads/edd-stripe",
  	"type": "wordpress-plugin",
 	"description": "Adds a payment gateway for Stripe.com",
-	"keywords": [ "edd", "pippin"],
+	"keywords": [ "edd", "pippin", "easy digital downloads" ],
 	"homepage": "https://easydigitaldownloads.com/downloads/stripe-gateway/",
 	"authors": [
 	    {
-	      	"name": "Pippin Williamson",
-	      	"email": "pippin@pippinsplugins.com",
+	      	"name": "Easy Digital Downloads",
+	      	"email": "support@easydigitaldownloads.com",
 	      	"homepage": "https://easydigitaldownloads.com/"
 	    }
 	],

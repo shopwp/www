@@ -1,0 +1,312 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.initAccount = undefined;
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _validation = require('../forms/validation');
+
+var _utils = require('../utils/utils');
+
+var _ws = require('../ws/ws');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+
+On account cat click
+
+*/
+function onAccountCatClick($) {
+
+  window.paceOptions = {
+    ajax: {
+      trackMethods: ["GET", "POST"]
+    }
+  };
+
+  $('.account-cat').on('click', function (e) {
+
+    var $element = $(this);
+
+    Pace.track((0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+      var stuff;
+      return _regenerator2.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return (0, _ws.getAccountCat)($element.data('account-cat'));
+
+            case 2:
+              stuff = _context.sent;
+
+
+              console.log("stuffstuffstuff: ", stuff);
+              $('.content').html($(stuff));
+              // console.log('account-cat: ', $(this).data('account-cat'));
+
+            case 5:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, this);
+    })));
+  });
+}
+
+//
+// function onAccountDownloads() {
+//
+// }
+//
+// function onAccountLicenses() {
+//
+// }
+//
+// function onAccountOrders() {
+//
+// }
+//
+// function onAccountProfile() {
+//
+// }
+
+//
+// function onAccountCatLinks() {
+//   onAccountBilling();
+//   onAccountDownloads();
+//   onAccountLicenses();
+//   onAccountOrders();
+//   onAccountProfile();
+// }
+
+
+function onProfileChange($) {
+
+  $("#form-account-profile-general").submit(function (e) {
+    e.preventDefault();
+  }).validate({
+    rules: {
+      wps_customer_email: {
+        email: true,
+        remote: {
+          url: "/wp/wp-admin/admin-ajax.php",
+          type: "post",
+          data: {
+            action: 'wps_check_existing_username',
+            email: function email() {
+              return $("#wps_customer_email").val();
+            }
+          }
+        }
+      }
+    },
+    messages: {
+      wps_customer_email: {
+        email: "Please enter a valid email",
+        remote: "Sorry but it looks like another user already has that email. Please choose a different one."
+      }
+    },
+    highlight: _validation.onInputAddError,
+    unhighlight: function unhighlight(element) {
+
+      (0, _validation.removeValidIcon)($(element));
+      (0, _validation.hideInputError)($(element));
+      (0, _validation.addValidInputClass)($(element));
+      (0, _validation.insertValidIcon)($(element));
+    },
+    submitHandler: function () {
+      var _ref2 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee2(form) {
+        var $form, emailUpdated;
+        return _regenerator2.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                $form = $(form);
+
+
+                (0, _utils.disableForm)($form);
+
+                console.log('before', (0, _utils.reduceFormData)($form));
+                _context2.next = 5;
+                return (0, _ws.updateAccountProfile)((0, _utils.reduceFormData)($form));
+
+              case 5:
+                emailUpdated = _context2.sent;
+
+                console.log('afterrrr', emailUpdated);
+
+                (0, _utils.enableForm)($form);
+
+                if (emailUpdated.email && emailUpdated.name) {
+                  // insertMessage('Successfully updated email and name', 'success');
+                  window.location.href = '/login?email-name-change=true';
+                } else if (emailUpdated.email && !emailUpdated.name) {
+                  // insertMessage('Successfully updated email', 'success');
+                  window.location.href = '/login?email-change=true';
+                } else if (!emailUpdated.email && emailUpdated.name) {
+                  (0, _utils.insertMessage)('Successfully updated name', 'success');
+                } else {
+                  (0, _utils.insertMessage)('Sorry we couldn\'t update your profile. Please try again.', 'error');
+                }
+
+              case 9:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function submitHandler(_x) {
+        return _ref2.apply(this, arguments);
+      }
+
+      return submitHandler;
+    }()
+
+  });
+}
+
+/*
+
+On Password Change
+
+*/
+function onPasswordChange($) {
+
+  $("#form-account-profile-password").submit(function (e) {
+
+    e.preventDefault();
+  }).validate({
+    rules: {
+      wps_customer_password_current: {
+        required: true
+      },
+      wps_customer_password_new: {
+        required: true
+      },
+      wps_customer_password_new_confirm: {
+        required: true,
+        equalTo: "#form-input-password"
+      }
+    },
+    messages: {
+      password: {
+        required: "New passwords must match"
+      }
+    },
+    highlight: _validation.onInputAddError,
+    unhighlight: function unhighlight(element) {
+
+      (0, _validation.removeValidIcon)($(element));
+      (0, _validation.hideInputError)($(element));
+      (0, _validation.addValidInputClass)($(element));
+      (0, _validation.insertValidIcon)($(element));
+    },
+    submitHandler: function () {
+      var _ref3 = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee3(form) {
+        var $form, passUpdated;
+        return _regenerator2.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                $form = $(form);
+
+
+                (0, _utils.disableForm)($form);
+
+                console.log('before', (0, _utils.reduceFormData)($form));
+                _context3.next = 5;
+                return (0, _ws.updateAccountPassword)((0, _utils.reduceFormData)($form));
+
+              case 5:
+                passUpdated = _context3.sent;
+
+                console.log('after passUpdated', passUpdated);
+
+                if (!passUpdated) {
+                  (0, _utils.insertMessage)('Error updating password, please try again', 'error');
+                } else {
+
+                  (0, _utils.insertMessage)('Successfully updated password', 'success');
+                }
+
+                (0, _utils.clearFormFields)($form);
+                (0, _utils.enableForm)($form);
+
+              case 10:
+              case 'end':
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function submitHandler(_x2) {
+        return _ref3.apply(this, arguments);
+      }
+
+      return submitHandler;
+    }()
+
+  });
+}
+
+function showUpgrades($) {
+  $('.account-view-upgrades').on('click', function (e) {
+    e.preventDefault();
+    console.log('lieeee');
+
+    $('#edd_sl_license_upgrades').toggleClass('is-hidden');
+  });
+}
+
+/*
+
+Init Account
+
+*/
+function initAccount($) {
+  onAccountCatClick($);
+  onProfileChange($);
+  onPasswordChange($);
+  showUpgrades($);
+
+  var clipboard = new Clipboard('.btn-copy');
+
+  var $inlineKeyNotice = jQuery('#license-key + .notice-inline');
+
+  clipboard.on('success', function (e) {
+    console.info('Action:', e.action);
+    console.info('Text:', e.text);
+    console.info('Trigger:', e.trigger);
+
+    $inlineKeyNotice.addClass('is-notifying');
+
+    setTimeout(function () {
+      $inlineKeyNotice.removeClass('is-notifying');
+      e.clearSelection();
+    }, 2000);
+
+    jQuery(e.trigger).focus().select();
+  });
+
+  clipboard.on('error', function (e) {
+    console.error('Action:', e.action);
+    console.error('Trigger:', e.trigger);
+  });
+}
+
+exports.initAccount = initAccount;

@@ -5,12 +5,26 @@
 .snippet-heading {
   font-size: $font-xl*2;
   font-weight: normal;
+  text-align: center;
+
 }
 
 .snippet-image {
   max-width: 450px;
+  padding-bottom: 0;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.snippet-content {
+  padding-top: 0;
+  width: 80%;
 }
 
 .snippet-copy {
   font-size: $font-l;
+}
+
+.snippet {
+  margin-bottom: 3em;
 }

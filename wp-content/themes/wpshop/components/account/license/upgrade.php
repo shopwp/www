@@ -16,6 +16,14 @@
 
 
   $sl = edd_software_licensing();
+
+  if (empty($sl)) {
+    echo "<pre>";
+    print_r($sl);
+    echo "</pre>";
+  }
+
+
   // $license_keys = $sl->get_licenses_of_purchase($user_purchase->ID);
 
 

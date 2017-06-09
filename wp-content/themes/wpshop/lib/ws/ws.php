@@ -162,21 +162,13 @@ function wps_get_doc() {
 
   $post = get_post( $_POST['docId'] );
 
-  error_log('>>>>>>>>> before <<<<<<<<<<<<<');
-  error_log(print_r($post->post_content, true));
-
   $content = apply_filters('the_content', $post->post_content);
   $slug = $post->post_name;
-
-  error_log('>>>>>>>>> after <<<<<<<<<<<<<');
-  error_log(print_r($content, true));
 
   $store = array(
     'content' => $content,
     'slug'    => $slug
   );
-
-
 
   echo json_encode($store);
   die();
@@ -200,11 +192,6 @@ function wps_get_account_cat() {
   // $okok = do_shortcode('[edd_license_keys]');
   // $license = edd_software_licensing();
   $customer = new EDD_Customer(get_current_user_id(), true);
-
-  error_log('------------------------------------');
-  echo "<pre>";
-  error_log( print_r($customer, true) );
-  echo "<pre>";
 
   // if($catSlug === 'downloads') {
   //   $stuff += do_shortcode('[download_history]');
@@ -244,9 +231,6 @@ Check if username exists
 function wps_check_existing_username() {
 
   $userID = username_exists($_POST['email']);
-
-  error_log('--------------- $userID ---------------');
-  error_log($userID);
 
   if($userID) {
     echo('false');

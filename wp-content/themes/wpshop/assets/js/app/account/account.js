@@ -247,6 +247,35 @@ function initAccount($) {
   onProfileChange($);
   onPasswordChange($);
   showUpgrades($);
+
+  var clipboard = new Clipboard('.btn-copy');
+
+  var $inlineKeyNotice = jQuery('#license-key + .notice-inline');
+
+  clipboard.on('success', function(e) {
+    console.info('Action:', e.action);
+    console.info('Text:', e.text);
+    console.info('Trigger:', e.trigger);
+
+    $inlineKeyNotice.addClass('is-notifying');
+
+    setTimeout(function() {
+      $inlineKeyNotice.removeClass('is-notifying');
+      e.clearSelection();
+    }, 2000);
+
+    jQuery(e.trigger).focus().select();
+
+
+  });
+
+  clipboard.on('error', function(e) {
+    console.error('Action:', e.action);
+    console.error('Trigger:', e.trigger);
+  });
+
+
+
 }
 
 export { initAccount }

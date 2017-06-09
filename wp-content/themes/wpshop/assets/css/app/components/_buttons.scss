@@ -3,7 +3,7 @@
 a.button.edd-slg-social-unlink-profile,
 .edd_submit,
 .search-submit {
-  padding: $space-m $space-xl;
+  padding: calc(#{$space-m} - 3px) calc(#{$space-xl} - 3px);
   color: color(white);
   background-color: color(primary);
   position: relative;
@@ -12,7 +12,7 @@ a.button.edd-slg-social-unlink-profile,
   font-size: 1em;
   font-family: $font-primary;
   display: inline-block;
-  border-radius: 30px;
+  border-radius: 0.4em;
   line-height: 1;
   // font-weight: bold;
   border: none;
@@ -22,7 +22,7 @@ a.button.edd-slg-social-unlink-profile,
   margin: 0;
   margin-top: $space-s;
   letter-spacing: 0.04em;
-  
+
   @include shadow();
   // @include shrink();
   // @include grow();

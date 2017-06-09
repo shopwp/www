@@ -20,3 +20,8 @@
 .is-fixed {
   position: fixed;
 }
+
+.is-highlighted {
+  background: color(notice-xlight);
+  padding: $space-s $space-l;
+}

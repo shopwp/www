@@ -133,8 +133,8 @@ Has Form Value
 
 */
 function hasValue(element) {
-  return $(element).filter(function() {
-    return $(this).val();
+  return jQuery(element).filter(function() {
+    return jQuery(this).val();
   }).length > 0;
 }
 
@@ -162,11 +162,11 @@ Reduces form data to a single object
 */
 function insertMessage(msg, type) {
 
-  $('body').append('<div class="msg msg-' + type + ' animated fadeInDown">' + msg + '</div>');
+  jQuery('body').append('<div class="msg msg-' + type + ' animated fadeInDown">' + msg + '</div>');
 
   setTimeout(function() {
-    $('.msg:last').removeClass('fadeInDown').animateCss('fadeOutUp', function() {
-      $('.msg:last').remove();
+    jQuery('body > .msg.animated').removeClass('fadeInDown').animateCss('fadeOutUp', function() {
+      jQuery('body > .msg.animated').remove();
     });
   }, 3700);
 
@@ -184,7 +184,7 @@ function clearFormFields($form) {
   $form[0].reset();
   $form.find('input').removeClass('valid');
   $form.find('.is-valid').remove();
-  
+
 }
 
 

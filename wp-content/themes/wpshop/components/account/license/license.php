@@ -57,7 +57,11 @@
 
         <td>
           <span class="view-key-wrapper">
-            <input type="text" readonly="readonly" class="edd_sl_license_key" value="<?php echo esc_attr( $sl->get_license_key( $license->ID ) ); ?>" />
+
+            <input id="license-key" type="text" class="btn-copy edd_sl_license_key" value="<?php echo esc_attr( $sl->get_license_key( $license->ID ) ); ?>" data-clipboard-text="<?php echo esc_attr( $sl->get_license_key( $license->ID ) ); ?>" />
+            <small class="notice-inline">Copied!</small>
+            <i class="fa fa-key" aria-hidden="true"></i>
+
           </span>
         </td>
 
