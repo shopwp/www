@@ -131,7 +131,6 @@ function onProfileChange($) {
       var emailUpdated = await updateAccountProfile( reduceFormData($form) );
       console.log('afterrrr', emailUpdated);
 
-
       enableForm($form);
 
       if(emailUpdated.email && emailUpdated.name) {
@@ -144,6 +143,9 @@ function onProfileChange($) {
 
       } else if(!emailUpdated.email && emailUpdated.name) {
         insertMessage('Successfully updated name', 'success');
+
+        removeValidIcon($form.find('input'));
+        removeValidClass($form.find('input'));
 
       } else {
         insertMessage('Sorry we couldn\'t update your profile. Please try again.', 'error');

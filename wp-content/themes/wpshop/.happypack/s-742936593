@@ -157,6 +157,9 @@ function onProfileChange($) {
                   window.location.href = '/login?email-change=true';
                 } else if (!emailUpdated.email && emailUpdated.name) {
                   (0, _utils.insertMessage)('Successfully updated name', 'success');
+
+                  (0, _validation.removeValidIcon)($form.find('input'));
+                  (0, _validation.removeValidClass)($form.find('input'));
                 } else {
                   (0, _utils.insertMessage)('Sorry we couldn\'t update your profile. Please try again.', 'error');
                 }

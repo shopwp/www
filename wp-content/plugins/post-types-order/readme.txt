@@ -3,16 +3,14 @@ Contributors: nsp-code, tdgu
 Donate link: http://www.nsp-code.com/donate.php
 Tags: post order, posts order, sort, post sort, posts sort, post type order, custom order, admin posts order
 Requires at least: 2.8
-Tested up to: 4.7.2
-Stable tag: 1.9.3
-.
-License: GPLv2 or later
+Tested up to: 4.8
+Stable tag: 1.9.3.1
 
 Post Order and custom Post Type Objects (custom post types) using a Drag and Drop Sortable JavaScript AJAX interface or default WordPress dashboard. 
 
 == Description ==
 
-<strong>Over 2 MILLIONS DOWNLOADS and near PERFECT rating out of 150 REVIEWS</strong>. <br />
+<strong>Over 2.3 MILLIONS DOWNLOADS and near PERFECT rating out of 150 REVIEWS</strong>. <br />
 A powerful plugin, Order Posts and Post Types Objects using a Drag and Drop Sortable JavaScript capability. 
 
 The order can be customized within **default WordPress post type archive list page** or **a separate Re-Order interface** which display all objects.
@@ -95,17 +93,23 @@ Consider upgrading to our advanced version of this plugin at a very resonable pr
 
 == Change Log ==
 
+= 1.9.3.1 =
+  - WordPress 4.8 compatibility notice
+  - Slight code changes, remove unused activate / deactivate hooks
+  - Updated po translation file
+  - Updated assets
+
 = 1.9.3 =
   - Fix for custom post type objects per page when using default archive interface drag & drop sort
   - Plugin code redo and re-structure
   - Improved compatibility with other plugins
-  - Security improvments for AJAX order updates
+  - Security improvements for AJAX order updates
 
 = 1.9 =
   - Remove translations from the package
   - Remove link for donate
   - Wp Hide plugin availability notification
-  - New Filter pto/get_options to allow to chaneg default options; Custom capability can be set for 'capability'
+  - New Filter pto/get_options to allow to change default options; Custom capability can be set for 'capability'
   - New Filter pto/admin/plugin_options/capability to allow custom capability option to be inserted within html
 
 = 1.8.9.2 =
@@ -135,7 +139,7 @@ Consider upgrading to our advanced version of this plugin at a very resonable pr
   - New query argument ignore_custom_sort , to be used with Autosort. Ignore any customised sort and return posts in default order.
 
 = 1.8.4.1 =
-  - Sortable interface styling improvments
+  - Sortable interface styling improvements
   - Portuguese translation update - Pedro Mendonca - http://www.pedromendonca.pt
   - Text doamin fix for few texts
   
@@ -181,7 +185,7 @@ Consider upgrading to our advanced version of this plugin at a very resonable pr
  - Edit Gallery - image order fix
  - "re-order" menu item allow translation 
  - Hungarian translation - Adam Laki - http://codeguide.hu/
- - Minor admin style improvments
+ - Minor admin style improvements
 
 = 1.6.5 = 
  - Updates/Fixes
@@ -228,7 +232,7 @@ Consider upgrading to our advanced version of this plugin at a very resonable pr
  - Get Previous / Next Posts Update
 
 = 1.4.3 = 
- - Small improvments
+ - Small improvements
 
 = 1.4.1 = 
  - Re-Order Menu Item Appearance fix for update versions

@@ -32,8 +32,8 @@
       <input type="email" name="wps_customer_email" id="wps_customer_email" value="<?php echo $user_info->user_email; ?>">
     </div>
 
-    <div class="btn-wrap btn-wrap-center">
-      <input type="submit" name="wps_customer_address_submit" class="btn btn-primary" value="Save profile">
+    <div class="btn-wrap">
+      <input type="submit" name="wps_customer_address_submit" class="btn btn-secondary" value="Save profile">
       <div class="spinner spinner-sm"></div>
     </div>
 

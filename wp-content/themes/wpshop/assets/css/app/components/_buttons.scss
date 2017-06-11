@@ -1,6 +1,7 @@
 .btn,
 .button,
 a.button.edd-slg-social-unlink-profile,
+.edd_download_file_link,
 .edd_submit,
 .search-submit {
   padding: calc(#{$space-m} - 3px) calc(#{$space-xl} - 3px);
@@ -12,10 +13,10 @@ a.button.edd-slg-social-unlink-profile,
   font-size: 1em;
   font-family: $font-primary;
   display: inline-block;
-  border-radius: 0.4em;
   line-height: 1;
   // font-weight: bold;
   border: none;
+  border-radius: 0.4em;
   outline: none;
   z-index: 2;
   text-align: center;
@@ -81,6 +82,7 @@ a.button.edd-slg-social-unlink-profile,
 
 }
 
+.edd_download_file_link,
 .btn-secondary {
   background-color: color(secondary);
 
@@ -121,4 +123,15 @@ a.button.edd-slg-social-unlink-profile {
 
 .btn-wrap-center {
   text-align: center;
+}
+
+
+.edd_download_file_link {
+  &:before {
+    content: '\f019';
+    font-family: 'FontAwesome';
+    font-size: 20px;
+    display: inline-block;
+    margin-right: 10px;
+  }
 }

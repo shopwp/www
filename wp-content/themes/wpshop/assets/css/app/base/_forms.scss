@@ -229,8 +229,7 @@ label[for="wps_customer_password_new"] {
 
 #license-key {
   user-select: all;
-  background: none;
-  border: 1px solid #dddddd;
+  background: #f4f4f4;
 
   &:hover {
     cursor: text;
@@ -485,4 +484,9 @@ select {
 #edd_sl_license_keys {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+
+  thead th {
+    padding-top: 0;
+  }
+
 }

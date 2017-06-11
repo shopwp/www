@@ -429,12 +429,13 @@ Runs everytime jQuery validate fires (keyup, blur, change) debounced by 300ms
 
 */
 function checkFields(validate, $form, $) {
+  console.log('Checking');
 
   if( formContainsErrors(validate) ) {
 
     console.log("Stuff still contains errors");
 
-    disableFormSubmit(validate, $form, $);
+    // disableFormSubmit(validate, $form, $);
     showInvalidFormNotice($form);
     toggleInvalidFormNotes($form, $);
 
@@ -443,9 +444,8 @@ function checkFields(validate, $form, $) {
     if( hasRemainingRequiredFields($) ) {
 
       console.log("!! Stuff has remaining required fields");
-      disableFormSubmit(validate, $form, $);
+      // disableFormSubmit(validate, $form, $);
       toggleInvalidFormNotes($form, $);
-
 
       //
       // Hacky way to submit form with dynamically created elements

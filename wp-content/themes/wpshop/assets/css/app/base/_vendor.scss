@@ -167,7 +167,7 @@ EDD
 */
 .edd_license_key,
 .edd_purchase_details {
-  display: none;
+  // display: none;
 }
 
 
@@ -810,6 +810,33 @@ select + .is-valid:after {
 
 .animated {
   animation-duration: 0.3s;
+}
+
+.msg-success.animated.fadeInDown {
+  opacity: 0;
+  animation: fade 5s linear;
+}
+
+
+form input:-moz-read-only.edd-submit {
+  opacity: 1;
+}
+
+
+@keyframes fade {
+  0% {
+    opacity: 0
+  }
+  5% {
+    opacity: 1
+  }
+  80% {
+    opacity: 1
+  }
+  90% {
+    opacity: 0
+  }
+
 }
 
 

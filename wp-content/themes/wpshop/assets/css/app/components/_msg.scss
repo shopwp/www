@@ -32,7 +32,7 @@ label.error {
 .msg {
   color: color(white);
   padding: $space-s $space-m;
-  border-radius: 10px;
+  border-radius: 0.4em;
   font-weight: normal;
   text-align: center;
   margin-bottom: $space-xl;
@@ -53,7 +53,7 @@ label.error {
 
 .msg {
   position: fixed;
-  top: 40px;
+  top: 28px;
   left: 0;
   width: auto;
   width: 700px;
