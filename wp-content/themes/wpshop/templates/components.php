@@ -15,7 +15,7 @@
         get_template_part('components/marquee/marquee-controller');
 
       // Products
-    } else if(get_row_layout() == 'component_products') {
+      } else if(get_row_layout() == 'component_products') {
 
         get_template_part('components/products/products-controller');
 

@@ -3,4 +3,4 @@
   <?php get_template_part('templates/content', 'page'); ?>
 <?php endwhile; ?>
 
-<?php get_template_part('components/support/support-controller'); ?>
+<?php // get_template_part('components/support/support-controller'); ?>

@@ -28,6 +28,8 @@ var _docs = require('./docs/docs');
     (0, _account.initAccount)($);
     (0, _docs.initDocs)($);
 
-    // onShopifyAuth($);
+    if (window.location.pathname === '/auth') {
+      (0, _security.onShopifyAuth)($);
+    }
   });
 })(jQuery);

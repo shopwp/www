@@ -20,7 +20,9 @@ import { initDocs } from './docs/docs';
     initAccount($);
     initDocs($);
 
-    // onShopifyAuth($);
+    if (window.location.pathname === '/auth') {
+      onShopifyAuth($);
+    }
 
   });
 

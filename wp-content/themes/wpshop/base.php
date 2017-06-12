@@ -16,10 +16,10 @@ use Roots\Sage\Wrapper;
     $stuff = '';
   }
 
-
   ?>
 
   <?php get_template_part('templates/head'); ?>
+
   <body <?php body_class('l-col'); ?> style="<?php echo $stuff; ?>">
 
     <!--[if IE]>
@@ -29,8 +29,10 @@ use Roots\Sage\Wrapper;
     <![endif]-->
 
     <?php
+
       do_action('get_header');
       get_template_part('templates/header');
+
     ?>
 
     <?php if (is_front_page()) { ?>
@@ -48,17 +50,7 @@ use Roots\Sage\Wrapper;
       <?php endif; ?>
 
 
-
-
       <main class="main l-col l-col-center l-fill">
-
-        <!-- <div class="msg msg-success animated fadeInDown"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Curabitur ullamcorper ultricies nisi. Donec vitae orci sed dolor rutrum auctor.</div>
-
-        <div class="msg msg-notice animated fadeInDown"><i class="fa fa-info-circle" aria-hidden="true"></i> Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero.</div>
-
-        <div class="msg msg-error animated fadeInDown"><i class="fa fa-times-circle-o" aria-hidden="true"></i> Non adipiscing dolor urna a orci. Mauris sollicitudin fermentum libero. Proin faucibus arcu quis ante.</div> -->
-
-
 
         <?php include Wrapper\template_path(); ?>
 
@@ -72,11 +64,17 @@ use Roots\Sage\Wrapper;
     </div>
 
     <?php
+
+
+
       do_action('get_footer');
 
-      get_template_part('templates/footer');
+      if (!is_page('auth')) {
+        get_template_part('templates/footer');
+      }
 
       wp_footer();
+
     ?>
 
   </body>
