@@ -1,0 +1,251 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.onShopifyAuth = undefined;
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+
+var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+/*
+
+Control center
+
+*/
+var onShopifyAuth = function () {
+  var _ref = (0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee($) {
+    var nonce;
+    return _regenerator2.default.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            console.log(1);
+            _context.next = 3;
+            return isValidHMAC($);
+
+          case 3:
+            console.log('Finished validating HMAC');
+            _context.next = 6;
+            return isValidHostname($);
+
+          case 6:
+            console.log('Finished validating Hostname');
+            _context.next = 9;
+            return isValidNonce($);
+
+          case 9:
+            nonce = _context.sent;
+
+            console.log('Finished validating nonce', nonce);
+            _context.next = 13;
+            return updateAuthDataWithCode($);
+
+          case 13:
+            console.log('Done');
+
+          case 14:
+          case 'end':
+            return _context.stop();
+        }
+      }
+    }, _callee, this);
+  }));
+
+  return function onShopifyAuth(_x) {
+    return _ref.apply(this, arguments);
+  };
+}();
+
+// console.log('Auth page');
+
+var _find = require('ramda/src/find');
+
+var _find2 = _interopRequireDefault(_find);
+
+var _propEq = require('ramda/src/propEq');
+
+var _propEq2 = _interopRequireDefault(_propEq);
+
+var _unionWith = require('ramda/src/unionWith');
+
+var _unionWith2 = _interopRequireDefault(_unionWith);
+
+var _eqProps = require('ramda/src/eqProps');
+
+var _eqProps2 = _interopRequireDefault(_eqProps);
+
+var _utils = require('../utils/utils');
+
+var _ws = require('../ws/ws');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*
+
+Checks if HMAC is valid
+
+*/
+function isValidHMAC($) {
+  console.log(2);
+  return new _promise2.default(function (resolve, reject) {
+
+    console.log(3, location.search);
+    console.log('get url params', _utils.getUrlParams);
+
+    var result = (0, _utils.getUrlParams)(location.search);
+    console.log(4, result);
+    var origHMAC = result.hmac;
+
+    var dataToVerify = {
+      code: result.code,
+      shop: result.shop,
+      state: result.state,
+      timestamp: result.timestamp
+    };
+
+    console.log("dataToVerify: ", dataToVerify);
+
+    var message = $.param(dataToVerify);
+    var secret = 'd73e5e7fa67a54ac25a9af8ff8df3814';
+    var finalDigest = crypto.createHmac('sha256', secret).update(message).digest('hex');
+
+    console.log("Final val: ", finalDigest);
+    console.log("Original hmac: ", origHMAC);
+
+    if (finalDigest === origHMAC) {
+      resolve("Valid HMAC");
+    } else {
+      reject("Invalid HMAC");
+    }
+  });
+};
+
+/*
+
+Check if hostname is valid
+
+*/
+function isValidHostname($) {
+
+  return new _promise2.default(function (resolve, reject) {
+
+    var result = (0, _utils.getUrlParams)(location.search);
+
+    console.log("result.shop: ", result.shop);
+
+    if (validator.isURL(result.shop)) {
+      resolve();
+    } else {
+      reject("Invalid Hostname");
+    }
+  });
+};
+
+/*
+
+Check if current nonce within the URL is valid. Checks
+against the stored nonce values in the database.
+
+*/
+function isValidNonce($) {
+
+  var url = (0, _utils.getUrlParams)(location.search),
+      nonce = url.state;
+
+  console.log("TESTING url: ", url);
+
+  return new _promise2.default(function (resolve, reject) {
+
+    (0, _ws.getStoredAuthData)().then(function (response) {
+
+      response = JSON.parse(response);
+
+      console.log("TESTING response: ", response);
+
+      var nonceMatches = (0, _find2.default)((0, _propEq2.default)('nonce', nonce))(response);
+
+      if (nonceMatches) {
+        resolve(response);
+      } else {
+        reject("Nonce not found, error111!");
+      }
+    });
+  });
+};
+
+/*
+
+Update the stored consumer entry with 'code'
+
+*/
+function updateAuthDataWithCode($) {
+
+  var ok = (0, _ws.getStoredAuthData)();
+
+  console.log("okok: ", ok);
+
+  ok.then(function (authData) {
+
+    console.log("authDataauthData: ", authData);
+
+    var url = (0, _utils.getUrlParams)(location.search);
+    var nonce = url.state;
+
+    var data = JSON.parse(authData);
+
+    console.log("url: ", url);
+    console.log("data: ", data);
+
+    // Finds the client which matches the nonce in the URL
+    var nonceMatch = (0, _find2.default)((0, _propEq2.default)('nonce', nonce))(data);
+
+    console.log("nonceMatch: ", nonceMatch);
+
+    if (nonceMatch.nonce === url.state) {
+      // Verified
+
+      nonceMatch.code = url.code;
+
+      var newnew = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
+
+      // window.location.href = newnew;
+
+      nonceMatch.code = url.code;
+      var finalRedirectURL = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
+
+      nonceMatch = [nonceMatch];
+
+      // Merging updated client with everything else
+      var newFinalList = (0, _unionWith2.default)((0, _eqProps2.default)('domain'), nonceMatch, data);
+
+      console.log("newFinalList: ", newFinalList);
+      console.log("nonceMatch", nonceMatch);
+      console.log("nonce", nonce);
+
+      // Saving client records to database
+      (0, _ws.saveAuthData)((0, _stringify2.default)(newFinalList)).then(function (resp) {
+
+        // At this point we've updated the authenticated consumer with the code
+        // value sent from Shopify. We can now query for this value from the
+        // consumer side.
+        console.log('Newly saved: ', resp);
+        console.log("finalRedirectURL", finalRedirectURL);
+        window.location = finalRedirectURL;
+      });
+    }
+  });
+};exports.onShopifyAuth = onShopifyAuth;

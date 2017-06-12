@@ -86,11 +86,16 @@ function isValidNonce($) {
   var url = getUrlParams(location.search),
       nonce = url.state;
 
+  console.log("TESTING url: ", url);
+
   return new Promise(function (resolve, reject) {
 
     getStoredAuthData().then(function(response) {
 
       response = JSON.parse(response);
+
+      console.log("TESTING response: ", response);
+
       var nonceMatches = find(propEq('nonce', nonce))(response);
 
       if(nonceMatches) {
