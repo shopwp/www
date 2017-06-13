@@ -123,10 +123,10 @@ function updateAuthDataWithCode($, authData) {
       var nonce = url.state;
 
       // Turn the JSON into JS object
-      var data = JSON.parse(authData);
+      // var authData = JSON.parse(authData);
 
       // Finds the client which matches the nonce in the URL
-      var nonceMatch = find(propEq('nonce', nonce))(data);
+      var nonceMatch = find(propEq('nonce', nonce))(authData);
 
       if(nonceMatch.nonce === url.state) {
 
@@ -144,7 +144,7 @@ function updateAuthDataWithCode($, authData) {
         nonceMatch = [nonceMatch];
 
         // Merging updated client with everything else
-        var updatedAuthenticatedSites = unionWith(eqProps('domain'), nonceMatch, data);
+        var updatedAuthenticatedSites = unionWith(eqProps('domain'), nonceMatch, authData);
 
         // Saving client records to database
         resolve({
