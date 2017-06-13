@@ -5,8 +5,6 @@ import {
 
 function initPlugins($) {
 
-console.log("$.validator: ", $);
-
   /*
 
   Animate
@@ -57,7 +55,6 @@ console.log("$.validator: ", $);
         year = parseInt($year.val(), 10);
 
     if( (!month || !year || year > minYear || (year === minYear && month >= minMonth)) ) {
-      console.log('Valid date');
 
       $month.attr("aria-invalid", false).addClass('valid');
       $year.attr("aria-invalid", false).addClass('valid');
@@ -70,7 +67,6 @@ console.log("$.validator: ", $);
       $month.attr("aria-invalid", true).removeClass('valid');
       $year.attr("aria-invalid", true).removeClass('valid');
 
-      console.log('invalid date');
       return false;
 
     }

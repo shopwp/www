@@ -14,7 +14,6 @@ function validateMailingListForm($) {
 
     submitHandler: function(form, e) {
 
-      console.log('hi');
       e.preventDefault();
 
       $(form).addClass('is-submitting');
@@ -24,7 +23,6 @@ function validateMailingListForm($) {
       getMailchimpListById($)
         .done(function(data) {
 
-          console.log("data: ", data.message.detail);
           $(form).find('input').prop("disabled", false);
           $('#mailinglist-email').focus().select();
 
@@ -36,7 +34,6 @@ function validateMailingListForm($) {
             $(form).removeClass('is-submitting');
 
           } else {
-            console.log('Success, time to hide stuff');
 
             $(form).removeClass('is-submitting');
             $(form).find('.spinner').removeClass('is-visible');
@@ -52,8 +49,6 @@ function validateMailingListForm($) {
 
           $(form).find('.form-error').addClass('is-visible');
           $(form).find('#mailinglist-email-error').append('Error! ' + textStatus);
-
-          console.log("Failed with: ", jqXHR);
 
           $(form).find('.spinner').removeClass('is-visible');
           $(form).find('input').removeClass('is-disabled');
@@ -104,5 +99,3 @@ function initMailinglist($) {
 }
 
 export { initMailinglist }
-
-// console.log("d:", $("#mailinglist-form"));

@@ -7,7 +7,7 @@ Returns: Object
 
 */
 function getUrlParams(url) {
-  console.log('hi');
+
   var urlParams = {};
 
   url.replace(
@@ -48,10 +48,10 @@ Disable Form
 
 */
 function disableForm($form) {
-  console.log(1);
+
   $form.find('input, select, textarea, label, label + span, .form-note').addClass('is-disabled');
   $form.addClass('is-submitting');
-  console.log(2);
+
 }
 
 
@@ -61,10 +61,10 @@ Enable Form
 
 */
 function enableForm($form) {
-  console.log(3);
+
   $form.find('input, select, textarea, label, label + span, .form-note').removeClass('is-disabled');
   $form.removeClass('is-submitting');
-  console.log(4);
+
 }
 
 
@@ -160,15 +160,17 @@ function reduceFormData($form) {
 Reduces form data to a single object
 
 */
-function insertMessage(msg, type) {
+function insertMessage(msg, type, oneway = false) {
 
   jQuery('body').append('<div class="msg msg-' + type + ' animated fadeInDown">' + msg + '</div>');
 
-  setTimeout(function() {
-    jQuery('body > .msg.animated').removeClass('fadeInDown').animateCss('fadeOutUp', function() {
-      jQuery('body > .msg.animated').remove();
-    });
-  }, 3700);
+  if (!oneway) {
+    setTimeout(function() {
+      jQuery('body > .msg.animated').removeClass('fadeInDown').animateCss('fadeOutUp', function() {
+        jQuery('body > .msg.animated').remove();
+      });
+    }, 3700);
+  }
 
 }
 

@@ -160,13 +160,9 @@ function initForgotPasswordForm($) {
       disableForm($form);
 
       var formData = reduceFormData($form);
-
-      console.log("formData: ", formData);
-
       var email = await forgotPassword(formData);
 
       enableForm($form);
-      console.log('HI after', email);
 
       if (email) {
         insertMessage('An email as been sent! Please click the link to finish the password reset process.', 'success');
@@ -233,13 +229,7 @@ function initResetPasswordForm($) {
       disableForm($form);
 
       var formData = reduceFormData($form);
-
-      console.log("formData: ", formData);
-
       var passwordReset = await resetPassword(formData);
-
-
-      console.log('passwordReset: ', passwordReset);
 
       if (passwordReset) {
         // insertMessage('Success! Your password has been reset.', 'success');

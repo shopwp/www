@@ -69,7 +69,7 @@
   <div class="l-contain l-col l-col-center l-row-center logo-header-auth-wrapper">
     <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header-auth">
     <h1>Authenticating</h1>
-    <p>Please wait ...</p>
+    <p class="auth-notifying">Please wait ...</p>
     <div class="spinner is-visible"></div>
   </div>
 

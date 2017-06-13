@@ -44,9 +44,7 @@ function onAccountCatClick($) {
 
       var stuff = await getAccountCat( $element.data('account-cat') );
 
-      console.log("stuffstuffstuff: ", stuff);
       $('.content').html($(stuff));
-      // console.log('account-cat: ', $(this).data('account-cat'));
 
     });
 
@@ -127,9 +125,7 @@ function onProfileChange($) {
 
       disableForm($form);
 
-      console.log('before', reduceFormData($form));
       var emailUpdated = await updateAccountProfile( reduceFormData($form) );
-      console.log('afterrrr', emailUpdated);
 
       enableForm($form);
 
@@ -203,9 +199,7 @@ function onPasswordChange($) {
 
       disableForm($form);
 
-      console.log('before', reduceFormData($form));
       var passUpdated = await updateAccountPassword( reduceFormData($form) );
-      console.log('after passUpdated', passUpdated);
 
       if (!passUpdated) {
         insertMessage('Error updating password, please try again', 'error');
@@ -230,7 +224,6 @@ function onPasswordChange($) {
 function showUpgrades($) {
   $('.account-view-upgrades').on('click', function(e) {
     e.preventDefault();
-    console.log('lieeee');
 
     $('#edd_sl_license_upgrades').toggleClass('is-hidden');
 
@@ -245,6 +238,7 @@ Init Account
 
 */
 function initAccount($) {
+  
   onAccountCatClick($);
   onProfileChange($);
   onPasswordChange($);
@@ -255,9 +249,6 @@ function initAccount($) {
   var $inlineKeyNotice = jQuery('#license-key + .notice-inline');
 
   clipboard.on('success', function(e) {
-    console.info('Action:', e.action);
-    console.info('Text:', e.text);
-    console.info('Trigger:', e.trigger);
 
     $inlineKeyNotice.addClass('is-notifying');
 
@@ -272,11 +263,8 @@ function initAccount($) {
   });
 
   clipboard.on('error', function(e) {
-    console.error('Action:', e.action);
-    console.error('Trigger:', e.trigger);
+
   });
-
-
 
 }
 

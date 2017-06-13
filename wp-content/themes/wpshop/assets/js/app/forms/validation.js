@@ -9,7 +9,6 @@ updateLoginHeight
 function updateLoginHeight($element, $) {
 
   if($element.attr('name') === 'edd_email') {
-    console.log('yep changing name');
     var height = $('#edd_checkout_user_info').height();
     $('.wps-checkout-login-container').height(height);
   }
@@ -48,14 +47,10 @@ onInputAddError
 */
 function onInputAddError(element) {
 
-  console.log('Adding input error ...', element);
-
   toggleHalfWidthErrorClasses( jQuery(element) );
 
   removeValidIcon(jQuery(element));
   removeValidClass(jQuery(element));
-
-  console.log('Finished adding input error.');
 
   // updateLoginHeight($(element), $);
   // validate.showErrors();
@@ -191,10 +186,8 @@ var onInputRemoveError = debounce(function(element) {
   if( !isReadOnly(element) ) {
 
     if(jQuery(element).attr('name') === 'edd_email') {
-      console.log('aaaaaaaa');
 
       if(!jQuery(element).parent().find('label.error').is(':visible') && !jQuery(element).hasClass('error')) {
-        console.log('bbbbbbbb');
 
         removeValidIcon(jQuery(element));
         hideInputError(jQuery(element));
@@ -202,7 +195,6 @@ var onInputRemoveError = debounce(function(element) {
         addValidInputClass(jQuery(element));
 
       } else {
-        console.log('cccccccc');
         // console.log('NOT valid');
 
       }
@@ -218,7 +210,6 @@ var onInputRemoveError = debounce(function(element) {
         addValidInputClass(jQuery(element));
 
       } else {
-        console.log('ffffffff');
         // console.log('NOT valid');
         // $(element)[0].setCustomValidity('Invalid');
       }
@@ -240,19 +231,16 @@ function ifAriaValuesPass() {
   var $requiredFields = jQuery("#edd_purchase_form input.required, #edd_purchase_form select.required");
   var valid = true;
 
-  console.log("Checking if Aria values are valid ...");
-
   jQuery.each($requiredFields, function() {
 
     if ( jQuery(this).attr('aria-invalid') === 'true') {
-      console.log('Aria value NOT valid: ', jQuery(this));
       valid = false;
       return;
 
     } else {
-      console.log('Aria value valid :)');
 
     }
+
   });
 
   return valid;
@@ -281,9 +269,6 @@ function hasRemainingRequiredFields($) {
 
   var $requiredFields = $("#edd_purchase_form input.required, #edd_purchase_form select.required");
   var $remainingRequiredFields = findInputsWithoutValues($requiredFields);
-
-  console.log("Total Required Fields: ", $requiredFields.length);
-  console.log("Total Remaining Required Fields: ", $remainingRequiredFields.length);
 
   return $remainingRequiredFields.length ? true : false;
 
@@ -343,11 +328,9 @@ showInvalidFormNotice
 function showInvalidFormNotice($form) {
 
   if($form.next().length > 0) {
-    console.log('Form note already exists, just showing.');
     $form.next('.form-note').show();
 
   } else {
-    console.log('Form note doesnt already exist, creating.');
     $form.after('<p class="form-note">Please fill out remaining required fields</p>');
   }
 
@@ -429,11 +412,8 @@ Runs everytime jQuery validate fires (keyup, blur, change) debounced by 300ms
 
 */
 function checkFields(validate, $form, $) {
-  console.log('Checking');
 
   if( formContainsErrors(validate) ) {
-
-    console.log("Stuff still contains errors");
 
     // disableFormSubmit(validate, $form, $);
     showInvalidFormNotice($form);
@@ -442,8 +422,6 @@ function checkFields(validate, $form, $) {
   } else {
 
     if( hasRemainingRequiredFields($) ) {
-
-      console.log("!! Stuff has remaining required fields");
       // disableFormSubmit(validate, $form, $);
       toggleInvalidFormNotes($form, $);
 
@@ -460,15 +438,11 @@ function checkFields(validate, $form, $) {
 
       if( ifAriaValuesPass() ) {
 
-        console.log("Stuff valid, ready to checkout!");
-
         enableFormSubmit($form);
         hideFormNote($form);
         removeInvalidFormNotes($form);
 
       } else {
-
-        console.log("Stuff still invalid");
         toggleInvalidFormNotes($form, $);
 
       }

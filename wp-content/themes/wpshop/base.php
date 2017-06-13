@@ -49,7 +49,6 @@ use Roots\Sage\Wrapper;
         </aside>
       <?php endif; ?>
 
-
       <main class="main l-col l-col-center l-fill">
 
         <?php include Wrapper\template_path(); ?>
@@ -64,8 +63,6 @@ use Roots\Sage\Wrapper;
     </div>
 
     <?php
-
-
 
       do_action('get_footer');
 

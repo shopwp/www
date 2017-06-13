@@ -1,7 +1,0 @@
-'use strict';
-
-require('../../css/app/app.scss');
-
-if (module.hot) {
-  module.hot.accept();
-}

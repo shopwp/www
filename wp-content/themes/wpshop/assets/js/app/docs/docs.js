@@ -18,26 +18,22 @@ function onDocClick($) {
 
   $('.doc-term').on('click', function(e) {
 
-    console.log('clicked', $(this).text());
     var $doc = $(this);
-    console.log('$doc: ', $doc);
+
 
     Pace.restart();
     Pace.track(async function() {
 
-      console.log('inside stop');
 
       var data = await getDoc( $doc.data('doc-id') );
 
       data = JSON.parse(data);
 
-      console.log("data.content: ", $doc.data('doc-id').toString());
       showDocContent(data.content);
 
       var url = "/docs/" + data.slug;
 
       window.history.pushState("object or string", "Title", url);
-
 
 
       DISQUS.reset({
@@ -67,7 +63,7 @@ function showDocContent(docContent) {
   jQuery('.entry-content').after( jQuery('<div id="disqus_thread"></div>') );
 
   Prism.highlightAll(true, function() {
-    console.log('Doneeeeeeeeeee highlighting');
+
   });
 
 }
@@ -83,6 +79,3 @@ function initDocs($) {
 }
 
 export { initDocs }
-
-// console.log("Docs page");
-// initDocs();

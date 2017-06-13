@@ -117,11 +117,9 @@ Removing Billing Inputs
 */
 function removeBillingInputs($) {
 
-  console.log('Removing Billing Inputs ...');
   $('#edd_cc_fields').remove();
   $('#edd_cc_address').remove();
   $('#edd_purchase_submit').remove();
-  console.log('Done Removing Billing Inputs');
 
 }
 
@@ -138,7 +136,6 @@ function onCheckoutLogin($) {
 
   $('#edd_checkout_user_info').on('click', '.wps-welcome-link', function(e) {
 
-    console.log('hi');
     e.preventDefault();
 
     $registerForm.hide();
@@ -177,7 +174,6 @@ function onCheckoutRegister($) {
 
   $('#edd_login_fields').on('click', '.wps-welcome-link', function(e) {
 
-    console.log('hey');
     e.preventDefault();
 
     $registerForm.show();
@@ -211,11 +207,9 @@ function setScrollScene($) {
 
   })
   .on('enter', function () {
-    console.log('Sticky nav enabled');
     $("#edd_checkout_cart_form_header").addClass('is-stuck');
   })
   .on('leave', function () {
-    console.log('Sticky nav removed');
     $("#edd_checkout_cart_form_header").removeClass('is-stuck');
   });
 
@@ -280,11 +274,9 @@ Is Form Valid
 function isFormValid(valid) {
 
   if(valid) {
-    console.log("final - valid");
     $('#edd-purchase-button').prop('disabled', false);
 
   } else {
-    console.log("final - not valid");
     $('#edd-purchase-button').prop('disabled', true);
 
   }
@@ -330,13 +322,11 @@ function toggleCheckoutFormStateDuringSubmit($) {
       var errortest = $button.closest('form').find("#edd-email-error").is(':visible');
 
       if ($errorContainer.length || errortest) {
-        console.log('here');
         enableForm( $button.closest('form') );
         hideLoader( $button.closest('form') );;
         clearInterval(loop);
 
       } else {
-        console.log('sfssdfhere');
         disableForm( $button.closest('form') );
         showLoader( $button.closest('form') );
       }
@@ -379,7 +369,7 @@ function onForgotPassBack($) {
   $('#form-forgot-pass .wps-welcome-link').on('click', function(e) {
 
     e.preventDefault();
-    console.log('hi');
+
     var $element = $(this);
     var $parentForm = $element.closest('form');
 
@@ -469,10 +459,7 @@ On Country Change
 */
 function onCountryChange($) {
   $('#billing_country').on('change', function() {
-
-    console.log('Country changed');
     removeValidFromStateProvince($);
-
   });
 }
 
@@ -484,7 +471,6 @@ Used when country changes
 
 */
 function removeValidFromStateProvince($) {
-  console.log("$: ", $('#edd-card-state-wrap .is-valid'));
   $('#edd-card-state-wrap .is-valid').remove();
   $('#card_state').removeClass('valid');
 
@@ -492,11 +478,11 @@ function removeValidFromStateProvince($) {
 
 
 function onStateChange($) {
-  console.log('on state change');
+
   $('#card_state, .card-state').on('change', function() {
-    console.log('State changed', $(this).closest('form').valid());
+
   });
-  console.log('after state change');
+
 }
 
 
@@ -508,10 +494,7 @@ Simple scroll to error on checkout error
 function onCheckoutError($) {
 
   if(getUrlParams(location.search)['payment-mode'] === 'stripe') {
-    console.log('lets go');
-
     $('html, body').animate({scrollTop:$(document).height()}, 1500);
-
   }
 
 }
