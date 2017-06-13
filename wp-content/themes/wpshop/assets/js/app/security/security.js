@@ -120,32 +120,38 @@ function updateAuthDataWithCode($, authData) {
       reject('Error: Nonce not available. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
 
     } else {
+
       var nonce = url.state;
 
       // Turn the JSON into JS object
       // var authData = JSON.parse(authData);
 
+      console.log("authData: ", authData);
+
       // Finds the client which matches the nonce in the URL
       var nonceMatch = find(propEq('nonce', nonce))(authData);
 
-      if(nonceMatch.nonce === url.state) {
+      console.log("nonceMatch: ", nonceMatch);
 
+      if(nonceMatch.nonce === url.state) {
+        console.log(1);
         // Verified
         nonceMatch.code = url.code;
-
+console.log(2);
         var newnew = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
-
+console.log(3);
         // window.location.href = newnew;
 
         nonceMatch.code = url.code;
+console.log(4);
         var finalRedirectURL = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
-
+console.log(5);
         // Conver to array so we can operate
         nonceMatch = [nonceMatch];
-
+console.log(6);
         // Merging updated client with everything else
         var updatedAuthenticatedSites = unionWith(eqProps('domain'), nonceMatch, authData);
-
+console.log(7);        
         // Saving client records to database
         resolve({
           finalRedirectURL: finalRedirectURL,
