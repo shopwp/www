@@ -1,3 +1,4 @@
+var edd_recurring_vars;
 jQuery(document).ready(function($) {
 
 	/**
@@ -428,8 +429,15 @@ jQuery(document).ready(function($) {
 				}
 
 				checkout_modal_shown = true;
-
+				
 				var amount = $('.edd_cart_total .edd_cart_amount').data('total');
+
+				if ( typeof edd_recurring_vars !== 'undefined' ) {
+					if( edd_recurring_vars.has_trial && edd_recurring_vars.total_plain ) {
+						amount = edd_recurring_vars.total_plain;
+					}
+				}
+		
 				if( 'true' != edd_stripe_vars.is_zero_decimal ) {
 					amount *= 100;
 					amount = Math.round( amount );
