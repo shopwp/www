@@ -11,6 +11,7 @@ EDD
   vertical-align: top;
   border-radius: 10px;
   margin-top: 0;
+  border: 1px solid color(medium-grey);
 
   th,
   td {
@@ -33,7 +34,12 @@ EDD
 #edd_checkout_cart,
 #edd_sl_license_keys,
 .edd-table {
-  @include shadow();
+  // @include shadow();
+  border: 1px solid color(medium-grey);
+}
+
+#edd_sl_license_keys {
+  border-top: 0;
 }
 
 #edd_checkout_cart {
@@ -47,6 +53,7 @@ EDD
 }
 
 .edd_form {
+
   label {
     margin-bottom: $space-s;
     display: block;
@@ -154,9 +161,9 @@ EDD
   text-transform: capitalize;
 }
 
-// .edd_sl_license_row td {
-//   padding-bottom: $space-m;
-// }
+#edd_sl_license_keys2 .edd_sl_license_row td {
+  padding-bottom: 0;
+}
 
 
 
@@ -278,12 +285,17 @@ EDD
       padding: $space-l;
 
       &:hover {
-        @include grow();
+        // @include grow();
       }
 
     }
 
   }
+
+  .edd-variable-pricing-desc {
+    display: none;
+  }
+
 }
 
 .edd_price_option_price {
@@ -305,6 +317,7 @@ EDD
   text-align: center;
   font-size: 22px;
   font-weight: bold;
+  margin-top: 0;
 }
 
 .edd_downloads_list {
@@ -315,7 +328,7 @@ EDD
 .edd_cart_total {
   text-align: center;
   font-size: $font-xl;
-  border-top: 1px solid color(light-grey);
+  border-top: 1px solid color(medium-grey);
 }
 
 #edd_checkout_cart_form {
@@ -978,4 +991,43 @@ Gravity Forms
 
 #dsq-content {
   display: none;
+}
+
+
+.edd_purchase_receipt_files .edd_download_file_link {
+  margin-top: 0;
+}
+
+
+
+
+#edd_purchase_receipt {
+
+  .edd_license_key {
+    padding-bottom: 2em;
+
+    .edd_sl_license_key {
+      padding: 10px 20px;
+      background: #f4f4f4;
+      border-radius: 5px;
+    }
+
+  }
+
+  tr:last-of-type td {
+    padding-bottom: 2em;
+  }
+
+}
+
+
+#edd_purchase_receipt_products {
+  tr:last-of-type td {
+    padding-bottom: 0;
+  }
+}
+
+
+#edd_sl_license_keys .edd_sl_license_row .edd_sl_type {
+  width: 330px;
 }

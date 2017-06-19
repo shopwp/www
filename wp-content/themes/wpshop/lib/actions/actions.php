@@ -418,4 +418,23 @@ add_action( 'login_form_resetpass', 'wps_redirect_to_custom_password_reset' );
 
 
 
+
+remove_action( 'edd_purchase_history_header_after', 'edd_sl_add_key_column', 10, 2 );
+remove_action( 'edd_purchase_history_row_end', 'edd_sl_site_management_links', 10, 2 );
+
+
+
+
+
+
+add_action('edd_after_download_history', function() {
+  echo '<small>(Latest Version)</small>';
+}, 10, 2);
+
+
+
+
+
+
+
 ?>

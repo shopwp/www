@@ -25,3 +25,52 @@
   background: color(notice-xlight);
   padding: $space-s $space-l;
 }
+
+
+
+
+
+
+.is-angled-up {
+
+  &:after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+    position: absolute;
+    border-top: $angle-width solid color(offwhite);
+    border-left: 0vw solid transparent;
+    border-right: 50vw solid transparent;
+  }
+
+  &:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    top: 0;
+    right: 0;
+    position: absolute;
+    border-top: $angle-width solid color(offwhite);
+    border-left: 50vw solid transparent;
+    border-right: 0vw solid transparent;
+  }
+
+  @include device(800, 'max') {
+    &:after,
+    &:before {
+      border-top: $angle-width-narrow solid color(offwhite);
+    }
+  }
+
+  @include device(500, 'max') {
+    &:after,
+    &:before {
+      border-top: calc(#{$angle-width} / 3) solid color(offwhite);
+    }
+  }
+
+}

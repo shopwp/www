@@ -49,6 +49,7 @@
 
 .component-account-heading {
   margin-bottom: $space-xs;
+  font-weight: bold;
 
   .fa {
     font-size: $font-s;
@@ -57,4 +58,8 @@
     top: -1px;
   }
 
+}
+
+.edd_download_history_row .edd_download_file_link {
+  margin-top: 0;
 }

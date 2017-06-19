@@ -1,10 +1,10 @@
 .header {
-  margin: 0 0 $space-xl 0;
+  margin: $space-m 0 $space-xl 0;
   padding: $space-xxs 0;
   background: color(white);
   // box-shadow: 0 18px 17px -23px rgba(0,0,0,.2);
 
-  @include shadow();
+  // @include shadow();
 
   .btn {
     margin-top: 0;
@@ -14,15 +14,16 @@
 .page-header {
   // margin-top: $space-xl;
   margin: $space-xl 0 $space-m 0;
-  padding-bottom: $space-xs;
-
+  padding-bottom: $space-s;
+  text-align: center;
+  
   &:after {
     content: '';
-    margin: $space-s auto 0 auto;
+    margin: $space-l auto 0 auto;
     display: block;
     height: 1px;
     width: 100px;
-    background-color: color(dark-grey);
+    background-color: color(medium-grey);
   }
 
   .has-icon {
@@ -109,7 +110,7 @@
   text-align: center;
   position: relative;
   margin-top: 4em;
-  
+
   .spinner {
     bottom: -75px;
   }

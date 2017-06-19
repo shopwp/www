@@ -3,7 +3,8 @@
 a.button.edd-slg-social-unlink-profile,
 .edd_download_file_link,
 .edd_submit,
-.search-submit {
+.search-submit,
+.menu-item-back a {
   padding: calc(#{$space-m} - 3px) calc(#{$space-xl} - 3px);
   color: color(white);
   background-color: color(primary);
@@ -82,6 +83,7 @@ a.button.edd-slg-social-unlink-profile,
 
 }
 
+.menu-item-back a,
 .edd_download_file_link,
 .btn-secondary {
   background-color: color(secondary);
@@ -107,6 +109,8 @@ a.button.edd-slg-social-unlink-profile,
   font-size: $font-l;
 }
 
+
+.menu-item-back a,
 .btn-s,
 a.button.edd-slg-social-unlink-profile {
   font-size: $font-s;

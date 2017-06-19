@@ -14,7 +14,7 @@ body {
   font-family: $font-primary;
   color: color(base);
   -webkit-backface-visibility: hidden;
-  background-color: color(offwhite);
+  background-color: color(white);
 
   * + * {
     margin-top: 1.5rem;

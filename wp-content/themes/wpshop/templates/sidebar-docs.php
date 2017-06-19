@@ -26,7 +26,14 @@
     <li class="doc-cat"><?php echo $term->name; ?></li>
 
     <ul class="doc-terms">
-      <?php foreach ($posts_array as $key => $value) { ?>
+      <?php foreach ($posts_array as $key => $value) {
+
+
+        error_log('DOC');
+        error_log(print_r($value, true));
+
+
+        ?>
         <li class="doc-term" data-doc-id="<?php echo $value->ID; ?>"><?php echo $value->post_title; ?></li>
       <?php } ?>
     </ul>

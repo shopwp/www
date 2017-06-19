@@ -4,13 +4,13 @@
 
 .snippet-heading {
   font-size: $font-xl*2;
-  font-weight: normal;
-  text-align: center;
+  font-weight: bold;
 
 }
 
 .snippet-image {
-  max-width: 450px;
+  width: 400px;
+  height: auto;
   padding-bottom: 0;
   text-align: center;
   margin: 0 auto;
@@ -18,7 +18,8 @@
 
 .snippet-content {
   padding-top: 0;
-  width: 80%;
+  width: 60%;
+  margin-left: 3em;
 }
 
 .snippet-copy {
@@ -27,4 +28,22 @@
 
 .snippet {
   margin-bottom: 3em;
+  width: 90%;
+  margin: $space-xxl auto;
+
+  &:after {
+    content: '';
+    width: 200px;
+    height: 1px;
+    background-color: color(medium-grey);
+    display: block;
+    margin: $space-xxl auto;
+  }
+
+  &:last-of-type {
+    &:after {
+      display: none;
+    }
+  }
+
 }

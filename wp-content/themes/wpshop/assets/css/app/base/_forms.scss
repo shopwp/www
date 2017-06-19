@@ -15,7 +15,7 @@
   // }
 
   a {
-    color: color(base);
+    color: color(primary);
   }
 
   .description {
@@ -78,13 +78,13 @@
 .is-focused {
 
   .form-label {
-    font-size: 18px;
     opacity: 1;
     left: -50px;
     top: -50px;
-    color: color(base);
+    color: color(white);
     padding: 10px 15px;
     border-radius: 5px;
+    font-weight: 100;
 
     @include device(800, 'max') {
       left: -10px;
@@ -95,6 +95,7 @@
     &:hover {
       cursor: text;
     }
+    
   }
 
   .form-input {
@@ -118,6 +119,8 @@ select {
   background: color(white);
   color: color(base);
   margin-top: 0;
+  border: 1px solid color(medium-grey);
+  font-weight: normal;
 
   &:focus {
     outline: none;
@@ -479,14 +482,16 @@ select {
 #edd_sl_license_keys2 {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  border-bottom: 0;
 }
 
 #edd_sl_license_keys {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  border-top: 0;
 
-  thead th {
-    padding-top: 0;
-  }
+  // thead th {
+  //   padding-top: 0;
+  // }
 
 }

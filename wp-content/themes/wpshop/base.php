@@ -11,7 +11,7 @@ use Roots\Sage\Wrapper;
   <?php
 
   if (is_front_page()) {
-    $stuff = "background-image: url('" . get_template_directory_uri() . "/assets/prod/imgs/bg-stuff.png')";
+    $stuff = "background-image: url('" . get_template_directory_uri() . "/assets/prod/imgs/bg-stuff-2.png')";
   } else {
     $stuff = '';
   }
@@ -49,7 +49,7 @@ use Roots\Sage\Wrapper;
         </aside>
       <?php endif; ?>
 
-      <main class="main l-col l-col-center l-fill">
+      <main class="main">
 
         <?php include Wrapper\template_path(); ?>
 
@@ -57,10 +57,11 @@ use Roots\Sage\Wrapper;
           get_template_part('templates/docs');
         } ?>
 
-        <?php get_template_part('templates/components'); ?>
       </main>
 
     </div>
+
+    <?php get_template_part('templates/components'); ?>
 
     <?php
 

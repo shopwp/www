@@ -4,7 +4,7 @@
 }
 
 .menu-item {
-  margin: 0 $space-m;
+  margin: 0;
   display: flex;
   align-items: center;
 
@@ -15,6 +15,7 @@
     font-size: $font-m;
     letter-spacing: 0.04em;
     color: color(base);
+    padding:  $space-m;
   }
 }
 

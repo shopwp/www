@@ -35,6 +35,9 @@ function onDocClick($) {
 
       window.history.pushState("object or string", "Title", url);
 
+      jQuery('html, body').animate({
+        scrollTop: jQuery('.main').offset().top - 150
+      }, 200);
 
       DISQUS.reset({
         reload: true,

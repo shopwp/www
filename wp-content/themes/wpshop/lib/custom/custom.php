@@ -269,11 +269,6 @@ function wps_check_current_pass_valid($passCurrent, $userID) {
 
 
 
-
-
-
-
-
 /*
 
 Reset user's pass

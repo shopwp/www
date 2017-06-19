@@ -25,3 +25,7 @@
     @include dim($opacity-hard);
   }
 }
+
+.docs-list-parameters {
+  list-style: none;
+}

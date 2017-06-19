@@ -1,11 +1,25 @@
 .footer {
   text-align: center;
-  padding: $space-xl*6 0 $space-l 0;
-  position: relative;
   font-size: $font-s;
-  background: color(offwhite);
+  margin-top: 0;
+  
+  @include device(800, 'max') {
 
-  @include device(800, 'max') {}
+  }
+
+}
+
+.footer-wrapper {
+  padding: $space-xxl*2 0 $space-xl*2 0;
+  position: relative;
+  background: color(dark-grey);
+  margin: 0;
+  color: color(white);
+
+  .menu-item a {
+    color: color(white);
+  }
+
 }
 
 .footer-social-link {
@@ -13,7 +27,7 @@
   padding: 0 $space-xxxs;
   text-decoration: none;
   border: none;
-  color: color(base);
+  color: color(white);
 
   &:hover {
     @include dim($opacity-soft);
@@ -22,4 +36,24 @@
 
 .footer-attr {
   margin-top: $space-xxs;
+  text-transform: uppercase;
+}
+
+.footer-social-links {
+  position: relative;
+  margin-top: $space-xxl*2;
+
+  &:before {
+    content: '';
+    width: 160px;
+    height: 60px;
+    bottom: 45px;
+    left: calc(50% - 80px);
+    position: absolute;
+    background: url('../../imgs/wave-shape.svg');
+    background-size: contain;
+    background-position: 50% 50%;
+    opacity: $opacity-hard;
+  }
+
 }

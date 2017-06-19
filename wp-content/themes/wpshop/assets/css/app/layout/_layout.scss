@@ -29,6 +29,7 @@
 
 
 .docs-template-default {
+
   .docs {
     width: 100%;
   }
@@ -58,14 +59,12 @@
     }
   }
 
-
   h2 {
     border-bottom: 1px solid color(medium-grey);
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     margin-bottom: 20px;
-    font-size: $font-xl;
+    font-size: $font-xxl;
   }
-
 
   p + h1,
   p + h2,

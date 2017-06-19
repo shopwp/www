@@ -1,6 +1,11 @@
 .search-form {
   margin-top: $space-xl*2;
   text-align: center;
+
+  .screen-reader-text {
+    display: none;
+  }
+
 }
 
 .search-submit {

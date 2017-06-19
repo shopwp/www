@@ -1,7 +1,8 @@
 .sidebar {
-  margin-right: $space-xxl;
+  margin-right: $space-xxl*2;
   margin-top: $space-m;
   width: 400px;
+
 }
 
 .sidebar-inner {
@@ -11,9 +12,10 @@
   width: inherit;
   list-style: none;
   margin: 0;
+  border: 1px solid color(medium-grey);
 
-  @include shadow();
-  
+  // @include shadow();
+
 }
 
 .sidebar-account {
