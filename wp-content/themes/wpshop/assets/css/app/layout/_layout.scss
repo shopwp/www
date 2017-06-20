@@ -57,6 +57,12 @@
       margin-left: 2em;
       margin-bottom: 1em;
     }
+
+    .btn {
+      float: right;
+      margin: $space-xxl 0 $space-xxl*3 0;
+    }
+
   }
 
   h2 {
@@ -93,4 +99,85 @@
   margin-top: 0;
   position: relative;
   top: -10px;
+}
+
+
+.error404 {
+  .alert {
+    max-width: $container-width-narrow;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+
+#edd_price_option_35_singlesite {
+  &:before {
+    content: 'Personal';
+    display: block;
+  }
+}
+
+#edd_price_option_35_2-5sites {
+  &:before {
+    content: 'Developer';
+    display: block;
+  }
+}
+
+#edd_price_option_35_unlimited {
+  &:before {
+    content: 'Agency';
+    display: block;
+  }
+}
+
+
+.edd_price_options {
+
+  li[itemprop="offers"] {
+    position: relative;
+
+    &.is-valid {
+      &:after {
+        top: 9px;
+        left: 15px;
+        opacity: 1;
+        width: 35px;
+        height: 35px;
+        background: url('../../imgs/icon-check-white.svg');
+      }
+    }
+
+    &:before {
+      text-align: center;
+      font-size: $font-xl;
+
+      background: color(offwhite);
+      margin-top: -1em;
+      width: calc(100% + 2em);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      margin-left: -1em;
+      padding: 10px 0;
+
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    label {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .edd_price_option_35,
+    input[type="radio"] {
+      visibility: hidden;
+    }
+
+  }
+
 }

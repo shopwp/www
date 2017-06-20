@@ -1,9 +1,10 @@
 .component-mailinglist {
-  background-color: color(secondary);
-  padding: 3em 1em 1em;
-  border-radius: 5px;
+  background: color(secondary-light);
+  padding: $space-l*3.5 0;
   position: relative;
-  color: color(white);
+  color: color(base);
+  background-size: 35%;
+  background-image: url('../../imgs/bg-stuff-2.png');
 
   .form-label {
     color: color(base);
@@ -13,7 +14,7 @@
 
   .is-focused {
     .form-label {
-      color: color(white);
+      color: color(base);
     }
   }
 
@@ -38,8 +39,8 @@
 }
 
 .mailinglist-heading {
-  color: color(white);
   margin-bottom: 0;
+  color: color(base);
 
   @include device(600, 'max') {
     font-size: $font-xxxl;
@@ -54,6 +55,7 @@
 .mailinglist-copy {
   margin-top: $space-xxxs;
   text-align: center;
+  color: color(base);
 
   @include device(400, 'max') {
     font-size: 1em;

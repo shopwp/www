@@ -31,8 +31,9 @@
 }
 
 .l-contain {
-  width: $container-width;
+  // width: $container-width;
   max-width: $max-width;
+  width: 100%;
   margin: 0 auto;
 
   @include device(1200, 'max') {

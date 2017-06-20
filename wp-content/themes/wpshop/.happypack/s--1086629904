@@ -299,6 +299,20 @@ function initMessages($) {
   }
 }
 
+function initPurchaseForm() {
+
+  jQuery('.edd_price_options li:first-of-type').addClass('is-highlighted is-valid');
+
+  jQuery('.edd_price_options li').on('click', function () {
+
+    jQuery('.edd_price_option_35').prop('checked', false);
+    jQuery('.edd_price_options li').removeClass('is-highlighted is-valid');
+
+    jQuery(this).addClass('is-highlighted is-valid');
+    jQuery(this).find('.edd_price_option_35').prop('checked', true);
+  });
+}
+
 function initForms($) {
   animateLabel($);
   addPlaceholders($);
@@ -308,6 +322,7 @@ function initForms($) {
   initForgotPasswordForm($);
   initResetPasswordForm($);
   initMessages($);
+  initPurchaseForm();
 }
 
 exports.initForms = initForms;

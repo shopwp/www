@@ -13,7 +13,8 @@
       <?php wp_nonce_field('mailinglist_signup'); ?>
 
       <div class="btn-group l-row-center">
-        <button class="btn form-btn" type="submit" title="Sign up" value="Sign up" />Sign me up</button>
+        <button class="btn btn-secondary form-btn" type="submit" title="Sign up" value="Sign up" />
+        <i class="fa fa-envelope" aria-hidden="true"></i> Sign me up</button>
         <div class="btn-bg"></div>
       </div>
 

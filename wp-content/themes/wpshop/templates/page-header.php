@@ -3,7 +3,7 @@
 
 <?php
 
-if(is_page('Purchase Confirmation')) {
+if(is_page('purchase-confirmation')) {
 
   if ( is_user_logged_in() ) {
 
@@ -34,7 +34,7 @@ if(is_page('Purchase Confirmation')) {
         <?= Titles\title(); ?>
       </h1>
 
-    <?php } else if(is_page('Purchase Confirmation')) { ?>
+    <?php } else if(is_page('purchase-confirmation')) { ?>
       <h1 class="has-icon">
         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/prod/imgs/icon-check.svg" alt="Payment Success" class="icon icon-small icon-thumbs-up">
         <?= Titles\title(); ?>

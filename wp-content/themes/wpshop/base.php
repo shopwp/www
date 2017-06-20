@@ -49,7 +49,7 @@ use Roots\Sage\Wrapper;
         </aside>
       <?php endif; ?>
 
-      <main class="main">
+      <main class="main l-fill">
 
         <?php include Wrapper\template_path(); ?>
 

@@ -1,18 +1,16 @@
 .sidebar {
-  margin-right: $space-xxl*2;
-  margin-top: $space-m;
   width: 400px;
-
+  margin: $space-m $space-xxl $space-xxl*2 0;
 }
 
 .sidebar-inner {
   background: color(white);
-  border-radius: 10px;
   padding: $space-l;
   width: inherit;
   list-style: none;
   margin: 0;
-  border: 1px solid color(medium-grey);
+
+  @include card();
 
   // @include shadow();
 

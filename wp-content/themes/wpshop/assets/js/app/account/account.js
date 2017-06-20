@@ -238,7 +238,7 @@ Init Account
 
 */
 function initAccount($) {
-  
+
   onAccountCatClick($);
   onProfileChange($);
   onPasswordChange($);
@@ -246,14 +246,14 @@ function initAccount($) {
 
   var clipboard = new Clipboard('.btn-copy');
 
-  var $inlineKeyNotice = jQuery('#license-key + .notice-inline');
-
   clipboard.on('success', function(e) {
 
-    $inlineKeyNotice.addClass('is-notifying');
+    console.log("e: ", );
+
+    jQuery(e.trigger).next().addClass('is-notifying');
 
     setTimeout(function() {
-      $inlineKeyNotice.removeClass('is-notifying');
+      jQuery(e.trigger).next().removeClass('is-notifying');
       e.clearSelection();
     }, 2000);
 

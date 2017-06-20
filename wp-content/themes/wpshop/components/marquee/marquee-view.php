@@ -9,8 +9,8 @@
     </div>
 
     <div class="btn-group l-row l-row-center">
-      <a href="#" class="btn btn-l btn-secondary"><i class="fa fa-download" aria-hidden="true"></i> Learn more</a>
-      <a href="#" class="btn btn-l"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Purchase</a>
+      <a href="/how" class="btn btn-l btn-secondary"><i class="fa fa-book" aria-hidden="true"></i> Learn more</a>
+      <a href="/purchase" class="btn btn-l"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Purchase</a>
     </div>
   </div>
 
@@ -29,16 +29,23 @@
 
       <div class="l-col l-row-center snippet-content">
         <h2 class="snippet-heading">Free your brand.</h2>
-        <p class="snippet-copy">Keep your brand consistent Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Maecenas malesuada. Morbi nec metus. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent congue erat at massa.</p>
-
+        <p class="snippet-copy">Keeping your brand consistent is important to build trust with your customers. WP Shopify syncs your data directly into WordPress without restrictive iFrames giving you complete control over styling.</p>
       </div>
     </div>
+
+  </div>
+
+</section>
+
+<section class="component component-snippet l-col l-col-center l-row-center">
+
+  <div class="l-contain">
 
     <div class="snippet l-row">
 
       <div class="l-col l-row-center snippet-content">
         <h2 class="snippet-heading">Sync what you need,<br>display what you want.</h2>
-        <p class="snippet-copy">Donec id justo. Nunc interdum lacus sit amet orci. Praesent ac massa at ligula laoreet iaculis. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem. Fusce fermentum odio nec arcu.</p>
+        <p class="snippet-copy">WP Shopify is built around hooks and has an action or filter for everything. You control the data and how it's shown to your users.</p>
 
       </div>
 
@@ -48,24 +55,18 @@
 
     </div>
 
-    <div class="snippet l-row">
+    <div class="snippet snippet-made-with-devs l-row">
       <div class="snippet-image">
         <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-code.svg">
       </div>
 
       <div class="l-col l-row-center snippet-content">
-        <h2 class="snippet-heading">Made with developers<br> & designers in mind.</h2>
-        <p class="snippet-copy">Praesent egestas neque eu enim. Curabitur turpis. Sed aliquam ultrices mauris. Sed mollis, eros et ultrices tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Proin magna.</p>
+        <h2 class="snippet-heading">One plugin for two platforms.</h2>
+        <p class="snippet-copy">Webhooks are used under the hood to keep your data in sync. Change something in Shopify and watch it automatically appear in WordPress.</p>
 
       </div>
     </div>
 
-    <a href="#" class="btn btn-l">Learn more</a>
   </div>
-
-</section>
-
-
-<section class="component component-full l-row l-row-center">
 
 </section>

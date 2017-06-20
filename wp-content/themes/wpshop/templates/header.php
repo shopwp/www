@@ -38,12 +38,24 @@
 
         <div class="header-account l-row l-col-center">
 
+          <a href="https://join.slack.com/wpshopify/shared_invite/MTg5OTQxODEwOTM1LTE0OTU5ODY2MTktN2Y1ODk0YzBlNg" class="header-social-link" target="_blank">
+            <i class="fa fa-slack" aria-hidden="true"></i>
+          </a>
+
+          <a href="https://github.com/arobbins/wp-shopify" class="header-social-link" target="_blank">
+            <i class="fa fa-github"></i>
+          </a>
+
+          <a href="https://twitter.com/andrewmrobbins" class="header-social-link" target="_blank">
+            <i class="fa fa-twitter"></i>
+          </a>
+
           <?php if(is_user_logged_in()) { ?>
-            <a href="/account" class="btn btn-s">My Account</a>
+            <a href="/account" class="btn btn-account btn-s">My Account</a>
             <a href="<?php echo wp_logout_url('/login'); ?>" class="link-account">Logout</a>
 
           <?php } else { ?>
-            <a href="/login" class="btn btn-s">Login</a>
+            <a href="/login" class="btn btn-account btn-s">Login</a>
 
           <?php } ?>
 

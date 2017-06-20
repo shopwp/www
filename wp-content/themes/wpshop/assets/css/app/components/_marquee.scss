@@ -1,7 +1,7 @@
 .component-marquee {
   width: 100%;
   min-height: 70vh;
-
+  margin-top: 0;
 
     .wordpress {
       position: relative;
@@ -14,7 +14,7 @@
         display: block;
         background-image: url('../../imgs/icon-wp.svg');
         width: 40px;
-        opacity: 0.6;
+        opacity: 0.75;
         height: 40px;
       }
 
@@ -28,7 +28,7 @@
         top: 5.3em;
         right: 4.35em;
         content: '';
-        opacity: 0.6;
+        opacity: 0.75;
         display: block;
         background-image: url('../../imgs/icon-shopify.svg');
         width: 40px;
@@ -58,6 +58,7 @@
   position: relative;
   text-align: center;
   top: 3vh;
+  left: -10px;
 }
 
 .marquee-heading {
@@ -69,4 +70,19 @@
 .marquee-short-desc {
   margin: $space-xl auto;
   font-size: $font-xxl;
+}
+
+
+
+
+
+
+
+
+.component-how-it-works {
+  padding: $space-l*3.5 0;
+  background: color(secondary-light);
+  background-image: url('../../imgs/bg-stuff-2.png');
+  margin-top: 0;
+  text-align: center;
 }

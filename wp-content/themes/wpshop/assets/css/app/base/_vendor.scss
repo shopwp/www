@@ -9,9 +9,9 @@ EDD
   width: 100%;
   background: color(white);
   vertical-align: top;
-  border-radius: 10px;
   margin-top: 0;
-  border: 1px solid color(medium-grey);
+
+  @include card();
 
   th,
   td {
@@ -31,11 +31,9 @@ EDD
 
 }
 
-#edd_checkout_cart,
-#edd_sl_license_keys,
-.edd-table {
-  // @include shadow();
-  border: 1px solid color(medium-grey);
+
+#edd_sl_license_keys {
+  @include card();
 }
 
 #edd_sl_license_keys {
@@ -165,6 +163,13 @@ EDD
   padding-bottom: 0;
 }
 
+#edd_sl_license_keys .edd_sl_license_row td {
+  vertical-align: middle;
+}
+
+#edd_user_history td.edd_download_download_files {
+  padding-bottom: 2em;
+}
 
 
 /*
@@ -225,37 +230,17 @@ Pace
   display: block;
   position: fixed;
   z-index: 2000;
-  top: 3px;
+  top: 12px;
   right: 30px;
-  width: 14px;
-  height: 14px;
+  width: 25px;
+  height: 25px;
   border: solid 2px transparent;
-  border-top-color: #005d9d;
-  border-left-color: #005d9d;
-  border-radius: 10px;
-  -webkit-animation: pace-spinner 400ms linear infinite;
-  -moz-animation: pace-spinner 400ms linear infinite;
-  -ms-animation: pace-spinner 400ms linear infinite;
-  -o-animation: pace-spinner 400ms linear infinite;
+  border-top-color: color(secondary);
+  border-left-color: color(secondary);
+  border-radius: 50%;
   animation: pace-spinner 400ms linear infinite;
 }
 
-@-webkit-keyframes pace-spinner {
-  0% { -webkit-transform: rotate(0deg); transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
-}
-@-moz-keyframes pace-spinner {
-  0% { -moz-transform: rotate(0deg); transform: rotate(0deg); }
-  100% { -moz-transform: rotate(360deg); transform: rotate(360deg); }
-}
-@-o-keyframes pace-spinner {
-  0% { -o-transform: rotate(0deg); transform: rotate(0deg); }
-  100% { -o-transform: rotate(360deg); transform: rotate(360deg); }
-}
-@-ms-keyframes pace-spinner {
-  0% { -ms-transform: rotate(0deg); transform: rotate(0deg); }
-  100% { -ms-transform: rotate(360deg); transform: rotate(360deg); }
-}
 @keyframes pace-spinner {
   0% { transform: rotate(0deg); transform: rotate(0deg); }
   100% { transform: rotate(360deg); transform: rotate(360deg); }
@@ -279,13 +264,26 @@ EDD
     li {
       margin: 0;
       background: color(white);
-      box-shadow: 0px 8px 77px -4px #eaeaea;
-      border-radius: 10px;
       width: 32%;
       padding: $space-l;
 
+      @include card();
+
       &:hover {
         // @include grow();
+      }
+
+      &.is-highlighted {
+        box-shadow: 0px 0px 0 5px #5ADCB2 inset;
+        transform: scale(1.05);
+        transition: all 0.25s ease;
+        border: none;
+
+        &:before {
+          background: #5ADCB2;
+          color: color(white);
+        }
+
       }
 
     }
@@ -328,7 +326,6 @@ EDD
 .edd_cart_total {
   text-align: center;
   font-size: $font-xl;
-  border-top: 1px solid color(medium-grey);
 }
 
 #edd_checkout_cart_form {
@@ -866,7 +863,8 @@ form input:-moz-read-only.edd-submit {
 
 .wps-checkout-login-container {
   position: relative;
-
+  margin-bottom: 4em;
+  
   #edd_checkout_user_info,
   #edd_checkout_login_register {
     // position: absolute;
@@ -985,6 +983,7 @@ Gravity Forms
 
 #disqus_thread {
   margin-top: $space-xxl * 2;
+  margin-bottom: $space-xxl * 2;
   width: 100%;
 }
 
@@ -1022,6 +1021,8 @@ Gravity Forms
 
 
 #edd_purchase_receipt_products {
+  margin-bottom: 5em;
+
   tr:last-of-type td {
     padding-bottom: 0;
   }

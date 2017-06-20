@@ -181,10 +181,19 @@ function testtetteeeerrr() {
 
 
 
-// function your_function($product_data) {
+function your_function($product_data) {
+
+  echo '<small class="purchase-options-note">(Select an option above)</small>';
+
+}
+
+add_action( 'edd_purchase_link_top', 'your_function' );
+
 //
-//   echo get_the_field('your_custom_field', $post_id);
+// function your_function_2($product_data) {
+//
+//   echo '<h1>HI</h1>';
 //
 // }
 //
-// add_action( 'wps_after_last_product_img', 'your_function' );
+// add_action( 'edd_after_price_options', 'your_function_2' );

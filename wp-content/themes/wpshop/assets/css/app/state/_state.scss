@@ -22,10 +22,16 @@
 }
 
 .is-highlighted {
-  background: color(notice-xlight);
+  background: color(primary);
   padding: $space-s $space-l;
 }
 
+.docs-template-default {
+  .is-highlighted {
+    background: color(secondary-light);
+    border-radius: 5px;
+  }
+}
 
 
 

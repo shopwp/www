@@ -2,7 +2,8 @@
   text-align: center;
   font-size: $font-s;
   margin-top: 0;
-  
+  background: rgb(57, 71, 82);
+
   @include device(800, 'max') {
 
   }
@@ -12,7 +13,13 @@
 .footer-wrapper {
   padding: $space-xxl*2 0 $space-xl*2 0;
   position: relative;
-  background: color(dark-grey);
+  // background: color(dark-grey);
+
+  // background: rgba(76, 176, 255, 0.09);
+  margin: 0;
+  color: #fff;
+  // background-image: url(http://wpshop.dev/wp-content/themes/wpshop/assets/prod/imgs/bg-stuff-2.png);
+
   margin: 0;
   color: color(white);
 
@@ -35,7 +42,7 @@
 }
 
 .footer-attr {
-  margin-top: $space-xxs;
+  margin-top: $space-l;
   text-transform: uppercase;
 }
 
@@ -43,17 +50,29 @@
   position: relative;
   margin-top: $space-xxl*2;
 
+  // &:before {
+  //   content: '';
+  //   width: 160px;
+  //   height: 60px;
+  //   bottom: 45px;
+  //   left: calc(50% - 80px);
+  //   position: absolute;
+  //   background: url('../../imgs/wave-shape.svg');
+  //   background-size: contain;
+  //   background-position: 50% 50%;
+  //   opacity: 0.2;
+  // }
+
   &:before {
+    bottom: 35px;
+    position: relative;
     content: '';
-    width: 160px;
-    height: 60px;
-    bottom: 45px;
-    left: calc(50% - 80px);
-    position: absolute;
-    background: url('../../imgs/wave-shape.svg');
-    background-size: contain;
-    background-position: 50% 50%;
-    opacity: $opacity-hard;
+    margin: $space-l auto 0 auto;
+    display: block;
+    height: 1px;
+    width: 100px;
+    background-color: color(white);
+    opacity: 0.3;
   }
 
 }

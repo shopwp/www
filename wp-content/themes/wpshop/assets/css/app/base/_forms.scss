@@ -3,9 +3,8 @@
 .search-form {
   width: 100%;
   max-width: 700px;
-  margin-top: 0;
   position: relative;
-
+  margin: 0 auto 2em auto;
   // @include device(1000, 'max') {
   //   width: 90%;
   // }
@@ -95,7 +94,7 @@
     &:hover {
       cursor: text;
     }
-    
+
   }
 
   .form-input {
@@ -329,6 +328,16 @@ select {
   .btn {
     margin: 0 auto;
   }
+
+  .spinner {
+    margin: 0;
+    top: calc(64% - 12px);
+    right: calc(50% - 20px);
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+  }
+
 }
 
 .form-message {
@@ -342,6 +351,14 @@ select {
 
 .form-error {
   color: color(error);
+}
+
+.form-valid {
+  + .form-messages {
+    .form-error {
+      display: none;
+    }
+  }
 }
 
 .form-success {
@@ -365,7 +382,7 @@ select {
   }
 
   .form-success.is-visible {
-    min-height: 200px;
+    // min-height: 200px;
   }
 
 }
@@ -391,6 +408,7 @@ select {
     padding-left: 15px;
     text-indent: -15px;
     margin-bottom: 0;
+    font-weight: normal;
   }
 
   input[type="checkbox"] {
@@ -420,6 +438,7 @@ select {
   text-align: center;;
   margin-top: $space-xxs;
   margin-bottom: $space-m;
+  font-size: 90%;
 }
 
 .form-note-invalid-field {

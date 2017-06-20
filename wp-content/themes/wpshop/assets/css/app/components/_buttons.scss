@@ -4,7 +4,8 @@ a.button.edd-slg-social-unlink-profile,
 .edd_download_file_link,
 .edd_submit,
 .search-submit,
-.menu-item-back a {
+.menu-item-back a,
+.edd-add-to-cart-label {
   padding: calc(#{$space-m} - 3px) calc(#{$space-xl} - 3px);
   color: color(white);
   background-color: color(primary);
@@ -83,6 +84,7 @@ a.button.edd-slg-social-unlink-profile,
 
 }
 
+.edd-add-to-cart-label,
 .menu-item-back a,
 .edd_download_file_link,
 .btn-secondary {
@@ -105,6 +107,7 @@ a.button.edd-slg-social-unlink-profile,
 }
 
 .btn-l,
+.edd-add-to-cart-label,
 #edd-purchase-button {
   font-size: $font-l;
 }
@@ -138,4 +141,21 @@ a.button.edd-slg-social-unlink-profile {
     display: inline-block;
     margin-right: 10px;
   }
+}
+
+.edd-add-to-cart {
+
+  &:hover {
+    opacity: 1;
+  }
+
+  span.edd-add-to-cart-label {
+    &:after {
+      content: '\f178';
+      font-family: FontAwesome;
+      display: inline-block;
+      margin-left: $space-s;
+    }
+  }
+
 }

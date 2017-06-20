@@ -1,3 +1,14 @@
 .edd_download_purchase_form {
   width: 100%;
 }
+
+.edd_purchase_submit_wrapper {
+  text-align: center;
+  margin-bottom: $space-xl*3;
+}
+
+.purchase-options-note {
+  display: block;
+  margin-top: $space-m;
+  text-align: center;
+}

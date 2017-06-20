@@ -19,6 +19,16 @@
 
         get_template_part('components/products/products-controller');
 
+      // Products
+      } else if(get_row_layout() == 'component_support') {
+
+        get_template_part('components/support/support-controller');
+
+      // Features
+      } else if(get_row_layout() == 'component_features') {
+
+        get_template_part('components/features/features-controller');
+
       }
 
     endwhile;

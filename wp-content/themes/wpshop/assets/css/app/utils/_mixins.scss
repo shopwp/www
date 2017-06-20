@@ -122,3 +122,11 @@ Shadow
 @mixin shadow() {
   box-shadow: 0 5px 36px -12px rgba(0, 0, 0, 0.59);
 }
+
+
+
+@mixin card() {
+  border-radius: 10px;
+  box-shadow: 0 2px 14px -3px #dadada;
+  border: 1px solid #dedede;
+}

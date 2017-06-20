@@ -133,7 +133,7 @@ wps_before_register_login
 
 */
 function wps_forgot_pass() {
-  echo '<a href="/password-reset">Forgot your password?</a>';
+  echo '<a href="/reset-password">Forgot your password?</a>';
 }
 
 add_action('edd_checkout_login_fields_after', 'wps_forgot_pass');
@@ -427,9 +427,9 @@ remove_action( 'edd_purchase_history_row_end', 'edd_sl_site_management_links', 1
 
 
 
-add_action('edd_after_download_history', function() {
-  echo '<small>(Latest Version)</small>';
-}, 10, 2);
+// add_action('edd_after_download_history', function() {
+//   echo '<small>(Latest Version)</small>';
+// }, 10, 2);
 
 
 

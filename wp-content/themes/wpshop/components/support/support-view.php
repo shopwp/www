@@ -1,4 +1,34 @@
-<section class="component component-support">
-  <h2><i class="fa fa-support" aria-hidden="true"></i> Need help?</h2>
-  <p>Please <a href="https://join.slack.com/wpshopify/shared_invite/MTc4MjIzMzUwMDUxLTE0OTM4Mzg0MzQtYWUzOWUwZTMxMg">join our public Slack</a> to ask a question or search our extensive <a href="/docs">documentation here</a>.</p>
+<section class="component component-support <?php echo get_sub_field('support_full_width') ? 'component-support-fullwidth' : ''; ?>">
+  <div class="l-contain-narrow">
+    <div class="l-col l-row-center l-col-center">
+
+      <?php if (get_sub_field('support_heading')) { ?>
+        <h1>
+
+          <?php if (get_sub_field('support_has_icon')) { ?>
+            <i class="fa <?php the_sub_field('support_icon'); ?>" aria-hidden="true"></i>
+          <?php } ?>
+
+           <?php the_sub_field('support_heading'); ?>
+
+        </h1>
+      <?php } ?>
+
+      <?php if (get_sub_field('support_copy')) { ?>
+        <?php the_sub_field('support_copy'); ?>
+      <?php } ?>
+
+      <?php if (get_sub_field('support_cta_copy')) { ?>
+        <a href="<?php the_sub_field('support_cta_link'); ?>" class="btn btn-l">
+
+          <?php if (get_sub_field('support_cta_has_icon')) { ?>
+            <i class="fa <?php the_sub_field('support_cta_icon'); ?>" aria-hidden="true"></i>
+          <?php } ?>
+
+          <?php the_sub_field('support_cta_copy'); ?>
+        </a>
+      <?php } ?>
+
+    </div>
+  </div>
 </section>
