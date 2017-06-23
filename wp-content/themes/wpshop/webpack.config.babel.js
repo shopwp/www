@@ -149,7 +149,7 @@ module.exports = () => {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader', 'sass-loader', 'resolve-url-loader']
+          use: ['css-loader?url=false', 'postcss-loader', 'sass-loader', 'resolve-url-loader']
         })
       }, {
         test: require.resolve("pace-progress"),
