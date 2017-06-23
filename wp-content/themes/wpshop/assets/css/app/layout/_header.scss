@@ -119,6 +119,8 @@
 
 .logo-link {
   border: none;
+  position: relative;
+  top: 5px;
 
   &:hover {
     opacity: 1;

@@ -146,7 +146,7 @@ class EDD_SL_List_Table extends WP_List_Table {
 		$base    = wp_nonce_url( $base, 'edd_sl_key_nonce' );
 		$license = edd_software_licensing()->get_license( $item['ID'] );
 
-		$title = $license->get_name( false );
+		$title = $item['title'];
 
 		if ( ! empty( $license->parent ) ) {
 			// Indent child licenses
@@ -590,7 +590,7 @@ class EDD_SL_List_Table extends WP_List_Table {
 
 				$licenses_data[] = array(
 					'ID'               => $license->ID,
-					'title'            => $license->get_name(),
+					'title'            => $license->get_name( false ),
 					'status'           => $license->status,
 					'key'              => $license->key,
 					'user'             => $license->user_id,
@@ -612,7 +612,7 @@ class EDD_SL_List_Table extends WP_List_Table {
 
 						$licenses_data[] = array(
 							'ID'               => $child_license->ID,
-							'title'            => $child_license->get_name(),
+							'title'            => $child_license->get_name( false ),
 							'status'           => $child_license->status,
 							'key'              => $child_license->key,
 							'user'             => $child_license->user_id,

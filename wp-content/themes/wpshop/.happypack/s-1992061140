@@ -33,50 +33,58 @@ function onDocClick($) {
 
   $('.doc-term').on('click', function (e) {
 
-    var $doc = $(this);
+    var $doc = jQuery(this);
 
-    Pace.restart();
-    Pace.track((0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
-      var data, url;
-      return _regenerator2.default.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return (0, _ws.getDoc)($doc.data('doc-id'));
+    if (!$doc.hasClass('is-current-doc')) {
 
-            case 2:
-              data = _context.sent;
+      jQuery('.entry-content').addClass('is-loading');
+      jQuery('.doc-term.is-current-doc').removeClass('is-current-doc');
+      $doc.addClass('is-current-doc');
+
+      Pace.restart();
+      Pace.track((0, _asyncToGenerator3.default)(_regenerator2.default.mark(function _callee() {
+        var data, url;
+        return _regenerator2.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return (0, _ws.getDoc)($doc.data('doc-id'));
+
+              case 2:
+                data = _context.sent;
 
 
-              data = JSON.parse(data);
+                data = JSON.parse(data);
 
-              showDocContent(data.content);
+                showDocContent(data.content);
+                jQuery('.entry-content').removeClass('is-loading');
 
-              url = "/docs/" + data.slug;
+                url = "/docs/" + data.slug;
 
 
-              window.history.pushState("object or string", "Title", url);
+                window.history.pushState("object or string", "Title", url);
 
-              jQuery('html, body').animate({
-                scrollTop: jQuery('.main').offset().top - 150
-              }, 200);
+                // jQuery('html, body').animate({
+                //   scrollTop: jQuery('.main').offset().top - 150
+                // }, 200);
 
-              DISQUS.reset({
-                reload: true,
-                config: function config() {
-                  this.page.identifier = $doc.data('doc-id').toString();
-                  this.page.url = "http://wpshop.dev/#!newthread";
-                }
-              });
+                DISQUS.reset({
+                  reload: true,
+                  config: function config() {
+                    this.page.identifier = $doc.data('doc-id').toString();
+                    this.page.url = "http://wpshop.dev/#!newthread";
+                  }
+                });
 
-            case 9:
-            case 'end':
-              return _context.stop();
+              case 9:
+              case 'end':
+                return _context.stop();
+            }
           }
-        }
-      }, _callee, this);
-    })));
+        }, _callee, this);
+      })));
+    }
   });
 }
 
@@ -99,6 +107,7 @@ Init Docs
 
 */
 function initDocs($) {
+
   onDocClick($);
 }
 

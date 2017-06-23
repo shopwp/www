@@ -14,10 +14,16 @@
 .doc-cat {
   font-size: $font-l;
   font-weight: bold;
+
+  &:not(:first-child) {
+    margin-top: $space-s*2;
+  }
+
 }
 
 .doc-term {
-  margin-top: $space-xxs;
+  padding-top: $space-xs;
+  margin-top: 0;
 
   &:hover {
     cursor: pointer;
@@ -28,4 +34,37 @@
 
 .docs-list-parameters {
   list-style: none;
+}
+
+
+.is-current-doc {
+  position: relative;
+  background: color(offwhite);
+  padding: 5px 10px;
+  border-radius: 5px;
+  padding: 5px 15px;
+  border-radius: 5px;
+  margin-top: $space-xs;
+
+
+  // position: relative;
+  // padding-left: $space-m;
+  //
+  // &:before {
+  //   content: "";
+  //   width: 5px;
+  //   background: color(primary);
+  //   height: 45%;
+  //   display: block;
+  //   position: absolute;
+  //   left: 0;
+  //   top: 15px;
+  // }
+
+
+  &:hover {
+    opacity: 1;
+    cursor: text;
+  }
+
 }

@@ -49,13 +49,15 @@
   .entry-content {
     width: 100%;
 
+    &.is-loading {
+      opacity: $opacity-hard;
+    }
+
     ul li {
-      margin-top: 0;
+
     }
 
     ul {
-      margin-left: 2em;
-      margin-bottom: 1em;
     }
 
     .btn {
@@ -99,6 +101,21 @@
   margin-top: 0;
   position: relative;
   top: -10px;
+
+  margin-left: 1em;
+  margin-bottom: 1em;
+  margin-top: 2em;
+  line-height: 1;
+
+  li {
+    margin-top: 0;
+
+    pre {
+      margin-top: 0;
+    }
+
+  }
+
 }
 
 

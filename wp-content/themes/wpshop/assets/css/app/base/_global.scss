@@ -33,9 +33,15 @@ body {
 code, kbd, pre, samp {
   border-radius: $space-s / 2;
   font-size: 98%;
+  margin-top: 0;
 }
 
 ul, ol, dl {
   padding: 0;
-  margin: $space-s 0 $space-s $space-s;
+  margin: $space-s 0 $space-m $space-m;
+
+  li {
+    margin-top: $space-xxs;
+  }
+
 }

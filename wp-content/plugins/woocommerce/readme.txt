@@ -3,7 +3,7 @@ Contributors: automattic, mikejolley, jameskoster, claudiosanches, jshreve, code
 Tags: ecommerce, e-commerce, store, sales, sell, shop, cart, checkout, downloadable, downloads, paypal, storefront, woo commerce
 Requires at least: 4.4
 Tested up to: 4.8
-Stable tag: 3.0.8
+Stable tag: 3.0.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -160,6 +160,25 @@ Yes you can! Join in on our [GitHub repository](http://github.com/woocommerce/wo
 6. A product archive (grid).
 
 == Changelog ==
+
+= 3.0.9 - 2017-06-22 =
+* Fix - Exclude sale products from category checks if coupon is not valid for sale products in coupon class.
+* Fix - Fix missing states in state field when selected country differs from checkout data. Required template modification.
+* Fix - Updated `woocommerce_email_actions` to send email when order status changes from processing to cancelled.
+* Fix - Fix undefined variables in terms and legacy order API endpoints.
+* Fix - Correctly update variation outofstock term on save.
+* Fix - Add a nonce and confirmation message for logging out via the customer my account page.
+* Fix - Allow setting grouped_products via the API.
+* Fix - Prevent edge case errors in `wc_get_product_term_ids`.
+* Fix - Remove extra escaping to fix saving of special characters in attribute terms.
+* Fix - Stricter shipping method matching in COD to prevent conflicts.
+* Fix - Recalculate totals after local pickup selection so taxes are recalculated.
+* Fix - Add missing nonce to product sales report.
+* Fix - Fix webhook save actions and ping the URL to test only once.
+* Fix - Fix issue with CLI IDs which overlap with actual data.
+* Fix - Normalise emails in coupons so lower/upper case is ignored.
+* Fix - Added background color to `x` button in product gallery edit box.
+* Dev - Renamed `woocommerce_credit_card_type_labels` filter from `wocommerce_credit_card_type_labels`.
 
 = 3.0.8 - 2017-06-06 =
 * Fix - Include multi-dimensional array support in oAuth1.0.
@@ -459,5 +478,5 @@ Yes you can! Join in on our [GitHub repository](http://github.com/woocommerce/wo
 
 == Upgrade Notice ==
 
-= 3.0.8 =
+= 3.0.9 =
 3.0 is a major update. Make a full site backup, update your theme and extensions, and [review update best practices](https://docs.woocommerce.com/document/how-to-update-your-site) before upgrading.

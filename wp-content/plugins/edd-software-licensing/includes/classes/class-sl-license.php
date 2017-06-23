@@ -625,7 +625,7 @@ final class EDD_SL_License {
 	public function get_name( $full = true ) {
 		$name = $this->name;
 		if ( false === $full ) {
-			$dash_pos = strpos( $name, '-' );
+			$dash_pos = strrpos( $name, '-' );
 			if ( false !== $dash_pos ) {
 				$name = substr( $name, 0, $dash_pos );
 			}

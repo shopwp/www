@@ -33,7 +33,7 @@ function wc_template_redirect() {
 		wp_redirect( wc_get_page_permalink( 'cart' ) );
 		exit;
 
-	} elseif ( isset( $wp->query_vars['customer-logout'] ) ) {
+	} elseif ( isset( $wp->query_vars['customer-logout'] ) && ! empty( $_REQUEST['_wpnonce'] ) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'customer-logout' ) ) {
 
 		// Logout
 		wp_redirect( str_replace( '&amp;', '&', wp_logout_url( wc_get_page_permalink( 'myaccount' ) ) ) );
@@ -1869,7 +1869,7 @@ if ( ! function_exists( 'woocommerce_form_field' ) ) {
 	 *
 	 * @subpackage	Forms
 	 * @param string $key
-	 * @param mixed $args
+	 * @param mixed  $args
 	 * @param string $value (default: null)
 	 */
 	function woocommerce_form_field( $key, $args, $value = null ) {
@@ -1972,11 +1972,9 @@ if ( ! function_exists( 'woocommerce_form_field' ) ) {
 
 				break;
 			case 'state' :
-
-				/* Get Country */
-				$country_key = 'billing_state' === $key ? 'billing_country' : 'shipping_country';
-				$current_cc  = WC()->checkout->get_value( $country_key );
-				$states      = WC()->countries->get_states( $current_cc );
+				/* Get country this state field is representing */
+				$for_country = isset( $args['country'] ) ? $args['country'] : WC()->checkout->get_value( 'billing_state' === $key ? 'billing_country' : 'shipping_country' );
+				$states      = WC()->countries->get_states( $for_country );
 
 				if ( is_array( $states ) && empty( $states ) ) {
 
@@ -1984,7 +1982,7 @@ if ( ! function_exists( 'woocommerce_form_field' ) ) {
 
 					$field .= '<input type="hidden" class="hidden" name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" value="" ' . implode( ' ', $custom_attributes ) . ' placeholder="' . esc_attr( $args['placeholder'] ) . '" />';
 
-				} elseif ( ! is_null( $current_cc ) && is_array( $states ) ) {
+				} elseif ( ! is_null( $for_country ) && is_array( $states ) ) {
 
 					$field .= '<select name="' . esc_attr( $key ) . '" id="' . esc_attr( $args['id'] ) . '" class="state_select ' . esc_attr( implode( ' ', $args['input_class'] ) ) . '" ' . implode( ' ', $custom_attributes ) . ' data-placeholder="' . esc_attr( $args['placeholder'] ) . '">
 						<option value="">' . esc_html__( 'Select a state&hellip;', 'woocommerce' ) . '</option>';
@@ -2583,7 +2581,7 @@ function wc_logout_url( $redirect = '' ) {
 	$redirect        = $redirect ? $redirect : wc_get_page_permalink( 'myaccount' );
 
 	if ( $logout_endpoint ) {
-		return wc_get_endpoint_url( 'customer-logout', '', $redirect );
+		return wp_nonce_url( wc_get_endpoint_url( 'customer-logout', '', $redirect ), 'customer-logout' );
 	} else {
 		return wp_logout_url( $redirect );
 	}

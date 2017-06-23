@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Software Licenses
 Plugin URL: https://easydigitaldownloads.com/downloads/software-licensing/
 Description: Adds a software licensing system to Easy Digital Downloads
-Version: 3.5.15
+Version: 3.5.16
 Author: Easy Digital Downloads
 Author URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, cklosows
@@ -24,7 +24,7 @@ if ( ! defined( 'EDD_SL_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_SL_VERSION' ) ) {
-	define( 'EDD_SL_VERSION', '3.5.15' );
+	define( 'EDD_SL_VERSION', '3.5.16' );
 }
 
 class EDD_Software_Licensing {
@@ -428,7 +428,9 @@ class EDD_Software_Licensing {
 		$bypass_local = isset( $edd_options['edd_sl_bypass_local_hosts'] );
 		$is_local_url = empty( $bypass_local ) ? false : $this->is_local_url( $url );
 
-		do_action( 'edd_sl_pre_activate_license', $license->ID, $license->download_id );
+		$license_id  = false !== $license ? $license->ID : 0;
+		$download_id = false !== $license ? $license->download_id : 0;
+		do_action( 'edd_sl_pre_activate_license', $license_id, $download_id );
 
 		$result = array();
 		$result['success'] = true;
@@ -441,8 +443,10 @@ class EDD_Software_Licensing {
 
 		} else {
 
+			$allow_bundle_activation = apply_filters( 'edd_sl_allow_bundle_activation', false, $license );
+
 			// Trying to activate bundle license
-			if ( $license->download->is_bundled_download() ) {
+			if ( $license->download->is_bundled_download() && ! $allow_bundle_activation ) {
 
 				$result['success'] = false;
 				$result['error'] = 'license_not_activable';
@@ -522,16 +526,18 @@ class EDD_Software_Licensing {
 
 		}
 
-		// All good, give some additional info about the activation
-		$result['license_limit'] = $license->activation_limit;
-		$result['site_count']    = $license->activation_count;
-		$result['expires']       = $license->expiration;
+		if ( false !== $license ) {
+			// All good, give some additional info about the activation
+			$result['license_limit'] = $license->activation_limit;
+			$result['site_count']    = $license->activation_count;
+			$result['expires']       = $license->expiration;
 
-		// just leaving this in here in case others are using it
-		if( $license->activation_limit > 0 ) {
-			$result['activations_left'] = $license->activation_limit - $license->activation_count;
-		} else {
-			$result['activations_left'] = 'unlimited';
+			// just leaving this in here in case others are using it
+			if( $license->activation_limit > 0 ) {
+				$result['activations_left'] = $license->activation_limit - $license->activation_count;
+			} else {
+				$result['activations_left'] = 'unlimited';
+			}
 		}
 
 		return $result; // license is valid and activated
@@ -586,9 +592,9 @@ class EDD_Software_Licensing {
 			), $result
 		);
 
-
+		$license_id = false !== $license ? $license->ID : 0;
 		header( 'Content-Type: application/json' );
-		echo json_encode( apply_filters( 'edd_remote_license_activation_response', $result, $args, $license->ID ) );
+		echo json_encode( apply_filters( 'edd_remote_license_activation_response', $result, $args, $license_id ) );
 		exit;
 	}
 
@@ -645,8 +651,10 @@ class EDD_Software_Licensing {
 			return false;
 		}
 
-		// Trying to activate bundle license
-		if ( $license->download->is_bundled_download() ) {
+		$allow_bundle_activation = apply_filters( 'edd_sl_allow_bundle_activation', false, $license );
+
+		// Trying to deactivate bundle license
+		if ( $license->download->is_bundled_download() && ! $allow_bundle_activation ) {
 			return false;
 		}
 

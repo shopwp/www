@@ -134,6 +134,9 @@ function assets() {
   // Scroll magic
   wp_enqueue_script('Scroll magic', '//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.min.js', ['jquery'], null, true);
 
+  wp_enqueue_script('sticky scroll', '//cdn.rawgit.com/leafo/sticky-kit/v1.1.2/jquery.sticky-kit.min.js', ['jquery'], null, true);
+
+
   wp_enqueue_script('Clipboard', '//cdn.jsdelivr.net/clipboard.js/1.6.1/clipboard.min.js', ['jquery'], null, true);
 
   // WPS Vendor Commons
@@ -174,9 +177,9 @@ function assets() {
   //
   // Docs
   if(is_page('Docs') || get_post_type( get_the_ID() ) === 'docs') {
-    wp_enqueue_style('Prism CSS', Assets\asset_path('css/vendor/prism.min.css'), false, null);
+    // wp_enqueue_style('Prism CSS', Assets\asset_path('css/vendor/prism.min.css'), false, null);
     // wp_enqueue_script('WPS Auth', Assets\asset_path('prod/js/docs.min.js'), [], null, true);
-    wp_enqueue_script('Prism JS', Assets\asset_path('js/vendor/prism.min.js'), [], null, true);
+    // wp_enqueue_script('Prism JS', Assets\asset_path('js/vendor/prism.min.js'), [], null, true);
   }
   //
   // wp_enqueue_script('WPS Mailinglist', Assets\asset_path('prod/js/mailinglist.min.js'), [], null, true);
