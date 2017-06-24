@@ -3,6 +3,36 @@
   margin: 0;
 }
 
+.nav-mobile {
+  display: none;
+  position: absolute;
+  top: 90px;
+  background: white;
+  width: 100%;
+  z-index: 99999;
+  padding-bottom: 1em;
+
+  &.is-active{
+    display: block;
+    box-shadow: 0px 80px 177px -62px #a8a8a8;
+
+    #menu-mobile-menu {
+      flex-direction: column;
+    }
+
+    .menu-item a {
+      width: 100%;
+      text-align: center;
+    }
+
+    .current-menu-item:after {
+      display: none;
+    }
+
+  }
+
+}
+
 .menu-item {
   margin: 0;
   display: flex;

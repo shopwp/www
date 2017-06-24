@@ -1006,7 +1006,9 @@ Gravity Forms
   margin-top: 0;
 }
 
-
+.edd_download_file .edd_download_file_link {
+  display: none;
+}
 
 
 #edd_purchase_receipt {
@@ -1070,3 +1072,9 @@ Gravity Forms
    }
 
  }
+
+
+
+.is-mobile .pace {
+  display: none;
+}

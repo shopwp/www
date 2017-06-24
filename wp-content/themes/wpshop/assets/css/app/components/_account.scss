@@ -20,6 +20,11 @@
   }
 }
 
+.receipt-account-wrapper {
+  text-align: center;
+  margin-bottom: 3em;
+}
+
 .component[class*="component-account"] {
   animation-duration: 0.5s;
   margin-bottom: $space-l;

@@ -1,3 +1,11 @@
+.home .main {
+
+  @include device(500, 'max') {
+    display: none;
+  }
+
+}
+
 .main {
   width: 100%;
   margin-bottom: 3em;

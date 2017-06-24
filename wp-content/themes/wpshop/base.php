@@ -3,6 +3,11 @@
 use Roots\Sage\Setup;
 use Roots\Sage\Wrapper;
 
+require_once 'lib/Mobile-Detect/Mobile_Detect.php';
+$detect = new Mobile_Detect;
+
+$mobileBodyClass = $detect->isMobile() ? 'l-col is-mobile' : 'l-col';
+
 ?>
 
 <!doctype html>
@@ -20,7 +25,12 @@ use Roots\Sage\Wrapper;
 
   <?php get_template_part('templates/head'); ?>
 
-  <body <?php body_class('l-col'); ?> style="<?php echo $stuff; ?>">
+  <body <?php body_class($mobileBodyClass); ?> style="<?php echo $stuff; ?>">
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
     <!--[if IE]>
       <div class="alert alert-warning">

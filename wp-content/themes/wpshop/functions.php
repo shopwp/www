@@ -42,15 +42,15 @@ foreach ($sage_includes as $file) {
 unset($file, $filepath);
 
 
+/*
 
-//
-// Hack for Webpack dev server
-// TODO: Remove before pushing live
-//
+Hack for Webpack dev server
+TODO: Remove before pushing live
+
+*/
 if(DISABLE_CANONICAL == 'Y') {
   remove_filter('template_redirect', 'redirect_canonical');
 }
-
 
 
 /*
@@ -189,11 +189,11 @@ function your_function($product_data) {
 
 add_action( 'edd_purchase_link_top', 'your_function' );
 
-//
-// function your_function_2($product_data) {
-//
-//   echo '<h1>HI</h1>';
-//
-// }
-//
-// add_action( 'edd_after_price_options', 'your_function_2' );
+
+function your_function_2($product_data) {
+
+  echo '<div class="receipt-account-wrapper"><a href="/account" class="btn btn-secondary">Go to account</a></div>';
+
+}
+
+add_action( 'edd_payment_receipt_before', 'your_function_2' );

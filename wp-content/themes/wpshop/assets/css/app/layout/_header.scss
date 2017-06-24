@@ -18,6 +18,16 @@
 
 .icon-mobile {
   display: none;
+  height: 25px;
+  position: absolute;
+  top: -8px;
+  right: 0;
+  z-index: 9999;
+
+  &:hover {
+    cursor: pointer;
+  }
+
 }
 
 .pace .pace-activity {
@@ -41,11 +51,6 @@
 
     .icon-mobile {
       display: block;
-      height: 25px;
-      position: absolute;
-      top: -8px;
-      right: 0;
-      z-index: 9999;
     }
 
   }

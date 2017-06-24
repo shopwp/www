@@ -32,6 +32,8 @@
     margin-top: 0;
   }
 
+
+
   &:before {
     content: '';
     width: 100%;
@@ -41,7 +43,14 @@
     z-index: -1;
     background: linear-gradient(180deg,hsla(0,0%,100%,0) 0,#ffffff 72%,#fff);
     position: absolute;
+
+    @include device(600, 'max') {
+      display: none;
+    }
+    
   }
+
+
 
 }
 
@@ -106,6 +115,10 @@
   width: 100%;
   margin: $space-xxl auto;
   position: relative;
+
+  @include device(600, 'max') {
+    // display: block;
+  }
 
   // &:after {
   //   content: '';

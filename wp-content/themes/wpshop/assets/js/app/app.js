@@ -7,11 +7,20 @@ import { initMailinglist } from './mailinglist/mailinglist';
 import { initCheckout } from './checkout/checkout';
 import { initAccount } from './account/account';
 import { initDocs } from './docs/docs';
+import { initMobile } from './mobile/mobile';
 
 (function($) {
   "use strict";
 
   $(function() {
+
+    if (!$('body').hasClass('is-mobile')) {
+      console.log('hi');
+      Pace.restart();
+    } else {
+      Pace.stop();
+      console.log('eeehi');
+    }
 
     initPlugins($);
     initForms($);
@@ -19,6 +28,8 @@ import { initDocs } from './docs/docs';
     initCheckout($);
     initAccount($);
     initDocs($);
+
+    initMobile($);
 
     if (window.location.pathname === '/auth') {
       onShopifyAuth($);

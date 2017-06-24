@@ -5,6 +5,10 @@
   border-radius: 10px;
   margin-top: 0;
 
+  @include device(600, 'max') {
+    font-size: 85%;
+  }
+
   a {
     // color: color(base);
 
@@ -49,6 +53,11 @@
       // max-width: 700px;
     }
 
+    @include device(600, 'max') {
+      padding: 2em;
+      max-width: 90vw;
+    }
+
   }
 
   .l-row {
@@ -89,3 +98,10 @@
 .checkout .component-support-fullwidth {
   margin-top: $space-xxl*3;
 }
+
+
+
+
+// .component-snippet {
+//   display: none !important;
+// }

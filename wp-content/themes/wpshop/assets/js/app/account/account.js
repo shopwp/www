@@ -30,23 +30,12 @@ On account cat click
 */
 function onAccountCatClick($) {
 
-  window.paceOptions = {
-    ajax: {
-      trackMethods: ["GET", "POST"]
-    }
-  };
-
-  $('.account-cat').on('click', function(e) {
+  $('.account-cat').on('click', async function(e) {
 
     var $element = $(this);
+    var stuff = await getAccountCat( $element.data('account-cat') );
 
-    Pace.track(async function() {
-
-      var stuff = await getAccountCat( $element.data('account-cat') );
-
-      $('.content').html($(stuff));
-
-    });
+    $('.content').html($(stuff));
 
   });
 }
@@ -265,6 +254,9 @@ function initAccount($) {
   clipboard.on('error', function(e) {
 
   });
+
+
+  $('.edd_download_file_link').text('Download WP Shopify').show();
 
 }
 

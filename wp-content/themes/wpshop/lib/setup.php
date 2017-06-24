@@ -31,7 +31,8 @@ function setup() {
   register_nav_menus([
     'primary_navigation' => __('Primary Navigation', 'sage'),
     'footer_navigation' => __('Footer Navigation', 'sage'),
-    'checkout_navigation' => __('Checkout Navigation', 'sage')
+    'checkout_navigation' => __('Checkout Navigation', 'sage'),
+    'mobile_navigation' => __('Mobile Navigation', 'sage')
   ]);
 
   // Enable post thumbnails

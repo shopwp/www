@@ -76,6 +76,12 @@
     </div>
 
 
+    <?php if (has_nav_menu('mobile_navigation')) : ?>
+      <nav class="nav-mobile l-row l-row-right l-fill l-col-center">
+        <?php wp_nav_menu(['theme_location' => 'mobile_navigation', 'menu_class' => 'nav l-row']); ?>
+      </nav>
+    <?php endif; ?>
+
   </header>
 
 <?php } else { ?>
