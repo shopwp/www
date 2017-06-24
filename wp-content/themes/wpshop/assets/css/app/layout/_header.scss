@@ -21,15 +21,22 @@
 }
 
 .pace .pace-activity {
+
   @include device(700, 'max') {
     right: 90px;
   }
+
+  @include device(500, 'max') {
+    right: 60px;
+  }
+
 }
+
 
 .header-content {
   position: relative;
 
-  @include device(1200, 'max') {
+  @include device(1300, 'max') {
     padding-right: $space-l*3;
 
     .icon-mobile {

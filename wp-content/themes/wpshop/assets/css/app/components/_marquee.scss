@@ -3,47 +3,77 @@
   min-height: 70vh;
   margin-top: 0;
 
-    .wordpress {
-      position: relative;
 
-      &:before {
-        position: absolute;
-        top: 5.3em;
-        left: 4.6em;
-        content: '';
-        display: block;
-        background-image: url('../../imgs/icon-wp.svg');
-        width: 40px;
-        opacity: 0.75;
-        height: 40px;
+  @include device(1700, 'min') {
+    min-height: 58vh;
+  }
+
+  @include device(1000, 'max') {
+    min-height: 60vh;
+  }
+
+  .wordpress {
+    position: relative;
+
+    @include device(1000, 'max') {
+      display: block;
+    }
+
+    &:before {
+      position: absolute;
+      top: 5.3em;
+      left: 4.6em;
+      content: '';
+      display: block;
+      background-image: url('../../imgs/icon-wp.svg');
+      width: 40px;
+      opacity: 0.75;
+      height: 40px;
+
+      @include device(1000, 'max') {
+        display: none;
       }
 
     }
 
-    .shopify {
-      position: relative;
+  }
 
-      &:before {
-        position: absolute;
-        top: 5.3em;
-        right: 4.35em;
-        content: '';
-        opacity: 0.75;
-        display: block;
-        background-image: url('../../imgs/icon-shopify.svg');
-        width: 40px;
-        height: 40px;
+
+  .shopify {
+    position: relative;
+
+    @include device(1000, 'max') {
+      display: block;
+    }
+
+    &:before {
+      position: absolute;
+      top: 5.3em;
+      right: 4.35em;
+      content: '';
+      opacity: 0.75;
+      display: block;
+      background-image: url('../../imgs/icon-shopify.svg');
+      width: 40px;
+      height: 40px;
+
+      @include device(1000, 'max') {
+        display: none;
       }
 
     }
 
-    .fa-fw {
-      width: 1.6em;
-    }
+  }
 
-    .btn:last-of-type {
-      margin-right: 0;
-    }
+
+  .fa-fw {
+    width: 1.6em;
+  }
+
+  .btn:last-of-type {
+    margin-right: 0;
+  }
+
 }
 
 .marquee-img {
@@ -59,17 +89,64 @@
   text-align: center;
   top: 3vh;
   left: -10px;
+
+  @include device(1500, 'max') {
+    top: 0;
+  }
+
+  @include device(1000, 'max') {
+    top: 0;
+    left: 0;
+    padding: 0 1em;
+  }
+
+  @include device(700, 'max') {
+    padding: 0;
+  }
+
 }
 
 .marquee-heading {
   max-width: 80vw;
   font-size: $font-xxl*2.8;
   font-weight: bold;
+
+  @include device(1500, 'max') {
+    right: 90px;
+    font-size: $font-xxl*2.6;
+    max-width: 100%;
+  }
+
+  @include device(1000, 'max') {
+    right: 90px;
+    font-size: $font-xxl*2.2;
+    max-width: 100%;
+  }
+
+  @include device(700, 'max') {
+    font-size: $font-xxl*1.4;
+  }
+
 }
 
 .marquee-short-desc {
   margin: $space-xl auto;
   font-size: $font-xxl;
+
+  @include device(1500, 'max') {
+    max-width: 720px;
+    margin: $space-l auto;
+  }
+
+  @include device(1000, 'max') {
+    right: 90px;
+    font-size: $font-xl;
+  }
+
+
+  @include device(700, 'max') {
+    font-size: $font-l;
+  }
 }
 
 

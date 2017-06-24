@@ -502,12 +502,23 @@ select {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom: 0;
+
+  @include device(600, 'max') {
+    display: flex;
+    flex-direction: column;
+  }
+
 }
 
 #edd_sl_license_keys {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-top: 0;
+
+  @include device(600, 'max') {
+    display: flex;
+    flex-direction: column;
+  }
 
   // thead th {
   //   padding-top: 0;

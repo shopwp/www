@@ -261,6 +261,10 @@ EDD
     display: flex;
     justify-content: space-between;
 
+    @include device(900, 'max') {
+      flex-direction: column;
+    }
+
     li {
       margin: 0;
       background: color(white);
@@ -268,6 +272,11 @@ EDD
       padding: $space-l;
 
       @include card();
+
+      @include device(900, 'max') {
+        width: 100%;
+        margin-bottom: $space-xl;
+      }
 
       &:hover {
         // @include grow();
@@ -864,7 +873,7 @@ form input:-moz-read-only.edd-submit {
 .wps-checkout-login-container {
   position: relative;
   margin-bottom: 4em;
-  
+
   #edd_checkout_user_info,
   #edd_checkout_login_register {
     // position: absolute;
@@ -1031,4 +1040,33 @@ Gravity Forms
 
 #edd_sl_license_keys .edd_sl_license_row .edd_sl_type {
   width: 330px;
+
+  @include device(600, 'max') {
+    width: 100%;
+  }
+
 }
+
+
+
+
+ .no-flexboxlegacy.flexboxtweener {
+
+   .logo-header {
+     width: 160px;
+   }
+
+   .component-snippet {
+     display: block;
+   }
+
+
+  //  .edd_download_purchase_form {
+  //    display: block;
+  //  }
+
+   body.l-col {
+     display: block;
+   }
+
+ }

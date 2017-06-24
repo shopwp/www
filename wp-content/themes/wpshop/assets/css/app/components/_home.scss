@@ -2,4 +2,13 @@ body.page-template-template-home {
   background-color: color(white);
   background-repeat: repeat;
   background-size: 48%;
+
+  @include device(1100, 'max') {
+    background-size: 80%;
+  }
+
+  @include device(700, 'max') {
+    background-size: 100%;
+  }
+
 }

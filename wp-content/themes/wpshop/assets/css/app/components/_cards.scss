@@ -15,6 +15,20 @@
     margin: 0 auto 1em auto;
   }
 
+  @include device(800, 'max') {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
+
+    p {
+      font-size: $font-s;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+    }
+
+  }
+
 }
 
 
@@ -64,3 +78,9 @@
 // .color-base-offset {
 //   background-color: #f2f2f2;
 // }
+
+.component-features {
+  @include device(600, 'max') {
+    margin-top: 0;
+  }
+}

@@ -40,6 +40,13 @@
 .view-key-wrapper {
   display: flex;
   align-items: center;
+
+  .fa {
+    @include device(1400, 'max') {
+      display: none;
+    }
+  }
+
 }
 
 .component-heading {

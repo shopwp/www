@@ -102,8 +102,15 @@ a.button.edd-slg-social-unlink-profile,
     margin-right: $space-m;
   }
 
-  // @include shrink();
-  // @include grow();
+  @include device(600, 'max') {
+    flex-direction: column;
+
+    .btn {
+      margin-right: 0;
+    }
+    
+  }
+
 }
 
 .btn-l,

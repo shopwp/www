@@ -54,12 +54,12 @@
     max-width: 680px;
   }
 
-  @include device(1000, 'max') {
-    max-width: 700px;
+  @include device(1100, 'max') {
+    max-width: 82vw;
   }
 
-  @include device(600, 'max') {
-    max-width: 100%;
+  @include device(700, 'max') {
+    max-width: 95%;
     padding-left: 0;
     padding-right: 0;
   }

@@ -1,6 +1,12 @@
 .sidebar {
   width: 400px;
   margin: $space-m $space-xxl $space-xxl*2 0;
+
+  @include device(1200, 'max') {
+    width: 100%;
+    // margin-right: 0;
+  }
+
 }
 
 .sidebar-inner {
@@ -18,4 +24,21 @@
 
 .sidebar-account {
   margin-top: 0;
+}
+
+
+.account .l-contain {
+  @include device(1300, 'max') {
+    max-width: 97vw;
+
+    .component {
+      padding: 0;
+    }
+  }
+}
+
+.main > .l-fill {
+  @include device(1300, 'max') {
+    flex-direction: column;
+  }
 }
