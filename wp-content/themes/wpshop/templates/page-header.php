@@ -35,6 +35,7 @@ if(is_page('purchase-confirmation')) {
       </h1>
 
     <?php } else if(is_page('purchase-confirmation')) { ?>
+
       <h1 class="has-icon">
         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/prod/imgs/icon-check.svg" alt="Payment Success" class="icon icon-small icon-thumbs-up">
         <?= Titles\title(); ?>
@@ -42,6 +43,7 @@ if(is_page('purchase-confirmation')) {
 
     <?php } else { ?>
       <h1> <?= Titles\title(); ?> </h1>
+
     <?php } ?>
 
   </div>

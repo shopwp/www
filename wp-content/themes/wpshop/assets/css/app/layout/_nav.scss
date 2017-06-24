@@ -24,14 +24,52 @@
 }
 
 .nav-primary {
+
+  @include device(1200, 'max') {
+    display: none;
+  }
+
   .menu-item {
+
     &:last-child {
       margin-right: $space-l;
     }
+
   }
+
 }
 
 .link-account {
   margin-top: 0;
   margin-left: $space-s;
+}
+
+.header .current-menu-item {
+  position: relative;
+
+  &:after {
+    content: '';
+    width: 50%;
+    height: 1px;
+    background: #898989;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+
+#menu-footer {
+
+  @include device(800, 'max') {
+    flex-direction: column;
+
+    .menu-item a {
+      width: 100%;
+      text-align: center;
+    }
+
+  }
+
 }

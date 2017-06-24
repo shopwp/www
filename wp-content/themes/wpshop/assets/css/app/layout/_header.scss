@@ -16,6 +16,41 @@
 
 }
 
+.icon-mobile {
+  display: none;
+}
+
+.pace .pace-activity {
+  @include device(700, 'max') {
+    right: 90px;
+  }
+}
+
+.header-content {
+  position: relative;
+
+  @include device(1200, 'max') {
+    padding-right: $space-l*3;
+
+    .icon-mobile {
+      display: block;
+      height: 25px;
+      position: absolute;
+      top: -8px;
+      right: 0;
+      z-index: 9999;
+    }
+
+  }
+
+  @include device(700, 'max') {
+    .header-account {
+      display: none;
+    }
+  }
+
+}
+
 .header-social-link {
   color: color(base);
   margin: 0 10px;

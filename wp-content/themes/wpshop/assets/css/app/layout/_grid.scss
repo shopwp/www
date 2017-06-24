@@ -36,8 +36,12 @@
   width: 100%;
   margin: 0 auto;
 
-  @include device(1200, 'max') {
+  @include device(1400, 'max') {
     max-width: $container-width;
+  }
+
+  @include device(700, 'max') {
+    max-width: 95%;
   }
 
 }

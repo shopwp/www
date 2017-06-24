@@ -120,6 +120,8 @@ function assets() {
 
   // TODO: Enque within plugin?
   wp_enqueue_script('modernizr-js', Assets\asset_path('js/vendor/modernizr.min.js'), [], null, true);
+  wp_enqueue_script('fontawesome-js', Assets\asset_path('js/vendor/fontawesome.js'), [], null, true);
+  wp_enqueue_script('fontawesome-light-js', Assets\asset_path('js/vendor/light.js'), [], null, true);
 
 
   if (is_single() && comments_open() && get_option('thread_comments')) {
