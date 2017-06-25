@@ -80,6 +80,11 @@ $mobileBodyClass = $detect->isMobile() ? 'l-col is-mobile' : 'l-col';
 
     ?>
 
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH&gtm_auth=o3TueFlIi6DRlFnUQW6CLg&gtm_preview=env-8&gtm_cookies_win=x"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
 
     <?php if (is_front_page()) { ?>
       <div class="wrap container l-fill l-row <?php echo isRegisteredAndPurchasing() ? 'is-registered-and-purchasing' : ''; ?>" role="document">
@@ -120,11 +125,6 @@ $mobileBodyClass = $detect->isMobile() ? 'l-col is-mobile' : 'l-col';
       wp_footer();
 
     ?>
-
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
 
 
     <script>
