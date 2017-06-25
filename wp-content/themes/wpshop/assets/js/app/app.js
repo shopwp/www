@@ -15,11 +15,11 @@ import { initMobile } from './mobile/mobile';
   $(function() {
 
     if (!$('body').hasClass('is-mobile')) {
-      console.log('hi');
       Pace.restart();
+
     } else {
       Pace.stop();
-      console.log('eeehi');
+      
     }
 
     initPlugins($);
