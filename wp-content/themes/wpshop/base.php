@@ -49,7 +49,8 @@ $mobileBodyClass = $detect->isMobile() ? 'l-col is-mobile' : 'l-col';
            'category': 'WP Shopify License',
            'price': <?php echo $purchaseData['payment']['cart_details'][0]['price']; ?>,
            'quantity': 1
-         }]
+         }],
+         'event': 'transactionComplete'
       });
 
     } else {

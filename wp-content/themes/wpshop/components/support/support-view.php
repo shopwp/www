@@ -19,7 +19,7 @@
       <?php } ?>
 
       <?php if (get_sub_field('support_cta_copy')) { ?>
-        <a href="<?php the_sub_field('support_cta_link'); ?>" class="btn btn-l">
+        <a href="<?php the_sub_field('support_cta_link'); ?>" class="btn btn-l gtm-link-support">
 
           <?php if (get_sub_field('support_cta_has_icon')) { ?>
             <i class="fa <?php the_sub_field('support_cta_icon'); ?>" aria-hidden="true"></i>

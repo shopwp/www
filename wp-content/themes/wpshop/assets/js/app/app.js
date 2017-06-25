@@ -8,6 +8,7 @@ import { initCheckout } from './checkout/checkout';
 import { initAccount } from './account/account';
 import { initDocs } from './docs/docs';
 import { initMobile } from './mobile/mobile';
+import { initDriftTracking } from './analytics/analytics';
 
 (function($) {
   "use strict";
@@ -19,7 +20,7 @@ import { initMobile } from './mobile/mobile';
 
     } else {
       Pace.stop();
-      
+
     }
 
     initPlugins($);
@@ -31,9 +32,12 @@ import { initMobile } from './mobile/mobile';
 
     initMobile($);
 
+    initDriftTracking($);
+
     if (window.location.pathname === '/auth') {
       onShopifyAuth($);
     }
+
 
   });
 

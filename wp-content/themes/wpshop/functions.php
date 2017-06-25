@@ -183,7 +183,7 @@ function testtetteeeerrr() {
 
 function your_function($product_data) {
 
-  echo '<small class="purchase-options-note">(Select an option above)</small>';
+  echo '<small class="purchase-options-note">(You need to manually renew your license key each year. We will <b>not</b> auto-renew your account by charging your credit card.)</small>';
 
 }
 
