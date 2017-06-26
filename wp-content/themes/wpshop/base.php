@@ -101,7 +101,7 @@ $mobileBodyClass = $detect->isMobile() ? 'l-col is-mobile' : 'l-col';
         </aside>
       <?php endif; ?>
 
-      <main class="main l-fill">
+      <main class="main l-fill <?php echo is_home() || is_singular('post') ? 'l-contain-narrow' : ''; ?>">
 
         <?php include Wrapper\template_path(); ?>
 

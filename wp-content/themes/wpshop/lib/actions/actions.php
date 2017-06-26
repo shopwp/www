@@ -81,7 +81,7 @@ function wps_register_text() {
     echo 'Checking out as, ' . $firstName . '.';
 
   } else {
-    echo "Register and checkout <p>(An email will be sent with your login credentials)</p>";
+    echo "Account Info <p>(An email will be sent with your login credentials)</p>";
 
   }
 

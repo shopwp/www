@@ -16,6 +16,22 @@
 
 }
 
+.meta-wrapper {
+  border-bottom: 1px solid color(medium-grey);
+  padding-bottom: $space-s;
+
+  time,
+  .byline {
+    width: auto;
+    margin: 0;
+  }
+
+  time {
+    margin-right: $space-xs;
+  }
+
+}
+
 .icon-mobile {
   display: none;
   height: 25px;

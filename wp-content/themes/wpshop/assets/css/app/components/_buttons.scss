@@ -108,7 +108,7 @@ a.button.edd-slg-social-unlink-profile,
     .btn {
       margin-right: 0;
     }
-    
+
   }
 
 }
@@ -163,6 +163,27 @@ a.button.edd-slg-social-unlink-profile {
       display: inline-block;
       margin-left: $space-s;
     }
+  }
+
+}
+
+
+.receipt-account-wrapper .btn {
+  &:after {
+    content: '\f178';
+    font-family: FontAwesome;
+    display: inline-block;
+    margin-left: $space-s;
+  }
+}
+
+
+.purchase-confirmation .edd_purchase_receipt_files .edd_download_file_link {
+  background-color: color(primary);
+
+  &:hover {
+    opacity: 1;
+    background-color: darken(color(primary), 12);
   }
 
 }

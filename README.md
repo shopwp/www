@@ -1,6 +1,6 @@
 [![N|Solid](https://simpleblend.net/wpshop-temp-logo-new.png)](https://wpshop.io)
 
-> Sync your Shopify store with WordPress. A plugin designed to be hackable, seamless, and lightweight.
+> Sell your Shopify products on WordPress. A plugin designed to be extensible, seamless, and powerful
 
 Website: https://wpshop.io
 

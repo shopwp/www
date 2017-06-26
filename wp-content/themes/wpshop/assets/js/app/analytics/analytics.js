@@ -30,4 +30,13 @@ function initDriftTracking($) {
 }
 
 
-export { initDriftTracking }
+function initMailinglistTracking() {
+
+  dataLayer.push({
+    'event': 'mailinglistSubmission'
+  });
+
+}
+
+
+export { initDriftTracking, initMailinglistTracking }

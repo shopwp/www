@@ -96,6 +96,11 @@ function wps_identifier_for_post($post) {
 
 
 
+
+
+
+
+
 // define the edd_send_back_to_checkout callback
 // function filter_edd_send_back_to_checkout( $redirect, $args ) {
 //
@@ -183,7 +188,7 @@ function testtetteeeerrr() {
 
 function your_function($product_data) {
 
-  echo '<small class="purchase-options-note">(You need to manually renew your license key each year. We will <b>not</b> auto-renew your account by charging your credit card.)</small>';
+  echo '<small class="purchase-options-note">(You need to manually renew your license key each year. We will <b>not</b> auto-renew your account by charging your credit card)</small>';
 
 }
 
@@ -197,3 +202,12 @@ function your_function_2($product_data) {
 }
 
 add_action( 'edd_payment_receipt_before', 'your_function_2' );
+
+
+
+
+add_action('login_init', function(){
+  if( !isset( $_GET['action'] ) ) {
+    wp_redirect( '/login' );
+  }
+});

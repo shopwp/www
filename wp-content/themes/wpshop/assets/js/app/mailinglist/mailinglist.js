@@ -2,6 +2,10 @@ import {
   getMailchimpListById
 } from '../ws/ws.js';
 
+import {
+  initMailinglistTracking
+} from '../analytics/analytics.js';
+
 
 /*
 
@@ -41,6 +45,8 @@ function validateMailingListForm($) {
             $(form).find('.form-success').addClass('is-visible');
             $(form).find('.form-success').append('<i class="fa fa-check-circle" aria-hidden="true"></i> Success! Please check your email to finish signing up.');
             $(form).addClass('is-submitted');
+
+            initMailinglistTracking();
 
           }
 

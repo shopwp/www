@@ -114,3 +114,10 @@ table {
 
 
 }
+
+
+
+
+tr.edd_download_history_row:not(:first-child) {
+  display: none;
+}
