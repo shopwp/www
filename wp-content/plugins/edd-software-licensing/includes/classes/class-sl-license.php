@@ -129,8 +129,6 @@ final class EDD_SL_License {
 			$this->$key = $value;
 		}
 
-		$last_changed = microtime();
-		wp_cache_set( 'last_changed', $last_changed, 'licenses' );
 	}
 
 	/**
@@ -227,7 +225,15 @@ final class EDD_SL_License {
 
 		if ( $is_bundle ) {
 
-			$downloads = $purchased_download->get_bundled_downloads();
+			if( method_exists( $purchased_download, 'get_variable_priced_bundled_downloads' ) ) {
+
+				$downloads = $purchased_download->get_variable_priced_bundled_downloads( $price_id );
+
+			} else {
+
+				$downloads = $purchased_download->get_bundled_downloads();
+
+			}
 
 			if ( $has_variable_prices ) {
 				$activation_limit = false === $activation_limit ? $purchased_download->get_activation_limit( $price_id )  : $activation_limit;
@@ -383,7 +389,12 @@ final class EDD_SL_License {
 		// If we have a bundle download, process the licenses.
 		foreach ( $downloads as $d_id ) {
 
-			$download = new EDD_SL_Download( ( $d_id ) );
+			$price_id_pos = strpos( $d_id, '_' );
+			if( false !== $price_id_pos ) {
+				$d_price_id = substr( $d_id, $price_id_pos + 1, strlen( $d_id ) );
+			}
+
+			$download = new EDD_SL_Download( $d_id );
 
 			if ( ! $download->licensing_enabled() ) {
 				continue;
@@ -391,6 +402,10 @@ final class EDD_SL_License {
 
 			if ( in_array( $download->ID, $child_license_download_ids ) ) {
 				continue;
+			}
+
+			if( false === $price_id_pos ) {
+				$d_price_id = edd_get_default_variable_price( $download->ID );
 			}
 
 			// Generate a license for a child license.
@@ -403,7 +418,7 @@ final class EDD_SL_License {
 			);
 
 			$child_license = new EDD_SL_License();
-			$child_license->create( $download->ID, $payment->ID, $price_id, $cart_index, $child_license_args );
+			$child_license->create( $download->ID, $payment->ID, $d_price_id, $cart_index, $child_license_args );
 
 			$keys[] = $child_license->ID;
 
@@ -518,7 +533,7 @@ final class EDD_SL_License {
 		if ( $updated ) {
 			$status  = $this->activation_count > 0 ? 'active' : 'inactive';
 			$this->update_meta( '_edd_sl_status', $status );
-			$this->status = $status;
+			$this->set_status( $status );
 
 			$child_licenses = $this->get_child_licenses();
 			foreach ( $child_licenses as $child_license ) {
@@ -537,9 +552,10 @@ final class EDD_SL_License {
 	 */
 	public function disable() {
 		$updated = wp_update_post( array( 'ID' => $this->ID, 'post_status' => 'draft' ) );
+
 		if ( $updated ) {
 			$this->update_meta( '_edd_sl_status', 'inactive' );
-			$this->status = 'inactive';
+			$this->set_status( 'inactive' );
 
 			$child_licenses = $this->get_child_licenses();
 			foreach ( $child_licenses as $child_license ) {
@@ -667,7 +683,7 @@ final class EDD_SL_License {
 
 		$user_id = $this->get_meta( '_edd_sl_user_id' );
 
-		if ( empty( $user_id ) ) {
+		if ( empty( $user_id ) || $user_id < 0 ) {
 
 			$payment_id = $this->get_payment_id();
 			$payment    = new EDD_Payment( $payment_id );
@@ -852,8 +868,8 @@ final class EDD_SL_License {
 	 * @since 3.5
 	 * @return int
 	 */
-	private function get_activation_limit() {
-		if ( ! is_null( $this->activation_limit ) ) {
+	private function get_activation_limit( $force_lookup = false ) {
+		if ( ! is_null( $this->activation_limit ) && ! $force_lookup ) {
 			return $this->activation_limit;
 		} else {
 			$limit = $this->get_meta( '_edd_sl_limit' );
@@ -920,7 +936,7 @@ final class EDD_SL_License {
 			$this->activation_limit = null;
 
 			// Now let the logic handle what the new limit should be.
-			$this->activation_limit = $this->get_activation_limit();
+			$this->activation_limit = $this->get_activation_limit( true );
 		}
 
 		return $updated;
@@ -1035,9 +1051,10 @@ final class EDD_SL_License {
 
 		if ( is_numeric( $license_expires ) && $license_expires < current_time( 'timestamp' ) && 'expired' !== $status ) {
 			$this->old_status = $status;
-			$this->status     = 'expired';
+			$this->set_status( 'expired' );
 		} elseif ( 'expired' === $status && $license_expires > current_time( 'timestamp' ) ) {
-			$this->status = $this->get_activation_count() >= 1 ? 'active' : 'inactive';
+			$status = $this->get_activation_count() >= 1 ? 'active' : 'inactive';
+			$this->set_status( $status  );
 		} else {
 			$this->status = $status;
 		}
@@ -1567,12 +1584,9 @@ final class EDD_SL_License {
 
 		// Change status to expired when expiration date is in the past
 		if( $expiration < current_time( 'timestamp' ) ) {
-			$this->status = 'expired';
-		}
-
-		// Set status to inactive when existing status is expired and new date is in the future
-		if( 'expired' == $this->status && $expiration > current_time( 'timestamp' ) ) {
-			$this->status = 'inactive';
+			$this->set_status( 'expired' );
+		} else if ( 'expired' == $this->status && $expiration > current_time( 'timestamp' ) ) {
+			$this->set_status( 'inactive' );
 		}
 
 		delete_post_meta( $this->ID, '_edd_sl_is_lifetime' );

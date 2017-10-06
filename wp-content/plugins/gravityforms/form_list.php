@@ -212,6 +212,7 @@ class GFFormList {
 
 		<?php
 
+		GFCommon::display_admin_message();
 		GFCommon::display_dismissible_message();
 
 		$table = new GF_Form_List_Table();
@@ -248,9 +249,9 @@ class GFFormList {
 
 		require_once( GFCommon::get_base_path() . '/form_detail.php' );
 
-		$form_json = rgpost( 'form' );
+		$form_json = rgpost( 'form', false );
 
-		$form = json_decode( $form_json, true );
+		$form = json_decode( stripslashes( $form_json ), true );
 
 		if ( empty( $form['title'] ) ) {
 			$result = array( 'error' => __( 'Please enter a form title.', 'gravityforms' ) );
@@ -420,7 +421,7 @@ class GF_Form_List_Table extends WP_List_Table {
 		return array(
 			'title' => array( 'title', false ),
 			'id'    => array( 'id', false ),
-			'lead_count'    => array( 'lead_count', false ),
+			'entry_count'    => array( 'entry_count', false ),
 			'view_count'    => array( 'view_count', false ),
 			'conversion'    => array( 'conversion', false ),
 		);
@@ -490,6 +491,7 @@ class GF_Form_List_Table extends WP_List_Table {
 			'per_page'    => $per_page,
 		) );
 
+
 		if ( in_array( $sort_column, array( 'view_count', 'lead_count', 'conversion' ) ) ) {
 			usort( $forms, array( $this, 'compare_' . $sort_column . '_'  . $sort_direction ) );
 		}
@@ -524,7 +526,7 @@ class GF_Form_List_Table extends WP_List_Table {
 			'is_active'  => '',
 			'title'      => esc_html__( 'Title', 'gravityforms' ),
 			'id'         => esc_html__( 'ID', 'gravityforms' ),
-			'lead_count' => esc_html__( 'Entries', 'gravityforms' ),
+			'entry_count' => esc_html__( 'Entries', 'gravityforms' ),
 			'view_count' => esc_html__( 'Views', 'gravityforms' ),
 			'conversion' => esc_html__( 'Conversion', 'gravityforms' ),
 		);
@@ -611,14 +613,14 @@ class GF_Form_List_Table extends WP_List_Table {
 		echo absint( $form->view_count );
 	}
 
-	function column_lead_count( $form ) {
-		echo '<a href="?page=gf_entries&id='. absint( $form->id ) .'">' . absint( $form->lead_count ) . '</a>';
+	function column_entry_count( $form ) {
+		echo '<a href="?page=gf_entries&id='. absint( $form->id ) .'">' . absint( $form->entry_count ) . '</a>';
 	}
 
 	function column_conversion( $form ) {
 		$conversion = '0%';
 		if ( $form->view_count > 0 ) {
-			$conversion = ( number_format( $form->lead_count / $form->view_count, 3 ) * 100 ) . '%';
+			$conversion = ( number_format( $form->entry_count / $form->view_count, 3 ) * 100 ) . '%';
 		}
 		echo $conversion;
 	}
@@ -806,6 +808,7 @@ class GF_Form_List_Table extends WP_List_Table {
 					foreach ( $form_ids as $form_id ) {
 						GFFormsModel::delete_views( $form_id );
 					}
+					GFCache::delete( 'get_view_count_per_form' );
 					$message = _n( 'Views for %s form have been reset.', 'Views for %s forms have been reset.', $form_count, 'gravityforms' );
 					break;
 				case 'delete_entries':
@@ -870,23 +873,23 @@ class GF_Form_List_Table extends WP_List_Table {
 	    return $a->view_count < $b->view_count;
 	}
 
-	public static function compare_lead_count_asc( $a, $b ) {
-	    return $a->lead_count > $b->lead_count;
+	public static function compare_entry_count_asc( $a, $b ) {
+	    return $a->entry_count > $b->entry_count;
 	}
 
-	public static function compare_lead_count_desc( $a, $b ) {
-	    return $a->lead_count < $b->lead_count;
+	public static function compare_entry_count_desc( $a, $b ) {
+	    return $a->entry_count < $b->entry_count;
 	}
 
 	public static function compare_conversion_asc( $a, $b ) {
-		$a_conversion = $a->view_count > 0 ? $a->lead_count / $a->view_count : 0;
-		$b_conversion = $b->view_count > 0 ? $b->lead_count / $b->view_count : 0;
+		$a_conversion = $a->view_count > 0 ? $a->entry_count / $a->view_count : 0;
+		$b_conversion = $b->view_count > 0 ? $b->entry_count / $b->view_count : 0;
 	    return $a_conversion > $b_conversion;
 	}
 
 	public static function compare_conversion_desc( $a, $b ) {
-	    $a_conversion = $a->view_count > 0 ? $a->lead_count / $a->view_count : 0;
-		$b_conversion = $b->view_count > 0 ? $b->lead_count / $b->view_count : 0;
+	    $a_conversion = $a->view_count > 0 ? $a->entry_count / $a->view_count : 0;
+		$b_conversion = $b->view_count > 0 ? $b->entry_count / $b->view_count : 0;
 	    return $a_conversion < $b_conversion;
 	}
 }

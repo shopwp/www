@@ -103,7 +103,7 @@ if ( is_user_logged_in() ) :
 							<?php endif; ?>
 						<?php endif; ?>
 						<br/>
-						<a class="edd_sl_purchase_number" href="<?php echo esc_url( edd_get_success_page_uri( '?payment_key=' . edd_get_payment_key( $payment_id ) ) ); ?>" title="<?php esc_attr_e( 'View Purchase Record', 'edd_sl' ); ?>"><?php printf( __( 'Purchase #%d', 'edd_sl' ), edd_get_payment_number( $payment_id ) ); ?></a>
+						<a class="edd_sl_purchase_number" href="<?php echo esc_url( edd_get_success_page_uri( '?payment_key=' . edd_get_payment_key( $payment_id ) ) ); ?>" title="<?php esc_attr_e( 'View Purchase Record', 'edd_sl' ); ?>"><?php printf( __( 'Purchase #%s', 'edd_sl' ), edd_get_payment_number( $payment_id ) ); ?></a>
 						<?php do_action( 'edd_sl_license_key_details', $license->ID ); ?>
 					</td>
 

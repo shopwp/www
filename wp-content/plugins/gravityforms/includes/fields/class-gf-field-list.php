@@ -468,7 +468,7 @@ class GF_Field_List extends GF_Field {
 
 		$value = maybe_unserialize( $value );
 		
-		if( ! is_array( $value ) ) {
+		if( ! is_array( $value ) || ! isset( $value[0] ) ) {
 			return '';
 		}
 
@@ -717,7 +717,7 @@ class GF_Field_List extends GF_Field {
 	}
 
 	/**
-	 * Gets the field value, formatted for exports.
+	 * Gets the field value, formatted for exports. For CSV export return an array.
 	 *
 	 * @since  Unknown
 	 * @access public
@@ -732,9 +732,9 @@ class GF_Field_List extends GF_Field {
 	 * @param array  $entry    The Entry Object.
 	 * @param string $input_id Input ID to export. If not defined, uses the current input ID. Defaults to empty string.
 	 * @param bool   $use_text Not used. Defaults to false.
-	 * @param bool   $is_csv   If the export should be formatted as CSV. Defaults to false.
+	 * @param bool   $is_csv   Is the value going to be used in the CSV export? Defaults to false.
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	public function get_value_export( $entry, $input_id = '', $use_text = false, $is_csv = false ) {
 		if ( empty( $input_id ) ) {
@@ -746,12 +746,15 @@ class GF_Field_List extends GF_Field {
 		}
 
 		$value = rgar( $entry, $input_id );
+
+		$value = unserialize( $value );
+
 		if ( empty( $value ) || $is_csv ) {
 
 			return $value;
 		}
 
-		$list_values = $column_values = unserialize( $value );
+		$list_values = $column_values = $value;
 
 		if ( isset( $column_num ) && is_numeric( $column_num ) && $this->enableColumns ) {
 			$column        = rgars( $this->choices, "{$column_num}/text" );

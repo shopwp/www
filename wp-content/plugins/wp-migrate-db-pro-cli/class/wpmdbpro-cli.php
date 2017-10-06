@@ -33,6 +33,9 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 		$this->wpmdb    = &$this->wpmdbpro;
 		$this->wpmdbpro = $wpmdbpro;
 
+		// extra profile fields
+		add_filter( 'wpmdb_accepted_profile_fields', array( $this, 'accepted_profile_fields' ) );
+
 		// announce extra args
 		add_filter( 'wpmdb_cli_filter_get_extra_args', array( $this, 'filter_extra_args' ), 10, 1 );
 
@@ -63,6 +66,9 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 		// check remote for MF plugin after remote connection has been made
 		add_filter( 'wpmdb_cli_filter_before_cli_initiate_migration', array( $this, 'check_remote_wpmdbpro_media_files_before_migration' ), 20, 1 );
 
+		// check remote for MST plugin after remote connection has been made
+		add_filter( 'wpmdb_cli_filter_before_cli_initiate_migration', array( $this, 'check_remote_wpmdbpro_mst_before_migration' ), 20, 1 );
+
 		// flush rewrite rules
 		add_filter( 'wpmdb_cli_finalize_migration_response', array( $this, 'finalize_flush' ), 20, 1 );
 
@@ -84,6 +90,21 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 
 		// Compare table prefixes and display error if mismatch
 		add_action( 'wpmdb_cli_before_migration', array( $this, 'handle_prefix_mismatch' ), 10, 2 );
+
+		// add import stage
+		add_action( 'wpmdb_cli_during_cli_migration', array( $this, 'cli_import' ), 10, 2 );
+	}
+
+	/**
+	 * Adds extra supported fields to the profile.
+	 *
+	 * @param $fields
+	 *
+	 * @return array
+	 */
+	public function accepted_profile_fields( $fields ) {
+		$fields[] = 'import_file';
+		return $fields;
 	}
 
 	/**
@@ -134,52 +155,6 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 	}
 
 	/**
-	 * Determine which tables to backup (if required)
-	 *
-	 * @return mixed|void
-	 */
-	function get_tables_to_backup() {
-		$tables_to_backup = array();
-		$action           = $this->profile['action'];
-
-		if ( ! in_array( $action, array( 'push', 'pull' ) ) ) {
-			$action = 'pull';
-		}
-
-		if ( 'push' === $action ) {
-			$all_tables      = $this->remote['tables'];
-			$prefixed_tables = $this->remote['prefixed_tables'];
-		} else {
-			$all_tables      = $this->get_tables();
-			$prefixed_tables = $this->get_tables( 'prefix' );
-		}
-
-
-		switch ( $this->profile['backup_option'] ) {
-			case 'backup_only_with_prefix':
-				$tables_to_backup = $prefixed_tables;
-				break;
-			case 'backup_selected':
-				//
-				// When tables to migrate is tables with prefix, select_tables
-				// might be empty. Intersecting it with remote/local tables
-				// throws notice/warning and won't backup the file either.
-				//
-				if ( 'migrate_only_with_prefix' === $this->profile['table_migrate_option'] ) {
-					$tables_to_backup = $prefixed_tables;
-				} else {
-					$tables_to_backup = array_intersect( $this->profile['select_tables'], $all_tables );
-				}
-				break;
-			case 'backup_manual_select':
-				$tables_to_backup = array_intersect( $this->profile['select_backup'], $all_tables );
-				break;
-		}
-
-		return apply_filters( 'wpmdb_cli_tables_to_backup', $tables_to_backup, $this->profile, $this->remote, $this->migration );
-	}
-
-	/**
 	 * Stub for ajax_verify_connection_to_remote_site()
 	 *
 	 * @param array|bool $args
@@ -218,6 +193,7 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 		$args[] = 'preserve-active-plugins';
 		$args[] = 'include-transients';
 		$args[] = 'backup';
+		$args[] = 'import-file';
 
 		// TODO: Move following to WPMDBPro_Media_Files_CLI along with Media Files args parsing.
 		$args[] = 'media';
@@ -241,11 +217,15 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 			return $profile;
 		}
 
-		if ( ! in_array( $assoc_args['action'], array( 'find_replace', 'savefile' ) ) ) {
+		if ( in_array( $assoc_args['action'], array( 'push', 'pull' ) ) ) {
 			if ( empty( $args[0] ) || empty( $args[1] ) ) {
 				return $this->cli_error( __( 'URL and secret-key are required', 'wp-migrate-db-pro-cli' ) );
 			}
 			$connection_info = sprintf( '%s %s', $args[0], $args[1] );
+		}
+
+		if ( 'import' === $assoc_args['action'] ) {
+			$import_file = $assoc_args['import-file'];
 		}
 
 		// --preserve-active-plugins
@@ -316,6 +296,7 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 			'create_backup',
 			'backup_option',
 			'select_backup',
+			'import_file',
 			$media_vars
 		);
 
@@ -338,7 +319,15 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 
 		$tables = $filter_vars['tables'];
 
-		$tables_to_backup = $this->get_tables_to_backup();
+		if ( 'push' === $this->profile['action'] ) {
+			$all_tables      = $this->remote['tables'];
+			$prefixed_tables = $this->remote['prefixed_tables'];
+		} else {
+			$all_tables      = $this->get_tables();
+			$prefixed_tables = $this->get_tables( 'prefix' );
+		}
+
+		$tables_to_backup = $this->wpmdbpro->get_tables_to_backup( $this->profile, $prefixed_tables, $all_tables );
 		if ( 'backup' == $this->post_data['stage'] &&
 			'backup_manual_select' == $this->profile['backup_option'] &&
 			array_diff( $this->profile['select_backup'], $tables_to_backup )
@@ -361,7 +350,7 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 	 * @return array
 	 */
 	function extend_cli_migration( $profile ) {
-		if ( ! in_array( $profile['action'], array( 'find_replace', 'savefile' ) ) ) {
+		if ( ! in_array( $profile['action'], array( 'find_replace', 'savefile', 'import' ) ) ) {
 			$this->remote = $this->verify_remote_connection();
 			if ( is_wp_error( $this->remote ) ) {
 				return $this->remote;
@@ -432,7 +421,24 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 			} elseif ( 'migrate_select' == $this->profile['table_migrate_option'] ) {
 				$tables_to_migrate = array_intersect( $this->profile['select_tables'], $this->remote['tables'] );
 			}
-		}
+		} elseif ( 'import' === $this->profile['action'] && 'find_replace' === $this->post_data['stage'] ) {
+			$temp_tables       = $this->get_tables( 'temp' );
+			$tables_to_migrate = array();
+
+            if ( isset( $this->profile['select_tables'] ) ) {
+                $selected_tables = $this->profile['select_tables'];
+
+                foreach ( $selected_tables as $table ) {
+                    if ( in_array( $this->temp_prefix . $table, $temp_tables ) ) {
+                        $tables_to_migrate[] = $this->temp_prefix . $table;
+                    }
+                }
+            } else {
+                $tables_to_migrate = $temp_tables;
+            }
+        }
+
+
 
 		return $tables_to_migrate;
 	}
@@ -452,7 +458,7 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 		$remote_table_rows = $this->remote['table_rows'];
 
 		if ( 1 === $stage ) { // 1 = backup stage, 2 = migration stage
-			$cached_stage_results = ( 'pull' === $migration_type ) ? $local_table_rows : $remote_table_rows;
+			$cached_stage_results = ( 'push' === $migration_type ) ? $remote_table_rows : $local_table_rows;
 		} else {
 			$cached_stage_results = ( 'pull' === $migration_type ) ? $remote_table_rows : $local_table_rows;
 		}
@@ -471,7 +477,7 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 	function check_wpmdbpro_version_before_migration( $profile ) {
 		// TODO: maybe instantiate WPMDBPro_CLI_Addon to make WPMDBPro_Addon::meets_version_requirements() available here
 		$wpmdb_pro_version = $GLOBALS['wpmdb_meta']['wp-migrate-db-pro']['version'];
-		if ( ! version_compare( $wpmdb_pro_version, '1.7', '>=' ) ) {
+		if ( ! version_compare( $wpmdb_pro_version, '1.8', '>=' ) ) {
 			return $this->cli_error( __( 'Please update WP Migrate DB Pro.', 'wp-migrate-db-pro-cli' ) );
 		}
 
@@ -571,6 +577,33 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 	}
 
 	/**
+	 * Check if --subsite param is passed in the profile but the MST plugin is not installed/active on remote
+	 * hooks on: wpmdb_cli_filter_before_cli_initiate_migration
+	 *
+	 * @param $profile
+	 *
+	 * @return array|WP_Error
+	 */
+	function check_remote_wpmdbpro_mst_before_migration( $profile ) {
+		if ( is_wp_error( $profile ) || in_array( $profile['action'], array(
+				'savefile',
+				'find_replace',
+				'import',
+			) ) ) {
+			return $profile;
+		}
+
+		if ( isset( $profile['mst_select_subsite'] ) && '1' === $profile['mst_select_subsite'] ) {
+			if ( ! isset( $this->remote['mst_available'] ) ) {
+				return $this->cli_error( __( 'The profile is set to migrate a subsite, however WP Migrate DB Pro Multisite tools does not seem to be installed/active on the remote website.', 'wp-migrate-db-pro-cli' ) );
+			}
+		}
+
+		return $profile;
+	}
+
+
+	/**
 	 * Flush rewrite rules
 	 * hooks on: wpmdb_cli_finalize_migration_response
 	 *
@@ -635,6 +668,10 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 				$progress_label = __( 'Performing backup', 'wp-migrate-db-pro-cli' );
 			} else {
 				$progress_label = __( 'Migrating tables', 'wp-migrate-db-pro-cli' );
+
+				if ( 'import' === $this->profile['action'] ) {
+					$progress_label = __( 'Running find & replace', 'wp-migrate-db-pro-cli' );
+				}
 			}
 		}
 
@@ -758,4 +795,65 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 
 		return $subsite_prefix_mismatch;
 	}
+
+	/**
+	 * Imports a file to the database.
+	 *
+	 * @param $post_data
+	 * @param $profile
+	 */
+	public function cli_import( $post_data, $profile ) {
+		if ( 'import' !== $profile['action'] ) {
+			return;
+		}
+
+		$file     = $profile['import_file'];
+		$importer = new WPMDBPro_Import( $this->wpmdbpro );
+
+		if ( $importer->file_is_gzipped( $file ) ) {
+			$file = $importer->decompress_file( $profile['import_file'] );
+		}
+
+		$chunk      = 0;
+		$num_chunks = $importer->get_num_chunks_in_file( $file );
+
+		if ( is_wp_error( $num_chunks ) ) {
+			$error = $num_chunks->get_error_message();
+			$this->wpmdbpro->log_error( $error );
+			WP_CLI::error( $error );
+		}
+
+		$file_object                    = $importer->get_file_object( $file );
+		$file_header                    = $file_object->fread( 2000 );
+		$this->post_data['import_info'] = $importer->parse_file_header( $file_header );
+
+		$current_query = '';
+		$progress      = WP_CLI\Utils\make_progress_bar( __( 'Importing file', 'wp-migrate-db-pro-cli' ), $num_chunks );
+
+		while ( $num_chunks > $chunk ) {
+			$import = $importer->import_chunk( $file, $chunk, $current_query );
+
+			if ( is_wp_error( $import ) ) {
+				$error = $import->get_error_message();
+				$this->wpmdbpro->log_error( $error );
+				WP_CLI::error( $error );
+			}
+
+			$current_query = $import['current_query'];
+
+			$chunk++;
+
+			$progress->tick();
+		}
+
+		$progress->finish();
+
+		$import_find_replace = isset( $profile['import_find_replace'] ) ? $profile['import_find_replace'] : true;
+
+		if ( ! empty( $profile['replace_old'] ) && ! empty( $profile['replace_new'] ) && $import_find_replace ) {
+			$this->post_data['stage'] = 'find_replace';
+			$this->migrate_tables();
+		}
+	}
+
 }

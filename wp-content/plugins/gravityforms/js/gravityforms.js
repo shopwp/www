@@ -269,7 +269,7 @@ function gformDeleteUploadedFile(formId, fieldId, deleteButton){
     parent.find(".ginput_preview").eq(fileIndex).remove();
 
     //displaying single file upload field
-    parent.find('input[type="file"],#extensions_message,.validation_message').removeClass("gform_hidden");
+    parent.find('input[type="file"],.validation_message,#extensions_message_' + formId + '_' + fieldId).removeClass("gform_hidden");
 
     //displaying post image label
     parent.find(".ginput_post_image_file").show();
@@ -731,6 +731,37 @@ function gformPasswordStrength(password1, password2) {
 
 }
 
+//----------------------------
+//------ CHECKBOX FIELD ------
+//----------------------------
+
+function gformToggleCheckboxes( toggleCheckbox ) {
+
+	var $toggle      = jQuery( toggleCheckbox ).parent(),
+	    $toggleLabel = $toggle.find( 'label' );
+	    $checkboxes  = $toggle.parent().find( 'li:not( .gchoice_select_all )' );
+
+	// Set checkboxes state.
+	$checkboxes.each( function() {
+
+		// Set checkbox checked state.
+		jQuery( 'input[type="checkbox"]', this ).prop( 'checked', toggleCheckbox.checked ).trigger( 'change' );
+
+		// Execute onclick event.
+		if ( typeof jQuery( 'input[type="checkbox"]', this )[0].onclick === 'function' ) {
+			jQuery( 'input[type="checkbox"]', this )[0].onclick();
+		}
+
+	} );
+
+	// Change toggle label.
+	if ( toggleCheckbox.checked ) {
+		$toggleLabel.html( $toggleLabel.data( 'label-deselect' ) );
+	} else {
+		$toggleLabel.html( $toggleLabel.data( 'label-select' ) );
+	}
+
+}
 
 
 //----------------------------
@@ -763,6 +794,8 @@ function gformAddListItem( addButton, max ) {
     gformToggleIcons( $container, max );
     gformAdjustClasses( $container );
 
+    gform.doAction( 'gform_list_post_item_add', $clone, $container );
+
 }
 
 function gformDeleteListItem( deleteButton, max ) {
@@ -775,6 +808,8 @@ function gformDeleteListItem( deleteButton, max ) {
 
     gformToggleIcons( $container, max );
     gformAdjustClasses( $container );
+ 
+    gform.doAction( 'gform_list_post_item_delete', $container );
 
 }
 
@@ -1291,8 +1326,9 @@ function renderRecaptcha() {
 
         var $elem      = jQuery( this ),
             parameters = {
-                'sitekey': $elem.data( 'sitekey' ),
-                'theme':   $elem.data( 'theme' )
+                'sitekey':  $elem.data( 'sitekey' ),
+                'theme':    $elem.data( 'theme' ),
+	            'tabindex': $elem.data( 'tabindex' )
             };
 
         if( ! $elem.is( ':empty' ) ) {
@@ -1305,6 +1341,10 @@ function renderRecaptcha() {
 
         grecaptcha.render( this.id, parameters );
 
+	    if( parameters.tabindex ) {
+		    $elem.find( 'iframe' ).attr( 'tabindex', parameters.tabindex );
+	    }
+
         gform.doAction( 'gform_post_recaptcha_render', $elem );
 
     } );
@@ -1316,12 +1356,13 @@ function renderRecaptcha() {
 //----------------------------------------
 
 function gformValidateFileSize( field, max_file_size ) {
-	
+	var validation_element;
+
 	// Get validation message element.
 	if ( jQuery( field ).closest( 'div' ).siblings( '.validation_message' ).length > 0 ) {
-		var validation_element = jQuery( field ).closest( 'div' ).siblings( '.validation_message' );
+		validation_element = jQuery( field ).closest( 'div' ).siblings( '.validation_message' );
 	} else {
-		var validation_element = jQuery( field ).siblings( '.validation_message' );
+		validation_element = jQuery( field ).siblings( '.validation_message' );
 	}
 	
 	
@@ -1334,7 +1375,7 @@ function gformValidateFileSize( field, max_file_size ) {
 	var file = field.files[0];
 	
 	// If selected file is larger than maximum file size, set validation message and unset file selection.
-	if ( file.size > max_file_size ) {
+	if ( file && file.size > max_file_size ) {
 		
 		// Set validation message.
 		validation_element.html( file.name + " - " + gform_gravityforms.strings.file_exceeds_limit );
@@ -1443,6 +1484,10 @@ function gformValidateFileSize( field, max_file_size ) {
 
         uploader.init();
 
+		uploader.bind('BeforeUpload', function(up, file){
+			up.settings.multipart_params.original_filename = file.name;
+		});
+
         uploader.bind('FilesAdded', function(up, files) {
             var max = parseInt(up.settings.gf_vars.max_files),
                 fieldID = up.settings.multipart_params.field_id,
@@ -1483,6 +1528,8 @@ function gformValidateFileSize( field, max_file_size ) {
 
                 $('#' + up.settings.filelist).prepend(status);
                 totalCount++;
+
+
 
             });
 
@@ -1563,11 +1610,9 @@ function gformValidateFileSize( field, max_file_size ) {
 
             $( '#' + file.id ).html( html );
 
-            var fieldID = up.settings.multipart_params["field_id"];
-
             if(file.percent == 100){
                 if(response.status && response.status == 'ok'){
-                    addFile(fieldID, response.data);
+                    addFile(fieldId, response.data);
                 }  else {
                     addMessage(up.settings.gf_vars.message_id, strings.unknown_error + ': ' + file.name);
                 }
@@ -1678,7 +1723,6 @@ function gformAddSpinner(formId, spinnerUrl) {
 
 }
 
-
 //----------------------------------------
 //------ EVENT FUNCTIONS -----------------
 //----------------------------------------
@@ -1758,6 +1802,34 @@ function gformExtractInputIndex( inputId ) {
     var inputIndex = parseInt( inputId.toString().split( '.' )[1] );
     return ! inputIndex ? false : inputIndex;
 }
+
+jQuery( document ).on( 'submit.gravityforms', '.gform_wrapper form', function( event ) {
+	
+	var formWrapper = jQuery( this ).closest( '.gform_wrapper' ),
+	    formID      = formWrapper.attr( 'id' ).split( '_' )[2],
+	    hasPages    = formWrapper.find( '.gform_page' ).length > 0;
+	
+	// If this is a single page form, return.
+	if ( ! hasPages ) {
+		return;
+	}
+	
+	// Get visible page.
+	var visiblePage = formWrapper.find( '.gform_page:visible' );
+	
+	// Get page submit button.
+	var submitButton = visiblePage.find( '.gform_page_footer .gform_next_button' );
+	if ( submitButton.length === 0 ) {
+		submitButton = visiblePage.find( '.gform_page_footer .gform_button' )
+	}
+	// If submit button is not visible, do not submit.
+	if ( ! submitButton.is( ':visible' ) ) {
+		window[ 'gf_submitting_' + formID ] = false;
+		event.preventDefault();
+	}
+	
+} );
+
 
 
 //----------------------------------------

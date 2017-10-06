@@ -118,11 +118,12 @@ class GFLogging extends GFAddOn {
 	/**
 	 * Defines the maximum file size for a log file.
 	 *
+	 * @since  2.2.3.3 Reduced max file size from 100MB to 5MB.
 	 * @since  2.2
 	 * @access private
 	 * @var    string $max_file_size Maximum file size for a log file.
 	 */
-	private $max_file_size = 104857600;
+	private $max_file_size = 5242880;
 
 	/**
 	 * Defines the maximum number of log files to store for a plugin.
@@ -183,13 +184,36 @@ class GFLogging extends GFAddOn {
 	 */
 	public function plugin_settings_page() {
 
-		// If the delete_log parameter is set, delete the log file and display a message.
-		if ( rgget( 'delete_log' ) ) {
-			if ( wp_verify_nonce( rgget( $this->_nonce_action ), $this->_nonce_action ) && $this->delete_log_file( rgget( 'delete_log' ) ) ) {
-				GFCommon::add_message( esc_html__( 'Log file was successfully deleted.', 'gravityforms' ) );
+
+		// If the delete_log parameter is set, delete the log file and redirect.
+		$plugin_slug = rgget( 'delete_log' );
+		if ( $plugin_slug ) {
+
+			$supported_plugins = $this->get_supported_plugins();
+
+			if ( isset( $supported_plugins[ $plugin_slug ] ) ) {
+				if ( wp_verify_nonce( rgget( $this->_nonce_action ), $this->_nonce_action ) && $this->delete_log_file( $plugin_slug ) ) {
+
+					// Prepare redirect URL.
+					$redirect_url = remove_query_arg( array( 'delete_log', 'gform_delete_log' ) );
+					$redirect_url = add_query_arg( array( 'deleted' => '1' ), $redirect_url );
+					$redirect_url = esc_url_raw( $redirect_url );
+					wp_safe_redirect( $redirect_url );
+					die();
+
+				} else {
+
+					// Display error message.
+					GFCommon::add_error_message( esc_html__( 'Log file could not be deleted.', 'gravityforms' ) );
+				}
 			} else {
-				GFCommon::add_error_message( esc_html__( 'Log file could not be deleted.', 'gravityforms' ) );
+				GFCommon::add_error_message( esc_html__( 'Invalid log file.', 'gravityforms' ) );
 			}
+		}
+
+		// If a log file was deleted, display message.
+		if ( '1' === rgget( 'deleted' ) ) {
+			GFCommon::add_message( esc_html__( 'Log file was successfully deleted.', 'gravityforms' ) );
 		}
 
 		parent::plugin_settings_page();

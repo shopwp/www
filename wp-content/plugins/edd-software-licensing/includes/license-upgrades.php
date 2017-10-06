@@ -506,11 +506,14 @@ add_filter( 'edd_cart_item_price', 'edd_sl_license_upgrade_cart_item_price', 10,
  * @return float
  */
 function edd_sl_license_upgrade_cart_item_price_label( $label, $download_id, $options ) {
+	global $edd_sl_cart_item_quantity_removed;
 
 	if( empty( $options['is_upgrade'] ) || ! isset( $options['upgrade_id'] ) ) {
 		return $label;
 	}
 
+	$edd_sl_cart_item_quantity_removed = true;
+	add_filter( 'edd_item_quantities_enabled', '__return_false' );
 	return $label . ' - ' . __( '<em>license upgrade</em>', 'edd_sl' );
 }
 add_filter( 'edd_cart_item_price_label', 'edd_sl_license_upgrade_cart_item_price_label', 10, 3 );
@@ -768,20 +771,18 @@ function edd_sl_process_license_upgrade( $download_id = 0, $payment_id = 0, $typ
 
 		if( $new_download->has_variable_prices() ) {
 
-			$limit       = $new_download->get_price_activation_limit( $upgrade['price_id'] );
-			$is_lifetime = $new_download->is_price_lifetime( $upgrade['price_id'] );
+			$limit = $new_download->get_price_activation_limit( $upgrade['price_id'] );
+			$license->activation_limit = $limit;
 
+			$is_lifetime = $new_download->is_price_lifetime( $upgrade['price_id'] );
 			$license->price_id = $upgrade['price_id'];
 
 		} else {
 
 			$license->reset_activation_limit();
-			$limit       = $license->activation_limit;
 			$is_lifetime = $new_download->is_lifetime();
 
 		}
-
-		$license->activation_limit = $limit;
 
 		if ( ! $is_lifetime ) {
 			// Set license expiration date

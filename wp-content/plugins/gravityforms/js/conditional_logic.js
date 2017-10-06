@@ -2,9 +2,11 @@
 var __gf_timeout_handle;
 
 gform.addAction( 'gform_input_change', function( elem, formId, fieldId ) {
-	var dependentFieldIds = rgars( gf_form_conditional_logic, [ formId, 'fields', gformExtractFieldId( fieldId ) ].join( '/' ) );
-	if( dependentFieldIds ) {
-		gf_apply_rules( formId, dependentFieldIds );
+	if( window.gf_form_conditional_logic ) {
+		var dependentFieldIds = rgars( gf_form_conditional_logic, [ formId, 'fields', gformExtractFieldId( fieldId ) ].join( '/' ) );
+		if( dependentFieldIds ) {
+			gf_apply_rules( formId, dependentFieldIds );
+		}
 	}
 }, 10 );
 
@@ -303,6 +305,7 @@ function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, cal
 
 		if(useAnimation && !isInit){
 			if($target.length > 0){
+				$target.find('input:hidden').prop( 'disabled', false );
 				$target.slideDown(callback);
 			} else if(callback){
 				callback();
@@ -316,7 +319,7 @@ function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, cal
 			if ( display == '' || display == 'none' ){
 				display = 'list-item';
 			}
-
+			$target.find('input:hidden').prop( 'disabled', false );
 			$target.css('display', display);
 
 			if(callback){
@@ -355,6 +358,7 @@ function gf_do_action(action, targetId, useAnimation, defaultValues, isInit, cal
 			}
 		} else{
 			$target.hide();
+			$target.find('input:hidden').prop( 'disabled', true );
 			if(callback){
 				callback();
 			}

@@ -77,11 +77,11 @@ class GFAsyncUpload {
 			GFCommon::recursive_add_index_file( $target_dir );
 		}
 
-		$uploaded_filename = $_FILES['file']['name'];
+		$uploaded_filename = $_REQUEST['original_filename'];
 		$file_name = isset( $_REQUEST['name'] ) ? $_REQUEST['name'] : '';
 		$field_id  = rgpost( 'field_id' );
-		$field_id = absint( $field_id );
-		$field     = GFFormsModel::get_field( $form, $field_id );
+		$field_id  = absint( $field_id );
+		$field     = gf_apply_filters( array( 'gform_multifile_upload_field', $form['id'], $field_id ), GFFormsModel::get_field( $form, $field_id ), $form, $field_id );
 
 		if ( empty( $field ) || GFFormsModel::get_input_type( $field ) != 'fileupload' ) {
 			die();
@@ -220,17 +220,27 @@ class GFAsyncUpload {
 			}
 		}
 
-		// Check if file has been uploaded
 		if ( ! $chunks || $chunk == $chunks - 1 ) {
-			// Strip the temp .part suffix off
+			// Upload is complete. Strip the temp .part suffix off
 			rename( "{$file_path}.part", $file_path );
-		}
 
+			if ( file_exists( $file_path ) ) {
+				GFFormsModel::set_permissions( $file_path );
+			} else {
+				self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' ' . $uploaded_filename );
+			}
 
-		if ( file_exists( $file_path ) ) {
-			GFFormsModel::set_permissions( $file_path );
+			gf_do_action( array( 'gform_post_multifile_upload', $form['id'] ), $form, $field, $uploaded_filename, $tmp_file_name, $file_path );
+
+			GFCommon::log_debug( sprintf( 'GFAsyncUpload::upload(): File upload complete. temp_filename: %s  uploaded_filename: %s ', $tmp_file_name, $uploaded_filename ) );
 		} else {
-			self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' '. $uploaded_filename );
+			if ( file_exists( "{$file_path}.part" ) ) {
+				GFFormsModel::set_permissions( "{$file_path}.part" );
+			} else {
+				self::die_error( 105, __( 'Upload unsuccessful', 'gravityforms' ) . ' ' . $uploaded_filename );
+			}
+
+			GFCommon::log_debug( sprintf( 'GFAsyncUpload::upload(): Chunk upload complete. temp_filename: %s  uploaded_filename: %s chunk: %d', $tmp_file_name, $uploaded_filename, $chunk ) );
 		}
 
 		$output = array(
@@ -242,10 +252,6 @@ class GFAsyncUpload {
 		);
 
 		$output = json_encode( $output );
-
-		GFCommon::log_debug( sprintf( 'GFAsyncUpload::upload(): File upload complete. temp_filename: %s  uploaded_filename: %s ', $tmp_file_name, $uploaded_filename ) );
-
-		gf_do_action( array( 'gform_post_multifile_upload', $form['id'] ), $form, $field, $uploaded_filename, $tmp_file_name, $file_path );
 
 		die( $output );
 	}

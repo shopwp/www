@@ -15,7 +15,7 @@ function edd_sl_licenses_page() {
 	$default_views  = edd_sl_license_views();
 	$requested_view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : 'licenses';
 
-	if ( array_key_exists( $requested_view, $default_views ) && function_exists( $default_views[$requested_view] ) ) {
+	if ( array_key_exists( $requested_view, $default_views ) && is_callable( $default_views[ $requested_view ] ) ) {
 		edd_sl_render_license_view( $requested_view, $default_views );
 	} else {
 		edd_sl_licenses_list();
@@ -178,7 +178,7 @@ function edd_sl_render_license_view( $view, $callbacks ) {
 				</div>
 
 				<div id="edd-item-card-wrapper" class="edd-sl-license-card" style="float: left">
-					<?php if ( function_exists( $callbacks[ $view ] ) ) : ?>
+					<?php if ( is_callable( $callbacks[ $view ] ) ) : ?>
 						<?php $callbacks[ $view ]( $license ) ?>
 					<?php endif; ?>
 				</div>
@@ -343,7 +343,8 @@ function edd_sl_licenses_view( $license ) {
 								<?php
 								$customer_id = $license->customer_id;
 								$customer    = new EDD_Customer( $customer_id );
-								echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' ) . $customer->id ) . '">' . $customer->name . '</a>';
+								$name        = empty( $customer->name ) ? $customer->email : $customer->name;
+								echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' ) . $customer->id ) . '">' . $name . '</a>';
 								?>
 							</td>
 						</tr>

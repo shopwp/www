@@ -10,8 +10,8 @@
 
   <section class="footer-social-links">
 
-    <a href="https://join.slack.com/wpshopify/shared_invite/MTg5OTQxODEwOTM1LTE0OTU5ODY2MTktN2Y1ODk0YzBlNg" class="footer-social-link" target="_blank">
-      <i class="fa fa-slack" aria-hidden="true"></i>
+    <a href="https://join.slack.com/wpshopify/shared_invite/MTg5OTQxODEwOTM1LTE0OTU5ODY2MTktN2Y1ODk0YzBlNg" class="footer-social-link gtm-link-support" target="_blank">
+      <i class="fa fa-slack gtm-link-support" aria-hidden="true"></i>
     </a>
 
     <a href="https://github.com/arobbins/wp-shopify" class="footer-social-link" target="_blank">

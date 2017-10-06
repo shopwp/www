@@ -187,7 +187,6 @@ class GF_Field_CAPTCHA extends GF_Field {
 				}
 				else {
 
-					$secure_token = self::create_recaptcha_secure_token( $secret_key );
 					$language     = empty( $this->captchaLanguage ) ? 'en' : $this->captchaLanguage;
 
 					// script is queued for the footer with the language property specified
@@ -196,8 +195,18 @@ class GF_Field_CAPTCHA extends GF_Field {
 					add_action( 'wp_footer', array( $this, 'ensure_recaptcha_js' ) );
 					add_action( 'gform_preview_footer', array( $this, 'ensure_recaptcha_js' ) );
 
-					$stoken = $this->use_stoken() ? sprintf( 'data-stoken=\'%s\'', esc_attr( $secure_token ) ) : '';
-					$output = "<div id='" . esc_attr( $field_id ) ."' class='ginput_container ginput_recaptcha' data-sitekey='" . esc_attr( $site_key ) . "' {$stoken} data-theme='" . esc_attr( $theme ) . "' ></div>";
+					$tabindex = GFCommon::$tab_index++;
+
+					$stoken = '';
+
+					if ( $this->use_stoken() ) {
+						// The secure token is a deprecated feature of the reCAPTCHA API.
+						// https://developers.google.com/recaptcha/docs/secure_token
+						$secure_token = self::create_recaptcha_secure_token( $secret_key );
+						$stoken = sprintf( 'data-stoken=\'%s\'', esc_attr( $secure_token ) );
+					}
+
+					$output = "<div id='" . esc_attr( $field_id ) ."' class='ginput_container ginput_recaptcha' data-sitekey='" . esc_attr( $site_key ) . "' {$stoken} data-theme='" . esc_attr( $theme ) . "' data-tabindex='{$tabindex}'></div>";
 
 					return $output;
 				}

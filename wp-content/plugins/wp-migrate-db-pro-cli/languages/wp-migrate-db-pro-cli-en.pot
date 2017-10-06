@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wp-migrate-db-pro-cli\n"
 "Report-Msgid-Bugs-To: nom@deliciousbrains.com\n"
-"POT-Creation-Date: 2016-11-01 09:12-0400\n"
+"POT-Creation-Date: 2017-09-14 15:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,208 +17,213 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: class/wpmdbpro-cli-command.php:290
+#: class/wpmdbpro-cli-command.php:63
+msgid "You must provide an import file."
+msgstr ""
+
+#: class/wpmdbpro-cli-command.php:353
 msgid "There are no saved profiles for this site."
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:309
+#: class/wpmdbpro-cli-command.php:372
 msgctxt "Export data to remote database"
 msgid "push"
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:310
+#: class/wpmdbpro-cli-command.php:373
 msgctxt "Import data from remote database"
 msgid "pull"
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:311
+#: class/wpmdbpro-cli-command.php:374
 msgctxt "Export file from local database"
 msgid "export"
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:312
+#: class/wpmdbpro-cli-command.php:375
 msgctxt "Run a find & replace on local database"
 msgid "find & replace"
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:324
+#: class/wpmdbpro-cli-command.php:387
 msgctxt "Profile list column heading"
 msgid "ID"
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:325
+#: class/wpmdbpro-cli-command.php:388
 msgctxt "Profile list column heading"
 msgid "NAME"
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:326
+#: class/wpmdbpro-cli-command.php:389
 msgctxt "Profile list column heading"
 msgid "ACTION"
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:327
+#: class/wpmdbpro-cli-command.php:390
 msgctxt "Profile list column heading"
 msgid "REMOTE"
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:407
+#: class/wpmdbpro-cli-command.php:473
 msgid "WP Migrate DB Pro CLI class not available."
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:414
+#: class/wpmdbpro-cli-command.php:480
 msgid "Migration successful."
 msgstr ""
 
-#: class/wpmdbpro-cli-command.php:416
+#: class/wpmdbpro-cli-command.php:482
 #, php-format
 msgid "Export saved to: %s"
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:61
+#: class/wpmdbpro-cli-settings.php:66
 #, php-format
 msgid "Invalid action parameter - `%s`"
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:67
+#: class/wpmdbpro-cli-settings.php:72
 #, php-format
 msgid "Invalid setting parameter - `%s`"
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:76
+#: class/wpmdbpro-cli-settings.php:81
 msgid "Please pass a value to update."
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:82
+#: class/wpmdbpro-cli-settings.php:87
 msgid "Invalid parameter for push/push settings. Value must be `on` or `off`."
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:90
+#: class/wpmdbpro-cli-settings.php:95
 #, php-format
 msgid "%s setting updated."
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:92
+#: class/wpmdbpro-cli-settings.php:97
 msgid "Setting unchanged."
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:95
+#: class/wpmdbpro-cli-settings.php:100
 msgid "The connection-key cannot be set via the CLI."
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:103
+#: class/wpmdbpro-cli-settings.php:105
 msgid "License updated."
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:114
+#: class/wpmdbpro-cli-settings.php:120
 #, php-format
 msgid "Too many positional arguments: %s"
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:127
+#: class/wpmdbpro-cli-settings.php:133
 #, php-format
 msgid "No setting `%s` currently saved in the database."
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:170
-msgid ""
-"WP Migrate DB Pro already locally activated. No need to set the license."
-msgstr ""
-
-#: class/wpmdbpro-cli-settings.php:175
+#: class/wpmdbpro-cli-settings.php:176
 msgid "Checking license key..."
 msgstr ""
 
-#: class/wpmdbpro-cli-settings.php:181
-msgid "Please provide a valid license key."
-msgstr ""
-
-#: class/wpmdbpro-cli.php:103
+#: class/wpmdbpro-cli.php:124
 msgid "Profile ID not found."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:117
+#: class/wpmdbpro-cli.php:138
 msgid "Verifying connection..."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:246
+#: class/wpmdbpro-cli.php:222
 msgid "URL and secret-key are required"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:276
+#: class/wpmdbpro-cli.php:256
 msgid ""
 "The Media Files addon needs to be installed and activated to make use of "
 "this option"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:279
+#: class/wpmdbpro-cli.php:259
 msgid "--media must be set to an acceptable value, see: wp help migratedb "
 msgstr ""
 
-#: class/wpmdbpro-cli.php:296
+#: class/wpmdbpro-cli.php:276
 msgid "The --media-subsites option can only be used on a multisite install"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:299
+#: class/wpmdbpro-cli.php:279
 msgid ""
 "The --media-subsites option can only be used in conjunction with the --media "
 "option"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:302
-#: class/wpmdbpro-cli.php:562
+#: class/wpmdbpro-cli.php:282
+#: class/wpmdbpro-cli.php:568
 msgid ""
 "One or more valid Blog IDs or Subsite URLs must be supplied to make use of "
 "the --media-subsites option"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:346
+#: class/wpmdbpro-cli.php:335
 msgid "Invalid backup option or non-existent table selected for backup."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:475
+#: class/wpmdbpro-cli.php:481
 msgid "Please update WP Migrate DB Pro."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:495
+#: class/wpmdbpro-cli.php:501
 msgid "Profile ID missing."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:523
+#: class/wpmdbpro-cli.php:529
 msgid ""
 "The profile is set to migrate media files, however WP Migrate DB Pro Media "
 "Files does not seem to be installed/active on the local website."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:545
+#: class/wpmdbpro-cli.php:551
 msgid ""
 "The profile is set to migrate media files, however WP Migrate DB Pro Media "
 "Files does not seem to be installed/active on the remote website."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:552
+#: class/wpmdbpro-cli.php:558
 msgid ""
 "One or more subsites should exist on the remote to make use of the --media-"
 "subsites option"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:582
+#: class/wpmdbpro-cli.php:598
+msgid ""
+"The profile is set to migrate a subsite, however WP Migrate DB Pro Multisite "
+"tools does not seem to be installed/active on the remote website."
+msgstr ""
+
+#: class/wpmdbpro-cli.php:615
 msgctxt "The caches and rewrite rules for the target are being flushed"
 msgid "Flushing caches and rewrite rules..."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:635
+#: class/wpmdbpro-cli.php:668
 msgid "Performing backup"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:637
+#: class/wpmdbpro-cli.php:670
 msgid "Migrating tables"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:688
+#: class/wpmdbpro-cli.php:673
+msgid "Running find & replace"
+msgstr ""
+
+#: class/wpmdbpro-cli.php:725
 msgid "Database table prefix differs between installations."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:692
+#: class/wpmdbpro-cli.php:729
 #, php-format
 msgid ""
 "We have detected you have table prefix \"%s\" at %s but have \"%s\" here. "
@@ -226,7 +231,7 @@ msgid ""
 "with the same base table prefix."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:695
+#: class/wpmdbpro-cli.php:732
 #, php-format
 msgid ""
 "The remote database uses a prefix of \"%s\". This migration will create new "
@@ -236,7 +241,7 @@ msgid ""
 "$table_prefix variable to \"%s\""
 msgstr ""
 
-#: class/wpmdbpro-cli.php:697
+#: class/wpmdbpro-cli.php:734
 #, php-format
 msgid ""
 "The local database uses a prefix of \"%s\". This migration will create new "
@@ -244,6 +249,10 @@ msgid ""
 "To use these new tables, AFTER the migration is complete, you will need to "
 "edit your wp-config.php file in your local environment and change the "
 "$table_prefix variable to \"%s\""
+msgstr ""
+
+#: class/wpmdbpro-cli.php:831
+msgid "Importing file"
 msgstr ""
 
 #: template/php-version-requirement-warning.php:7

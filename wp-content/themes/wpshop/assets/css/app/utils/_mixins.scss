@@ -110,7 +110,7 @@ Dim
 
 */
 @mixin invalidInput() {
-  box-shadow: 0px 0px 0px 1px color(error);
+  box-shadow: 0 0 0 2px #ffd3d3;
 }
 
 

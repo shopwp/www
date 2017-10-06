@@ -5,7 +5,7 @@ if ( ! class_exists( 'GFForms' ) ) {
 }
 
 if ( ! defined( 'GRAVITY_API_URL' ) ) {
-	define( 'GRAVITY_API_URL', 'https://o4zq2dvjn6.execute-api.us-east-1.amazonaws.com/prod/' );
+	define( 'GRAVITY_API_URL', 'https://gravityapi.com/wp-json/gravityapi/v1' );
 }
 
 if ( ! class_exists( 'Gravity_Api' ) ) {
@@ -43,7 +43,7 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 		 */
 		public function register_current_site( $license_key, $is_md5 = false ) {
 
-			$body = GFCommon::get_remote_post_params();
+			$body = array();
 			$body['site_name'] = get_bloginfo( 'name' );
 			$body['site_url']  = get_bloginfo( 'url' );
 
@@ -60,12 +60,12 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			$result = $this->request( 'sites', $body, 'POST', array( 'headers' => $this->get_license_auth_header( $license_key_md5 ) ) );
 			$result = $this->prepare_response_body( $result );
 
-			if ( is_wp_error( $result ) ) {
-				GFCommon::log_debug( __METHOD__ . '() - error registering site. ' . print_r( $result, true ) );
+			if ( is_wp_error( $result ) || ! is_object( $result ) ) {
+				GFCommon::log_error( __METHOD__ . '() - error registering site. ' . print_r( $result, true ) );
 				return $result;
 			}
 
-			//Updating site key and secret
+			// Updating site key and secret
 			update_option( 'gf_site_key', $result->key );
 			update_option( 'gf_site_secret', $result->secret );
 
@@ -77,7 +77,9 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 		public function update_current_site( $new_license_key_md5 ) {
 
 			$site_key = $this->get_site_key();
-			if ( empty( $site_key ) ) {
+			$site_secret = $this->get_site_secret();
+			if ( empty( $site_key ) || empty( $site_secret ) ) {
+
 				return false;
 			}
 
@@ -86,13 +88,7 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			$body['site_url']  = get_bloginfo( 'url' );
 			$body['license_key_md5'] = $new_license_key_md5;
 			$body['site_key'] = $site_key;
-
-			$site_secret = $this->get_site_secret();
-			if ( $site_secret ) {
-				$site_secret_md5 = md5( $site_secret );
-				$body['site_secret'] = $site_secret;
-				$body['site_secret_md5'] = $site_secret_md5;
-			}
+			$body['site_secret'] = $site_secret;
 
 			GFCommon::log_debug( __METHOD__ . '() - refreshing license info' );
 
@@ -109,7 +105,7 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			return true;
 		}
 
-		public function deregister_current_site(){
+		public function deregister_current_site() {
 
 			$site_key = $this->get_site_key();
 			$site_secret = $this->get_site_secret();
@@ -137,50 +133,17 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			return true;
 		}
 
-		/***
-		 * Retrieves API Keys for third party services. Requires a valid license
-		 *
-		 * @param $third_party_name string - Name or the third party service. "Dropbox" is currently the only supported service.
-		 * @return WP_Error|object - If successful, returns the api key.
-		 */
-		public function get_api_key( $third_party_name ) {
-
-			$site_keys = $this->ensure_site_registered();
-			if ( empty( $site_keys ) ) {
-				return false;
-			}
-
-			switch ( $third_party_name ) {
-
-				case 'Dropbox' :
-
-					GFCommon::log_debug( __METHOD__ . '() - retrieving dropbox api key' );
-
-					$auth = base64_encode( $site_keys['site_key'] . ':' . $site_keys['site_secret'] );
-
-					$headers = array( 'Authorization' => 'GravityAPI ' . $auth );
-
-					$response = $this->request( 'credentials/dropbox', array(), 'GET', array( 'headers' => $headers ) );
-
-					return $this->prepare_response_body( $response );
-
-				default :
-
-					return new WP_Error( 'unsupported_service_name', 'The provided third party service name: ' . $third_party_name . ' is not supported. ' );
-			}
-
-		}
 
 		// # HELPERS
 
-		private function get_site_auth_header( $site_key, $site_secret ){
+		private function get_site_auth_header( $site_key, $site_secret ) {
 
 			$auth = base64_encode( "{$site_key}:{$site_secret}" );
 			return array( 'Authorization' => 'GravityAPI ' . $auth );
 
 		}
 
-		private function get_license_auth_header( $license_key_md5 ){
+		private function get_license_auth_header( $license_key_md5 ) {
 
 			$auth = base64_encode( "license:{$license_key_md5}" );
 			return array( 'Authorization' => 'GravityAPI ' . $auth );

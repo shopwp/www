@@ -108,18 +108,6 @@ function edds_add_settings( $settings ) {
 			'type'  => 'checkbox'
 		),
 		array(
-			'id'    => 'stripe_alipay',
-			'name'  => __( 'Accept Alipay in Stripe Checkout', 'edds' ),
-			'desc'  => __( 'Check this box if you would like to permit your customers to pay with an Alipay account.', 'edds' ),
-			'type'  => 'checkbox'
-		),/*
-		array(
-			'id'   => 'stripe_bitcoin',
-			'name'  => __( 'Accept Bitcoin in Stripe Checkout', 'edds' ),
-			'desc'  => __( 'Check this box if you would like to permit your customers to pay with bitcoin. Supported by Buy Now buttons only.', 'edds' ),
-			'type'  => 'checkbox'
-		),*/
-		array(
 			'id'    => 'stripe_checkout_button_text',
 			'name'  => __( 'Complete Purchase Text', 'edds' ),
 			'desc'  => __( 'Enter the text shown on the checkout\'s submit button. This is the button that opens the Stripe Checkout modal window.', 'edds' ),

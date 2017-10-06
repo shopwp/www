@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: johnny5
 Donate link: http://urbangiraffe.com/about/
-Tags: post, admin, seo, pages, manage, 301, 404, redirect, permalink
-Requires at least: 4.2
-Tested up to: 4.8
-Stable tag: 2.6.2
+Tags: post, admin, seo, pages, manage, 301, 404, redirect, permalink, apache, nginx
+Requires at least: 4.4
+Tested up to: 4.8.1
+Stable tag: 2.7.3
 
 Redirection is a WordPress plugin to manage 301 redirections and keep track of 404 errors without requiring knowledge of Apache .htaccess files.
 
@@ -15,53 +15,25 @@ This is particularly useful if you are migrating pages from an old website, or a
 
 And it's 100% free!
 
-New features include:
+Features include:
 
 * 404 error monitoring - captures a log of 404 errors and allows you to easily map these to 301 redirects
 * Custom 'pass-through' redirections allowing you to pass a URL through to another page, file, or website.
 * Full logs for all redirected URLs
-* All URLs can be redirected, not just ones that  don't exist
-* Redirection methods - redirect based upon login status, redirect to random pages, redirect based upon the referrer!
-
-Existing features include:
-
+* All URLs can be redirected, not just ones that don't exist
+* WP CLI support
+* Redirect based upon login status, user agent, or referrer
 * Automatically add a 301 redirection when a post's URL changes
 * Manually add 301, 302, and 307 redirections for a WordPress post, or for any other file
+* Full import/export to JSON, CSV, .htaccess, and Nginx rewrite.rules
 * Full regular expression support
 * Apache .htaccess is not required - works entirely inside WordPress
-* Redirect index.php, index.html, and index.htm access
+* Support for Apache and Nginx
 * Redirection statistics telling you how many times a redirection has occurred, when it last happened, who tried to do it, and where they found your URL
-* Fully localized
-
-Redirection is available in:
-
-* English
-* French by Oncle Tom
-* Hebrew by Rami
-* Spanish by Juan
-* Simplified Chinese by Sha Miao
-* Catalan by Robert Bu
-* Japanese by Naoko McCracken
-* Hindi by Ashish
-* Russian by Grib
-* Bahasa Indonesia by Septian Fujianto
-* German by Fabian Schulz
-* Italian by Raffaello Tesi
-* Ukrainian by WordPress plugins Ukraine
-* Polish by Kuba Majerczyk
-* Arabic by Jerry John
-* Brazilian Portuguese by Pedro Padron
-* Dutch by Marlon Navas, Pieter Carette, and Bart Kummel
-* Hungarian by daSSad and Szépe Viktor
-* Turkish by Fatih Cevik
-* Romanian by InboxTranslations
-* Greek by Stefanos Kofopoulos
-* Belarusian by Alexander Ovsov
-* Czech by Martin Jurica
-* Danish by Rasmus Himmelstrup
-* Persian by Danial Hatami
+* Fully localized & available in many languages
 
 Please submit bugs and patches to https://github.com/johngodley/redirection
+Please submit translations to https://translate.wordpress.org/projects/wp-plugins/redirection
 
 == Installation ==
 
@@ -96,6 +68,54 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 * Another database change. Please backup your data
 
 == Changelog ==
+
+= 2.7.3 - 26th August 2017 =
+* Fix an import regression bug
+
+= 2.7.2 - 25th August 2017 =
+* Better IE11 support
+* Fix Apache importer
+* Show more detailed error messages
+* Refactor match code and fix a problem saving referrer & user agent matches
+* Fix save button not enabling for certain redirect types
+
+= 2.7.1 - 14th August 2017 =
+* Improve display of errors
+* Improve handling of CSV
+* Reset tables when changing menus
+* Change how the page is displayed to reduce change of interference from other plugins
+
+= 2.7 - 6th August 2017 =
+* Finish conversion to React
+* Add WP CLI support for import/export
+* Add a JSON import/export that exports all data
+* Edit redirect position
+* Apache config moved to options page
+* Fix 410 error code
+* Fix page limits
+* Fix problems with IE/Safari
+
+= 2.6.6 =
+* Use React on redirects page
+* Use translate.wordpress.org for language files
+
+= 2.6.5 =
+* Use React on groups page
+
+= 2.6.4 =
+* Add a limit to per page screen options
+* Fix warning in referrer match when referrer doesn't exist
+* Fix 404 page showing options
+* Fix RSS token not regenerating
+* 404 and log filters can now avoid logging
+* Use React on modules page
+
+= 2.6.3 =
+* Use React on log and 404 pages
+* Fix log option not saving 'never'
+* Additional check for auto-redirect from root
+* Fix delete plugin button
+* Improve IP detection for Cloudflare
 
 = 2.6.2 =
 * Set auto_detect_line_endings when importing CSV
@@ -319,7 +339,7 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 = 2.1.24 =
 * Add Ukrainian translation
 * Add Polish translation
-* Database optimisation
+* Database optimization
 
 = 2.1.23 =
 * Add Bahasa Indonesian translation
@@ -370,7 +390,7 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 * Errors on some sites
 
 = 2.1.10 =
-* Missing localisations
+* Missing localizations
 
 = 2.1.9 =
 * Fix 'you do not permissions' error on some non-English sites

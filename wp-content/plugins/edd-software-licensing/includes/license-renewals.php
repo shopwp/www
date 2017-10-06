@@ -369,6 +369,7 @@ function edd_sl_add_renewal_to_cart( $license_id = 0, $by_key = false ) {
  * @return void
  */
 function edd_sl_renewal_details_cart_item( $item ) {
+	global $edd_sl_cart_item_quantity_removed;
 	if( empty( $item['options']['is_renewal'] ) || empty( $item['options']['license_key'] ) ) {
 		return;
 	}
@@ -377,8 +378,9 @@ function edd_sl_renewal_details_cart_item( $item ) {
 				<span class="edd-sl-renewal-label"><?php _e( 'Renewing', 'edd_sl' ); ?>:</span>
 				<span class="edd-sl-renewal-key"><?php echo $item['options']['license_key']; ?></span>
 		</div>
-
 	<?php
+	$edd_sl_cart_item_quantity_removed = true;
+	add_filter( 'edd_item_quantities_enabled', '__return_false' );
 }
 add_action( 'edd_checkout_cart_item_title_after', 'edd_sl_renewal_details_cart_item' );
 

@@ -44,6 +44,7 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 		'enable_setting_pages'            => true,
 		'enable_admin_bar_menu'			  => true,
 		'enable_cornerstone_content'      => true,
+		'enable_text_link_counter'        => true,
 		'show_onboarding_notice'          => false,
 		'first_activated_on'              => false,
 	);
@@ -63,6 +64,7 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 	protected $site_types = array(
 		'',
 		'blog',
+		'shop',
 		'news',
 		'smallBusiness',
 		'corporateOther',
@@ -76,6 +78,14 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 		'staging',
 		'development',
 	);
+
+	/** @var array Possible has_multiple_authors options. */
+	protected $has_multiple_authors_options = array(
+		'',
+		true,
+		false,
+	);
+
 
 	/**
 	 * Add the actions and filters for the option
@@ -189,16 +199,25 @@ class WPSEO_Option_Wpseo extends WPSEO_Option {
 					break;
 
 				case 'site_type':
-					$clean[ $key ] = '';
+					$clean[ $key ] = $old[ $key ];
 					if ( isset( $dirty[ $key ] ) && in_array( $dirty[ $key ], $this->site_types, true ) ) {
 						$clean[ $key ] = $dirty[ $key ];
 					}
 					break;
+
 				case 'environment_type':
-					$clean[ $key ] = '';
+					$clean[ $key ] = $old[ $key ];
 					if ( isset( $dirty[ $key ] ) && in_array( $dirty[ $key ], $this->environment_types, true ) ) {
 						$clean[ $key ] = $dirty[ $key ];
 					}
+					break;
+
+				case 'has_multiple_authors':
+					$clean[ $key ] = $old[ $key ];
+					if ( isset( $dirty[ $key ] ) && in_array( $dirty[ $key ], $this->has_multiple_authors_options, true ) ) {
+						$clean[ $key ] = $dirty[ $key ];
+					}
+
 					break;
 
 				case 'first_activated_on' :

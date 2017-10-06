@@ -138,27 +138,64 @@ div.gf_delete_notice {
 	margin-bottom: 10px;
 }
 
-div.gforms_help_alert {
+div.gforms_help_alert,
+div.gforms_red_alert,
+div.gforms_green_alert {
 	background-color: #fff;
-    border-left: 4px solid #ffba00;
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-    display: inline-block;
-    font-family: "lucida sans","lucida grande",lucida,sans-serif;
-    font-size: 12px;
-    line-height: 1.6;
-    margin: 12px 24px -6px;
-    padding: 11px 15px;
-    position: relative;
-    text-align: left;
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+	display: inline-block;
+	font-family: "lucida sans","lucida grande",lucida,sans-serif;
+	font-size: 12px;
+	line-height: 1.6;
+	margin: 12px 24px -6px;
+	padding: 11px 15px;
+	position: relative;
+	text-align: left;
+}
+
+/* yellow alert style */
+
+div.gforms_help_alert {
+	border-left: 4px solid #FFBA00;
 }
 
 html[dir="rtl"] div.gforms_help_alert {
-    border-right: 4px solid #ffba00;
-    border-left: none !important;
+	border-right: 4px solid #FFBA00;
+	border-left: none !important;
 }
 
 div.gforms_help_alert i.fa {
 	color: #D4662C;
+}
+
+/* red alert style */
+
+div.gforms_red_alert {
+	border-left: 4px solid #DD3D36;
+}
+
+html[dir="rtl"] div.gforms_red_alert {
+	border-right: 4px solid #DD3D36;
+	border-left: none !important;
+}
+
+div.gforms_red_alert i.fa {
+	color: #DD3D36;
+}
+
+/* green alert style */
+
+div.gforms_green_alert {
+	border-left: 4px solid #7AD03A;
+}
+
+html[dir="rtl"] div.gforms_green_alert {
+	border-right: 4px solid #7AD03A;
+	border-left: none !important;
+}
+
+div.gforms_green_alert i.fa {
+	color: #7AD03A;
 }
 
 div.gforms_helpbox {
@@ -826,6 +863,10 @@ ul.gfield_checkbox, ul.gfield_radio {
 	width: auto;
 	line-height: 1.5;
 	vertical-align: top
+}
+
+.gchoice_select_all {
+	font-weight: 700;
 }
 
 .gfield_checkbox li input[type="checkbox"],
@@ -2675,7 +2716,8 @@ ul#gf_form_toolbar_links li.gf_form_toolbar_results a.gf_toolbar_disabled:hover 
 }
 
 #form_switcher{
-	max-width : 300px;
+	max-width: 300px;
+	min-width: 130px;
 }
 
 .form_switcher_arrow i{
@@ -4732,6 +4774,15 @@ div.wrap.gf_browser_chrome .gfield_checkbox li input {
 	width:500px;*/
 }
 
+#gform_register_site {
+	display:none;
+}
+
+#gform_license_key {
+	font-size: 19px !important;
+	width: 90% !important;
+}
+
 /* Form List and Entry List */
 
 #entry_list_form .column-is_starred,
@@ -4744,7 +4795,7 @@ div.wrap.gf_browser_chrome .gfield_checkbox li input {
 
 #form_list_form .column-id,
 #form_list_form .column-conversion,
-#form_list_form .column-lead_count,
+#form_list_form .column-entry_count,
 #form_list_form .column-view_count{
 	width:10%;
 }

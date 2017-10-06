@@ -3,9 +3,9 @@
 a.button.edd-slg-social-unlink-profile,
 .edd_download_file_link,
 .edd_submit,
+.edd-submit,
 .search-submit,
-.menu-item-back a,
-.edd-add-to-cart-label {
+.menu-item-back a {
   padding: calc(#{$space-m} - 3px) calc(#{$space-xl} - 3px);
   color: color(white);
   background-color: color(primary);
@@ -84,7 +84,7 @@ a.button.edd-slg-social-unlink-profile,
 
 }
 
-.edd-add-to-cart-label,
+.edd-submit,
 .menu-item-back a,
 .edd_download_file_link,
 .btn-secondary {

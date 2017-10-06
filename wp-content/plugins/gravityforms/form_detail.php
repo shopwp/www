@@ -36,8 +36,6 @@ class GFFormDetail {
 			$update_result = self::save_form_info( $form_id, rgpost( 'gform_meta', false ) );
 		}
 
-		require_once( GFCommon::get_base_path() . '/currency.php' );
-
 		wp_print_styles( array( 'thickbox' ) );
 
 		/* @var GF_Field_Address $gf_address_field  */
@@ -1350,7 +1348,7 @@ class GFFormDetail {
 			<input type="text" id="field_max_file_size" size="10" placeholder="<?php $max_upload_size = wp_max_upload_size() / 1048576;
 			echo $max_upload_size; ?>MB" />
 
-			<div>
+			<div id="gform_server_max_file_size_notice">
 				<small><?php printf( esc_html__( 'Maximum allowed on this server: %sMB', 'gravityforms' ),  $max_upload_size ); ?></small>
 			</div>
 		</li>
@@ -1521,6 +1519,19 @@ class GFFormDetail {
 
 				</div>
 			</div>
+		</li>
+		<?php
+		do_action( 'gform_field_standard_settings', 1360, $form_id );
+		?>
+
+		<li class="select_all_choices_setting field_setting">
+
+			<input type="checkbox" id="field_select_all_choices" onclick="var value = jQuery(this).is(':checked'); SetFieldProperty('enableSelectAll', value); RefreshSelectedFieldPreview();" onkeypress="var value = jQuery(this).is(':checked'); SetFieldProperty('enableSelectAll', value); RefreshSelectedFieldPreview();" />
+			<label for="field_select_all_choices" class="inline">
+				<?php esc_html_e( 'Enable "Select All" choice', 'gravityforms' ); ?>
+				<?php gform_tooltip( 'form_field_select_all_choices' ) ?>
+			</label>
+
 		</li>
 		<?php
 		do_action( 'gform_field_standard_settings', 1362, $form_id );

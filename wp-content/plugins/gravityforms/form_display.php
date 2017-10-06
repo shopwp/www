@@ -186,16 +186,25 @@ class GFFormDisplay {
 
 			}
 
-			if ( is_array( $confirmation ) && isset( $confirmation['redirect'] ) ){
+			/**
+			 * Allows the confirmation redirect header to be suppressed. Required by GFAPI::submit_form().
+			 *
+			 * @since 2.3
+			 *
+			 * @param bool $suppress_redirect
+			 */
+			$suppress_redirect = apply_filters( 'gform_suppress_confirmation_redirect', false );
+
+			if ( is_array( $confirmation ) && isset( $confirmation['redirect'] ) && ! $suppress_redirect ) {
 				header( "Location: {$confirmation["redirect"]}" );
-                /**
-                 * Fires after submission, if the confirmation page includes a redirect
-                 *
-                 * Used to perform additional actions after submission
-                 *
-                 * @param array $lead The Entry object
-                 * @param array $form The Form object
-                 */
+				/**
+				 * Fires after submission, if the confirmation page includes a redirect
+				 *
+				 * Used to perform additional actions after submission
+				 *
+				 * @param array $lead The Entry object
+				 * @param array $form The Form object
+				 */
 				gf_do_action( array( 'gform_post_submission', $form['id'] ), $lead, $form );
 				exit;
 			}
@@ -330,7 +339,7 @@ class GFFormDisplay {
 			}
 
 			if ( empty( $_FILES[ $input_name ]['name'] ) ) {
-				GFCommon::log_debug( "GFFormDisplay::upload_files(): Skipping field because " . $_FILES[ $input_name ]['name'] . " could not be found: {$field->label}({$field->id} - {$field->type})." );
+				GFCommon::log_debug( "GFFormDisplay::upload_files(): Skipping field because a file could not be found: {$field->label}({$field->id} - {$field->type})." );
 				continue;
 			}
 
@@ -663,7 +672,7 @@ class GFFormDisplay {
 		}
 	}
 
-	public static function get_form( $form_id, $display_title = true, $display_description = true, $force_display = false, $field_values = null, $ajax = false, $tabindex = 1 ) {
+	public static function get_form( $form_id, $display_title = true, $display_description = true, $force_display = false, $field_values = null, $ajax = false, $tabindex = 0 ) {
 
 		/**
 		 * Provides the ability to modify the options used to display the form
@@ -847,10 +856,6 @@ class GFFormDisplay {
 				return $entry_limit_validation;
 			}
 
-			// make sure database isn't currently being upgraded.
-			if ( gf_upgrade()->is_upgrading() ){
-				return "<div class='gf_submission_limit_message'><p>" . esc_html__( 'This area of the site is currently undergoing maintenance and is temporarily not accepting new submissions. Please try again in a few minutes. Sorry for any inconvenience.', 'gravityforms' ) . '</p></div>';
-			}
 		}
 
 		$form_string = '';
@@ -895,12 +900,10 @@ class GFFormDisplay {
 			$form_string .= "
                 <div class='{$wrapper_css_class}{$custom_wrapper_css_class}' id='gform_wrapper_$form_id' " . $style . '>';
 
-			$default_anchor = $has_pages || $ajax ? true : false;
-			$use_anchor     = gf_apply_filters( array( 'gform_confirmation_anchor', $form_id ), $default_anchor, $form );
-			if ( $use_anchor !== false ) {
-				$form_string .= "<a id='gf_$form_id' class='gform_anchor' ></a>";
-				$action .= "#gf_$form_id";
-			}
+			$anchor      = self::get_anchor( $form, $ajax );
+			$form_string .= $anchor['tag'];
+			$action      .= $anchor['id'];
+
 			$target = $ajax ? "target='gform_ajax_frame_{$form_id}'" : '';
 
 			$form_css_class = ! empty( $form['cssClass'] ) ? "class='{$form_css_class}'" : '';
@@ -940,7 +943,11 @@ class GFFormDisplay {
 			}
 
 			if ( $is_postback && ! $is_valid ) {
-				$validation_message = "<div class='validation_error'>" . esc_html__( 'There was a problem with your submission.', 'gravityforms' ) . ' ' . esc_html__( 'Errors have been highlighted below.', 'gravityforms' ) . '</div>';
+				if ( gf_upgrade()->get_submissions_block() ){
+					$validation_message = "<div class='gf_submission_limit_message'><p>" . esc_html__( 'Your form was not submitted. Please try again in a few minutes.', 'gravityforms' ) . '</p></div>';
+				} else {
+					$validation_message = "<div class='validation_error'>" . esc_html__( 'There was a problem with your submission.', 'gravityforms' ) . ' ' . esc_html__( 'Errors have been highlighted below.', 'gravityforms' ) . '</div>';
+				}
 				$form_string .= gf_apply_filters( array( 'gform_validation_message', $form_id ), $validation_message, $form );
 			}
 
@@ -1020,9 +1027,9 @@ class GFFormDisplay {
 				$spinner_url     = gf_apply_filters( array( 'gform_ajax_spinner_url', $form_id ), GFCommon::get_base_url() . '/images/spinner.gif', $form );
 				$scroll_position = array( 'default' => '', 'confirmation' => '' );
 
-				if ( $use_anchor !== false ) {
-					$scroll_position['default']      = is_numeric( $use_anchor ) ? 'jQuery(document).scrollTop(' . intval( $use_anchor ) . ');' : "jQuery(document).scrollTop(jQuery('#gform_wrapper_{$form_id}').offset().top);";
-					$scroll_position['confirmation'] = is_numeric( $use_anchor ) ? 'jQuery(document).scrollTop(' . intval( $use_anchor ) . ');' : "jQuery(document).scrollTop(jQuery('#gforms_confirmation_message_{$form_id}').offset().top);";
+				if ( $anchor['scroll'] !== false ) {
+					$scroll_position['default']      = is_numeric( $anchor['scroll'] ) ? 'jQuery(document).scrollTop(' . intval( $anchor['scroll'] ) . ');' : "jQuery(document).scrollTop(jQuery('#gform_wrapper_{$form_id}').offset().top);";
+					$scroll_position['confirmation'] = is_numeric( $anchor['scroll'] ) ? 'jQuery(document).scrollTop(' . intval( $anchor['scroll'] ) . ');' : "jQuery(document).scrollTop(jQuery('{$anchor['id']}').offset().top);";
 				}
 
 				$iframe_style = defined( 'GF_DEBUG' ) && GF_DEBUG ? 'display:block;width:600px;height:300px;border:1px solid #eee;' : 'display:none;width:0px;height:0px;';
@@ -1032,7 +1039,7 @@ class GFFormDisplay {
 				$iframe_title = $is_html5 ? " title='Ajax Frame'" : '';
 
 				$form_string .= "
-                <iframe style='{$iframe_style}' src='about:blank' name='gform_ajax_frame_{$form_id}' id='gform_ajax_frame_{$form_id}'" . $iframe_title . ">" . esc_html__( 'This iframe contains the logic required to handle AJAX powered Gravity Forms.', 'gravityforms' ) . "</iframe>
+                <iframe style='{$iframe_style}' src='about:blank' name='gform_ajax_frame_{$form_id}' id='gform_ajax_frame_{$form_id}'" . $iframe_title . ">" . esc_html__( 'This iframe contains the logic required to handle Ajax powered Gravity Forms.', 'gravityforms' ) . "</iframe>
                 <script type='text/javascript'>" . apply_filters( 'gform_cdata_open', '' ) . '' .
 					'jQuery(document).ready(function($){' .
 						"gformInitSpinner( {$form_id}, '{$spinner_url}' );" .
@@ -1056,12 +1063,12 @@ class GFFormDisplay {
 								"window['gf_submitting_{$form_id}'] = false;" .
 							'}' .
 							'else if(!is_redirect){' .
-								"var confirmation_content = jQuery(this).contents().find('#gforms_confirmation_message_{$form_id}').html();" .
+								"var confirmation_content = jQuery(this).contents().find('.GF_AJAX_POSTBACK').html();" .
 								'if(!confirmation_content){' .
 									'confirmation_content = contents;' .
 								'}' .
 								'setTimeout(function(){' .
-									"jQuery('#gform_wrapper_{$form_id}').replaceWith('<' + 'div id=\'gforms_confirmation_message_{$form_id}\' class=\'gform_confirmation_message_{$form_id} gforms_confirmation_message\'' + '>' + confirmation_content + '<' + '/div' + '>');" .
+									"jQuery('#gform_wrapper_{$form_id}').replaceWith(confirmation_content);" .
 									"{$scroll_position['confirmation']}" .
 									"jQuery(document).trigger('gform_confirmation_loaded', [{$form_id}]);" .
 									"window['gf_submitting_{$form_id}'] = false;" .
@@ -1299,11 +1306,18 @@ class GFFormDisplay {
 		return $field;
 	}
 
+	/**
+	 * Get the maximum field ID for the current form.
+	 *
+	 * @param array $form The current form object.
+	 *
+	 * @return int
+	 */
 	public static function get_max_field_id( $form ) {
 		$max = 0;
 		foreach ( $form['fields'] as $field ) {
-			if ( floatval( $field->id ) > $max ) {
-				$max = floatval( $field->id );
+			if ( intval( $field->id ) > $max ) {
+				$max = intval( $field->id );
 			}
 		}
 
@@ -1387,7 +1401,7 @@ class GFFormDisplay {
 		if ( $is_spam ) {
 
 			//marking entry as spam
-			RGFormsModel::update_lead_property( $lead['id'], 'status', 'spam', false, true );
+			GFFormsModel::update_entry_property( $lead['id'], 'status', 'spam', false, true );
 			$lead['status'] = 'spam';
 
 		}
@@ -1496,6 +1510,8 @@ class GFFormDisplay {
 		$form = self::update_confirmation( $form, $lead );
 		$form_id = absint( $form['id'] );
 
+		$suppress_redirect = false;
+
 		if ( $form['confirmation']['type'] == 'message' ) {
 			$confirmation = self::get_confirmation_message( $form['confirmation'], $form, $lead, $aux_data );
 		} else {
@@ -1527,7 +1543,16 @@ class GFFormDisplay {
 				$url .= "?{$query_string}";
 			}
 
-			if ( headers_sent() || $ajax ) {
+			/**
+			 * Allows the confirmation redirect header to be suppressed. Required by GFAPI::submit_form().
+			 *
+			 * @since 2.3
+			 *
+			 * @param bool $suppress_redirect
+			 */
+			$suppress_redirect = apply_filters( 'gform_suppress_confirmation_redirect', $suppress_redirect );
+
+			if ( ( headers_sent() || $ajax ) && ! $suppress_redirect ) {
 				// Perform client side redirect for AJAX forms, of if headers have already been sent.
 				$confirmation = self::get_js_redirect_confirmation( $url, $ajax );
 			} else {
@@ -1542,7 +1567,7 @@ class GFFormDisplay {
 
 		if ( ! is_array( $confirmation ) ) {
 			$confirmation = GFCommon::gform_do_shortcode( $confirmation ); //enabling shortcodes
-		} else if ( headers_sent() || $ajax ) {
+		} elseif ( ( headers_sent() || $ajax ) && ! $suppress_redirect ) {
 			//Perform client side redirect for AJAX forms, of if headers have already been sent
 			$confirmation = self::get_js_redirect_confirmation( $confirmation['redirect'], $ajax ); //redirecting via client side
 		}
@@ -1566,11 +1591,12 @@ class GFFormDisplay {
 	 * @return string The confirmation message.
 	 */
 	public static function get_confirmation_message( $confirmation, $form, $entry, $aux_data = array() ) {
+		$ajax   = isset( $_POST['gform_ajax'] );
+		$anchor = self::get_anchor( $form, $ajax );
+		$anchor = $anchor['tag'];
 
-		$default_anchor = self::has_pages( $form ) ? 1 : 0;
-		$anchor         = gf_apply_filters( array( 'gform_confirmation_anchor', $form['id'] ), $default_anchor, $form ) ? "<a id='gf_{$form['id']}' class='gform_anchor' ></a>" : '';
-		$nl2br          = rgar( $confirmation, 'disableAutoformat' ) ? false : true;
-		$css_class      = esc_attr( rgar( $form, 'cssClass' ) );
+		$nl2br     = rgar( $confirmation, 'disableAutoformat' ) ? false : true;
+		$css_class = esc_attr( rgar( $form, 'cssClass' ) );
 
 		$message = GFCommon::replace_variables( $confirmation['message'], $form, $entry, false, true, $nl2br, 'html', $aux_data );
 		$message = self::maybe_sanitize_confirmation_message( $message );
@@ -1592,6 +1618,7 @@ class GFFormDisplay {
 	}
 
 	private static function get_js_redirect_confirmation( $url, $ajax ) {
+		$url = esc_url_raw( $url );
 		$confirmation = "<script type=\"text/javascript\">" . apply_filters( 'gform_cdata_open', '' ) . " function gformRedirect(){document.location.href='$url';}";
 		if ( ! $ajax ) {
 			$confirmation .= 'gformRedirect();';
@@ -1621,8 +1648,8 @@ class GFFormDisplay {
 			return false;
 		}
 
-		// make sure database isn't being upgraded now
-		if ( gf_upgrade()->is_upgrading() ) {
+		// make sure database isn't being upgraded now and submissions are blocked
+		if ( gf_upgrade()->get_submissions_block() ) {
 			return false;
 		}
 
@@ -1797,6 +1824,10 @@ class GFFormDisplay {
 		global $wp_query;
 		if ( isset( $wp_query->posts ) && is_array( $wp_query->posts ) ) {
 			foreach ( $wp_query->posts as $post ) {
+				if ( ! $post instanceof WP_Post ) {
+					continue;
+				}
+
 				$forms = self::get_embedded_forms( $post->post_content, $ajax );
 				foreach ( $forms as $form ) {
 					if ( isset( $form['id'] ) ) {
@@ -1867,7 +1898,7 @@ class GFFormDisplay {
 			wp_enqueue_script( 'gform_datepicker_init' );
 		}
 
-		if ( $ajax || self::has_price_field( $form ) || self::has_password_strength( $form ) || GFCommon::has_list_field( $form ) || GFCommon::has_credit_card_field( $form ) || self::has_conditional_logic( $form ) || self::has_currency_format_number_field( $form ) || self::has_calculation_field( $form ) || self::has_recaptcha_field( $form ) ) {
+		if ( $ajax || self::has_price_field( $form ) || self::has_password_strength( $form ) || GFCommon::has_list_field( $form ) || GFCommon::has_credit_card_field( $form ) || self::has_conditional_logic( $form ) || self::has_currency_format_number_field( $form ) || self::has_calculation_field( $form ) || self::has_recaptcha_field( $form ) || self::has_checkbox_field( $form, true ) ) {
 			wp_enqueue_script( 'gform_gravityforms' );
 		}
 
@@ -2110,7 +2141,7 @@ class GFFormDisplay {
 					}
 				} elseif ( $input_type == 'time' ) { // maintained for backwards compatibility. The Time field now has an inputs array.
 					$parameter_val = RGFormsModel::get_parameter_value( $field->inputName, $field_values, $field );
-					if ( ! empty( $parameter_val ) && preg_match( '/^(\d*):(\d*) ?(.*)$/', $parameter_val, $matches ) ) {
+					if ( ! empty( $parameter_val ) && ! is_array( $parameter_val ) && preg_match( '/^(\d*):(\d*) ?(.*)$/', $parameter_val, $matches ) ) {
 						$field_val   = array();
 						$field_val[] = esc_attr( $matches[1] ); //hour
 						$field_val[] = esc_attr( $matches[2] ); //minute
@@ -2463,10 +2494,6 @@ class GFFormDisplay {
 
 	public static function get_pricing_init_script( $form ) {
 
-		if ( ! class_exists( 'RGCurrency' ) ) {
-			require_once( 'currency.php' );
-		}
-
 		return "if(window[\"gformInitPriceFields\"]) jQuery(document).ready(function(){gformInitPriceFields();} );";
 	}
 
@@ -2500,16 +2527,10 @@ class GFFormDisplay {
 			$script_str .= gf_apply_filters( array( 'gform_input_mask_script', $form['id'] ), $script, $form['id'], $field->id, $mask );
 		}
 
-		if ( ! empty( $script_str ) ) {
-			return 'if(!/(android)/i.test(navigator.userAgent)){' . $script_str . '}';
-		}
-
 		return $script_str;
 	}
 
 	public static function get_calculations_init_script( $form ) {
-		require_once( GFCommon::get_base_path() . '/currency.php' );
-
 		$formula_fields = array();
 
 		foreach ( $form['fields'] as $field ) {
@@ -2545,9 +2566,6 @@ class GFFormDisplay {
 	 * @return string
 	 */
 	public static function get_number_formats_script( $form ) {
-
-		require_once ( GFCommon::get_base_path() . '/currency.php' );
-
 		$number_formats = array();
 		$currency       = RGCurrency::get_currency( GFCommon::get_currency() );
 
@@ -2599,6 +2617,31 @@ class GFFormDisplay {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Determines if the supplied form has a Checkbox field.
+	 *
+	 * @since  2.3
+	 * @access public
+	 *
+	 * @param array $form               The current forms properties.
+	 * @param bool  $select_all_enabled Check if the "Select All" choices setting is enabled
+	 *
+	 * @return bool
+	 */
+	private static function has_checkbox_field( $form, $select_all_enabled = false ) {
+
+		if ( is_array( $form['fields'] ) ) {
+			foreach ( $form['fields'] as $field ) {
+				if ( $field->type == 'checkbox' && ( ! $select_all_enabled || ( $select_all_enabled && $field->enableSelectAll ) ) ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+
 	}
 
 	/**
@@ -2930,14 +2973,14 @@ class GFFormDisplay {
 	 */
 	public static function get_field_content( $field, $value = '', $force_frontend_label = false, $form_id = 0, $form = null ) {
 
-		$field_label = $field->get_field_label( $form, $value );
+		$field_label   = $field->get_field_label( $force_frontend_label, $value );
 		$admin_buttons = $field->get_admin_buttons();
 
 		$input_type = GFFormsModel::get_input_type( $field );
 
-		$is_form_editor = GFCommon::is_form_editor();
+		$is_form_editor  = GFCommon::is_form_editor();
 		$is_entry_detail = GFCommon::is_entry_detail();
-		$is_admin = $is_form_editor || $is_entry_detail;
+		$is_admin        = $is_form_editor || $is_entry_detail;
 
 		if ( $input_type == 'adminonly_hidden' ) {
 			$field_content = ! $is_admin ? '{FIELD}' : sprintf( "%s<label class='gfield_label' >%s</label>{FIELD}", $admin_buttons, esc_html( $field_label ) );
@@ -3208,7 +3251,7 @@ class GFFormDisplay {
 
 	public static function replace_save_variables( $text, $form, $resume_token, $email = null ) {
 		$resume_token = sanitize_key( $resume_token );
-		$form_id = intval( $form['id'] );
+		$form_id      = intval( $form['id'] );
 
 		/**
 		 * Filters the 'Save and Continue' URL to be used with a partial entry submission.
@@ -3231,7 +3274,7 @@ class GFFormDisplay {
 		$email_esc = esc_attr( $email );
 		$text      = str_replace( '{save_email}', $email_esc, $text );
 
-		$resume_submit_button_text       = esc_html__( 'Send Email', 'gravityforms' );
+		$resume_submit_button_text       = esc_html__( 'Send Link', 'gravityforms' );
 		$resume_email_validation_message = esc_html__( 'Please enter a valid email address.', 'gravityforms' );
 
 		// The {save_email_input} accepts shortcode-style options button_text and validation_message. E.g.,
@@ -3253,16 +3296,9 @@ class GFFormDisplay {
 
 		$action = esc_url( remove_query_arg( 'gf_token' ) );
 
-		$ajax = isset( $_POST['gform_ajax'] );
-
-		$has_pages = self::has_pages( $form );
-
-		$default_anchor = $has_pages || $ajax ? true : false;
-
-		$use_anchor     = gf_apply_filters( array( 'gform_confirmation_anchor', $form_id ), $default_anchor, $form );
-		if ( $use_anchor !== false ) {
-			$action .= "#gf_$form_id";
-		}
+		$ajax   = isset( $_POST['gform_ajax'] );
+		$anchor = self::get_anchor( $form, $ajax );
+		$action .= $anchor['id'];
 
 		$html_input_type = RGFormsModel::is_html5_enabled() ? 'email' : 'text';
 
@@ -3289,7 +3325,7 @@ class GFFormDisplay {
 		$resume_form = "<div class='form_saved_message_emailform'>
 							<form action='{$action}' method='POST' id='gform_{$form_id}' {$target}>
 								{$ajax_fields}
-								<input type='{$html_input_type}' name='gform_resume_email' value='{$email_esc}'/>
+								<input type='{$html_input_type}' name='gform_resume_email' value='{$email_esc}' placeholder='email address'/>
 								<input type='hidden' name='gform_resume_token' value='{$resume_token}' />
 								<input type='hidden' name='gform_send_resume_link' value='{$form_id}' />
 	                            <input type='submit' name='gform_send_resume_link_button' id='gform_send_resume_link_button_{$form_id}' value='{$resume_submit_button_text}' {$ajax_submit}/>
@@ -3304,9 +3340,10 @@ class GFFormDisplay {
 	}
 
 	public static function handle_save_email_confirmation( $form, $ajax ) {
-		$resume_email       = $_POST['gform_resume_email'];
+		$resume_email = $_POST['gform_resume_email'];
 		if ( ! GFCommon::is_valid_email( $resume_email ) ) {
 			GFCommon::log_debug( 'GFFormDisplay::handle_save_email_confirmation(): Invalid email address: ' . $resume_email );
+
 			return new WP_Error( 'invalid_email' );
 		}
 		$resume_token       = $_POST['gform_resume_token'];
@@ -3321,23 +3358,12 @@ class GFFormDisplay {
 		$confirmation            = '<div class="form_saved_message_sent"><span>' . $confirmation_message . '</span></div>';
 		$nl2br                   = rgar( $form['confirmation'], 'disableAutoformat' ) ? false : true;
 		$save_email_confirmation = self::replace_save_variables( $confirmation, $form, $resume_token, $resume_email );
-
 		$save_email_confirmation = GFCommon::replace_variables( $save_email_confirmation, $form, $entry, false, true, $nl2br );
 		$save_email_confirmation = GFCommon::gform_do_shortcode( $save_email_confirmation );
-
 		$save_email_confirmation = self::maybe_sanitize_confirmation_message( $save_email_confirmation );
 
-		$form_id = absint( $form['id'] );
-
-		$has_pages = self::has_pages( $form );
-
-		$default_anchor = $has_pages || $ajax ? true : false;
-
-		$use_anchor     = gf_apply_filters( array( 'gform_confirmation_anchor', $form_id ), $default_anchor, $form );
-
-		if ( $use_anchor !== false ) {
-			$save_email_confirmation = "<a id='gf_$form_id' class='gform_anchor' ></a>" . $save_email_confirmation;
-		}
+		$anchor                  = self::get_anchor( $form, $ajax );
+		$save_email_confirmation = $anchor['tag'] . $save_email_confirmation;
 
 		if ( $ajax ) {
 			$save_email_confirmation = "<!DOCTYPE html><html><head><meta charset='UTF-8' /></head><body class='GF_AJAX_POSTBACK'>" . $save_email_confirmation . '</body></html>';
@@ -3349,28 +3375,17 @@ class GFFormDisplay {
 	}
 
 	public static function handle_save_confirmation( $form, $resume_token, $confirmation_message, $ajax ) {
-		$resume_email         = isset( $_POST['gform_resume_email'] ) ? $_POST['gform_resume_email'] : null;
+		$resume_email = isset( $_POST['gform_resume_email'] ) ? $_POST['gform_resume_email'] : null;
 
 		$confirmation_message = self::maybe_sanitize_confirmation_message( $confirmation_message );
-
 		$confirmation_message = self::replace_save_variables( $confirmation_message, $form, $resume_token, $resume_email );
-
 		$confirmation_message = GFCommon::gform_do_shortcode( $confirmation_message );
-
 		$confirmation_message = "<div class='form_saved_message'><span>" . $confirmation_message . '</span></div>';
 
-		$form_id = absint( $form['id'] );
+		$anchor               = self::get_anchor( $form, $ajax );
+		$confirmation_message = $anchor['tag'] . $confirmation_message;
 
-		$has_pages = self::has_pages( $form );
-
-		$default_anchor = $has_pages || $ajax ? true : false;
-
-		$use_anchor     = gf_apply_filters( array( 'gform_confirmation_anchor', $form_id ), $default_anchor, $form );
-
-		if ( $use_anchor !== false ) {
-			$confirmation_message = "<a id='gf_{$form_id}' class='gform_anchor' ></a>" . $confirmation_message;
-		}
-
+		$form_id           = absint( $form['id'] );
 		$wrapper_css_class = GFCommon::get_browser_class() . ' gform_wrapper';
 
 		$confirmation_message = "<div class='{$wrapper_css_class}' id='gform_wrapper_{$form_id}'>" . $confirmation_message . '</div>';
@@ -3383,7 +3398,6 @@ class GFFormDisplay {
 
 		return $confirmation_message;
 	}
-
 
 	/**
 	 * Insert review page into form.
@@ -3426,6 +3440,38 @@ class GFFormDisplay {
 
 		return $form;
 
+	}
+
+	/**
+	 * Get the anchor config for the current form.
+	 *
+	 * @since 2.2.2.1
+	 *
+	 * @param array $form The current Form object.
+	 * @param bool $ajax Indicates if AJAX is enabled for the current form.
+	 *
+	 * @return array
+	 */
+	public static function get_anchor( $form, $ajax ) {
+		$form_id = absint( $form['id'] );
+		$anchor  = $ajax || self::has_pages( $form ) ? true : false;
+
+		/**
+		 * Allow the anchor to be enabled/disabled or set to a scroll distance.
+		 *
+		 * @since 1.9.17.12 Added the $form parameter.
+		 * @since Unknown
+		 *
+		 * @param bool|int $anchor Is the form anchor enabled? True when ajax enabled or when the form has multiple pages.
+		 * @param array    $form   The current Form object.
+		 */
+		$anchor = gf_apply_filters( array( 'gform_confirmation_anchor', $form_id ), $anchor, $form );
+
+		return array(
+			'scroll' => $anchor,
+			'tag'    => $anchor !== false ? "<a id='gf_{$form_id}' class='gform_anchor' ></a>" : '',
+			'id'     => $anchor !== false ? "#gf_{$form_id}" : ''
+		);
 	}
 
 }

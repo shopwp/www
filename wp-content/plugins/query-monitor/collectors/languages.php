@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright 2009-2016 John Blackbourn
+Copyright 2009-2017 John Blackbourn
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ class QM_Collector_Languages extends QM_Collector {
 
 	public function process() {
 		$this->data['locale'] = get_locale();
+		ksort( $this->data['languages'] );
 	}
 
 	/**
@@ -51,8 +52,10 @@ class QM_Collector_Languages extends QM_Collector {
 		foreach ( $filtered as $i => $item ) {
 
 			if ( in_array( $item['function'], array(
+				'load_muplugin_textdomain',
 				'load_plugin_textdomain',
 				'load_theme_textdomain',
+				'load_child_theme_textdomain',
 				'load_default_textdomain',
 			), true ) ) {
 				$caller = $item;
@@ -78,7 +81,7 @@ class QM_Collector_Languages extends QM_Collector {
 			$caller['line'] = $filtered[0]['line'];
 		}
 
-		$this->data['languages'][] = array(
+		$this->data['languages'][ $domain ][] = array(
 			'caller' => $caller,
 			'domain' => $domain,
 			'mofile' => $mofile,

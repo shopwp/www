@@ -277,8 +277,9 @@ class EDD_SL_Package_Download {
 					} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
 
 						// We need a path relative to the domain
-						$file_path = str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
-						header( "X-Accel-Redirect: /$file_path" );
+						$redirect_path = '/' . str_ireplace( realpath( $_SERVER['DOCUMENT_ROOT'] ), '', $file_path );
+						$redirect_path = apply_filters( 'edd_sl_accel_redirect_path', $redirect_path, $file_path );
+						header( "X-Accel-Redirect: $redirect_path" );
 
 					}
 

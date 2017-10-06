@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Add an errors div
  *
@@ -90,7 +89,7 @@ function edd_stripe_new_card_form() {
 			<span class="card-type"></span>
 		</label>
 		<span class="edd-description"><?php _e( 'The (typically) 16 digits on the front of your credit card.', 'edds' ); ?></span>
-		<input type="tel" pattern="^[0-9\s*\w]{13,16}$" id="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'edds' ); ?>" autocomplete="cc-number" />
+		<input type="tel" pattern="^[0-9!@#$%^&* ]*$" id="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'edds' ); ?>" autocomplete="cc-number" />
 	</p>
 	<p id="edd-card-cvc-wrap">
 		<label for="card_cvc" class="edd-label">
@@ -143,6 +142,10 @@ function edd_stripe_update_billing_address_field() {
 	if ( empty( $existing_cards ) ) {
 		return;
 	}
+
+	if ( ! did_action( 'edd_stripe_cc_form' ) ) {
+		return;
+	}
 	?>
 	<p class="edd-stripe-update-billing-address-wrapper">
 		<input type="checkbox" name="edd_stripe_update_billing_address" id="edd-stripe-update-billing-address" value="1" />
@@ -171,7 +174,6 @@ function edd_stripe_existing_card_field_radio( $user_id = 0 ) {
 		<?php foreach ( $existing_cards as $card ) : ?>
 			<?php $source = $card['source']; ?>
 			<div class="edd-stripe-card-radio-item existing-card-wrapper <?php if ( $card['default'] ) { echo ' selected'; } ?>">
-				<input <?php checked( true, $card['default'], true ); ?> type="radio" id="<?php echo $source->id; ?>" name="edd_stripe_existing_card" value="<?php echo $source->id; ?>" class="edd-stripe-existing-card">
 				<input type="hidden" id="<?php echo $source->id; ?>-billing-details"
 					   data-address_city="<?php echo $source->address_city; ?>"
 					   data-address_country="<?php echo $source->address_country; ?>"
@@ -181,6 +183,7 @@ function edd_stripe_existing_card_field_radio( $user_id = 0 ) {
 					   data-address_zip="<?php echo $source->address_zip; ?>"
 				/>
 				<label for="<?php echo $source->id; ?>">
+					<input <?php checked( true, $card['default'], true ); ?> type="radio" id="<?php echo $source->id; ?>" name="edd_stripe_existing_card" value="<?php echo $source->id; ?>" class="edd-stripe-existing-card">
 					<span class="card-label">
 						<span class="card-data">
 							<span class="card-name-number">
@@ -362,7 +365,7 @@ function edd_stripe_manage_cards() {
 					<span style="display: none;" class="edd-loading-ajax edd-loading"></span>
 				</button>
 				<a href="#" id="edd-stripe-add-new-cancel" style="display: none;"><?php _e( 'Cancel', 'edds' ); ?></a>
-				<?php echo wp_nonce_field( 'edd-stripe-add-card', 'edd-stripe-add-card-nonce', false ); ?>
+				<?php wp_nonce_field( 'edd-stripe-add-card', 'edd-stripe-add-card-nonce', false, true ); ?>
 			</div>
 		</fieldset>
 	</form>
@@ -577,8 +580,7 @@ function edd_stripe_purchase_link_output( $download_id = 0, $args = array() ) {
 		$current_user = wp_get_current_user();
 		$email        = $current_user->user_email;
 	}
-?>
-	<script src="https://checkout.stripe.com/checkout.js"></script>
+	?>
 	<script>
 		jQuery(document).ready(function($) {
 
@@ -657,7 +659,6 @@ function edd_stripe_purchase_link_output( $download_id = 0, $args = array() ) {
 					name: '<?php echo esc_js( get_bloginfo( "name" ) ); ?>',
 					image: '<?php echo esc_url( edd_get_option( "stripe_checkout_image" ) ); ?>',
 					description: '<?php echo esc_js( $download->post_title ); ?>',
-					alipay: <?php echo edd_get_option( 'stripe_alipay' ) ? 'true' : 'false'; ?>,
 					amount: Math.round( amount ),
 					zipCode: <?php echo edd_get_option( 'stripe_checkout_zip_code' ) ? 'true' : 'false'; ?>,
 					allowRememberMe: <?php echo edd_get_option( 'stripe_checkout_remember' ) ? 'true' : 'false'; ?>,

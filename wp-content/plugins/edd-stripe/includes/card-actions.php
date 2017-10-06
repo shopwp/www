@@ -176,16 +176,27 @@ function edd_stripe_process_card_add( $data ) {
 			$secret_key = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) ) ;
 
 			\Stripe\Stripe::setApiKey( $secret_key );
-			$stripe_customer = \Stripe\Customer::retrieve( $stripe_customer_id );
 
-			$added = $stripe_customer->sources->create( array( 'source' => $token ) );
-			if ( $added->id ) {
-				$response['success'] = true;
-				$response['message'] = __( 'Card successfully added.', 'edds' );
-			} else {
+			try {
+
+				$stripe_customer = \Stripe\Customer::retrieve( $stripe_customer_id );
+
+				$added = $stripe_customer->sources->create( array( 'source' => $token ) );
+				if ( $added->id ) {
+					$response['success'] = true;
+					$response['message'] = __( 'Card successfully added.', 'edds' );
+				} else {
+					$response['success'] = false;
+					$response['message'] = __( 'Error adding card.', 'edds' );
+				}
+
+			} catch ( Exception $e ) {
+
 				$response['success'] = false;
-				$response['message'] = __( 'Error adding card.', 'edds' );
+				$response['message'] = $e->getMessage();
+
 			}
+
 		}
 	}
 

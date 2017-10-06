@@ -250,7 +250,7 @@ class GFEntryDetail {
 			}
 		}
 
-		RGFormsModel::update_lead_property( $lead['id'], 'is_read', 1 );
+		GFFormsModel::update_entry_property( $lead['id'], 'is_read', 1 );
 
 		switch ( RGForms::post( 'action' ) ) {
 			case 'update' :
@@ -342,22 +342,26 @@ class GFEntryDetail {
 
 			case 'trash' :
 				check_admin_referer( 'gforms_save_entry', 'gforms_save_entry' );
-				RGFormsModel::update_lead_property( $lead['id'], 'status', 'trash' );
-				$lead = RGFormsModel::get_lead( $lead['id'] );
-				self::set_current_entry( $lead );
+				GFFormsModel::update_entry_property( $lead['id'], 'status', 'trash' );
+				$admin_url = admin_url( 'admin.php?page=gf_entries&view=entries&id=' . absint( $form['id'] ) . '&trashed_entry=' . absint( $lead['id'] ) );
+				?>
+				<script type="text/javascript">
+					document.location.href = <?php echo json_encode( $admin_url ); ?>;
+				</script>
+				<?php
 				break;
 
 			case 'restore' :
 			case 'unspam' :
 				check_admin_referer( 'gforms_save_entry', 'gforms_save_entry' );
-				RGFormsModel::update_lead_property( $lead['id'], 'status', 'active' );
+				GFFormsModel::update_entry_property( $lead['id'], 'status', 'active' );
 				$lead = RGFormsModel::get_lead( $lead['id'] );
 				self::set_current_entry( $lead );
 				break;
 
 			case 'spam' :
 				check_admin_referer( 'gforms_save_entry', 'gforms_save_entry' );
-				RGFormsModel::update_lead_property( $lead['id'], 'status', 'spam' );
+				GFFormsModel::update_entry_property( $lead['id'], 'status', 'spam' );
 				$lead = RGFormsModel::get_lead( $lead['id'] );
 				self::set_current_entry( $lead );
 				break;
@@ -367,15 +371,15 @@ class GFEntryDetail {
 				if ( ! GFCommon::current_user_can_any( 'gravityforms_delete_entries' ) ) {
 					die( esc_html__( "You don't have adequate permission to delete entries.", 'gravityforms' ) );
 				}
-				RGFormsModel::delete_lead( $lead['id'] );
+				GFFormsModel::delete_entry( $lead['id'] );
+				$admin_url = admin_url( 'admin.php?page=gf_entries&view=entries&id=' . absint( $form['id'] ) . '&deleted=' . absint( $lead['id'] ) );
 				?>
 				<script type="text/javascript">
-					document.location.href = '<?php echo 'admin.php?page=gf_entries&view=entries&id=' . absint( $form['id'] )?>';
+					document.location.href = <?php echo json_encode( $admin_url ); ?>;
 				</script>
 				<?php
-
 				break;
-		}
+		} // End switch().
 
 		$mode = empty( $_POST['screen_mode'] ) ? 'view' : $_POST['screen_mode'];
 
@@ -659,8 +663,8 @@ class GFEntryDetail {
 
 		if ( rgpost( 'action' ) == 'update' ) {
 			?>
-			<div class="updated fade" style="padding:6px;">
-				<?php esc_html_e( 'Entry Updated.', 'gravityforms' ); ?>
+			<div class="updated fade">
+				<p><?php esc_html_e( 'Entry Updated.', 'gravityforms' ); ?></p>
 			</div>
 			<?php
 		}

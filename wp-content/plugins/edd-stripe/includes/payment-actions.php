@@ -9,12 +9,12 @@
  */
 function edds_process_stripe_payment( $purchase_data ) {
 
-	global $edd_options, $edd_stripe_is_buy_now;
+	global $edd_stripe_is_buy_now;
 
 	if ( edd_is_test_mode() ) {
-		$secret_key = trim( $edd_options['test_secret_key'] );
+		$secret_key = trim( edd_get_option( 'test_secret_key' ) );
 	} else {
-		$secret_key = trim( $edd_options['live_secret_key'] );
+		$secret_key = trim( edd_get_option( 'live_secret_key' ) );
 	}
 
 	$purchase_summary = '';
@@ -132,6 +132,7 @@ function edds_process_stripe_payment( $purchase_data ) {
 			}
 
 			$existing_card = false;
+			$preapprove_only = edd_get_option( 'stripe_preapprove_only' );
 
 			if ( $customer_exists ) {
 
@@ -188,13 +189,17 @@ function edds_process_stripe_payment( $purchase_data ) {
 				}
 
 				// Process a normal one-time charge purchase
-
-				if( ! isset( $edd_options['stripe_preapprove_only'] ) ) {
+				if( ! $preapprove_only ) {
 
 					if( edds_is_zero_decimal_currency() ) {
+
 						$amount = $purchase_data['price'];
+
 					} else {
-						$amount = $purchase_data['price'] * 100;
+
+						// Round to the nearest integer, see GitHub issue #270
+						$amount = round( $purchase_data['price'] * 100, 0 );
+
 					}
 
 					$statement_descriptor = edd_get_option( 'stripe_statement_descriptor', '' );
@@ -240,22 +245,9 @@ function edds_process_stripe_payment( $purchase_data ) {
 
 			if ( $payment && ( ! empty( $customer_id ) || ! empty( $charge ) ) ) {
 
-				if ( ! empty( $needs_invoiced ) ) {
-
-					try {
-						// Create the invoice containing taxes / discounts / fees
-						$invoice = \Stripe\Invoice::create( array(
-							'customer' => $customer_id, // the customer to apply the fee to
-						) );
-						$invoice = $invoice->pay();
-					} catch ( Exception $e ) {
-						// If there is nothing to pay, it just means the invoice item was taken care of with the subscription payment
-					}
-				}
-
 				$payment = new EDD_Payment( $payment );
 
-				if ( isset( $edd_options['stripe_preapprove_only'] ) ) {
+				if ( $preapprove_only ) {
 					$payment->status = 'preapproval';
 					$payment->update_meta( '_edds_stripe_customer_id', $customer_id );
 				} else {
@@ -380,17 +372,18 @@ function edds_process_stripe_payment( $purchase_data ) {
 			}
 
 		} catch ( Exception $e ) {
-			// some sort of other error
-			$body = $e->getJsonBody();
-			$err  = $body['error'];
-			if( isset( $err['message'] ) ) {
-				edd_set_error( 'request_error', $err['message'] );
-			} else {
-				edd_set_error( 'api_error', __( 'Something went wrong.', 'edds' ) );
+
+			// Check if an error message exists, if not use an empty string.
+			$message = $e->getMessage();
+
+			if ( empty( $message ) ) {
+				$message = __( 'Something went wrong.', 'edds' );
 			}
 
+			edd_set_error( 'request_error', $message );
+
 			if( $edd_stripe_is_buy_now ) {
-				wp_die( $err['message'], __( 'Card Processing Error', 'edds' ) );
+				wp_die( $message, __( 'Card Processing Error', 'edds' ) );
 			} else {
 				edd_send_back_to_checkout( '?payment-mode=stripe' );
 			}
@@ -410,8 +403,6 @@ add_action( 'edd_gateway_stripe', 'edds_process_stripe_payment' );
  */
 function edds_charge_preapproved( $payment_id = 0 ) {
 
-	global $edd_options;
-
 	if( empty( $payment_id ) )
 		return false;
 
@@ -425,7 +416,7 @@ function edds_charge_preapproved( $payment_id = 0 ) {
 		return;
 	}
 
-	$secret_key = edd_is_test_mode() ? trim( $edd_options['test_secret_key'] ) : trim( $edd_options['live_secret_key'] );
+	$secret_key = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) );
 
 	\Stripe\Stripe::setApiKey( $secret_key );
 
@@ -551,9 +542,7 @@ function edds_stripe_event_listener() {
 
 	if ( isset( $_GET['edd-listener'] ) && $_GET['edd-listener'] == 'stripe' ) {
 
-		global $edd_options;
-
-		$secret_key = edd_is_test_mode() ? trim( $edd_options['test_secret_key'] ) : trim( $edd_options['live_secret_key'] );
+		$secret_key = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) );
 
 		\Stripe\Stripe::setApiKey( $secret_key );
 
@@ -687,8 +676,6 @@ add_action( 'init', 'edds_stripe_event_listener' );
  */
 function edd_stripe_process_refund( $payment_id, $new_status, $old_status ) {
 
-	global $edd_options;
-
 	if( empty( $_POST['edd_refund_in_stripe'] ) ) {
 		return;
 	}
@@ -723,7 +710,7 @@ function edd_stripe_process_refund( $payment_id, $new_status, $old_status ) {
 		return;
 	}
 
-	$secret_key = edd_is_test_mode() ? trim( $edd_options['test_secret_key'] ) : trim( $edd_options['live_secret_key'] );
+	$secret_key = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) );
 
 	\Stripe\Stripe::setApiKey( $secret_key );
 

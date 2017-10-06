@@ -160,9 +160,9 @@ function wps_identifier_for_post($post) {
 // $Frontend->config->plugin_name = '1111';
 
 
-function testtetteeeerrr() {
-  echo 'NOPE';
-}
+// function testtetteeeerrr() {
+//   echo 'NOPE';
+// }
 
 //
 // $Frontend = 'hello';
@@ -210,4 +210,9 @@ add_action('login_init', function(){
   if( !isset( $_GET['action'] ) ) {
     wp_redirect( '/login' );
   }
+});
+
+
+add_action('edd_after_price_option', function(){
+  echo '<small style="display:block;text-align:center;margin-top:-10px;">per year</small>';
 });

@@ -19,31 +19,42 @@ function edd_stripe_js( $override = false ) {
 			$publishable_key = edd_get_option( 'live_publishable_key', '' );
 		}
 
-		wp_enqueue_script( 'stripe-js', 'https://js.stripe.com/v2/', array( 'jquery' ), null );
+		// Use minified libraries if SCRIPT_DEBUG is turned off
+		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+		wp_register_script( 'stripe-js', 'https://js.stripe.com/v2/', array( 'jquery' ), null );
+		wp_register_script( 'stripe-checkout', 'https://checkout.stripe.com/checkout.js', array( 'jquery' ), null );
+		wp_register_script( 'edd-stripe-js', EDDSTRIPE_PLUGIN_URL . 'assets/js/edd-stripe' . $suffix . '.js', array( 'jquery', 'stripe-js' ), EDD_STRIPE_VERSION, true );
+
+		wp_enqueue_script( 'stripe-js' );
 
 		if ( edd_is_checkout() || $override ) {
 
-			// Use minified libraries if SCRIPT_DEBUG is turned off
-			$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			$enqueue_checkout = edd_get_option( 'stripe_checkout', false ) || $override ? true : false;
+			if ( $enqueue_checkout ) {
+				wp_enqueue_script( 'stripe-checkout' );
+			}
 
-			wp_enqueue_script( 'stripe-checkout', 'https://checkout.stripe.com/checkout.js', array( 'jquery' ) );
-			wp_enqueue_script( 'edd-stripe-js', EDDSTRIPE_PLUGIN_URL . 'assets/js/edd-stripe' . $suffix . '.js', array( 'jquery', 'stripe-js' ), EDD_STRIPE_VERSION, true );
+			wp_enqueue_script( 'edd-stripe-js' );
+			wp_enqueue_script( 'jQuery.payment' );
 
 			$stripe_vars = apply_filters( 'edd_stripe_js_vars', array(
-				'publishable_key'  => trim( $publishable_key ),
-				'is_ajaxed'        => edd_is_ajax_enabled() ? 'true' : 'false',
-				'currency'         => edd_get_currency(),
-				'locale'           => edds_get_stripe_checkout_locale(),
-				'is_zero_decimal'  => edds_is_zero_decimal_currency() ? 'true' : 'false',
-				'checkout'         => edd_get_option( 'stripe_checkout' ) ? 'true' : 'false',
-				'store_name'       => get_bloginfo( 'name' ),
-				'alipay'           => edd_get_option( 'stripe_alipay' ) ? 'true' : 'false',
-				'submit_text'      => edd_get_option( 'stripe_checkout_button_text', __( 'Next', 'edds' ) ),
-				'image'            => edd_get_option( 'stripe_checkout_image' ),
-				'zipcode'          => edd_get_option( 'stripe_checkout_zip_code', false ) ? 'true' : 'false',
-				'billing_address'  => edd_get_option( 'stripe_checkout_billing', false ) ? 'true' : 'false',
-				'remember_me'      => edd_get_option( 'stripe_checkout_remember', false ) ? 'true' : 'false',
-				'no_key_error'     => __( 'Stripe publishable key missing. Please enter your publishable key in Settings.', 'edds' )
+				'publishable_key'                => trim( $publishable_key ),
+				'is_ajaxed'                      => edd_is_ajax_enabled() ? 'true' : 'false',
+				'currency'                       => edd_get_currency(),
+				'locale'                         => edds_get_stripe_checkout_locale(),
+				'is_zero_decimal'                => edds_is_zero_decimal_currency() ? 'true' : 'false',
+				'checkout'                       => edd_get_option( 'stripe_checkout' ) ? 'true' : 'false',
+				'store_name'                     => get_bloginfo( 'name' ),
+				'alipay'                         => edd_get_option( 'stripe_alipay' ) ? 'true' : 'false',
+				'submit_text'                    => edd_get_option( 'stripe_checkout_button_text', __( 'Next', 'edds' ) ),
+				'image'                          => edd_get_option( 'stripe_checkout_image' ),
+				'zipcode'                        => edd_get_option( 'stripe_checkout_zip_code', false ) ? 'true' : 'false',
+				'billing_address'                => edd_get_option( 'stripe_checkout_billing', false ) ? 'true' : 'false',
+				'remember_me'                    => edd_get_option( 'stripe_checkout_remember', false ) ? 'true' : 'false',
+				'no_key_error'                   => __( 'Stripe publishable key missing. Please enter your publishable key in Settings.', 'edds' ),
+				'checkout_required_fields_error' => __( 'Please fill out all required fields to continue your purchase.', 'edds' ),
+				'checkout_agree_to_terms'        => __( 'Please agree to the terms to complete your purchase.', 'edds' ),
 			) );
 
 			wp_localize_script( 'edd-stripe-js', 'edd_stripe_vars', $stripe_vars );

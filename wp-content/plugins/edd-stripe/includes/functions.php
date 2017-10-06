@@ -104,13 +104,17 @@ function edds_get_stripe_customer_id( $id_or_email, $by_user_id = true ) {
 			$user = get_user_by( 'id', $user_id );
 		}
 
-		$customer = new EDD_Customer( $user->user_email );
+		if ( $user ) {
 
-		if ( ! empty( $user_id ) ) {
-			$stripe_customer_id = get_user_meta( $user_id, $meta_key, true );
+			$customer = new EDD_Customer( $user->user_email );
 
-			// Lazy load migrating data over to the customer meta from Stripe issue #113
-			$customer->update_meta( $meta_key, $stripe_customer_id );
+			if ( ! empty( $user_id ) ) {
+				$stripe_customer_id = get_user_meta( $user_id, $meta_key, true );
+
+				// Lazy load migrating data over to the customer meta from Stripe issue #113
+				$customer->update_meta( $meta_key, $stripe_customer_id );
+			}
+
 		}
 
 	}

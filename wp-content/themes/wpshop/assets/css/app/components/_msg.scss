@@ -2,9 +2,10 @@
 label.error {
   text-align: center;
   font-size: $font-s;
+  color: color(dark-grey);
 
   a {
-    color: color(white);
+    color: color(dark-grey);
   }
 
   p {
@@ -30,28 +31,14 @@ label.error {
 }
 
 .msg {
-  color: color(white);
+  color: color(dark-grey);
   padding: $space-s $space-m;
   border-radius: 0.4em;
   font-weight: normal;
-  text-align: center;
   margin-bottom: $space-xl;
   margin-top: $space-m;
   position: relative;
 
-  &:after {
-    content: '';
-    display: block;
-  }
-
-  a {
-    color: color(white);
-  }
-
-}
-
-
-.msg {
   position: fixed;
   top: 28px;
   left: 0;
@@ -62,11 +49,20 @@ label.error {
   left: 50%;
   margin-left: -350px;
   font-size: $font-m;
-  box-shadow: 0 8px 60px 7px hsla(0,0%,43%,.31);
+  box-shadow: 0 8px 60px -6px hsla(0,0%,43%,.31);
 
   @include device(800, 'max') {
     width: 90%;
     margin-left: -45%;
+  }
+
+  &:after {
+    content: '';
+    display: block;
+  }
+
+  a {
+    color: color(dark-grey);
   }
 
 }

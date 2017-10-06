@@ -54,8 +54,9 @@ class EDD_SL_List_Table extends WP_List_Table {
 				break;
 			case 'user':
 
-				$customer    = new EDD_Customer( $license->customer_id );
-				echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' ) . $customer->id ) . '">' . $customer->name . '</a>';
+				$customer = new EDD_Customer( $license->customer_id );
+				$name     = empty( $customer->name ) ? $customer->email : $customer->name;
+				echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' ) . $customer->id ) . '">' . $name . '</a>';
 				break;
 
 			case 'limit':

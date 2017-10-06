@@ -253,8 +253,6 @@ class GFSettings {
 			return;
 		}
 
-		require_once( 'currency.php' );
-
 		if ( isset( $_POST['submit'] ) ) {
 			check_admin_referer( 'gforms_update_settings', 'gforms_update_settings' );
 
@@ -502,7 +500,7 @@ class GFSettings {
 			<p style="text-align: left;">
 				<?php esc_html_e( 'Gravity Forms integrates with reCAPTCHA, a free CAPTCHA service that helps to digitize books while protecting your forms from spam bots. ', 'gravityforms' ); ?>
 				<?php printf( esc_html__( '%sPlease note%s, these settings are required only if you decide to use the reCAPTCHA field.', 'gravityforms' ), '<strong>', '</strong>' ); ?>
-				<a href="http://www.google.com/recaptcha/" target="_blank"><?php esc_html_e( 'Read more about reCAPTCHA', 'gravityforms' ); ?></a>.
+				<a href="http://www.google.com/recaptcha/" target="_blank"><?php esc_html_e( 'Read more about reCAPTCHA.', 'gravityforms' ); ?></a>
 			</p>
 
 			<table class="form-table">
@@ -870,7 +868,7 @@ class GFSettings {
 	 *
 	 * @return string $value The new key
 	 */
-	public static function action_add_option_rg_gforms_key( $option, $value ){
+	public static function action_add_option_rg_gforms_key( $option, $value ) {
 
 		self::update_site_registration( '', $value );
 
@@ -890,7 +888,7 @@ class GFSettings {
 	 *
 	 * @return string $value The new key
 	 */
-	public static function action_update_option_rg_gforms_key( $old_value, $value ){
+	public static function action_update_option_rg_gforms_key( $old_value, $value ) {
 
 		self::update_site_registration( $old_value, $value );
 
@@ -917,7 +915,7 @@ class GFSettings {
 	}
 
 
-	private static function update_site_registration( $previous_key_md5, $new_key_md5 ){
+	public static function update_site_registration( $previous_key_md5, $new_key_md5 ) {
 
 		GFForms::include_gravity_api();
 
@@ -928,8 +926,7 @@ class GFSettings {
 			//De-registering site when key is removed
 			$result = gapi()->deregister_current_site();
 
-		}
-		else if ( $previous_key_md5 != $new_key_md5 ) {
+		} else {
 
 			//Key has changed, update site record appropriately.
 
@@ -939,31 +936,27 @@ class GFSettings {
 			//Has site been already registered?
 			$is_site_registered = gapi()->is_site_registered();
 
-			$is_valid_new 			= $version_info['is_valid_key'] && !$is_site_registered;
+			$is_valid_new 			= $version_info['is_valid_key'] && ! $is_site_registered;
 			$is_valid_registered 	= $version_info['is_valid_key'] && $is_site_registered;
-			$is_invalid				= !$version_info['is_valid_key'] && $is_site_registered;
+			$is_invalid				= ! $version_info['is_valid_key'] && $is_site_registered;
 
 			if ( $is_valid_new ) {
 				//Site is new (not registered) and license key is valid
 				//Register new site
 				$result = gapi()->register_current_site( $new_key_md5, true );
-			}
-			else if ( $is_valid_registered ) {
+			} elseif ( $is_valid_registered ) {
 
 				//Site is already registered and new license key is valid
 				//Update site with new key
-				$result = gapi()->update_current_site( $new_key_md5 );
-			}
-
-			else if ( $is_invalid ){
+				$result = gapi()->update_current_site( $new_key_md5, true );
+			} elseif ( $is_invalid ) {
 
 				//invalid key, deregister site
 				$result = gapi()->deregister_current_site();
 			}
-
 		}
 
-		if ( is_wp_error( $result ) ){
+		if ( is_wp_error( $result ) ) {
 			GFCommon::log_error( 'Failed to update site registration with Gravity Manager. ' . print_r( $result, true ) );
 		}
 

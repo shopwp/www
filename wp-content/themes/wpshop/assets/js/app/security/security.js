@@ -25,7 +25,7 @@ function isValidHMAC($) {
     };
 
     var message = $.param(dataToVerify);
-    var secret = 'd73e5e7fa67a54ac25a9af8ff8df3814';
+    var secret = '80f6a0c920d7cbaeb910c4a1e4f01d21';
     var finalDigest = crypto.createHmac('sha256', secret).update(message).digest('hex');
 
     if(finalDigest === origHMAC) {
@@ -151,7 +151,7 @@ console.log(5);
 console.log(6);
         // Merging updated client with everything else
         var updatedAuthenticatedSites = unionWith(eqProps('domain'), nonceMatch, authData);
-console.log(7);        
+console.log(7);
         // Saving client records to database
         resolve({
           finalRedirectURL: finalRedirectURL,

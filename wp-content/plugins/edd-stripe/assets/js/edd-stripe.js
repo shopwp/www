@@ -16,7 +16,6 @@ jQuery(document).ready(function($) {
 			body.on('click', '.edd-stripe-existing-card', function() {
 				if ( edd_scripts.is_checkout ) {
 					$('.edd-stripe-card-radio-item').removeClass('selected');
-					$(this).parent().addClass('selected');
 					var card_id = $(this).val(),
 						new_card_wrapper = $('.edd-stripe-new-card'),
 						inputs = $('#edd_cc_address p input, #edd_cc_address p select').not('#edd-stripe-update-billing-address'),
@@ -24,10 +23,12 @@ jQuery(document).ready(function($) {
 
 
 					if ( 'new' === card_id ) {
+						$(this).parent().addClass('selected');
 						new_card_wrapper.slideDown();
 						inputs.prop('readonly', false);
 						billing_address_wrapper.hide();
 					} else {
+						$(this).parent().parent().addClass('selected');
 						new_card_wrapper.slideUp();
 						billing_address_wrapper.show();
 						var billing_info = $('#' + card_id + '-billing-details');
@@ -39,7 +40,11 @@ jQuery(document).ready(function($) {
 						setTimeout(function(){
 						  $('#card_state').val(billing_info.data('address_state')).trigger('change').prop('readonly', true);
 						}, 1500);
-						inputs.prop('readonly', true);
+
+						// Only set the fields to read-only if we have a checkbox for updating the fields.
+						if ( $('#edd-stripe-update-billing-address').length ) {
+							inputs.prop('readonly', true);
+						}
 					}
 				}
 			});
@@ -79,6 +84,9 @@ jQuery(document).ready(function($) {
 		add_new : function() {
 			$('.edd-stripe-add-new').click(function(e) {
 				var card_form = $('.edd-stripe-add-new-card');
+
+				$('#edd-stripe-manage-cards .edd-alert').remove();
+				$('#edd-stripe-manage-cards .edd_errors').remove();
 
 				if ( ! card_form.is(':visible')) {
 					$('#edd-stripe-manage-cards .edd-stripe-add-new-card').slideDown();
@@ -128,49 +136,6 @@ jQuery(document).ready(function($) {
 					token_args.address_zip     = card_fields_wrapper.find('.card-zip').val();
 					token_args.address_country = card_fields_wrapper.find('.billing_country').val();
 					edd_stripe_process_card(token_args, edd_stripe_add_card_handler);
-
-					// We need to sleep here to allow Stripe to call and return a token, so we can insert it into the DOM
-					setTimeout(function() {
-						var button = $('.edd-stripe-add-new');
-						var stripe_token = $('body').find('#edd-stripe-new-token').val();
-						var data         = {
-							edd_action: 'add_stripe_card',
-							token     : stripe_token,
-							user_id   : $('#stripe-update-card-user_id').val(),
-							nonce     : $('input[name="edd-stripe-add-card-nonce"]').val()
-						};
-
-						$.ajax({
-							type     : "POST",
-							data     : data,
-							dataType : "json",
-							url      : edd_scripts.ajaxurl,
-							xhrFields: {
-								withCredentials: true
-							},
-							success  : function (response) {
-								if (response.success === true) {
-									button.parent().replaceWith('<p class="edd-alert edd-alert-success">' + response.message + '</p>');
-									setTimeout(function () {
-										location.reload();
-									}, 1000);
-								} else {
-									button.addClass('.edd-stripe-add-new');
-									button.find('.button-text').show();
-									button.find('.edd-loading').hide();
-									button.css('width', 'auto');
-									button.parent().parent().append('<p class="edd-alert edd-alert-error">' + response.message + '</p>');
-									return false;
-								}
-							}
-						}).fail(function (response) {
-							if (window.console && window.console.log) {
-								console.log(response);
-							}
-						}).done(function (response) {
-
-						});
-					}, 500);
 
 				}
 
@@ -424,12 +389,55 @@ jQuery(document).ready(function($) {
 
 			if( 'true' == edd_stripe_vars.checkout ) {
 
+				// Since the error fields aren't shown for Stripe we need to include them
+				if ( $('#edd-stripe-payment-errors').length == 0 ) {
+					var checkout_error_anchor = '#edd_purchase_submit'; // Default here in case someone isn't on EDD 2.8 yet
+					if( typeof edd_global_vars.checkout_error_anchor != 'undefined' ) {
+						checkout_error_anchor = edd_global_vars.checkout_error_anchor;
+					}
+
+					// Insert our error wrapper on the anchor.
+					$(checkout_error_anchor).append('<div id="edd-stripe-payment-errors"></div>');
+				}
+
+				var error_target = $('#edd-stripe-payment-errors');
+				$(error_target).html('').hide();
+
+				var purchase_button = $('#edd-purchase-button');
+
+				var errors = [];
+
+				var terms_checked    = true;
+				if ( $('#edd_agree_to_terms').length != 0 ) {
+					terms_checked = $('#edd_agree_to_terms').is(':checked');
+					if ( false === terms_checked ) {
+						errors.push( edd_stripe_vars.checkout_agree_to_terms );
+					}
+				}
+
+				var html5_validation = $('#edd_purchase_form')[0].checkValidity();
+				if ( false === html5_validation ) {
+					errors.push(  edd_stripe_vars.checkout_required_fields_error );
+				}
+
+				if ( errors.length > 0 ) {
+					$('.edd-loading-ajax').hide();
+					$(purchase_button).val(edd_stripe_vars.submit_text).prop('disabled', false);
+
+					for (var i = 0, len = errors.length; i < len; i++) {
+						$(error_target).append('<div class="edd_errors"><p class="edd_error">' + errors[i] + '</p></div>');
+					}
+
+					$(error_target).show();
+					return;
+				}
+
 				if ( checkout_modal_shown ) {
 					return;
 				}
 
 				checkout_modal_shown = true;
-				
+
 				var amount = $('.edd_cart_total .edd_cart_amount').data('total');
 
 				if ( typeof edd_recurring_vars !== 'undefined' ) {
@@ -437,7 +445,7 @@ jQuery(document).ready(function($) {
 						amount = edd_recurring_vars.total_plain;
 					}
 				}
-		
+
 				if( 'true' != edd_stripe_vars.is_zero_decimal ) {
 					amount *= 100;
 					amount = Math.round( amount );
@@ -450,13 +458,15 @@ jQuery(document).ready(function($) {
 					currency: edd_stripe_vars.currency,
 					zipCode: ( 'true' === edd_stripe_vars.zipcode ),
 					allowRememberMe: ( 'true' === edd_stripe_vars.remember_me ),
-					alipay: ( 'true' === edd_stripe_vars.alipay ),
 					billingAddress:  ( 'true' === edd_stripe_vars.billing_address ),
 					email: $('#edd-email').val(),
 					closed: function() {
 						checkout_modal_shown = false;
-						jQuery('.edd-loading-ajax').hide();
-						jQuery('#edd-purchase-button').val(edd_stripe_vars.submit_text).prop('disabled', false);
+						$('.edd-loading-ajax').hide();
+
+						if ( $('input[name="edd_stripe_token"]').length == 0 ) {
+							$(purchase_button).val(edd_stripe_vars.submit_text).prop('disabled', false);
+						}
 					}
 				});
 
@@ -582,18 +592,70 @@ function edd_stripe_response_handler(status, response) {
 }
 
 function edd_stripe_add_card_handler(status, response) {
+
 	if (response.error) {
+
 		var error = '<div class="edd_errors"><p class="edd_error">' + response.error.message + '</p></div>';
 		// show the errors on the form
 		jQuery('.edd-stripe-add-card-actions').append(error);
+
 	} else {
+
 		if ( false !== response ) {
 			// token contains id, last4, and card type
 			var token = response['id'];
 
 			// insert the token into the form so it gets submitted to the server
-			jQuery('.edd-stripe-add-new-card').append("<input type='hidden' id='edd-stripe-new-token' name='edd_stripe_token' value='" + token + "' />");
+			jQuery('#edd-stripe-manage-cards').append("<input type='hidden' id='edd-stripe-new-token' name='edd_stripe_token' value='" + token + "' />");
 		}
+
+		var button = jQuery('.edd-stripe-add-new');
+		var stripe_token = jQuery('body').find('#edd-stripe-new-token').val();
+		var data         = {
+			edd_action: 'add_stripe_card',
+			token     : stripe_token,
+			user_id   : jQuery('#stripe-update-card-user_id').val(),
+			nonce     : jQuery('input[name="edd-stripe-add-card-nonce"]').val()
+		};
+
+		jQuery.ajax({
+			type     : "POST",
+			data     : data,
+			dataType : "json",
+			url      : edd_scripts.ajaxurl,
+			xhrFields: {
+				withCredentials: true
+			},
+			success  : function (response) {
+
+				if (response.success === true) {
+
+					button.parent().replaceWith('<p class="edd-alert edd-alert-success">' + response.message + '</p>');
+					setTimeout(function () {
+						location.reload();
+					}, 1000);
+
+				} else {
+
+					button.addClass('.edd-stripe-add-new');
+					button.find('.button-text').show();
+					button.find('.edd-loading').hide();
+					button.css('width', 'auto');
+					button.parent().parent().append('<p class="edd-alert edd-alert-error">' + response.message + '</p>');
+					return false;
+
+				}
+
+			}
+
+		}).fail(function (response) {
+			if (window.console && window.console.log) {
+				console.log(response);
+			}
+		}).done(function (response) {
+
+		});
+
 	}
 }
 

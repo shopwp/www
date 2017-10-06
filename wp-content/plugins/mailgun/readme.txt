@@ -5,7 +5,7 @@ Contributors: Mailgun, sivel, lookahead.io, m35dev
 Tags: mailgun, smtp, http, api, mail, email
 Requires at least: 3.3
 Tested up to: 4.8
-Stable tag: 1.5.8.3
+Stable tag: 1.5.8.5
 License: GPLv2 or later
 
 
@@ -88,6 +88,31 @@ MAILGUN_FROM_ADDRESS Type: string
 
   Should return a new array to replace `$attachments`.
 
+- What hooks are available for use with other plugins?
+
+`mg_use_recipient_vars_syntax`
+  Mutates messages to use recipient variables syntax - see
+  https://documentation.mailgun.com/user_manual.html#batch-sending for more info.
+
+  Should accept a list of `To` addressses.
+
+  Should *only* return `true` or `false`.
+
+`mg_mutate_message_body`
+  Allows an external plugin to mutate the message body before sending.
+
+  Should accept an array, `$body`.
+
+  Should return a new array to replace `$body`.
+
+`mg_mutate_attachments`
+  Allows an external plugin to mutate the attachments on the message before
+  sending.
+
+  Should accept an array, `$attachments`.
+
+  Should return a new array to replace `$attachments`.
+
 
 == Screenshots ==
 
@@ -101,20 +126,33 @@ MAILGUN_FROM_ADDRESS Type: string
 
 == Changelog ==
 
+= 1.5.8.5 (2017-09-05): =
+- Change default click tracking setting to `htmlonly` (https://github.com/mailgun/wordpress-plugin/pull/58)
+- Change PHPMailer set-up stanza to use TLS
+
+= 1.5.8.4 (2017-06-28): =
+- Packaging fix which takes care of an odd filtering issue (https://wordpress.org/support/topic/1-5-8-3-broke-the-mg_mutate_message_body-filter)
+
 = 1.5.8.3 (2017-06-13): =
 - Fix a bug causing only the last header value to be used when multiple headers of the same type are specified (https://wordpress.org/support/topic/bug-with-mg_parse_headers/)
 - Added `pt_BR` translations (thanks @emersonbroga)
 
 = 1.5.8.2 (2017-02-27): =
-* Fix a bug causing empty tags to be sent with messages (#51)
-* Add `mg_mutate_message_body` hook to allow other plugins to modify the message body before send
-* Add `mg_mutate_attachments` hook to allow other plugins to modify the message attachments before send
-* Fix a bug causing the AJAX test to fail incorrectly.
+- Fix a bug causing empty tags to be sent with messages (#51)
+- Add `mg_mutate_message_body` hook to allow other plugins to modify the message body before send
+- Add `mg_mutate_attachments` hook to allow other plugins to modify the message attachments before send
+- Fix a bug causing the AJAX test to fail incorrectly.
+
+= 1.5.8.2 (2017-02-27): =
+- Fix a bug causing empty tags to be sent with messages (#51)
+- Add `mg_mutate_message_body` hook to allow other plugins to modify the message body before send
+- Add `mg_mutate_attachments` hook to allow other plugins to modify the message attachments before send
+- Fix a bug causing the AJAX test to fail incorrectly.
 
 = 1.5.8.1 (2017-02-06): =
-* Fix "Undefined property: MailgunAdmin::$hook_suffix" (#48)
-* Fix "Undefined variable: from_name on every email process" (API and SMTP) (#49)
-* Admin code now loads only on admin user access
+- Fix "Undefined property: MailgunAdmin::$hook_suffix" (#48)
+- Fix "Undefined variable: from_name on every email process" (API and SMTP) (#49)
+- Admin code now loads only on admin user access
 
 = 1.5.8 (2017-01-23): =
 * Rewrite a large chunk of old SMTP code

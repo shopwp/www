@@ -1,0 +1,40 @@
+------------------------------------------------------------------------------------------------------------------
+Version 2.3-beta-2
+    - Added a dismissible admin message while upgrading.
+    - API: Deprecated GFCommon::encrypt() and GFCommon::decrypt().
+    - API: Added multisite support to GF_Background_Process.
+    - Fixed the upgrade process for multisite.
+    - Updated the upgrade process to fail form validation while upgrading. The form is now displayed.
+    - Updated site registration to minimize changes of API request getting blocked by Armor.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.3-beta-1
+    - Added security enhancements.
+    - Added accessibility enhancements: Updated the field markup to suppress the tabindex attribute by default unless it's set explicitly via the shortcode or the gform_tabindex filter.
+    - Added the X-Robots-Tag header to the .htaccess file protecting the downloads and to the download request response.
+    - Added support for chunking file uploads via the gform_plupload_settings filter. Example:
+        add_filter( 'gform_plupload_settings', function( $plupload_init ) {
+                $plupload_init['chunk_size'] = '1mb';
+                return $plupload_init;
+            }, 10, 3 );
+    - Added support for OpenSSL encryption.
+    - Added checkbox to select all forms for export.
+    - Added "gform_notification_enable_cc" filter to enable CC notification settings field.
+    - Added "Select All" choice to Checkbox field.
+    - Updated wording in installation wizard.
+    - Updated behavior when deleting an entry to match WordPress deletion behavior.
+    - Updated Import Forms page to allow for importing multiple files at once.
+    - Updated Import Forms page verbiage.
+    - Updated the database schema. Entries will be migrated in the background unless GFORM_AUTO_DB_MIGRATION_DISABLED constant is true. Database rows will be migrated in batches of 10000 or by the number defined by the GFORM_DB_MIGRATION_BATCH_SIZE constant.
+    - Upgraded included Chosen jQuery library to version 1.7.
+    - Fixed submitting a form with keyboard navigation when the submit or next page button is hidden.
+    - Fixed an issue with the input mask on Android devices.
+    - Fixed error message appearing when updating logging settings after deleting a log.
+    - Fixed PHP notice when receiving an invalid response when registering site.
+    - Fixed redirection issue when permanently deleting or trashing an entry from the entry detail view.
+    - Fixed an issue with HTML5 elements where browser validation can fail if the field is hidden by conditional logic.
+    - Fixed merge tag UI tooltip not appearing when with a visual editor.
+    - API: Updated CSV entry export not to unserialize values. GF_Field::get_value_export() and the gform_export_field_value filter must return either a string or an array, not a serialized value.
+    - API: Fixed handling of confirmation redirects.
+    - AF: Updated settings saved text to include Add-On short title.
+    - AF: Added "no_choices" property to select settings field to display message when no choices exist.

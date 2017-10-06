@@ -28,9 +28,9 @@ class GF_Field extends stdClass implements ArrayAccess {
 	private $_is_entry_detail = null;
 
 	/**
-	 * @var array $_modifiers An array of modifiers specified on the field or all_fields merge tag being processed.
+	 * @var array $_merge_tag_modifiers An array of modifiers specified on the field or all_fields merge tag being processed.
 	 */
-	private $_modifiers = array();
+	private $_merge_tag_modifiers = array();
 
 	public function __construct( $data = array() ) {
 		if ( empty( $data ) ) {
@@ -443,7 +443,7 @@ class GF_Field extends stdClass implements ArrayAccess {
 	public function get_value_merge_tag( $value, $input_id, $entry, $form, $modifier, $raw_value, $url_encode, $esc_html, $format, $nl2br ) {
 
 		if ( $format === 'html' ) {
-			$form_id = absint( $form['id'] );
+			$form_id = isset( $form['id'] ) ? absint( $form['id'] ) : null;
 			$allowable_tags = $this->get_allowable_tags( $form_id );
 
 			if ( $allowable_tags === false ) {
@@ -550,12 +550,14 @@ class GF_Field extends stdClass implements ArrayAccess {
 	/**
 	 * Format the entry value before it is used in entry exports and by framework add-ons using GFAddOn::get_field_value().
 	 *
+	 * For CSV export return a string or array.
+	 *
 	 * @param array      $entry    The entry currently being processed.
 	 * @param string     $input_id The field or input ID.
 	 * @param bool|false $use_text When processing choice based fields should the choice text be returned instead of the value.
 	 * @param bool|false $is_csv   Is the value going to be used in the .csv entries export?
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	public function get_value_export( $entry, $input_id = '', $use_text = false, $is_csv = false ) {
 		if ( empty( $input_id ) ) {
@@ -725,7 +727,7 @@ class GF_Field extends stdClass implements ArrayAccess {
 	 */
 	public function set_modifiers( $modifiers ) {
 
-		$this->_modifiers = $modifiers;
+		$this->_merge_tag_modifiers = $modifiers;
 	}
 
 	/**
@@ -735,7 +737,7 @@ class GF_Field extends stdClass implements ArrayAccess {
 	 */
 	public function get_modifiers() {
 
-		return $this->_modifiers;
+		return $this->_merge_tag_modifiers;
 	}
 
 	/**

@@ -12,6 +12,7 @@ class WPMDBPro_CLI_Settings extends WPMDB_CLI {
 	protected $allowed_settings;
 	protected $allowed_push_pull_values;
 	protected $options_map;
+	protected $wpmdbpro;
 
 	function __construct( $plugin_file_path ) {
 		$this->doing_cli_migration = true;
@@ -28,6 +29,10 @@ class WPMDBPro_CLI_Settings extends WPMDB_CLI {
 			'connection-key' => 'key',
 			'license'        => 'licence',
 		);
+
+		global $wpmdbpro;
+		$this->wpmdb    = &$this->wpmdbpro;
+		$this->wpmdbpro = $wpmdbpro;
 	}
 
 	/**
@@ -95,12 +100,13 @@ class WPMDBPro_CLI_Settings extends WPMDB_CLI {
 				WP_CLI::error( __( 'The connection-key cannot be set via the CLI.', 'wp-migrate-db-pro-cli' ) );
 			} elseif ( 'license' == $args[1] ) {
 				// Validates licence against dbrains api
-				$licence = $this->_handle_licence( $args[2] );
-				if ( $licence ) {
-					$update = $this->_cli_save_setting( 'licence', $licence );
-					// Message only required if setting a new license.
-					if ( $update ) {
-						WP_CLI::success( __( 'License updated.', 'wp-migrate-db-pro-cli' ) );
+				$licence_response = $this->_handle_licence( $args[2] );
+				if ( true === $licence_response ) {
+					WP_CLI::success( __( 'License updated.', 'wp-migrate-db-pro-cli' ) );
+				} else if ( is_array( $licence_response ) ) {
+					foreach ( $licence_response as $error ) {
+						//Strip HTML, convert HTML entities to ASCII...
+						WP_CLI::error( self::cleanup_message( $error ) );
 					}
 				}
 			}
@@ -164,25 +170,24 @@ class WPMDBPro_CLI_Settings extends WPMDB_CLI {
 	 * @return bool
 	 */
 	protected function _handle_licence( $licence ) {
-		$existing_licence = $this->get_licence_key();
 
-		if ( $licence == $existing_licence ) {
-			WP_CLI::warning( __( 'WP Migrate DB Pro already locally activated. No need to set the license.', 'wp-migrate-db-pro-cli' ) );
-
-			return false;
-		}
+		$this->wpmdbpro->set_cli_migration();
 
 		WP_CLI::log( __( 'Checking license key...', 'wp-migrate-db-pro-cli' ) );
-		$response = $this->check_licence( $licence );
-		$decoded_response = json_decode( $response, true );
-		$licence_valid    = isset( $decoded_response['errors'] ) ? false : true;
 
-		if ( ! $licence_valid ) {
-			WP_CLI::error( __( 'Please provide a valid license key.', 'wp-migrate-db-pro-cli' ) );
+		$_POST['action']      = 'wpmdb_activate_licence';
+		$_POST['licence_key'] = $licence;
+		$_POST['context']     = 'licence';
 
-			return false;
+		//ajax_activate_licence() validates the license against the Delicious Brains API and sets the option in the database if valid. Returns an error otherwise.
+		$licence_response = $this->wpmdbpro->ajax_activate_licence();
+
+		$decoded_response = json_decode( $licence_response, true );
+
+		if ( ( ! isset( $decoded_response['masked_licence'] ) && isset( $decoded_response['errors'] ) ) || ( isset( $decoded_response['masked_licence'] ) && isset( $decoded_response['errors'] ) ) ) {
+			return $decoded_response['errors'];
 		}
 
-		return $licence;
+		return true;
 	}
 }

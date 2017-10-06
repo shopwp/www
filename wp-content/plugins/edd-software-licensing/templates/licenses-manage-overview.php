@@ -16,6 +16,7 @@ $color = ( $color == 'inherit' ) ? '' : $color;
 // Retrieve all license keys for the specified payment
 $edd_sl = edd_software_licensing();
 $keys   = $edd_sl->get_licenses_of_purchase( $payment_id );
+$keys   = apply_filters( 'edd_sl_manage_template_payment_licenses', $keys, $payment_id );
 if ( $keys ) : ?>
 	<table id="edd_sl_license_keys" class="edd_sl_table">
 		<thead>

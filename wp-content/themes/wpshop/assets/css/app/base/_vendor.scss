@@ -100,7 +100,6 @@ EDD
 
 
 #edd_purchase_form {
-
   margin-bottom: $space-l;
 
   .spinner {
@@ -110,6 +109,15 @@ EDD
     border-top-color: color(white);
     right: calc(50% - 15px);
     bottom: 17px;
+  }
+
+  &.is-logged-out {
+    #edd_cc_fields,
+    #edd_cc_address,
+    #edd-stripe-payment-errors,
+    #edd_purchase_submit {
+      display: none;
+    }
   }
 
 }
@@ -679,6 +687,7 @@ EDD
   .edd_error {
     padding: 0;
     margin-bottom: 0;
+    color: color(dark-grey);
   }
 
 }
@@ -1077,4 +1086,31 @@ Gravity Forms
 
 .is-mobile .pace {
   display: none;
+}
+
+
+
+/*
+
+Auth page
+
+*/
+.page.auth {
+  .pace,
+  #drift-widget-container {
+    display: none;
+  }
+}
+
+
+.page.purchase,
+.page.support,
+.page.demo,
+.page.how,
+.page.home,
+.page.checkout {
+  .pace {
+    display: none;
+  }
+
 }

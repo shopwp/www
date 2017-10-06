@@ -22,7 +22,7 @@
 ?>
         <div class="wrap">
             <div id="icon-options-general" class="icon32"><br /></div>
-            <span class="alignright"><a target="_blank" href="http://www.mailgun.com/"><img src="https://www.mailgun.com/static/img/mailgun.svg" alt="Mailgun" style="width: 10em;"/></a></span>
+            <span class="alignright"><a target="_blank" href="http://www.mailgun.com/"><img src="https://assets.mailgun.com/img/mailgun.svg" alt="Mailgun" style="width: 10em;"/></a></span>
             <h2><?php _e('Mailgun', 'mailgun'); ?></h2>
             <p>A <a target="_blank" href="http://www.mailgun.com/">Mailgun</a> account is required to use this plugin and the Mailgun service.</p>
             <p>If you need to register for an account, you can do so at <a target="_blank" href="http://www.mailgun.com/">http://www.mailgun.com/</a>.</p>
@@ -96,8 +96,8 @@
                         </th>
                         <td>
                             <select name="mailgun[track-clicks]">
-                                <option value="yes"<?php selected('yes', $this->get_option('track-clicks')); ?>><?php _e('Yes', 'mailgun'); ?></option>
                                 <option value="htmlonly"<?php selected('htmlonly', $this->get_option('track-clicks')); ?>><?php _e('HTML Only', 'mailgun'); ?></option>
+                                <option value="yes"<?php selected('yes', $this->get_option('track-clicks')); ?>><?php _e('Yes', 'mailgun'); ?></option>
                                 <option value="no"<?php selected('no', $this->get_option('track-clicks')); ?>><?php _e('No', 'mailgun'); ?></option>
                             </select>
                             <p class="description"><?php _e('If enabled, Mailgun will  and track links.', 'mailgun'); ?> <a href="http://documentation.mailgun.com/user_manual.html#tracking-clicks" target="_blank">Click Tracking Documentation</a></p>

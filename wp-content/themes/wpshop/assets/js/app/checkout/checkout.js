@@ -44,7 +44,7 @@ function onAskExisting($) {
   $('#edd-user-login-submit .button').val('Login and checkout');
   // $registerForm.addClass('animated bounceInTop');
 
-  $("#card_number").attr('type', 'text');
+  // $("#card_number").attr('type', 'text');
 
   // var heigtheight = $('#edd_checkout_user_info').height();
 
@@ -132,7 +132,8 @@ On Login Link
 function onCheckoutLogin($) {
 
   var $loginForm = $("#edd_checkout_login_register"),
-      $registerForm = $("#edd_checkout_user_info");
+      $registerForm = $("#edd_checkout_user_info"),
+      $checkoutLoginContainer = $('#edd_purchase_form');
 
   $('#edd_checkout_user_info').on('click', '.wps-welcome-link', function(e) {
 
@@ -141,8 +142,10 @@ function onCheckoutLogin($) {
     $registerForm.hide();
     $loginForm.show();
 
+    $checkoutLoginContainer.toggleClass('is-logged-out');
+
     $('#edd-user-login-submit input').prop('disabled', false);
-    removeBillingInputs();
+    // removeBillingInputs();
 
   });
 
@@ -170,7 +173,8 @@ On Login Link
 function onCheckoutRegister($) {
 
   var $loginForm = $("#edd_checkout_login_register"),
-      $registerForm = $("#edd_checkout_user_info");
+      $registerForm = $("#edd_checkout_user_info"),
+      $checkoutLoginContainer = $('#edd_purchase_form');
 
   $('#edd_login_fields').on('click', '.wps-welcome-link', function(e) {
 
@@ -178,8 +182,9 @@ function onCheckoutRegister($) {
 
     $registerForm.show();
     $loginForm.hide();
+    $checkoutLoginContainer.toggleClass('is-logged-out');
 
-    insertSavedCheckoutForm($);
+    //insertSavedCheckoutForm($);
     // setScrollScene();
     resetLoginForm($);
 
