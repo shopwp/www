@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Software Licensing
 Plugin URL: https://easydigitaldownloads.com/downloads/software-licensing/
 Description: Adds a software licensing system to Easy Digital Downloads
-Version: 3.5.20
+Version: 3.5.22
 Author: Easy Digital Downloads
 Author URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, cklosows
@@ -24,7 +24,7 @@ if ( ! defined( 'EDD_SL_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_SL_VERSION' ) ) {
-	define( 'EDD_SL_VERSION', '3.5.20' );
+	define( 'EDD_SL_VERSION', '3.5.22' );
 }
 
 class EDD_Software_Licensing {
@@ -2345,20 +2345,20 @@ class EDD_Software_Licensing {
 
 		$url = strtolower( $url );
 
-		if( apply_filters( 'edd_sl_strip_www', true ) ) {
+		if ( apply_filters( 'edd_sl_strip_www', true ) ) {
 
 			// strip www subdomain
 			$url = str_replace( array( '://www.', ':/www.' ), '://', $url );
 
 		}
 
-		if( apply_filters( 'edd_sl_strip_protocal', true ) ) {
+		if ( apply_filters( 'edd_sl_strip_protocol', apply_filters( 'edd_sl_strip_protocal', true ) ) ) {
 			// strip protocol
 			$url = str_replace( array( 'http://', 'https://', 'http:/', 'https:/' ), '', $url );
 
 		}
 
-		if( apply_filters( 'edd_sl_strip_port_number', true ) ) {
+		if ( apply_filters( 'edd_sl_strip_port_number', true ) ) {
 
 			$port = parse_url( $url, PHP_URL_PORT );
 
@@ -2410,7 +2410,9 @@ class EDD_Software_Licensing {
 	 * Check if a URL is considered a local one
 	 *
 	 * @since  3.2.7
-	 * @param  string  $url The URL Provided
+	 *
+	 * @param  string $url The URL Provided
+	 *
 	 * @return boolean      If we're considering the URL local or not
 	 */
 	function is_local_url( $url = '' ) {
@@ -2453,11 +2455,14 @@ class EDD_Software_Licensing {
 
 			if ( substr_count( $host, '.' ) > 1 ) {
 				$subdomains_to_check = apply_filters( 'edd_sl_url_subdomains', array(
-					'dev.', 'staging.',
+					'dev.', '*.staging.',
 				) );
 
 				foreach ( $subdomains_to_check as $subdomain ) {
-					if ( 0 === strpos( $host, $subdomain ) ) {
+					$subdomain = str_replace( $subdomain, '.', '(.)' );
+					$subdomain = str_replace( $subdomain, '*', '(.*)' );
+
+					if ( preg_match( '/^(' . $subdomain . ')/', $host ) ) {
 						$is_local_url = true;
 						continue;
 					}

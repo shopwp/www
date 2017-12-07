@@ -70,7 +70,7 @@ class GF_Feed_Processor extends GF_Background_Process {
 		$dispatched = parent::dispatch();
 
 		if ( is_wp_error( $dispatched ) ) {
-			GFCommon::log_debug( sprintf( 'Unable to dispatch background feed processor: %s', $dispatched->get_error_message() ) );
+			GFCommon::log_debug( sprintf( '%s(): Unable to dispatch background feed processor: %s', __METHOD__, $dispatched->get_error_message() ) );
 		}
 	}
 

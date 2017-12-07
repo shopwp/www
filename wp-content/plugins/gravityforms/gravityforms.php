@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms
 Plugin URI: http://www.gravityforms.com
 Description: Easily create web forms and manage form entries within the WordPress admin.
-Version: 2.3-beta-2
+Version: 2.3-beta-3
 Author: rocketgenius
 Author URI: http://www.rocketgenius.com
 Text Domain: gravityforms
@@ -161,8 +161,7 @@ require_once( plugin_dir_path( __FILE__ ) . 'includes/api.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'includes/webapi/webapi.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'includes/fields/class-gf-fields.php' );
 require_once( plugin_dir_path( __FILE__ ) . 'includes/class-gf-download.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'includes/class-gf-query.php' );
-require_once( plugin_dir_path( __FILE__ ) . 'includes/class-gf-meta-query.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'includes/query/class-gf-query.php' );
 
 // Load Logging if Logging Add-On is not active.
 if ( ! GFCommon::is_logging_plugin_active() ) {
@@ -213,7 +212,7 @@ class GFForms {
 	 *
 	 * @var string $version The version number.
 	 */
-	public static $version = '2.3-beta-2';
+	public static $version = '2.3-beta-3';
 
 	/**
 	 * Handles background upgrade tasks.
@@ -2267,6 +2266,10 @@ class GFForms {
 			return 'notification_list';
 		}
 
+		if ( rgget( 'page' ) == 'gf_edit_forms' && rgget( 'view' ) == 'settings' && rgget( 'subview' ) ) {
+			return 'form_settings_' . rgget( 'subview' );
+		}
+
 		if ( rgget( 'page' ) == 'gf_entries' && ( ! rgget( 'view' ) || rgget( 'view' ) == 'entries' ) ) {
 			return 'entry_list';
 		}
@@ -2953,9 +2956,44 @@ class GFForms {
 					$notification['toType'] = 'email';
 				}
 
-				GFCommon::send_notification( $notification, $form, $lead );
+				/**
+				 * Allow the resend notification email to be skipped
+				 *
+				 * @since 2.3
+				 *
+				 * @param bool  $abort_email  Should we prevent this email being sent?
+				 * @param array $notification The current notification object.
+				 * @param array $form         The current form object.
+				 * @param array $lead         The current entry object.
+				 */
+				$abort_email = apply_filters( 'gform_disable_resend_notification', false, $notification, $form, $lead );
+
+				if ( ! $abort_email ) {
+					GFCommon::send_notification( $notification, $form, $lead );
+				}
+
+				/**
+				 * Fires after the current notification processing is finished
+				 *
+				 * @since 2.3
+				 *
+				 * @param array $notification The current notification object.
+				 * @param array $form         The current form object.
+				 * @param array $lead         The current entry object.
+				 */
+				do_action( 'gform_post_resend_notification', $notification, $form, $lead );
 			}
 		}
+
+		/**
+		 * Fires after the resend notifications processing is finished
+		 *
+		 * @since 2.3
+		 *
+		 * @param array $form The current form object.
+		 * @param array $lead The current entry object.
+		 */
+		do_action( 'gform_post_resend_all_notifications', $form, $lead );
 
 		die();
 	}

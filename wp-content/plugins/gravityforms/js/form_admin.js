@@ -21,6 +21,11 @@ jQuery(document).ready(function($){
 
 	}
 
+	// For backwards compat.
+	if( window.form ) {
+		window.gfMergeTags = new gfMergeTagsObj( form );
+	}
+
 	$(document).ready(function(){
 		$(".gform_currency").bind("change", function(){
 			FormatCurrency(this);

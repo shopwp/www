@@ -131,7 +131,6 @@
   display: none;
 }
 
-
 .logo-shopify {
   max-width: 110px;
   margin: 0 auto;
@@ -159,7 +158,6 @@
   }
 }
 
-
 .flexboxtweener {
   .marquee {
     left: 50px;
@@ -169,9 +167,6 @@
 .marquee-wrapper {
   margin-top: 0;
 }
-
-
-
 
 .logo-header {
   width: auto;
@@ -188,11 +183,12 @@
   &:hover {
     opacity: 1;
   }
+
 }
 
 .logo-header-auth {
   margin: $space-xxl 0;
-  width: 150px;
+  width: 90px;
 }
 
 .logo-header-auth-wrapper {
@@ -204,7 +200,6 @@
     bottom: -75px;
   }
 }
-
 
 .header-cart-link {
   margin-top: 0;

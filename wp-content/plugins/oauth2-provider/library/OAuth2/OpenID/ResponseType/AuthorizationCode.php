@@ -53,7 +53,7 @@ class AuthorizationCode extends BaseAuthorizationCode implements AuthorizationCo
     public function createAuthorizationCode($client_id, $user_id, $redirect_uri, $scope = null, $id_token = null)
     {
         $code = $this->generateAuthorizationCode();
-        $this->storage->setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, time() + $this->config['auth_code_lifetime'], $scope, $id_token);
+        $this->storage->setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, current_time( 'timestamp' ) + $this->config['auth_code_lifetime'], $scope, $id_token);
 
         return $code;
     }

@@ -1132,7 +1132,7 @@ Class GFNotification {
 			</th>
 			<td>
 				<input type="checkbox" name="gform_notification_disable_autoformat" id="gform_notification_disable_autoformat" value="1" <?php echo empty( $notification['disableAutoformat'] ) ? '' : "checked='checked'" ?>/>
-				<label for="form_notification_disable_autoformat" class="inline">
+				<label for="gform_notification_disable_autoformat" class="inline">
 					<?php esc_html_e( 'Disable auto-formatting', 'gravityforms' ); ?>
 					<?php gform_tooltip( 'notification_autoformat' ) ?>
 				</label>

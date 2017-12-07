@@ -1,4 +1,24 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.9
+	- Added the theme to the system report.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.8
+	- Added the locale to the system report.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.7
+	- Fixed the placeholder attribute not being added when the field or input placeholder is set to 0.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.6
+	- Updated remote message caching so that it gets cleared when user navigates to System Status page.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.5
+	- Fixed add-on form settings tabs not using the field admin labels since v2.2.5.
+
+------------------------------------------------------------------------------------------------------------------
 Version 2.2.5.4
 	- Fixed entry exports from the Forms > Import/Export page not using the field admin labels since v2.2.5.
 

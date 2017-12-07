@@ -6,7 +6,6 @@ Control center
 function initDriftTracking($) {
 
   drift.on('ready',function(api, payload) {
-    console.log('Drift ready');
 
     drift.on('startConversation', function (event) {
 

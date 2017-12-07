@@ -1410,7 +1410,7 @@ class GFFormsModel {
 	}
 
 	public static function delete_leads_by_form( $form_id, $status = '' ) {
-		self::delete_entries_by_form( $form_id, $status = '' );
+		self::delete_entries_by_form( $form_id, $status );
 	}
 
 	public static function delete_entries_by_form( $form_id, $status = '' ) {
@@ -2202,7 +2202,11 @@ class GFFormsModel {
 			 */
 			$currency = gf_apply_filters( array( 'gform_currency_pre_save_entry', $form['id'] ), GFCommon::get_currency(), $form );
 
-			$wpdb->query( $wpdb->prepare( "INSERT INTO $entry_table(form_id, ip, source_url, date_created, user_agent, currency, created_by) VALUES(%d, %s, %s, utc_timestamp(), %s, %s, {$user_id})", $form['id'], self::get_ip(), $source_url, $user_agent, $currency ) );
+			$ip = self::get_ip();
+
+			$date_created = $wpdb->get_var( 'SELECT utc_timestamp()' );
+
+			$wpdb->query( $wpdb->prepare( "INSERT INTO $entry_table(form_id, ip, source_url, date_created, user_agent, currency, created_by) VALUES(%d, %s, %s, %s, %s, %s, {$user_id})", $form['id'], $ip, $source_url, $date_created, $user_agent, $currency ) );
 
 
 			// Reading newly created lead id
@@ -2214,7 +2218,29 @@ class GFFormsModel {
 				wp_die( $die_message );
 			}
 
-			$entry = array( 'id' => $lead_id );
+			$entry = array(
+				'id'               => (string) $lead_id,
+				'status'           => 'active',
+				'form_id'          => (string) $form['id'],
+				'ip'               => $ip,
+				'source_url'       => $source_url,
+				'currency'         => $currency,
+				'post_id'          => null,
+				'date_created'     => $date_created,
+				'date_updated'     => null,
+				'is_starred'       => 0,
+				'is_read'          => 0,
+				'user_agent'       => $user_agent,
+				'payment_status'   => null,
+				'payment_date'     => null,
+				'payment_amount'   => null,
+				'payment_method'   => '',
+				'transaction_id'   => null,
+				'is_fulfilled'     => null,
+				'created_by'       => (string) $user_id,
+				'transaction_type' => null,
+			);
+
 
 			GFCommon::log_debug( __METHOD__ . "(): Entry record created in the database. ID: {$lead_id}." );
 		}
@@ -2311,7 +2337,7 @@ class GFFormsModel {
 				wp_die( $die_message );
 			}
 
-			self::refresh_product_cache( $form, $entry = RGFormsModel::get_lead( $entry['id'] ) );
+			self::refresh_product_cache( $form, $entry );
 		}
 
 		//saving total field as the last field of the form.
@@ -2327,6 +2353,32 @@ class GFFormsModel {
 				$error = $results['inserts'];
 				GFCommon::log_error( __METHOD__ . '(): Error while saving total field values for new entry. ' . $error->get_error_message() );
 				wp_die( $die_message );
+			}
+		}
+
+		foreach ( $form['fields'] as $field ) {
+			/* @var GF_Field $field */
+
+			if ( $field->displayOnly ) {
+				continue;
+			}
+
+			$inputs = $field->get_entry_inputs();
+
+			if ( is_array( $inputs ) ) {
+				foreach ( $inputs as $input ) {
+					$entry[ (string) $input['id'] ] = gf_apply_filters( array( 'gform_get_input_value', $form['id'], $field->id, $input['id'] ), rgar( $entry, (string) $input['id'] ), $entry, $field, $input['id'] );
+				}
+			} else {
+
+				$value = rgar( $entry, (string) $field->id );
+
+				if ( GFFormsModel::is_openssl_encrypted_field( $entry['id'], $field->id ) ) {
+					$value = GFCommon::openssl_decrypt( $value );
+				}
+
+				$lead[ $field->id ] = gf_apply_filters( array( 'gform_get_input_value', $form['id'], $field->id ), $value, $entry, $field, '' );
+
 			}
 		}
 
@@ -4085,9 +4137,7 @@ class GFFormsModel {
 	 *
 	 * @return bool
 	 */
-	public static function queue_batch_field_operation( $form, $entry, $field, $entry_meta_id, $input_id, $value ) {
-		global $wpdb;
-
+	public static function queue_batch_field_operation( $form, &$entry, $field, $entry_meta_id, $input_id, $value ) {
 		/**
 		 * Filter the value before it's saved to the database.
 		 *
@@ -4113,8 +4163,10 @@ class GFFormsModel {
 			return false;
 		}
 
-		$entry_id                = $entry['id'];
-		$form_id                = $form['id'];
+		$entry[ $input_id ] = $value;
+
+		$entry_id = $entry['id'];
+		$form_id  = $form['id'];
 
 		if ( ! rgblank( $value ) ) {
 			if ( $entry_meta_id > 0 ) {
@@ -4296,27 +4348,31 @@ class GFFormsModel {
 		$time            = current_time( 'mysql' );
 		$y               = substr( $time, 0, 4 );
 		$m               = substr( $time, 5, 2 );
-		$target_root     = self::get_upload_path( $form_id ) . "/$y/$m/";
-		$target_root_url = self::get_upload_url( $form_id ) . "/$y/$m/";
+		$default_target_root     = self::get_upload_path( $form_id ) . "/$y/$m/";
+		$default_target_root_url = self::get_upload_url( $form_id ) . "/$y/$m/";
 
 		//adding filter to upload root path and url
-		$upload_root_info = array( 'path' => $target_root, 'url' => $target_root_url );
+		$upload_root_info = array( 'path' => $default_target_root, 'url' => $default_target_root_url );
 		$upload_root_info = gf_apply_filters( array( 'gform_upload_path', $form_id ), $upload_root_info, $form_id );
 
 		$target_root     = $upload_root_info['path'];
 		$target_root_url = $upload_root_info['url'];
+
+		$target_root = trailingslashit( $target_root );
 
 		if ( ! is_dir( $target_root ) ) {
 			if ( ! wp_mkdir_p( $target_root ) ) {
 				return false;
 			}
 
-			//adding index.html files to all subfolders
-			if ( ! file_exists( self::get_upload_root() . '/index.html' ) ) {
+			// Adding index.html files to all subfolders.
+			if ( $default_target_root != $target_root && ! file_exists( $target_root . 'index.html' ) ) {
+				GFCommon::recursive_add_index_file( $target_root );
+			} elseif ( ! file_exists( self::get_upload_root() . '/index.html' ) ) {
 				GFCommon::recursive_add_index_file( self::get_upload_root() );
-			} else if ( ! file_exists( self::get_upload_path( $form_id ) . '/index.html' ) ) {
+			} elseif ( ! file_exists( self::get_upload_path( $form_id ) . '/index.html' ) ) {
 				GFCommon::recursive_add_index_file( self::get_upload_path( $form_id ) );
-			} else if ( ! file_exists( self::get_upload_path( $form_id ) . "/$y/index.html" ) ) {
+			} elseif ( ! file_exists( self::get_upload_path( $form_id ) . "/$y/index.html" ) ) {
 				GFCommon::recursive_add_index_file( self::get_upload_path( $form_id ) . "/$y" );
 			} else {
 				GFCommon::recursive_add_index_file( self::get_upload_path( $form_id ) . "/$y/$m" );
@@ -4484,7 +4540,11 @@ class GFFormsModel {
 	}
 
 	public static function get_lead( $lead_id ) {
-		return GFAPI::get_entry( $lead_id );
+		$entry = GFAPI::get_entry( $lead_id );
+		if ( is_wp_error( $entry ) ) {
+			$entry = false;
+		}
+		return $entry;
 	}
 
 	public static function get_entry( $entry_id ) {
@@ -4933,8 +4993,17 @@ class GFFormsModel {
 		if ( ! $field instanceof GF_Field ) {
 			$field = GF_Fields::create( $field );
 		}
-		$field_label = ( GFForms::get_page() || RG_CURRENT_PAGE == 'select_columns.php' || RG_CURRENT_PAGE == 'print-entry.php' || rgget( 'gf_page', $_GET ) == 'select_columns' || rgget( 'gf_page', $_GET ) == 'print-entry' ) && ! empty( $field->adminLabel ) && $allow_admin_label ? $field->adminLabel : $field->label;
-		$input       = self::get_input( $field, $input_id );
+
+		$field_label = ( GFForms::get_page() ||
+		                 RG_CURRENT_PAGE == 'select_columns.php' ||
+		                 RG_CURRENT_PAGE == 'print-entry.php' ||
+		                 rgget( 'gf_page', $_GET ) == 'select_columns' ||
+		                 rgget( 'gf_page', $_GET ) == 'print-entry' ||
+		                 $field->get_context_property( 'use_admin_label' )
+		               ) && ! empty( $field->adminLabel ) && $allow_admin_label ? $field->adminLabel : $field->label;
+
+		$input = self::get_input( $field, $input_id );
+
 		if ( self::get_input_type( $field ) == 'checkbox' && $input != null ) {
 			return $input['label'];
 		} else if ( $input != null ) {
@@ -5910,6 +5979,14 @@ class GFFormsModel {
 class RGFormsModel extends GFFormsModel {
 }
 
+/**
+ * In-memory cache of entry meta using "{blog_id}_{entry_id}_{meta_key}" as the key.
+ *
+ * @since 2.3 Prefixed cache key with the blog id.
+ * @since unknown
+ *
+ * @global array $_gform_lead_meta
+ */
 global $_gform_lead_meta;
 $_gform_lead_meta = array();
 
@@ -5923,7 +6000,7 @@ function gform_get_meta( $entry_id, $meta_key ) {
 	global $wpdb, $_gform_lead_meta;
 
 	//get from cache if available
-	$cache_key = $entry_id . '_' . $meta_key;
+	$cache_key = get_current_blog_id() . '_' . $entry_id . '_' . $meta_key;
 	if ( array_key_exists( $cache_key, $_gform_lead_meta ) ) {
 		return maybe_unserialize( $_gform_lead_meta[ $cache_key ] );
 	}
@@ -6024,7 +6101,7 @@ function gform_update_meta( $entry_id, $meta_key, $meta_value, $form_id = null )
 	}
 
 	//updates cache
-	$cache_key = $entry_id . '_' . $meta_key;
+	$cache_key = get_current_blog_id() . '_' . $entry_id . '_' . $meta_key;
 	if ( array_key_exists( $cache_key, $_gform_lead_meta ) ) {
 		$_gform_lead_meta[ $cache_key ] = $meta_value;
 	}
@@ -6068,6 +6145,8 @@ function gform_add_meta( $entry_id, $meta_key, $meta_value, $form_id = null ) {
 
 	$wpdb->insert( $table_name, array( 'form_id' => $form_id, 'entry_id' => $entry_id, 'meta_key' => $meta_key, 'meta_value' => $serialized_meta_value ), array( '%d', '%d', '%s', '%s' ) );
 
+	$cache_key                      = get_current_blog_id() . '_' . $entry_id . '_' . $meta_key;
+	$_gform_lead_meta[ $cache_key ] = $meta_value;
 }
 
 function gform_delete_meta( $entry_id, $meta_key = '' ) {

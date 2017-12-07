@@ -1782,7 +1782,7 @@ class GF_Forms_Model_Legacy {
 		global $wpdb, $_gform_lead_meta;
 
 		//get from cache if available
-		$cache_key = $entry_id . '_' . $meta_key;
+		$cache_key = get_current_blog_id() . '_' . $entry_id . '_' . $meta_key;
 		if ( array_key_exists( $cache_key, $_gform_lead_meta ) ) {
 			return maybe_unserialize( $_gform_lead_meta[ $cache_key ] );
 		}
@@ -1870,7 +1870,7 @@ class GF_Forms_Model_Legacy {
 		}
 
 		//updates cache
-		$cache_key = $entry_id . '_' . $meta_key;
+		$cache_key = get_current_blog_id() . '_' . $entry_id . '_' . $meta_key;
 		if ( array_key_exists( $cache_key, $_gform_lead_meta ) ) {
 			$_gform_lead_meta[ $cache_key ] = $meta_value;
 		}
@@ -1903,6 +1903,8 @@ class GF_Forms_Model_Legacy {
 
 		$wpdb->insert( $table_name, array( 'form_id' => $form_id, 'lead_id' => $entry_id, 'meta_key' => $meta_key, 'meta_value' => $serialized_meta_value ), array( '%d', '%d', '%s', '%s' ) );
 
+		$cache_key                      = get_current_blog_id() . '_' . $entry_id . '_' . $meta_key;
+		$_gform_lead_meta[ $cache_key ] = $meta_value;
 	}
 
 	public static function gform_delete_meta( $entry_id, $meta_key = '' ) {

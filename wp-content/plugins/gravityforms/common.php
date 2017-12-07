@@ -5892,14 +5892,14 @@ class GFCache {
 		if ( is_multisite() ) {
 			$sql = "
                  DELETE FROM $wpdb->sitemeta
-                 WHERE meta_key LIKE '_site_transient_timeout_GFCache_%' OR
+                 WHERE meta_key LIKE '\_site\_transient\_timeout\_GFCache\_%' OR
                  meta_key LIKE '_site_transient_GFCache_%'
                 ";
 		} else {
 			$sql = "
                  DELETE FROM $wpdb->options
-                 WHERE option_name LIKE '_transient_timeout_GFCache_%' OR
-                 option_name LIKE '_transient_GFCache_%'
+                 WHERE option_name LIKE '\_transient\_timeout\_GFCache\_%' OR
+                 option_name LIKE '\_transient\_GFCache\_%'
                 ";
 
 		}

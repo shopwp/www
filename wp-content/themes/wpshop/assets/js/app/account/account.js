@@ -237,8 +237,6 @@ function initAccount($) {
 
   clipboard.on('success', function(e) {
 
-    console.log("e: ", );
-
     jQuery(e.trigger).next().addClass('is-notifying');
 
     setTimeout(function() {

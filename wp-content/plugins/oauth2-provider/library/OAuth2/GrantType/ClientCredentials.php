@@ -1,5 +1,4 @@
 <?php
-
 namespace OAuth2\GrantType;
 
 use OAuth2\ClientAssertionType\HttpBasic;
@@ -11,12 +10,12 @@ use OAuth2\Storage\ClientCredentialsInterface;
  *
  * @see OAuth2\ClientAssertionType_HttpBasic
  */
-class ClientCredentials extends HttpBasic implements GrantTypeInterface
-{
+class ClientCredentials extends HttpBasic implements GrantTypeInterface {
+
     private $clientData;
 
-    public function __construct(ClientCredentialsInterface $storage, array $config = array())
-    {
+    public function __construct( ClientCredentialsInterface $storage, array $config = array() ) {
+
         /**
          * The client credentials grant type MUST only be used by confidential clients
          *
@@ -27,23 +26,20 @@ class ClientCredentials extends HttpBasic implements GrantTypeInterface
         parent::__construct($storage, $config);
     }
 
-    public function getQuerystringIdentifier()
-    {
+    public function getQuerystringIdentifier() {
         return 'client_credentials';
     }
 
-    public function getScope()
-    {
+    public function getScope() {
         $this->loadClientData();
 
         return isset($this->clientData['scope']) ? $this->clientData['scope'] : null;
     }
 
-    public function getUserId()
-    {
+    public function getUserId() {
         $this->loadClientData();
 
-        return isset($this->clientData['user_id']) ? $this->clientData['user_id'] : null;
+        return isset( $this->clientData['user_id'] ) ? $this->clientData['user_id'] : null;
     }
 
     public function createAccessToken(AccessTokenInterface $accessToken, $client_id, $user_id, $scope)

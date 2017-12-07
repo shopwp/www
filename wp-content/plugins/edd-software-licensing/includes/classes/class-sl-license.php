@@ -1535,7 +1535,15 @@ final class EDD_SL_License {
 
 			$this->status = $status;
 
-			if( 'expired' == $status ) {
+			if ( 'active' == $status ) {
+				edd_software_licensing()->log_license_activation( $this->ID, $_SERVER );
+			}
+
+			if ( 'inactive' == $status ) {
+				edd_software_licensing()->log_license_deactivation( $this->ID, $_SERVER );
+			}
+
+			if ( 'expired' == $status ) {
 				// Determine if we should send an email when a license key is marked as expired
 				$notice_on_expired = false;
 				$notices = edd_sl_get_renewal_notices();

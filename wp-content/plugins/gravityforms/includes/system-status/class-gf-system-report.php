@@ -422,6 +422,11 @@ class GF_System_Report {
 						),
 					),
 					array(
+						'title'        => esc_html__( 'Active Theme', 'gravityforms' ),
+						'title_export' => 'Active Theme',
+						'items'        => self::get_theme(),
+					),
+					array(
 						'title'        => esc_html__( 'Active Plugins', 'gravityforms' ),
 						'title_export' => 'Active Plugins',
 						'items'        => self::get_active_plugins( false, false, true ),
@@ -689,8 +694,11 @@ class GF_System_Report {
 	 */
 	public static function get_gravityforms() {
 
-		// Get Gravity Forms version info.
+		// Get Gravity Forms version info, clearing cache
 		$version_info = GFCommon::get_version_info( false );
+
+		// Re-caches remote message.
+		GFCommon::cache_remote_message();
 
 		// Determine if upload folder is writable.
 		$upload_path = GFFormsModel::get_upload_root();
@@ -706,7 +714,7 @@ class GF_System_Report {
 		$updates          = get_option( 'gform_enable_background_updates' );
 
 		GFForms::include_gravity_api();
-		$site_key = gapi()->get_site_key();
+		$site_key      = gapi()->get_site_key();
 		$is_registered = gapi()->is_site_registered();
 
 		if ( $is_registered ) {
@@ -715,19 +723,20 @@ class GF_System_Report {
 			//if there was an error during site registration, display appropriate message
 			$validation_message = sprintf( esc_html__( 'There was an error registering your site. Please check that the licence key entered is valid and not expired. If the problem persists, please contact support. %1$sRegister Site%2$s.', 'gravityforms' ), '<a class="thickbox" href="#TB_inline?width=400&inlineId=gform_register_site">', '</a>' );
 		} else {
-		 	$validation_message = sprintf( esc_html__( 'This site has not been registered. %1$sPlease register your site%2$s.', 'gravityforms' ), '<a class="thickbox" href="#TB_inline?width=400&inlineId=gform_register_site">', '</a>' );
+			$validation_message = sprintf( esc_html__( 'This site has not been registered. %1$sPlease register your site%2$s.', 'gravityforms' ), '<a class="thickbox" href="#TB_inline?width=400&inlineId=gform_register_site">', '</a>' );
 		}
+
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'gravityforms' );
 
 		// Prepare versions array.
 		$gravityforms = array(
 			array(
-				'label'              => esc_html__( 'Registration', 'gravityforms' ),
-				'label_export'       => 'Registration',
-				'value'              => $is_registered ? esc_html__( 'Site registered ', 'gravityforms' ) . ' ( ' . $site_key . ' ) ' : '',
-				'is_valid'			 => $is_registered,
-				'value_export'       => $is_registered ? 'Site registered ( ' . $site_key . ' ) ' : 'Not registered',
-				'is_valid'           => $is_registered,
-				'validation_message' => $validation_message,
+				'label'                     => esc_html__( 'Registration', 'gravityforms' ),
+				'label_export'              => 'Registration',
+				'value'                     => $is_registered ? esc_html__( 'Site registered ', 'gravityforms' ) . ' ( ' . $site_key . ' ) ' : '',
+				'is_valid'                  => $is_registered,
+				'value_export'              => $is_registered ? 'Site registered ( ' . $site_key . ' ) ' : 'Not registered',
+				'validation_message'        => $validation_message,
 				'validation_message_export' => '',
 			),
 			array(
@@ -743,9 +752,9 @@ class GF_System_Report {
 				),
 			),
 			array(
-				'label'              => esc_html__( 'Upload folder', 'gravityforms' ),
-				'label_export'       => 'Upload folder',
-				'value'              => GFFormsModel::get_upload_root(),
+				'label'        => esc_html__( 'Upload folder', 'gravityforms' ),
+				'label_export' => 'Upload folder',
+				'value'        => GFFormsModel::get_upload_root(),
 			),
 			array(
 				'label'              => esc_html__( 'Upload folder permissions', 'gravityforms' ),
@@ -783,6 +792,12 @@ class GF_System_Report {
 				'label_export' => 'Background updates',
 				'value'        => $updates ? __( 'Yes', 'gravityforms' ) : __( 'No', 'gravityforms' ),
 				'value_export' => $updates ? 'Yes' : 'No',
+			),
+			array(
+				'label'        => esc_html__( 'Locale', 'gravityforms' ),
+				'label_export' => 'Locale',
+				'value'        => $locale,
+				'value_export' => $locale,
 			),
 		);
 
@@ -1316,6 +1331,54 @@ class GF_System_Report {
 		}
 
 		return false;
+
+	}
+
+	/**
+	 * Get the theme info.
+	 *
+	 * @since  2.2.5.9
+	 * @access public
+	 *
+	 * @return array
+	 */
+	public static function get_theme() {
+
+		wp_update_themes();
+		$update_themes = get_site_transient( 'update_themes' );
+
+		$active_theme     = wp_get_theme();
+		$theme_name       = wp_strip_all_tags( $active_theme->get( 'Name' ) );
+		$theme_version    = wp_strip_all_tags( $active_theme->get( 'Version' ) );
+		$theme_author     = wp_strip_all_tags( $active_theme->get( 'Author' ) );
+		$theme_author_uri = esc_url( $active_theme->get( 'AuthorURI' ) );
+
+		$theme_details = array(
+			array(
+				'label'        => $theme_name,
+				'value'        => sprintf( 'by <a href="%s">%s</a> - %s', $theme_author_uri, $theme_author, $theme_version ),
+				'value_export' => sprintf( 'by %s (%s) - %s', $theme_author, $theme_author_uri, $theme_version ),
+				'is_valid'     => version_compare( $theme_version, rgar( $update_themes->checked, $active_theme->get_stylesheet() ), '>=' )
+			),
+		);
+
+		if ( is_child_theme() ) {
+			$parent_theme      = wp_get_theme( $active_theme->get( 'Template' ) );
+			$parent_name       = wp_strip_all_tags( $parent_theme->get( 'Name' ) );
+			$parent_version    = wp_strip_all_tags( $parent_theme->get( 'Version' ) );
+			$parent_author     = wp_strip_all_tags( $parent_theme->get( 'Author' ) );
+			$parent_author_uri = esc_url( $parent_theme->get( 'AuthorURI' ) );
+
+			$theme_details[] = array(
+				'label'        => sprintf( '%s (%s)', $parent_name, esc_html__( 'Parent', 'gravityforms' ) ),
+				'label_export' => $parent_name . ' (Parent)',
+				'value'        => sprintf( 'by <a href="%s">%s</a> - %s', $parent_author_uri, $parent_author, $parent_version ),
+				'value_export' => sprintf( 'by %s (%s) - %s', $parent_author, $parent_author_uri, $parent_version ),
+				'is_valid'     => version_compare( $parent_version, rgar( $update_themes->checked, $parent_theme->get_stylesheet() ), '>=' )
+			);
+		}
+
+		return $theme_details;
 
 	}
 

@@ -85,6 +85,30 @@ function initPlugins($) {
 
   }, 'Must be a number between 3-4 digits long');
 
+
+  /*
+
+  Polyfill endsWith() used to check for myshopify.com domain ending during auth
+
+  */
+  if (!String.prototype.endsWith) {
+
+    String.prototype.endsWith = function(searchStr, Position) {
+
+      if (!(Position < this.length)) {
+        Position = this.length;
+
+      } else {
+        Position |= 0;
+      }
+
+      return this.substr(Position - searchStr.length, searchStr.length) === searchStr;
+
+    };
+
+  }
+
+
 }
 
 export {

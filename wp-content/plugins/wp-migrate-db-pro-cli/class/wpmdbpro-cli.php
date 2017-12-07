@@ -438,8 +438,6 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
             }
         }
 
-
-
 		return $tables_to_migrate;
 	}
 
@@ -477,7 +475,7 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 	function check_wpmdbpro_version_before_migration( $profile ) {
 		// TODO: maybe instantiate WPMDBPro_CLI_Addon to make WPMDBPro_Addon::meets_version_requirements() available here
 		$wpmdb_pro_version = $GLOBALS['wpmdb_meta']['wp-migrate-db-pro']['version'];
-		if ( ! version_compare( $wpmdb_pro_version, '1.8', '>=' ) ) {
+		if ( ! version_compare( $wpmdb_pro_version, '1.8.1', '>=' ) ) {
 			return $this->cli_error( __( 'Please update WP Migrate DB Pro.', 'wp-migrate-db-pro-cli' ) );
 		}
 
@@ -593,15 +591,37 @@ class WPMDBPro_CLI extends WPMDBPro_CLI_Export {
 			return $profile;
 		}
 
-		if ( isset( $profile['mst_select_subsite'] ) && '1' === $profile['mst_select_subsite'] ) {
+		if ( isset( $profile['mst_select_subsite'] ) && '1' === $profile['mst_select_subsite'] && isset( $profile['mst_selected_subsite'] ) ) {
 			if ( ! isset( $this->remote['mst_available'] ) ) {
 				return $this->cli_error( __( 'The profile is set to migrate a subsite, however WP Migrate DB Pro Multisite tools does not seem to be installed/active on the remote website.', 'wp-migrate-db-pro-cli' ) );
 			}
+		} else {
+			return $profile;
+		}
+
+		if ( is_multisite() && 'true' === $this->remote['site_details']['is_multisite'] ) {
+			return $this->cli_error( __( 'The profile is set to migrate a subsite, however WP Migrate DB Pro Multisite Tools does not currently support migrating a subsite between multisite installs.', 'wp-migrate-db-pro-cli' ) );
+		}
+
+		if ( ! is_multisite() && 'true' === $this->remote['site_details']['is_multisite'] ) {
+			$profile['mst_selected_subsite'] = $this->get_subsite_id( $profile['mst_selected_subsite'], $this->remote['site_details']['subsites'] );
+		}
+
+		if ( false === $profile['mst_selected_subsite'] ) {
+			return $this->cli_error( __( 'A valid Blog ID or Subsite URL must be supplied to make use of the subsite option', 'wp-migrate-db-pro-cli' ) );
+		}
+
+		if ( 1 < $profile['mst_selected_subsite'] &&
+		     (
+			     ( 'pull' === $profile['action'] && is_multisite() ) ||
+			     ( 'push' === $profile['action'] && 'true' === $this->remote['site_details']['is_multisite'] )
+		     )
+		) {
+			$profile['new_prefix'] .= $profile['mst_selected_subsite'] . '_';
 		}
 
 		return $profile;
 	}
-
 
 	/**
 	 * Flush rewrite rules

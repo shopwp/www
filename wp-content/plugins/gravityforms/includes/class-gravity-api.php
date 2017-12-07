@@ -55,13 +55,13 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 				$license_key_md5 = md5( $license_key );
 			}
 
-			GFCommon::log_debug( __METHOD__ . '() - registering site' );
+			GFCommon::log_debug( __METHOD__ . '(): registering site' );
 
 			$result = $this->request( 'sites', $body, 'POST', array( 'headers' => $this->get_license_auth_header( $license_key_md5 ) ) );
 			$result = $this->prepare_response_body( $result );
 
 			if ( is_wp_error( $result ) || ! is_object( $result ) ) {
-				GFCommon::log_error( __METHOD__ . '() - error registering site. ' . print_r( $result, true ) );
+				GFCommon::log_error( __METHOD__ . '(): error registering site. ' . print_r( $result, true ) );
 				return $result;
 			}
 
@@ -69,7 +69,7 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			update_option( 'gf_site_key', $result->key );
 			update_option( 'gf_site_secret', $result->secret );
 
-			GFCommon::log_debug( __METHOD__ . '() - site registration successful. Site Key: ' . $result->key );
+			GFCommon::log_debug( __METHOD__ . '(): site registration successful. Site Key: ' . $result->key );
 
 			return true;
 		}
@@ -90,14 +90,14 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			$body['site_key'] = $site_key;
 			$body['site_secret'] = $site_secret;
 
-			GFCommon::log_debug( __METHOD__ . '() - refreshing license info' );
+			GFCommon::log_debug( __METHOD__ . '(): refreshing license info' );
 
 			$result = $this->request( 'sites/' . $site_key, $body, 'PUT', array( 'headers' => $this->get_site_auth_header( $site_key, $site_secret ) ) );
 			$result = $this->prepare_response_body( $result );
 
 			if ( is_wp_error( $result ) ) {
 
-				GFCommon::log_debug( __METHOD__ . '() - error updating site registration. ' . print_r( $result, true ) );
+				GFCommon::log_debug( __METHOD__ . '(): error updating site registration. ' . print_r( $result, true ) );
 				return $result;
 
 			}
@@ -114,7 +114,7 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 				return false;
 			}
 
-			GFCommon::log_debug( __METHOD__ . '() - deregistering' );
+			GFCommon::log_debug( __METHOD__ . '(): deregistering' );
 
 			$body = array(
 				'license_key_md5' => '',
@@ -125,7 +125,7 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 
 			if ( is_wp_error( $result ) ) {
 
-				GFCommon::log_debug( __METHOD__ . '() - error updating site registration. ' . print_r( $result, true ) );
+				GFCommon::log_debug( __METHOD__ . '(): error updating site registration. ' . print_r( $result, true ) );
 				return $result;
 
 			}

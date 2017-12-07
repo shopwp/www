@@ -85,16 +85,23 @@ class GF_Field_CAPTCHA extends GF_Field {
 				break;
 
 			default:
-				$this->validate_recaptcha();
+				$this->validate_recaptcha( $form );
 		}
 
 	}
 
-	public function validate_recaptcha() {
+	public function validate_recaptcha( $form ) {
 
 		// when user clicks on the "I'm not a robot" box, the response token is populated into a hidden field by Google, get token from POST
 		$response_token = rgpost( 'g-recaptcha-response' );
-		$is_valid       = $this->verify_recaptcha_response( $response_token );
+		$hash           = rgpost( 'gf-recaptcha-response-hash' );
+
+		if( GFFormDisplay::is_last_page( $form ) && $hash && wp_hash( $response_token ) === $hash ) {
+			$is_valid = true;
+		} else {
+			$is_valid = $this->verify_recaptcha_response( $response_token );
+		}
+
 
 		if ( ! $is_valid ) {
 
@@ -208,6 +215,21 @@ class GF_Field_CAPTCHA extends GF_Field {
 
 					$output = "<div id='" . esc_attr( $field_id ) ."' class='ginput_container ginput_recaptcha' data-sitekey='" . esc_attr( $site_key ) . "' {$stoken} data-theme='" . esc_attr( $theme ) . "' data-tabindex='{$tabindex}'></div>";
 
+					$recaptcha_response = rgpost( 'g-recaptcha-response' );
+					$current_page = GFFormDisplay::get_current_page( $form['id'] );
+
+					if( $recaptcha_response && ! $this->failed_validation && $current_page != $this->pageNumber ) {
+
+						$hash = rgpost( 'gf-recaptcha-response-hash' );
+						if( ! $hash ) {
+							$hash = wp_hash( $recaptcha_response );
+						}
+
+						$output .= "<input type='hidden' name='g-recaptcha-response' value='{$recaptcha_response}'>";
+						$output .= "<input type='hidden' name='gf-recaptcha-response-hash' value='{$hash}'>";
+
+					}
+
 					return $output;
 				}
 		}
@@ -216,13 +238,17 @@ class GF_Field_CAPTCHA extends GF_Field {
 	public function ensure_recaptcha_js(){
 		?>
 		<script type="text/javascript">
-			var gfRecaptchaPoller = setInterval( function() {
-				if( ! window.grecaptcha ) {
-					return;
-				}
-				renderRecaptcha();
-				clearInterval( gfRecaptchaPoller );
-			}, 100 );
+			( function( $ ) {
+				$( document ).bind( 'gform_post_render', function() {
+					var gfRecaptchaPoller = setInterval( function() {
+						if( ! window.grecaptcha ) {
+							return;
+						}
+						renderRecaptcha();
+						clearInterval( gfRecaptchaPoller );
+					}, 100 );
+				} );
+			} )( jQuery );
 		</script>
 
 		<?php

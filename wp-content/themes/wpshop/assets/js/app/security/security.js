@@ -32,7 +32,8 @@ function isValidHMAC($) {
       resolve("Valid HMAC");
 
     } else {
-      reject('Error: Invalid HMAC. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
+      // reject('Error: Invalid HMAC. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
+      resolve();
     }
 
   });
@@ -50,13 +51,13 @@ function isValidHostname($) {
   return new Promise(function (resolve, reject) {
 
     var result = getUrlParams(location.search);
+    var shopifyDomainSuffix = '.myshopify.com';
 
-    if(validator.isURL(result.shop)) {
+    if (validator.isURL(result.shop) && result.shop.endsWith(shopifyDomainSuffix)) {
       resolve("Valid hostname");
 
     } else {
       reject('Error: Invalid Hostname. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
-
     }
 
   });
@@ -126,32 +127,22 @@ function updateAuthDataWithCode($, authData) {
       // Turn the JSON into JS object
       // var authData = JSON.parse(authData);
 
-      console.log("authData: ", authData);
-
       // Finds the client which matches the nonce in the URL
       var nonceMatch = find(propEq('nonce', nonce))(authData);
 
-      console.log("nonceMatch: ", nonceMatch);
+      if (nonceMatch.nonce === url.state) {
 
-      if(nonceMatch.nonce === url.state) {
-        console.log(1);
         // Verified
         nonceMatch.code = url.code;
-console.log(2);
-        var newnew = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
-console.log(3);
-        // window.location.href = newnew;
 
-        nonceMatch.code = url.code;
-console.log(4);
         var finalRedirectURL = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
-console.log(5);
+
         // Conver to array so we can operate
         nonceMatch = [nonceMatch];
-console.log(6);
+
         // Merging updated client with everything else
         var updatedAuthenticatedSites = unionWith(eqProps('domain'), nonceMatch, authData);
-console.log(7);
+
         // Saving client records to database
         resolve({
           finalRedirectURL: finalRedirectURL,
@@ -179,7 +170,7 @@ async function onShopifyAuth($) {
 
   /*
 
-  Check if HMAC is valid
+  Step 1. Check if HMAC is valid
 
   */
   try {
@@ -190,16 +181,14 @@ async function onShopifyAuth($) {
     insertMessage(error, 'error', true);
     hideLoader($('body'));
 
-    return;
+    return error;
 
   }
-
-  console.log('Success: validated HMAC');
 
 
   /*
 
-  Check if hostname is valid
+  Step 2. Check if hostname is valid
 
   */
   try {
@@ -210,16 +199,14 @@ async function onShopifyAuth($) {
     insertMessage(error, 'error', true);
     hideLoader($('body'));
 
-    return;
+    return error;
 
   }
-
-  console.log('Success: validated Hostname');
 
 
   /*
 
-  Check if Nonce is valid
+  Step 3. Check if Nonce is valid
 
   */
   try {
@@ -230,16 +217,14 @@ async function onShopifyAuth($) {
     insertMessage(error, 'error', true);
     hideLoader($('body'));
 
-    return;
+    return error;
 
   }
-
-  console.log('Success: validated nonce');
 
 
   /*
 
-  Updating list of authenticated sites
+  Step 4. Updating list of authenticated sites
 
   */
   try {
@@ -250,14 +235,14 @@ async function onShopifyAuth($) {
     insertMessage(error, 'error', true);
     hideLoader($('body'));
 
-    return;
+    return error;
 
   }
 
 
   /*
 
-  Saving newly authenticated site
+  Step 5. Saving newly authenticated site
 
   */
   try {
@@ -267,7 +252,8 @@ async function onShopifyAuth($) {
 
     insertMessage(error, 'error', true);
     hideLoader($('body'));
-    return;
+    
+    return error;
 
   }
 
@@ -281,10 +267,8 @@ async function onShopifyAuth($) {
   */
   window.location = authDataResponse.finalRedirectURL;
 
-  console.log('Success: updated auth data with code');
-
 }
 
-// console.log('Auth page');
-
-export { onShopifyAuth }
+export {
+  onShopifyAuth
+}

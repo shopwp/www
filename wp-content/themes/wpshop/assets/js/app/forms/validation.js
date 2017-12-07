@@ -194,9 +194,6 @@ var onInputRemoveError = debounce(function(element) {
         insertValidIcon(jQuery(element));
         addValidInputClass(jQuery(element));
 
-      } else {
-        // console.log('NOT valid');
-
       }
 
     } else {
@@ -209,9 +206,6 @@ var onInputRemoveError = debounce(function(element) {
         insertValidIcon(jQuery(element));
         addValidInputClass(jQuery(element));
 
-      } else {
-        // console.log('NOT valid');
-        // $(element)[0].setCustomValidity('Invalid');
       }
 
     }

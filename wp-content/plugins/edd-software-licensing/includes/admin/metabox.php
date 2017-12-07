@@ -210,7 +210,7 @@ function edd_sl_render_license_upgrade_paths_meta_box()	{
 				if ( ! empty( $paths ) && is_array( $paths ) ) :
 					foreach ( $paths as $key => $value ) :
 			?>
-					<tr class="edd_repeatable_upload_wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
+					<tr class="edd-repeatable-upgrade-wrapper edd_repeatable_row" data-key="<?php echo esc_attr( $key ); ?>">
 						<td>
 							<?php
 							echo EDD()->html->product_dropdown( array(
@@ -254,7 +254,11 @@ function edd_sl_render_license_upgrade_paths_meta_box()	{
 								'name'    => 'edd_sl_upgrade_paths[' . $key . '][pro_rated]',
 								'value'   => '1',
 								'current' => ! empty( $value['pro_rated'] ) ? 1 : 0
-							) ); ?>
+							) );
+
+							do_action( 'sl_after_prorate_checkbox', $key, $value );
+
+							?>
 						</td>
 						<td>
 							<?php echo EDD()->html->text( array(
@@ -272,7 +276,7 @@ function edd_sl_render_license_upgrade_paths_meta_box()	{
 					endforeach;
 				else :
 			?>
-				<tr class="edd_repeatable_upload_wrapper edd_repeatable_row" data-key="1">
+				<tr class="edd-repeatable-upgrade-wrapper edd_repeatable_row" data-key="1">
 					<td>
 						<?php
 						echo EDD()->html->product_dropdown( array(

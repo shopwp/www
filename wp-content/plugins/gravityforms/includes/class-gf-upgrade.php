@@ -228,7 +228,7 @@ class GF_Upgrade {
 
 		if ( $lock_params && ! $force_upgrade ) {
 
-			GFCommon::log_debug( 'Upgrade in process. Aborting' );
+			GFCommon::log_debug( __METHOD__ . '(): Upgrade in process. Aborting' );
 
 			// Abort. Upgrade already in process.
 			return false;
@@ -255,17 +255,17 @@ class GF_Upgrade {
 
 			// Lock upgrade
 			$wpdb->query( $sql );
-			GFCommon::log_debug( 'Upgrade Locked.' );
+			GFCommon::log_debug( __METHOD__ . '(): Upgrade Locked.' );
 		} else {
 
 			$sql = $wpdb->prepare( "UPDATE {$wpdb->options} SET option_value=%s WHERE option_name='gf_upgrade_lock'", $lock_params_serialized );
 
 			// Lock upgrade
 			$wpdb->query( $sql );
-			GFCommon::log_debug( 'Upgrade Locked.' );
+			GFCommon::log_debug( __METHOD__ . '(): Upgrade Locked.' );
 		}
 
-		$system_status_link_open  = sprintf( '<a href="">', admin_url( 'admin.php?page=gf_system_status' ) );
+		$system_status_link_open  = sprintf( '<a href="%s">', admin_url( 'admin.php?page=gf_system_status' ) );
 		$system_status_link_close = '</a>';
 
 		/* translators: 1: version number 2: open link tag 3: closing link tag. */
@@ -309,7 +309,7 @@ class GF_Upgrade {
 
 		GFCommon::remove_dismissible_message( 'gravityforms_upgrading_' . GFForms::$version );
 
-		GFCommon::log_debug( 'Upgrade Completed.' );
+		GFCommon::log_debug( __METHOD__ . '(): Upgrade Completed.' );
 	}
 
 	/**
@@ -571,7 +571,7 @@ class GF_Upgrade {
 		// Return false to remove this final task from the background updates queue.
 		$this->update_db_version();
 
-		GFCommon::log_debug( 'Background upgrade complete' );
+		GFCommon::log_debug( __METHOD__ . '(): Background upgrade complete' );
 
 		$this->set_upgrade_ended();
 

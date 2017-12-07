@@ -119,11 +119,10 @@ function edds_process_stripe_payment( $purchase_data ) {
 			if ( ! $customer_exists ) {
 
 				// Create a customer first so we can retrieve them later for future payments
-				$cu = \Stripe\Customer::create( array(
-						'description' => $purchase_data['user_email'],
-						'email'       => $purchase_data['user_email'],
-					)
-				);
+				$cu = \Stripe\Customer::create( apply_filters( 'edds_create_customer_args', array(
+					'description' => $purchase_data['user_email'],
+					'email'       => $purchase_data['user_email'],
+				), $payment_data ) );
 
 				$customer_id = is_array( $cu ) ? $cu['id'] : $cu->id;
 
@@ -718,13 +717,17 @@ function edd_stripe_process_refund( $payment_id, $new_status, $old_status ) {
 		\Stripe\Stripe::setAppInfo( 'Easy Digital Downloads - Stripe', EDD_STRIPE_VERSION, esc_url( site_url() ) );
 	}
 
-	$ch = \Stripe\Charge::retrieve( $charge_id );
-
 	try {
 
-		$ch->refund();
+		$args = apply_filters( 'edds_create_refund_args', array(
+			'charge' => $charge_id,
+		) );
 
-		edd_insert_payment_note( $payment_id, __( 'Charge refunded in Stripe', 'edds' ) );
+		$sec_args = apply_filters( 'edds_create_refund_secondary_args', array() );
+
+		$refund = \Stripe\Refund::create( $args, $sec_args );
+
+		edd_insert_payment_note( $payment_id, sprintf( __( 'Charge refunded in Stripe. Refund ID %s', 'edds' ), $refund->id ) );
 
 	} catch ( Exception $e ) {
 

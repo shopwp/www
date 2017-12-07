@@ -94,7 +94,9 @@ function edds_add_settings( $settings ) {
 			'id'   => 'stripe_preapprove_only',
 			'name'  => __( 'Preapprove Only?', 'edds' ),
 			'desc'  => __( 'Check this if you would like to preapprove payments but not charge until a later date.', 'edds' ),
-			'type'  => 'checkbox'
+			'type'  => 'checkbox',
+			'tooltip_title' => __( 'What does checking preapprove do?', 'edds' ),
+			'tooltip_desc'  => __( 'If you choose this option, Stripe will not charge the customer right away after checkout, and the payment status will be set to preapproved in Easy Digital Downloads. You (as the admin) can then manually change the status to Complete by going to Payment History and changing the status of the payment to Complete. Once you change it to Complete, the customer will be charged. Note that most typical stores will not need this option.', 'edds' ),
 		),
 		array(
 			'id'    => 'stripe_checkout_settings',

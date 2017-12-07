@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wp-migrate-db-pro-cli\n"
 "Report-Msgid-Bugs-To: nom@deliciousbrains.com\n"
-"POT-Creation-Date: 2017-09-14 15:18+0000\n"
+"POT-Creation-Date: 2017-11-09 09:20-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,7 +160,7 @@ msgid ""
 msgstr ""
 
 #: class/wpmdbpro-cli.php:282
-#: class/wpmdbpro-cli.php:568
+#: class/wpmdbpro-cli.php:566
 msgid ""
 "One or more valid Blog IDs or Subsite URLs must be supplied to make use of "
 "the --media-subsites option"
@@ -170,60 +170,73 @@ msgstr ""
 msgid "Invalid backup option or non-existent table selected for backup."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:481
+#: class/wpmdbpro-cli.php:479
 msgid "Please update WP Migrate DB Pro."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:501
+#: class/wpmdbpro-cli.php:499
 msgid "Profile ID missing."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:529
+#: class/wpmdbpro-cli.php:527
 msgid ""
 "The profile is set to migrate media files, however WP Migrate DB Pro Media "
 "Files does not seem to be installed/active on the local website."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:551
+#: class/wpmdbpro-cli.php:549
 msgid ""
 "The profile is set to migrate media files, however WP Migrate DB Pro Media "
 "Files does not seem to be installed/active on the remote website."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:558
+#: class/wpmdbpro-cli.php:556
 msgid ""
 "One or more subsites should exist on the remote to make use of the --media-"
 "subsites option"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:598
+#: class/wpmdbpro-cli.php:596
 msgid ""
 "The profile is set to migrate a subsite, however WP Migrate DB Pro Multisite "
 "tools does not seem to be installed/active on the remote website."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:615
+#: class/wpmdbpro-cli.php:603
+msgid ""
+"The profile is set to migrate a subsite, however WP Migrate DB Pro Multisite "
+"Tools does not currently support migrating a subsite between multisite "
+"installs."
+msgstr ""
+
+#: class/wpmdbpro-cli.php:611
+msgid ""
+"A valid Blog ID or Subsite URL must be supplied to make use of the subsite "
+"option"
+msgstr ""
+
+#: class/wpmdbpro-cli.php:635
 msgctxt "The caches and rewrite rules for the target are being flushed"
 msgid "Flushing caches and rewrite rules..."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:668
+#: class/wpmdbpro-cli.php:688
 msgid "Performing backup"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:670
+#: class/wpmdbpro-cli.php:690
 msgid "Migrating tables"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:673
+#: class/wpmdbpro-cli.php:693
 msgid "Running find & replace"
 msgstr ""
 
-#: class/wpmdbpro-cli.php:725
+#: class/wpmdbpro-cli.php:745
 msgid "Database table prefix differs between installations."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:729
+#: class/wpmdbpro-cli.php:749
 #, php-format
 msgid ""
 "We have detected you have table prefix \"%s\" at %s but have \"%s\" here. "
@@ -231,7 +244,7 @@ msgid ""
 "with the same base table prefix."
 msgstr ""
 
-#: class/wpmdbpro-cli.php:732
+#: class/wpmdbpro-cli.php:752
 #, php-format
 msgid ""
 "The remote database uses a prefix of \"%s\". This migration will create new "
@@ -241,7 +254,7 @@ msgid ""
 "$table_prefix variable to \"%s\""
 msgstr ""
 
-#: class/wpmdbpro-cli.php:734
+#: class/wpmdbpro-cli.php:754
 #, php-format
 msgid ""
 "The local database uses a prefix of \"%s\". This migration will create new "
@@ -251,7 +264,7 @@ msgid ""
 "$table_prefix variable to \"%s\""
 msgstr ""
 
-#: class/wpmdbpro-cli.php:831
+#: class/wpmdbpro-cli.php:851
 msgid "Importing file"
 msgstr ""
 

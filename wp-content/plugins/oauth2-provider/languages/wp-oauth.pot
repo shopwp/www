@@ -1,0 +1,194 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-29 03:49+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: wp-oauth-server.php:167
+msgid ""
+"WP OAuth Server's Updates are disabled. Please enter a valid license on the"
+msgstr ""
+
+#: wp-oauth-server.php:182
+msgid ""
+"WP OAuth Server requires that WordPress 4.4 or greater be used. Update to "
+"the latest WordPress version."
+msgstr ""
+
+#: wp-oauth-server.php:183
+msgid "Update Now"
+msgstr ""
+
+#: wp-oauth-server.php:183
+msgid "Manage Clients"
+msgstr ""
+
+#: wp-oauth-server.php:183
+msgid "Settings"
+msgstr ""
+
+#: wp-oauth-server.php:183
+msgid "Status"
+msgstr ""
+
+#: includes/functions.php:39
+msgid "Description."
+msgstr ""
+
+#: library/class-wo-api.php:17
+msgid "temporarily unavailable"
+msgstr ""
+
+#: library/class-wo-api.php:25
+msgid "plugin core is not authenticate"
+msgstr ""
+
+#: library/class-wo-api.php:239
+msgid "missing or invalid parameter(s)"
+msgstr ""
+
+#: library/class-wo-api.php:261
+msgid "unknown request"
+msgstr ""
+
+#: library/class-wo-table.php:163
+msgid "Edit"
+msgstr ""
+
+#: library/class-wo-table.php:164
+msgid "delete this client"
+msgstr ""
+
+#: library/class-wo-table.php:164
+msgid "Delete"
+msgstr ""
+
+#: includes/admin/page-server-status.php:34
+msgid "No error"
+msgstr ""
+
+#: includes/admin/page-server-status.php:35
+msgid "Maximum stack depth exceeded"
+msgstr ""
+
+#: includes/admin/page-server-status.php:36
+msgid "State mismatch (invalid or malformed JSON)"
+msgstr ""
+
+#: includes/admin/page-server-status.php:37
+msgid "Control character error, possibly incorrectly encoded"
+msgstr ""
+
+#: includes/admin/page-server-status.php:38
+msgid "Syntax error"
+msgstr ""
+
+#: includes/admin/page-server-status.php:39
+msgid "Malformed UTF-8 characters, possibly incorrectly encoded"
+msgstr ""
+
+#: includes/admin/page-server-status.php:44
+msgid "JSON ERROR: "
+msgstr ""
+
+#: includes/admin/page-server-status.php:63
+msgid "Server Status"
+msgstr ""
+
+#: includes/admin/page-server-status.php:65
+msgid ""
+"The following information is helpful when debugging or reporting an issue. "
+"Please note that the\n"
+"\t\tinformation provided here is a reference only."
+msgstr ""
+
+#: includes/admin/page-server-status.php:71
+msgid "General Information"
+msgstr ""
+
+#: includes/admin/page-server-status.php:75
+msgid "WordPress Version "
+msgstr ""
+
+#: includes/admin/page-server-status.php:83
+msgid "PHP Version"
+msgstr ""
+
+#: includes/admin/page-server-status.php:99
+msgid "Certificates Generated"
+msgstr ""
+
+#: includes/admin/page-server-status.php:117
+msgid "Running Windows OS"
+msgstr ""
+
+#: includes/admin/page-server-status.php:124
+msgid "Genuine"
+msgstr ""
+
+#: includes/admin/pages/add-new-client.php:8
+#: includes/admin/pages/add-new-client.php:74
+msgid "Create Client"
+msgstr ""
+
+#: includes/admin/pages/add-new-client.php:50
+#: includes/admin/pages/edit-client.php:87
+msgid "Client Information"
+msgstr ""
+
+#: includes/admin/pages/edit-client.php:15
+msgid "Client Updated"
+msgstr ""
+
+#: includes/admin/pages/edit-client.php:48
+msgid ""
+"Choosing the correct grant type for your client is important. For security "
+"reasons, a single\n"
+"\t\t\t\t\t\t\tgrant type should be used per client. To learn more about "
+"which grant type you will need,\n"
+"\t\t\t\t\t\t\tplease visit <a href=\"https://wp-oauth.com/kb/available-grant-"
+"types/\"\n"
+"\t\t\t\t\t\t\t                title=\"Learn more about which grant type to "
+"use\" target=\"_blank\">https://wp-oauth.com/kb/available-grant-types/</a>"
+msgstr ""
+
+#: includes/admin/pages/edit-client.php:119
+msgid "Update Client"
+msgstr ""
+
+#: includes/admin/pages/manage-clients.php:8
+msgid "Manage Codes"
+msgstr ""
+
+#: includes/admin/pages/manage-clients.php:11
+msgid "Add New Client"
+msgstr ""
+
+#. Name of the plugin
+msgid "WP OAuth Server - Pro"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Full OAuth2 Server for WordPress. User Authorization Management Systems For "
+"WordPress."
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "http://wp-oauth.com"
+msgstr ""
+
+#. Author of the plugin
+msgid "WP OAuth Server"
+msgstr ""

@@ -2264,7 +2264,12 @@ function InitializeFields(){
       function () {
         jQuery(this).removeClass('field_hover');
       }
-    );
+    ).focus(
+		function () {
+			jQuery('.field_hover').removeClass('field_hover');
+			jQuery(this).addClass('field_hover');
+		}
+	);
 
     jQuery('.field_delete_icon, .field_duplicate_icon').click(function(event){
         event.stopPropagation();

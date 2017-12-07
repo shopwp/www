@@ -104,7 +104,7 @@ class WPSEO_Admin_Asset_Manager {
 		return array(
 			'inside-editor' => new WPSEO_Admin_Asset( array(
 				'name' => 'inside-editor',
-				'src' => 'inside-editor-' . $flat_version,
+				'src'  => 'inside-editor-' . $flat_version,
 			) ),
 		);
 	}
@@ -128,7 +128,7 @@ class WPSEO_Admin_Asset_Manager {
 	/**
 	 * Returns the scripts that need to be registered.
 	 *
-	 * @TODO data format is not self-documenting. Needs explanation inline. R.
+	 * @todo Data format is not self-documenting. Needs explanation inline. R.
 	 *
 	 * @return array scripts that need to be registered.
 	 */
@@ -148,6 +148,18 @@ class WPSEO_Admin_Asset_Manager {
 		$flat_version = $this->flatten_version( WPSEO_VERSION );
 
 		return array(
+			array(
+				'name' => 'webpack-commons',
+				'src'  => 'commons-' . $flat_version,
+			),
+			array(
+				'name' => 'help-center',
+				'src'  => 'wp-seo-help-center-' . $flat_version,
+				'deps' => array(
+					'jquery',
+					self::PREFIX . 'webpack-commons',
+				),
+			),
 			array(
 				'name' => 'admin-script',
 				'src'  => 'wp-seo-admin-' . $flat_version,
@@ -185,15 +197,16 @@ class WPSEO_Admin_Asset_Manager {
 				'deps' => array( 'jquery', self::PREFIX . 'polyfill' ),
 			),
 			array(
-				'name' => 'metabox',
-				'src'  => 'wp-seo-metabox-' . $flat_version,
-				'deps' => array(
+				'name'      => 'metabox',
+				'src'       => 'wp-seo-metabox-' . $flat_version,
+				'deps'      => array(
 					'jquery',
 					'jquery-ui-core',
 					'jquery-ui-autocomplete',
 					self::PREFIX . 'select2',
 					self::PREFIX . 'select2-translations',
 					self::PREFIX . 'polyfill',
+					self::PREFIX . 'webpack-commons',
 				),
 				'in_footer' => false,
 			),
@@ -219,6 +232,7 @@ class WPSEO_Admin_Asset_Manager {
 					self::PREFIX . 'shortcode-plugin',
 					'wp-util',
 					self::PREFIX . 'polyfill',
+					self::PREFIX . 'webpack-commons',
 				),
 			),
 			array(
@@ -227,6 +241,7 @@ class WPSEO_Admin_Asset_Manager {
 				'deps' => array(
 					self::PREFIX . 'replacevar-plugin',
 					self::PREFIX . 'polyfill',
+					self::PREFIX . 'webpack-commons',
 				),
 			),
 			array(
@@ -259,23 +274,23 @@ class WPSEO_Admin_Asset_Manager {
 				),
 			),
 			array(
-				'name'   => 'select2',
-				'src'    => 'select2/select2.full',
-				'suffix' => '.min',
-				'deps'   => array(
+				'name'    => 'select2',
+				'src'     => 'select2/select2.full',
+				'suffix'  => '.min',
+				'deps'    => array(
 					'jquery',
 				),
 				'version' => '4.0.3',
 			),
 			array(
-				'name' => 'select2-translations',
-				'src'  => 'select2/i18n/' . $select2_language,
-				'deps' => array(
+				'name'    => 'select2-translations',
+				'src'     => 'select2/i18n/' . $select2_language,
+				'deps'    => array(
 					'jquery',
 					self::PREFIX . 'select2',
 				),
 				'version' => '4.0.3',
-				'suffix' => '',
+				'suffix'  => '',
 			),
 			array(
 				'name' => 'configuration-wizard',
@@ -283,6 +298,7 @@ class WPSEO_Admin_Asset_Manager {
 				'deps' => array(
 					'jquery',
 					self::PREFIX . 'polyfill',
+					self::PREFIX . 'webpack-commons',
 				),
 			),
 			array(
@@ -304,9 +320,9 @@ class WPSEO_Admin_Asset_Manager {
 				'deps' => array( 'jquery' ),
 			),
 			array(
-				'name' => 'quick-edit-handler',
-				'src'  => 'wp-seo-quick-edit-handler-' . $flat_version,
-				'deps' => array( 'jquery' ),
+				'name'      => 'quick-edit-handler',
+				'src'       => 'wp-seo-quick-edit-handler-' . $flat_version,
+				'deps'      => array( 'jquery' ),
 				'in_footer' => true,
 			),
 			array(
@@ -324,7 +340,13 @@ class WPSEO_Admin_Asset_Manager {
 					self::PREFIX . 'api',
 					self::PREFIX . 'polyfill',
 					'jquery',
+					self::PREFIX . 'webpack-commons',
 				),
+			),
+			array(
+				'name' => 'filter-explanation',
+				'src'  => 'wp-seo-filter-explanation-' . $flat_version,
+				'deps' => array( 'jquery' ),
 			),
 		);
 	}
@@ -332,7 +354,7 @@ class WPSEO_Admin_Asset_Manager {
 	/**
 	 * Returns the styles that need to be registered.
 	 *
-	 * @TODO data format is not self-documenting. Needs explanation inline. R.
+	 * @todo Data format is not self-documenting. Needs explanation inline. R.
 	 *
 	 * @return array styles that need to be registered.
 	 */
@@ -400,14 +422,6 @@ class WPSEO_Admin_Asset_Manager {
 				'rtl'     => false,
 			),
 			array(
-				'name' => 'kb-search',
-				'src'  => 'kb-search-' . $flat_version,
-			),
-			array(
-				'name' => 'help-center',
-				'src'  => 'help-center-' . $flat_version,
-			),
-			array(
 				'name' => 'admin-global',
 				'src'  => 'admin-global-' . $flat_version,
 			),
@@ -418,6 +432,10 @@ class WPSEO_Admin_Asset_Manager {
 			array(
 				'name' => 'extensions',
 				'src'  => 'yoast-extensions-' . $flat_version,
+			),
+			array(
+				'name' => 'filter-explanation',
+				'src'  => 'filter-explanation-' . $flat_version,
 			),
 		);
 	}

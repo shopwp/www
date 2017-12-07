@@ -692,11 +692,6 @@ class GFFormDisplay {
 
 		$action = remove_query_arg( 'gf_token' );
 
-		//disable ajax if form has a reCAPTCHA field (not supported).
-		if ( $ajax && self::has_recaptcha_field( $form ) ) {
-			$ajax = false;
-		}
-
 		if ( isset( $_POST['gform_send_resume_link'] ) ) {
 			$save_email_confirmation = self::handle_save_email_confirmation( $form, $ajax );
 			if ( is_wp_error( $save_email_confirmation ) ) { // Failed email validation
@@ -1373,9 +1368,6 @@ class GFFormDisplay {
 
 		//creating entry in DB
 		RGFormsModel::save_lead( $form, $lead );
-
-		//reading entry that was just saved
-		$lead = RGFormsModel::get_lead( $lead['id'] );
 
 		$lead = GFFormsModel::set_entry_meta( $lead, $form );
 
@@ -2937,7 +2929,10 @@ class GFFormDisplay {
 
 		$css_class = esc_attr( $css_class );
 
-		$field_container = "<li id='$field_id' class='{$css_class}' $style>{FIELD_CONTENT}</li>";
+		// Allows fields to receive focus in the form editor so screen readers can open the settings.
+		$tabindex = $is_form_editor ? "tabindex='0'" : '';
+
+		$field_container = "<li id='$field_id' {$tabindex} class='{$css_class}' $style>{FIELD_CONTENT}</li>";
 
 		$field_container = gf_apply_filters( array( 'gform_field_container', $form['id'], $field->id ), $field_container, $field, $form, $css_class, $style, $field_content );
 

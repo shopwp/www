@@ -39,7 +39,7 @@ class GF_Background_Upgrader extends GF_Background_Process {
 		$dispatched = parent::dispatch();
 
 		if ( is_wp_error( $dispatched ) ) {
-			GFCommon::log_debug( sprintf( 'Unable to dispatch upgrader: %s', $dispatched->get_error_message() ) );
+			GFCommon::log_debug( sprintf( '%s(): Unable to dispatch upgrader: %s', __METHOD__, $dispatched->get_error_message() ) );
 		}
 
 		return $dispatched;
@@ -111,16 +111,16 @@ class GF_Background_Upgrader extends GF_Background_Process {
 		}
 
 		if ( is_callable( $callback ) ) {
-			GFCommon::log_debug( sprintf( 'Running callback: %s', print_r( $callback, 1 ) ) );
+			GFCommon::log_debug( sprintf( '%s(): Running callback: %s', __METHOD__, print_r( $callback, 1 ) ) );
 			$needs_more_time = call_user_func( $callback );
 			if ( $needs_more_time ) {
-				GFCommon::log_debug( sprintf( 'Callback needs another run: %s', print_r( $callback, 1 ) ) );
+				GFCommon::log_debug( sprintf( '%s(): Callback needs another run: %s', __METHOD__, print_r( $callback, 1 ) ) );
 				return $callback;
 			} else {
-				GFCommon::log_debug( sprintf( 'Finished callback: %s', print_r( $callback, 1 ) ) );
+				GFCommon::log_debug( sprintf( '%s(): Finished callback: %s', __METHOD__, print_r( $callback, 1 ) ) );
 			}
 		} else {
-			GFCommon::log_debug( sprintf( 'Could not find callback: %s', print_r( $callback, 1 ) ) );
+			GFCommon::log_debug( sprintf( '%s(): Could not find callback: %s', __METHOD__, print_r( $callback, 1 ) ) );
 		}
 
 		return false;

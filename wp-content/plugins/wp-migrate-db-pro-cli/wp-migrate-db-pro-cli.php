@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: WP Migrate DB Pro CLI
-Plugin URI: http://deliciousbrains.com/wp-migrate-db-pro/
+Plugin URI: https://deliciousbrains.com/wp-migrate-db-pro/
 Description: An extension to WP Migrate DB Pro, allows you to execute migrations using a function call or via WP-CLI
 Author: Delicious Brains
-Version: 1.3.1
-Author URI: http://deliciousbrains.com
+Version: 1.3.2
+Author URI: https://deliciousbrains.com
 Network: True
 */
 

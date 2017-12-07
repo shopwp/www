@@ -1,11 +1,12 @@
-=== WP OAuth Server ===
+=== WP OAuth Server - CE ===
 
 Contributors: justingreerbbi
 Donate link: http://justin-greer.com/
 Tags: OAuth2 Service, oauth2, OAuth provider, Provider, OAuth, OAuth client, Single Sign On, SSO, OpenID Connect, OIDC, OpenID, Connect
-Requires at least: 4.3
-Tested up to: 4.7.2
-Stable tag: 3.2.002
+Requires at least: 4.7.2
+Tested up to: 4.9
+Requires PHP: 5.6
+Stable tag: 3.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,52 +17,43 @@ Create and Manage an OAuth 2.0 server powered by WordPress. Become a Single Sign
 This plugin is a full OAuth 2.0 authorization server/provider for WordPress. 
 The goal of WP OAuth Server is to provide an easy to use authorization method that 3rd party platforms can use to securely authorize users from your WordPress site.
 
-[youtube http://www.youtube.com/watch?v=0oqat8ivZWk]
-
-NOTE: WP OAuth Server has moved the version 3.2.0 release to wp-oauth.com. WP OAuth Server 3.1.X will still be hosted here at 
-WordPress.org but will only contain the Auth Code grant type.
-
 = Features =
-* Works with WP REST API/ JSON API. Access protected endpoints via OAuth2
-* Create and Manage a client.
-* Built-In Resource Server. You can either extend the resource server or JSON API. You pick.
-* Automated Authorization for Single Sign On using WordPress as the provider.
-* Extendable
+
+* Authorization Grant Type
+* Single Sign On Provider
+* OAuth 2.0 Server
+* Built-in Resource Server
 
 = Supported Grant Types =
 
 * Authentication Code
-
-
-NOTE: WP OAuth Server Pro Supports all grant types including:
-
-* Auth Code
-* Client Credentials
-* User Credentials
-* Implicit Flow
-* OpenID Code
-* OpenID Implicit
-
-You can purchase pro + by visiting https://wp-oauth.com/platform.
+* User Credentials - pro
+* Client Credentials - pro
+* Refresh Token - pro
+* OpenID Connect with discovery - pro
 
 = How to Use =
 
-Visit https://wp-oauth.com/support/documentation/ for detailed documentation on installing, configuring and using 
+Visit https://wp-oauth.com/support/documentation/ for detailed documentation on installing, configuring and using
 WordPress OAuth Server.
+
+= Licensing = 
+
+WP OAuth Server is free to used. Please support the project by licensing. You can view more information at
+https://wp-oauth.com.
 
 = Minimum Requirements =
 
-* PHP 5.4 or greater *(latest version recommended)*
+* PHP 5.6.4 or greater *(latest version recommended)*
 * OpenSSL installed and enabled if you plan on using OpenID Connect
 
 = Other Information =
 
-* NOTE: As of 3.0.0, there are no backward compatibility for any version older than 3.0.0
-* NOTE: Due to IIS's inability play nice, WP OAuth Server may work but is not supported on Windows OS.
+* NOTE: Due to IIS's inability play nice, WP OAuth Server may work but is very limited for Windows OS.
 
 = Support =
 
-Support requests should be made by opening a support request at https://wp-oauth.com/account/submit-ticket/.
+Support requests should be made by opening a support request at https://wp-oauth.com/support/submit-ticket/.
 
 == Installation ==
 
@@ -72,6 +64,10 @@ Support requests should be made by opening a support request at https://wp-oauth
 
 == Frequently Asked Questions ==
 
+= Do I need OAuth 2 or App Passwords? =
+This depends. If you project requires random users access an application, then OAuth2 is the route you need. If you are making
+a server that handles a one time client id and secret for authorization, then Application Passwords is for you.
+
 = How do I add a APP/Client? =
 Click on `Settings->OAuth Server`. Click on the `Clients` tab and then `Add New Client`. Enter the client information and your are done.
 
@@ -79,17 +75,17 @@ Click on `Settings->OAuth Server`. Click on the `Clients` tab and then `Add New 
 Yes, WordPress OAuth Server does support Single Sign On for both Traditional OAuth2 Flow and OpenID Connect.
 
 = Is there support for this plugin? Can you help me? =
-You can visit our https://wp-oauth.com/account/submit-ticket/ to open up a support request directly with developers.
+You can visit our https://wp-oauth.com/support/submit-ticket/ to open up a support request directly with developers.
 
 = Can you set this up for me on my current website? =
 * DRINKS COFFEE * Can I? "YES". You are more than welcome to contact us with if you should ever need assistance.
 
 = How do I use WordPress OAuth Server? =
-You can visit https://wp-oauth.com/knowledge-base/. You will find in-depth documentation as well as examples of how to get started.
+You can visit https://wp-oauth.com/support/documentation/. You will find in-depth documentation as well as examples of how to get started.
 
 == Upgrade Notice ==
 
-Version 2.0.0 and lower are not compatible with version 3.0.0. If you have built your service using version 2.0.0 or lower, visit https://wp-oauth.com/account/submit-ticket/ to open a new request support request.
+Version 2.0.0 and lower are not compatible with version 3.0.0. If you have built your service using version 2.0.0 or lower, visit https://wp-oauth.com/support/submit-ticket/ to open a new request support request.
 
 For any upgrade or modification, PLEASE PLEASE PLEASE make a full backup of your data. 
 
@@ -99,23 +95,163 @@ For any upgrade or modification, PLEASE PLEASE PLEASE make a full backup of your
 
 == Changelog ==
 
-= 3.2.002 =
-* Tested on 4.7.2
-* Updated scopes storage in API
-* Added API endpoint information
+= 3.4.3 =
+* FIX: Notice Error
+* ENHANCEMENT: UX while editing clients
+* UPDATE: Base code updates
 
-= 3.2.001 =
-* Updated Readme
-* Tested with version 4.7-alpha-38677
-* Removed overhead
+= 3.4.2 =
+* NEW: Updated entire code base to match
+* FIX: License error using older PHP version
+* FIX: Clash with thickbox in admin area
 
-= 3.1.98 =
-* Tested on 4.6 with version update.
-* Added video.
+= 3.4.1 =
+* NEW: Added prompt parameter support for "login", "consent", and "none"
+* NEW: Added User consent window for Authorization code flow.
+* NEW: Added filter "wo_use_grant_request" to enable user consent dialog. Boolean.
+
+= 3.4.0 =
+* NEW: Basic support for Token Introspection. RFC 7662 ( https://tools.ietf.org/html/rfc7662 )
+* ENHANCEMENT: Start of framework for add ons.
+* FIX: Bug in a token being delivered even with invalid client credentials.
+* FIX: Proper return from resource server during invalid request.
+
+= 3.3.81 - MAY 1ST, 2017 =
+* ENHANCEMENT: current_time( 'timestamp' ) used in favor of time(). This allows for time to follow WP setting
+* ENHANCEMENT: Native tabs in admin.
+* ENHANCEMENT: "wo_updater" filter added to allow plugin updater control.
+* FIX: Bug in redirect URI during authentication code flow. Now uses home_url()
+* FIX: Bug that allowed for client ID's to be search able.
+
+= 3.3.8 =
+* Added public function "wo_public_insert_client" for adding clients.
+* Deprecated "wo_get_access_token" in favor of "wo_public_get_access_token"
+* apply_filters( 'wo_unset_refresh_token_after_use', false )
+* Minor tweak to the status license box
+* Bug Fix: Invalid JSON return for "me" endpoint
+
+= 3.3.7 =
+* Performance improvement for front-end.
+* Modified the default values for plugin.
+* Fixed array_merge in the settings that caused warnings in some cases.
+* Added wo_me_resource_return filter to default "me" resource.
+* Removed debug information for access tokens.
+* Updated "n" return encoding for public keys.
+
+= 3.3.5 =
+* Added user assigning functionality to client options.
+* Removed memory scope storage form API.
+* Added restricted scopes to individual clients.
+* Default scopes are now functional.
+
+= 3.3.4 =
+* Update update class to latest version
+
+= 3.3.3 =
+* Fixed error with write context return
+* Fixed implicit issue for clients
+
+= 3.3.2 =
+* Fixed undefined index for invalid client.
+* Fixed redirect_uri issue with getClientDetails(). Threw missing redirect uri error.
+* Fixed Bearer token authorization for self resource server calls.
+
+= 3.3.1 =
+* Patched clients showing up in admin menu.
+
+= 3.3.0 =
+* Refactored style names.
+* Updater class was updated to version 1.6.7
+* Optimized DB structure.
+* wo_create_client now returns insert id instead boolean. This may break compatibility to some add-ons.
+* Changed menu order and naming.
+* Broke out client management for ease of use and future development.
+* Simple Spanish Translation started.
+* Extra security has not been added to by restricting/binding individual clients to a set grant types.
+* Client querying now uses WP_Query. This provides faster response times for the API.
+
+= 3.2.87 =
+* Added filters: wo_allow_credentials_in_request_body, wo_allow_public_clients, wo_always_issue_new_refresh_token, wo_redirect_status_code, wo_create_from_globals_json, wo_create_from_globals_urlencoded, wo_strict_api_lockdown
+* Renamed "User Credentials" to Password Credentials for uniformity of code and GUI.
+* Updated the readme.
+* Added server secure status check.
+* API security halt now uses 403 forbidden header.
+* Strict API can now be enabled and disabled.
+* Increased _wo_authenicate_bypass filter to 9999 to prevent plugin conflicts.
+* Tested with 4.7-beta4-39322.
+
+= 3.2.86 =
+* Changed instances from site_url to home_url for registered routes.
+* Changed openID Connect variables to use home_url instead of site_url
+
+= 3.2.85 =
+* Added 'wo_login_check' filter
+* Minor UI changes
+* Tested with 4.7-alpha
+
+= 3.2.84 =
+* Removed deprecated mysql_string function in favor for esc_sql
+* Tested with 4.6-RC1-38175
+
+= 3.2.83 =
+* Added oauth2 to WP JSON index.
+* Tested with WP 4.6-beta3-38065.
+* Cleaned up old code.
+
+= 3.2.82 =
+* Fixed bug in development system.
+* Remove exit code that was causing authorization code to fail silently.
+* Tested with WP 4.6-beta2-38008.
+* Random code improvements.
+* Changed certificate language when there is an error with any of the certificates.
+
+= 3.2.81 = 
+* Updated broken links in the readme.
+* Fixed issue with redirect_uri bug.
+* Fixed do_action('wo_authorization_code_authorize', $user_id ); issue after authorization code authorization
+* Updated user claims to be included in id_token token and token id_token implicit responses.
+* Minor standard updates to code base.
+
+= 3.2.8 =
+* Fixed user Claims with OpenID and ID Token calls.
+* Added wo_get_access_token function for public use.
+
+= 3.2.7 =
+* Added wo_authorization_code_authorize action. Passed user_id as a single parameter.
+* Added wo_restrict_single_access_token filter. Returns true or false / Defaults to false.
+* Added wo_auth_code_lifetime filter. Defaults to 30.
+* Fixed possible XSS issue with client description.
+
+= 3.2.6 =
+* Fixed updater error
+
+= 3.2.5 =
+* Fixed bug in security checks that caused displaying of error.
+* Client secrets can not be regenerated.
+
+= 3.2.4 =
+* Added ssl_verify parameter to wp_remote_get() during license check.
+* Security fix that could allow for someone to call wo_create_client and hook action before being validated first.
+* Server now return 503 header when server is unavailable.
+* Security fix that allowed Ajax calls to be called by any logged in user.
+
+= 3.2.3 =
+* Updated license calls
+* Added more information on the server page
+
+= 3.2.2 =
+* Added error catches to license activation functionality
+* Expanded clean check to API to prevent exploits gaining access to user information through the OAuth2 Sever API.
+* Fix bug/oversight in key lengths that could be stored in tables over 40 chars. Updated script added for backward fixes as well.
+
+= 3.2.0 =
+* Introduced new wo_setting function to return formatted options
+* Merged firewall and brute protect into one plugin.
+* Updated license functionality
+* Corrected token length and added support for 2000 Char keys.
 
 = 3.1.97 =
-* Bug fix in openID sub return parameter.
-* Added notice about upgrading and continuation of WP OAuth Server in WordPress plugin repository.
+* Added temp fix to paging issue with clients. 
 
 = 3.1.96 =
 * Restructuring and clean up.
@@ -141,9 +277,6 @@ For any upgrade or modification, PLEASE PLEASE PLEASE make a full backup of your
 * Added $_REQUEST parameter to wo_before_api action
 * Add wo_failed_login action when login fails for OAuth2\Stoarge::checkPassword during user credentials grant type
 * Added wo_user_not_found action when user is not found when using user credentials
-
-TODOS
-* Add http://php.net/manual/en/function.apache-get-version.php function check before running it.
 
 = 3.1.91 =
 * Added action wo_endpoint_user_authenticated which runs before resource method but after access token authentication.

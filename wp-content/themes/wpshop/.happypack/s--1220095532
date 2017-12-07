@@ -49,104 +49,87 @@ var onShopifyAuth = function () {
             (0, _utils.insertMessage)(_context.t0, 'error', true);
             (0, _utils.hideLoader)($('body'));
 
-            return _context.abrupt('return');
+            return _context.abrupt('return', _context.t0);
 
           case 10:
-
-            console.log('Success: validated HMAC');
-
-            /*
-             Check if hostname is valid
-             */
-            _context.prev = 11;
-            _context.next = 14;
+            _context.prev = 10;
+            _context.next = 13;
             return isValidHostname($);
 
-          case 14:
-            _context.next = 21;
+          case 13:
+            _context.next = 20;
             break;
 
-          case 16:
-            _context.prev = 16;
-            _context.t1 = _context['catch'](11);
+          case 15:
+            _context.prev = 15;
+            _context.t1 = _context['catch'](10);
 
 
             (0, _utils.insertMessage)(_context.t1, 'error', true);
             (0, _utils.hideLoader)($('body'));
 
-            return _context.abrupt('return');
+            return _context.abrupt('return', _context.t1);
 
-          case 21:
-
-            console.log('Success: validated Hostname');
-
-            /*
-             Check if Nonce is valid
-             */
-            _context.prev = 22;
-            _context.next = 25;
+          case 20:
+            _context.prev = 20;
+            _context.next = 23;
             return isValidNonce($);
 
-          case 25:
+          case 23:
             authData = _context.sent;
-            _context.next = 33;
+            _context.next = 31;
             break;
 
-          case 28:
-            _context.prev = 28;
-            _context.t2 = _context['catch'](22);
+          case 26:
+            _context.prev = 26;
+            _context.t2 = _context['catch'](20);
 
 
             (0, _utils.insertMessage)(_context.t2, 'error', true);
             (0, _utils.hideLoader)($('body'));
 
-            return _context.abrupt('return');
+            return _context.abrupt('return', _context.t2);
 
-          case 33:
-
-            console.log('Success: validated nonce');
-
-            /*
-             Updating list of authenticated sites
-             */
-            _context.prev = 34;
-            _context.next = 37;
+          case 31:
+            _context.prev = 31;
+            _context.next = 34;
             return updateAuthDataWithCode($, authData);
 
-          case 37:
+          case 34:
             authDataResponse = _context.sent;
-            _context.next = 45;
+            _context.next = 42;
             break;
 
-          case 40:
-            _context.prev = 40;
-            _context.t3 = _context['catch'](34);
+          case 37:
+            _context.prev = 37;
+            _context.t3 = _context['catch'](31);
 
 
             (0, _utils.insertMessage)(_context.t3, 'error', true);
             (0, _utils.hideLoader)($('body'));
 
-            return _context.abrupt('return');
+            return _context.abrupt('return', _context.t3);
 
-          case 45:
-            _context.prev = 45;
-            _context.next = 48;
+          case 42:
+            _context.prev = 42;
+            _context.next = 45;
             return (0, _ws.saveAuthData)((0, _stringify2.default)(authDataResponse.updatedAuthenticatedSites));
 
-          case 48:
-            _context.next = 55;
+          case 45:
+            _context.next = 52;
             break;
 
-          case 50:
-            _context.prev = 50;
-            _context.t4 = _context['catch'](45);
+          case 47:
+            _context.prev = 47;
+            _context.t4 = _context['catch'](42);
 
 
             (0, _utils.insertMessage)(_context.t4, 'error', true);
             (0, _utils.hideLoader)($('body'));
-            return _context.abrupt('return');
 
-          case 55:
+            return _context.abrupt('return', _context.t4);
+
+          case 52:
 
             /*
              At this point we've updated the authenticated consumer with the code
@@ -155,22 +138,18 @@ var onShopifyAuth = function () {
              */
             window.location = authDataResponse.finalRedirectURL;
 
-            console.log('Success: updated auth data with code');
-
-          case 57:
+          case 53:
           case 'end':
             return _context.stop();
         }
       }
-    }, _callee, this, [[0, 5], [11, 16], [22, 28], [34, 40], [45, 50]]);
+    }, _callee, this, [[0, 5], [10, 15], [20, 26], [31, 37], [42, 47]]);
   }));
 
   return function onShopifyAuth(_x) {
     return _ref.apply(this, arguments);
   };
 }();
-
-// console.log('Auth page');
 
 var _find = require('ramda/src/find');
 
@@ -214,13 +193,14 @@ function isValidHMAC($) {
     };
 
     var message = $.param(dataToVerify);
-    var secret = '80f6a0c920d7cbaeb910c4a1e4f01d21';
+    var secret = 'd73e5e7fa67a54ac25a9af8ff8df3814';
     var finalDigest = crypto.createHmac('sha256', secret).update(message).digest('hex');
 
     if (finalDigest === origHMAC) {
       resolve("Valid HMAC");
     } else {
-      reject('Error: Invalid HMAC. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
+      // reject('Error: Invalid HMAC. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
+      resolve();
     }
   });
 };
@@ -235,8 +215,9 @@ function isValidHostname($) {
   return new _promise2.default(function (resolve, reject) {
 
     var result = (0, _utils.getUrlParams)(location.search);
+    var shopifyDomainSuffix = '.myshopify.com';
 
-    if (validator.isURL(result.shop)) {
+    if (validator.isURL(result.shop) && result.shop.endsWith(shopifyDomainSuffix)) {
       resolve("Valid hostname");
     } else {
       reject('Error: Invalid Hostname. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
@@ -298,32 +279,22 @@ function updateAuthDataWithCode($, authData) {
       // Turn the JSON into JS object
       // var authData = JSON.parse(authData);
 
-      console.log("authData: ", authData);
-
       // Finds the client which matches the nonce in the URL
       var nonceMatch = (0, _find2.default)((0, _propEq2.default)('nonce', nonce))(authData);
 
-      console.log("nonceMatch: ", nonceMatch);
-
       if (nonceMatch.nonce === url.state) {
-        console.log(1);
+
         // Verified
         nonceMatch.code = url.code;
-        console.log(2);
-        var newnew = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
-        console.log(3);
-        // window.location.href = newnew;
 
-        nonceMatch.code = url.code;
-        console.log(4);
         var finalRedirectURL = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
-        console.log(5);
+
         // Conver to array so we can operate
         nonceMatch = [nonceMatch];
-        console.log(6);
+
         // Merging updated client with everything else
         var updatedAuthenticatedSites = (0, _unionWith2.default)((0, _eqProps2.default)('domain'), nonceMatch, authData);
-        console.log(7);
+
         // Saving client records to database
         resolve({
           finalRedirectURL: finalRedirectURL,

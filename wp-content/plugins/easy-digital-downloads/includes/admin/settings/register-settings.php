@@ -340,7 +340,7 @@ function edd_get_registered_settings() {
 						'id'   => 'allow_tracking',
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
-							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
+							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
 							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox',
@@ -554,7 +554,7 @@ function edd_get_registered_settings() {
 						'desc'          => __( 'Check this to disable all included styling of buttons, checkout fields, and all other elements.', 'easy-digital-downloads' ),
 						'type'          => 'checkbox',
 						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless your sure your theme has a complete custom CSS.', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( "If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless you're sure your theme has a complete custom CSS.", 'easy-digital-downloads' ),
 					),
 					'button_header' => array(
 						'id'   => 'button_header',

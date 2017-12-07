@@ -8,17 +8,16 @@ namespace OAuth2;
  *
  * @see OAuth2\Response
  */
-interface ResponseInterface
-{
-    public function addParameters(array $parameters);
+interface ResponseInterface {
+	public function addParameters( array $parameters );
 
-    public function addHttpHeaders(array $httpHeaders);
+	public function addHttpHeaders( array $httpHeaders );
 
-    public function setStatusCode($statusCode);
+	public function setStatusCode( $statusCode );
 
-    public function setError($statusCode, $name, $description = null, $uri = null);
+	public function setError( $statusCode, $name, $description = null, $uri = null );
 
-    public function setRedirect($statusCode, $url, $state = null, $error = null, $errorDescription = null, $errorUri = null);
+	public function setRedirect( $statusCode, $url, $state = null, $error = null, $errorDescription = null, $errorUri = null );
 
-    public function getParameter($name);
+	public function getParameter( $name );
 }

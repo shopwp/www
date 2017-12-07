@@ -498,8 +498,6 @@ class GFAPI {
 	 * @since  1.8
 	 * @access public
 	 *
-	 * @uses GFFormsModel::search_leads()
-	 * @uses GFAPI::count_entries()
 	 *
 	 * @param int|array $form_ids        The ID of the form or an array IDs of the Forms. Zero for all forms.
 	 * @param array     $search_criteria Optional. An array containing the search criteria. Defaults to empty array.
@@ -523,13 +521,9 @@ class GFAPI {
 			return $entries;
 		}
 
-		$args = self::get_gf_query_args( $form_ids, $search_criteria, $sorting, $paging );
-
-		$the_query = new GF_Query( $args );
-		$entries = $the_query->entries;
-		if ( ! is_null( $total_count ) ) {
-			$total_count = $the_query->found_entries;
-		}
+		$q = new GF_Query( $form_ids, $search_criteria, $sorting, $paging );
+		$entries = $q->get();
+		$total_count = $q->total_found;
 
 		return $entries;
 	}
@@ -541,257 +535,29 @@ class GFAPI {
 	 * @since  Unknown
 	 * @access public
 	 *
-	 * @uses GFFormsModel::get_database_version()
-	 * @uses GFFormsModel::search_leads()
-	 * @uses GFAPI::get_gf_query_args()
-	 *
-	 * @param int|array $form_ids        The ID of the form or an array IDs of the Forms. Zero for all forms.
+	 * @param int|array $form_id         The ID of the form or an array IDs of the Forms. Zero for all forms.
 	 * @param array     $search_criteria Optional. An array containing the search criteria. Defaults to empty array.
 	 * @param array     $sorting         Optional. An array containing the sorting criteria. Defaults to null.
 	 * @param array     $paging          Optional. An array containing the paging criteria. Defaults to null.
+	 * @param null|int  $total_count     Optional. An output parameter containing the total number of entries. Pass a non-null value to get the total count. Defaults to null.
 	 *
 	 * @return array An array of the Entry IDs.
 	 */
-	public static function get_entry_ids( $form_id, $search_criteria = array(), $sorting = null, $paging = null ) {
+	public static function get_entry_ids( $form_id, $search_criteria = array(), $sorting = null, $paging = null, &$total_count = null ) {
 
 		if ( version_compare( GFFormsModel::get_database_version(), '2.3-dev-1', '<' ) ) {
 			$entry_ids = GF_Forms_Model_Legacy::search_lead_ids( $form_id, $search_criteria );
 			return $entry_ids;
 		}
 
-		$args = self::get_gf_query_args( $form_id, $search_criteria, $sorting, $paging );
+		if ( ! $paging ) {
+			$paging = array( 'page_size' => 0 );
+		}
 
-		$args['fields'] = 'ids';
-
-		$the_query = new GF_Query( $args );
-		$entry_ids = $the_query->entries;
+		$the_query = new GF_Query( $form_id, $search_criteria, $sorting, $paging  );
+		$entry_ids = $the_query->get_ids();
+		$total_count = $the_query->total_found;
 		return $entry_ids;
-	}
-
-	public static function get_gf_query_args( $form_id, $search_criteria, $sorting = array(), $paging = array() ) {
-
-		$form = null;
-
-		$sort_field = isset( $sorting['key'] ) ? $sorting['key'] : 'date_created'; // column, field or entry meta
-
-		$allowed_property_keys = array(
-			'id', 'date_created', 'form_id', 'post_id', 'is_starred', 'is_read',
-			'ip', 'source_url', 'user_agent', 'currency', 'payment_status', 'payment_date', 'payment_amount',
-			'transaction_id', 'is_fulfilled', 'status', 'created_by', 'transaction_type', 'rand',
-		);
-
-		if ( in_array( $sort_field, $allowed_property_keys ) ) {
-			$args['orderby'] = $sort_field;
-		} else {
-			$args['meta_key'] = $sort_field;
-			$is_numeric_sort = isset( $sorting['is_numeric'] ) ? $sorting['is_numeric'] : false;
-			if ( $is_numeric_sort ) {
-				$args['orderby']  = 'meta_value_num';
-			} else {
-				$args['orderby']  = 'meta_value';
-			}
-		}
-
-		$args['order']  = isset( $sorting['direction'] ) && strtoupper( $sorting['direction'] ) == 'ASC' ? 'ASC' : 'DESC';
-
-		$args['offset'] = isset( $paging['offset'] ) ? $paging['offset'] : 0;
-		$args['entries_per_page'] = isset( $paging['page_size'] ) ? $paging['page_size'] : 20;
-
-		if ( ! empty( $form_id ) ) {
-			if ( is_array( $form_id ) ) {
-				$args['form_id__in'] = $form_id;
-			} else {
-				$args['form_id'] = $form_id;
-			}
-		}
-
-		$start_date = rgar( $search_criteria, 'start_date' );
-		$end_date = rgar( $search_criteria, 'end_date' );
-
-		if ( ! empty( $start_date ) || ! empty( $end_date ) ) {
-
-			$start_date           = new DateTime( $search_criteria['start_date'] );
-			$start_datetime_str = $start_date->format( 'Y-m-d H:i:s' );
-			$start_date_str       = $start_date->format( 'Y-m-d' );
-			if ( $start_datetime_str == $start_date_str  . ' 00:00:00' ) {
-				$start_date_str = $start_date_str . ' 00:00:00';
-			} else {
-				$start_date_str = $start_date->format( 'Y-m-d H:i:s' );
-			}
-
-			$start_date_str_utc = get_gmt_from_date( $start_date_str );
-
-
-			$end_date         = new DateTime( $search_criteria['end_date'] );
-			$end_datetime_str = $end_date->format( 'Y-m-d H:i:s' );
-			$end_date_str     = $end_date->format( 'Y-m-d' );
-
-			// extend end date till the end of the day unless a time was specified. 00:00:00 is ignored.
-			if ( $end_datetime_str == $end_date_str . ' 00:00:00' ) {
-				$end_date_str = $end_date->format( 'Y-m-d' ) . ' 23:59:59';
-			} else {
-				$end_date_str = $end_date->format( 'Y-m-d H:i:s' );
-			}
-
-			$end_date_str_utc = get_gmt_from_date( $end_date_str );
-
-			$date_query = array(
-				'inclusive' => true,
-			);
-			if ( ! empty( $start_date ) ) {
-				$date_query['after'] = $start_date_str_utc;
-			}
-			if ( ! empty( $end_date ) ) {
-				$date_query['before'] = $end_date_str_utc;
-			}
-
-			$args['date_query'] = $date_query;
-		}
-
-		foreach ( $search_criteria as $key => $value ) {
-			if ( $key == 'field_filters' ) {
-				continue;
-			}
-			if ( $key == 'status' ) {
-				$args['entry_status'] = $value;
-			} elseif ( in_array( $key, $allowed_property_keys ) ) {
-				$args[ $key ] = $value;
-			}
-		}
-
-		if ( isset( $search_criteria['field_filters'] ) ) {
-
-			if ( ! empty( $form_id ) && ! is_array( $form_id ) ) {
-				$form = GFFormsModel::get_form_meta( $form_id );
-			}
-
-			$relation_mode_map = array(
-				'all' => 'AND',
-				'any' => 'OR',
-			);
-
-			$search_mode = isset( $search_criteria['field_filters']['mode'] ) && ! empty( $search_criteria['field_filters']['mode'] ) ? strtolower( $search_criteria['field_filters']['mode'] ) : 'all';
-
-			$relation = isset( $relation_mode_map[ $search_mode ] ) ? $relation_mode_map[ $search_mode ] : 'AND';
-
-			unset( $search_criteria['field_filters']['mode'] );
-
-			$date_query_parts = array();
-
-			if ( isset( $search_criteria['field_filters'] ) ) {
-				$meta_query = array();
-				$properties_query = array();
-				$key_type = '';
-				$type = 'CHAR';
-				foreach ( $search_criteria['field_filters'] as $filter ) {
-
-					$operator = strtoupper( rgar( $filter, 'operator' ) );
-
-					switch ( $operator ) {
-						case 'CONTAINS':
-							$filter['operator'] = 'LIKE';
-							break;
-						case '<>':
-						case 'ISNOT':
-							$filter['operator'] = '!=';
-							break;
-						default :
-							$filter['operator'] = empty( $operator ) ? '=' : $operator;
-					}
-
-					if ( empty( $filter['key'] ) ) {
-						$meta_query[] = array(
-							'value'   => $filter['value'],
-							'type'    => 'CHAR',
-							'compare' => $filter['operator'],
-						);
-						continue;
-					}
-
-					if ( $filter['key'] == 'date_created' && isset( $filter['operator'] ) && in_array( $filter['operator'], array( '=', 'is' ) ) ) {
-
-						$search_date           = new DateTime( $filter['value'] );
-						$search_date_str       = $search_date->format( 'Y-m-d' );
-						$date_created_start    = $search_date_str . ' 00:00:00';
-						$date_created_start_utc = get_gmt_from_date( $date_created_start );
-						$date_created_end      = $search_date_str . ' 23:59:59';
-						$date_created_end_utc  = get_gmt_from_date( $date_created_end );
-
-						$date_query_part = array(
-							'after' => $date_created_start_utc,
-							'before' => $date_created_end_utc,
-							'inclusive' => true,
-						);
-						$date_query_parts[] = $date_query_part;
-
-						continue;
-					}
-
-					if ( $filter['key'] == 'id' && isset( $filter['operator'] ) && in_array( $filter['operator'], array( '=', 'is' ) ) ) {
-						$args['e'] = $filter['value'];
-						continue;
-					}
-
-					if ( in_array( $filter['key'], $allowed_property_keys ) ) {
-						$properties_query[] = array(
-							'key'     => $filter['key'],
-							'value'   => $filter['value'],
-							'compare' => isset( $filter['operator'] ) ? $filter['operator'] : '=',
-						);
-						continue;
-					}
-
-					$field = null;
-
-					if ( ! empty( $form_id ) && ! is_array( $form_id ) ) {
-						$field = GFFormsModel::get_field( $form, $filter['key'] );
-					}
-
-					if ( $field ) {
-						$input_type = $field->get_input_type();
-						if ( $input_type == 'checkbox' && ctype_digit( strval( $filter['key'] ) ) ) {
-							$key_type = 'UNSIGNED';
-						}
-
-						if ( $input_type == 'number' ) {
-							$type = 'numeric';
-						}
-					}
-
-					if ( rgar( $filter, 'is_numeric' ) ) {
-						$type = 'numeric';
-					}
-
-					$meta_query[] = array(
-						'key'     => $filter['key'],
-						'value'   => $filter['value'],
-						'type'    => $type,
-						'key_type' => $key_type,
-						'compare' => isset( $filter['operator'] ) ? $filter['operator'] : '=',
-					);
-				}
-
-				if ( ! empty( $meta_query ) ) {
-					$args['meta_query'] = $meta_query;
-					$args['meta_query']['relation'] = $relation;
-				}
-
-				if ( ! empty( $properties_query ) ) {
-					$args['properties_query'] = $properties_query;
-					$args['properties_query']['relation'] = $relation;
-				}
-			}
-		}
-
-		if ( ! empty( $date_query_parts ) ) {
-			$args['date_query'] = $date_query_parts;
-		}
-
-		if ( ! empty( $properties_query ) ) {
-			$args['properties_query'] = $properties_query;
-		}
-
-		return $args;
 	}
 
 	/**
@@ -813,10 +579,9 @@ class GFAPI {
 			return GF_Forms_Model_Legacy::count_search_leads( $form_ids, $search_criteria );
 		}
 
-		$args = self::get_gf_query_args( $form_ids, $search_criteria );
-
-		$the_query = new GF_Query( $args );
-		return $the_query->found_entries;
+		$q = new GF_Query( $form_ids, $search_criteria );
+		$ids = $q->get_ids();
+		return $q->total_found;
 	}
 
 	/**
@@ -833,16 +598,15 @@ class GFAPI {
 	 */
 	public static function get_entry( $entry_id ) {
 
-		$search_criteria['field_filters'][] = array( 'key' => 'id', 'value' => $entry_id );
+		$q = new GF_Query();
 
-		$paging  = array( 'offset' => 0, 'page_size' => 1 );
-		$entries = self::get_entries( 0, $search_criteria, null, $paging );
+		$entry = $q->get_entry( $entry_id );
 
-		if ( empty( $entries ) ) {
+		if ( empty( $entry ) ) {
 			return new WP_Error( 'not_found', sprintf( __( 'Entry with id %s not found', 'gravityforms' ), $entry_id ), $entry_id );
 		}
 
-		return $entries[0];
+		return $entry;
 	}
 
 	/**
@@ -892,7 +656,7 @@ class GFAPI {
 
 		foreach ( $entries as $entry ) {
 			$entry_id = rgar( $entry, 'id' );
-			GFCommon::log_debug( 'Updating entry ' . $entry_id );
+			GFCommon::log_debug( __METHOD__ . '(): Updating entry ' . $entry_id );
 			$result = self::update_entry( $entry, $entry_id );
 			if ( is_wp_error( $result ) ) {
 				return $result;

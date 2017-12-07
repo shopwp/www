@@ -430,6 +430,16 @@ class GF_Form_List_Table extends WP_List_Table {
 	function get_views() {
 		$form_count = RGFormsModel::get_form_count();
 
+		/**
+		 * Allow for form count filtering.
+		 * Useful when form list is being filtered.
+		 *
+		 * @since 2.3-beta-3
+		 *
+		 * @param array $form_count The form count by filter name.
+		 */
+		$form_count = apply_filters( 'gform_form_list_count', $form_count );
+
 		$all_class = ( $this->filter == '' ) ? 'current' : '';
 
 		$active_class = ( $this->filter == 'active' ) ? 'current' : '';
@@ -481,6 +491,20 @@ class GF_Form_List_Table extends WP_List_Table {
 		} else {
 			$forms = GFFormsModel::search_forms( $search_query, $active, $sort_column, $sort_direction, $trash );
 		}
+
+		/**
+		 * Allow form list filtering.
+		 *
+		 * @since 2.3-beta-3
+		 *
+		 * @param array  $forms          The complete list of forms.
+		 * @param string $search_query   The search query string if set.
+		 * @param bool   $active         If inactive forms should be displayed.
+		 * @param string $sort_column    List column being sorted.
+		 * @param string $sort_direction Direction of column sorting.
+		 * @param bool   $trash          If trash items should be displayed.
+		 */
+		$forms = apply_filters( 'gform_form_list_forms', $forms, $search_query, $active, $sort_column, $sort_direction, $trash );
 
 		$per_page = $this->get_items_per_page( 'gform_forms_per_page', 20 );
 

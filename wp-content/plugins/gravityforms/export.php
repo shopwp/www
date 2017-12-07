@@ -920,6 +920,12 @@ class GFExport {
 		$form = apply_filters( 'gform_export_fields', $form );
 		$form = GFFormsModel::convert_field_objects( $form );
 
+		foreach ( $form['fields'] as $field ) {
+			/* @var GF_Field $field */
+
+			$field->set_context_property( 'use_admin_label', true );
+		}
+
 		return $form;
 	}
 

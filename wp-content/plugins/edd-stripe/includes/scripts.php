@@ -69,7 +69,13 @@ function edd_stripe_css( $override = false ) {
 		// Use minified libraries if SCRIPT_DEBUG is turned off
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-		wp_register_style( 'edd-stripe', EDDSTRIPE_PLUGIN_URL . 'assets/css/style' . $suffix . '.css', array( 'edd-styles' ), EDD_STRIPE_VERSION );
+		$deps = array( 'edd-styles' );
+
+		if ( ! wp_script_is( 'edd-styles', 'enqueued' ) ) {
+			$deps = array();
+		}
+
+		wp_register_style( 'edd-stripe', EDDSTRIPE_PLUGIN_URL . 'assets/css/style' . $suffix . '.css', $deps, EDD_STRIPE_VERSION );
 		wp_enqueue_style( 'edd-stripe' );
 	}
 }

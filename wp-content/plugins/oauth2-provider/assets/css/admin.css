@@ -56,9 +56,6 @@
     padding-left: 0;
 }
 
-.ui-widget-content {
-}
-
 .ui-tabs-nav,
 .ui-tabs-nav li:first-of-type {
     padding-left: 0;
@@ -66,9 +63,9 @@
 
 .ui-tabs .ui-tabs-panel {
     border-top-width: 1px;
-    border-top-color: rgb(239, 239, 239);
+    border-top-color: #efefef;
     border-top-style: solid;
-    background: rgb(255, 255, 255);
+    background: #ffffff;
 }
 
 .ui-tabs-nav .ui-state-focus a {
@@ -81,12 +78,20 @@ a:active {
     outline: 0 !important;
 }
 
-.settings_page_wo_settings .form-table {
+.column-title {
+    width: 40%;
+}
+
+.form-table {
     background: #fafafa;
     border-left: #0074a2 solid 5px;
 }
 
-.settings_page_wo_settings .form-table th {
+.form-table td, .form-table th, .form-table td P {
+    font-size: 13px;
+}
+
+.form-table th {
     padding-left: 20px;
 }
 
@@ -95,30 +100,27 @@ a:active {
     color: #0074a2;
 }
 
+.clearboth {
+    clear: both;
+}
+
 .notification {
     border-left: 4px solid #dd3d36;
     background: #fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .1);
+    -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
     padding: 10px 12px;
     margin: 5px 0 15px;
-}
-
-.wo-popup-inner {
 }
 
 .wo-popup-inner h3.header {
     color: #0074a2;
 }
 
-.wo-popup-inner form {
-}
-
 .wo-popup-inner label {
     font-weight: bold;
     margin-top: 15px;
     display: block;
-    font-size: 14px;
 }
 
 .wo-popup-inner input[type="text"] {
@@ -158,12 +160,58 @@ a:active {
     background: #f9f9f9;
 }
 
+.wo-background {
+    background: #fff;
+    padding: 1em;
+}
+
+/**
+ * FORM
+ ----------------------*/
+.wo-form {
+}
+
+.wo-form hr {
+    margin: 2.2em 0;
+}
+
+.wo-form label {
+    display: block;
+    margin-top: 1em;
+    font-weight: bold;
+}
+
+.wo-form label * {
+    font-weight: 100;
+}
+
+.wo-form label strong {
+    font-weight: bold;
+}
+
+.wo-form label .description {
+    display: block;
+    opacity: 0.6;
+}
+
+.wo-form label input, .wo-form label textarea {
+    width: 100%;
+    padding: .6em;
+}
+
+.wo-form label input:focus {
+    outline: none !important;
+}
+
+.wo-form label input[type="checkbox"] {
+    width: auto;
+}
+
 .wo-badge {
     background: #0074a2 url(../images/logo.png) no-repeat center 24px;
     -webkit-background-size: 85px 85px;
     background-size: 85px 85px;
     color: #EDEDED;
-    font-size: 14px;
     text-align: center;
     font-weight: 300;
     margin: 5px 0 0;
@@ -172,36 +220,20 @@ a:active {
     display: inline-block;
     width: 150px;
     text-rendering: optimizeLegibility;
-    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     position: absolute;
     top: 0;
     right: 0;
 }
 
-.ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a {
+.ui-tabs .ui-tabs-nav li a,
+.ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a {
     font-weight: 300;
 }
 
 .wo-oauth-server {
     background: #000;
-}
-
-.sidebar .module {
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 1em;
-}
-
-.sidebar .module .inner {
-
-}
-
-.sidebar .module h3 {
-    line-height: 1.4;
-}
-
-.sidebar .module img.fullwidth {
-    width: 100%;
 }
 
 /*  SECTIONS  */
@@ -234,56 +266,33 @@ a:active {
 }
 
 .group {
-    zoom: 1; /* For IE 6/7 */
+    zoom: 1;
+    /* For IE 6/7 */
 }
 
-/*  GRID OF TWELVE  */
-.span_12_of_12 {
+/*  GRID OF SIX  */
+.span_6_of_6 {
     width: 100%;
 }
 
-.span_11_of_12 {
-    width: 91.53%;
-}
-
-.span_10_of_12 {
+.span_5_of_6 {
     width: 83.06%;
 }
 
-.span_9_of_12 {
-    width: 74.6%;
-}
-
-.span_8_of_12 {
+.span_4_of_6 {
     width: 66.13%;
 }
 
-.span_7_of_12 {
-    width: 57.66%;
-}
-
-.span_6_of_12 {
+.span_3_of_6 {
     width: 49.2%;
 }
 
-.span_5_of_12 {
-    width: 40.73%;
-}
-
-.span_4_of_12 {
+.span_2_of_6 {
     width: 32.26%;
 }
 
-.span_3_of_12 {
-    width: 23.8%;
-}
-
-.span_2_of_12 {
+.span_1_of_6 {
     width: 15.33%;
-}
-
-.span_1_of_12 {
-    width: 6.866%;
 }
 
 /*  GO FULL WIDTH BELOW 480 PIXELS */
@@ -292,7 +301,106 @@ a:active {
         margin: 1% 0 1% 0%;
     }
 
-    .span_1_of_12, .span_2_of_12, .span_3_of_12, .span_4_of_12, .span_5_of_12, .span_6_of_12, .span_7_of_12, .span_8_of_12, .span_9_of_12, .span_10_of_12, .span_11_of_12, .span_12_of_12 {
+    .span_1_of_6,
+    .span_2_of_6,
+    .span_3_of_6,
+    .span_4_of_6,
+    .span_5_of_6,
+    .span_6_of_6 {
         width: 100%;
     }
+}
+
+.sidebar .module {
+    box-sizing: border-box;
+    border: 1px solid #efefef;
+    background: #FFFFFF;
+    border-radius: .4em;
+    margin-bottom: 1em;
+    padding: 0 1.3em 1em 1.3em;
+}
+
+.sidebar .module h3 {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: .8em;
+}
+
+.license_form {
+    margin-top: 1.5em;
+}
+
+.license_form input[type="text"] {
+    display: block;
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+.license_form input[type="submit"] {
+    float: right;
+    margin-bottom: 1em;
+}
+
+.clearboth {
+    clear: both;
+}
+
+.product-license-grid .product {
+    background: #FFF;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
+.product-license-grid .product h3.product-title {
+    margin: 0.4em 0;
+}
+
+.module.hire-us {
+    font-weight: 300;
+    background: #0facf3;
+    background: -moz-linear-gradient(5deg, #2386c5 57%, #2386c5 57%, #2386c5 57%);
+    background: -webkit-linear-gradient(5deg, #2386c5 57%, #2386c5 57%, #2794da 57%);
+    background: linear-gradient(5deg, #2386c5 57%, #2386c5 57%, #2794da 57%);
+    color: #FFF;
+}
+
+.module.pro-version {
+    padding: 1em;
+    font-weight: 300;
+    background: #0facf3;
+    background: -moz-linear-gradient(5deg, #c0392b 57%, #c0392b 57%, #c0392b 57%);
+    background: -webkit-linear-gradient(5deg, #c0392b 57%, #c0392b 57%, #e74c3c 57%);
+    background: linear-gradient(5deg, #c0392b 57%, #c0392b 57%, #e74c3c 57%);
+    color: #FFF;
+    box-sizing: border-box;
+    margin-bottom: 2em;
+}
+
+.module.pro-version .button {
+    background: #2c3e50;
+    color: #FFF;
+    box-shadow: none;
+}
+
+.module h3 {
+    color: #fff;
+    font-weight: 500;
+}
+
+.module input[type="text"] {
+    display: block;
+    width: 100%;
+}
+
+.module ul {
+    padding-left: 2.5em;
+    font-weight: bolder;
+}
+
+.module ul li {
+    list-style: disc;
+}
+
+p.description {
+    font-weight: normal;
+    font-size: 12px !important;
 }

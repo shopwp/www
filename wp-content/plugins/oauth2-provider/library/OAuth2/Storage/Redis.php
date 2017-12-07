@@ -71,7 +71,7 @@ class Redis implements AuthorizationCodeInterface,
         $this->cache[$key] = $value;
         $str = json_encode($value);
         if ($expire > 0) {
-            $seconds = $expire - time();
+            $seconds = $expire - current_time( 'timestamp' );
             $ret = $this->redis->setex($key, $seconds, $str);
         } else {
             $ret = $this->redis->set($key, $str);

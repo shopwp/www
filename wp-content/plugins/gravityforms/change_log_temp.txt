@@ -1,4 +1,17 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 2.3-beta-3
+    - Added the gform_form_list_count filter for overriding the filter counts on the forms list page. Credit: Randall-Reilly and 10up.
+    - Added the gform_form_list_forms filter for overriding the forms included on the forms list page. Credit: Randall-Reilly and 10up.
+    - API: Removed support for duplicate keys for checkbox fields in search criteria field filters - use array values with IN or NOT IN instead.
+    - API: Added GF_Field::get_context_property() and GF_Field::set_context_property() to help define and determine the context for the field.
+    - API: Added GF_Query. One query to rule them all. Credit: The team at GravityView.
+    - Fixed an issue where emptying the trash on the entry list deletes all entries.
+    - Fixed an issue with the form editor preventing screen readers from editing field settings.
+    - Fixed an issue with the form submission process where notifications may be sent with blank field values when WordPress is using certain database cluster configurations.
+    - Fixed security index files not getting created in custom file upload locations.
+    - API: Fixed a performance issue while clearing the transients.
+
+------------------------------------------------------------------------------------------------------------------
 Version 2.3-beta-2
     - Added a dismissible admin message while upgrading.
     - API: Deprecated GFCommon::encrypt() and GFCommon::decrypt().
