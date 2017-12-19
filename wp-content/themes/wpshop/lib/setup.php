@@ -113,16 +113,18 @@ Theme assets
 */
 function assets() {
 
+
+
   wp_enqueue_style('Animate CSS', '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);
-  wp_enqueue_style('Font Awesome CSS', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', false, null);
+  // wp_enqueue_style('Font Awesome CSS', Assets\asset_path('css/vendor/fontawesome-all.min.css'), false, null);
 
   wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Open+Sans:400,700|Catamaran:400,700', false, null);
 
 
   // TODO: Enque within plugin?
   wp_enqueue_script('modernizr-js', Assets\asset_path('js/vendor/modernizr.min.js'), [], null, true);
-  wp_enqueue_script('fontawesome-js', Assets\asset_path('js/vendor/fontawesome.js'), [], null, true);
-  wp_enqueue_script('fontawesome-light-js', Assets\asset_path('js/vendor/light.js'), [], null, true);
+  wp_enqueue_script('fontawesome-js', Assets\asset_path('js/vendor/fontawesome-all.min.js'), [], null, true);
+  // wp_enqueue_script('fontawesome-light-js', Assets\asset_path('js/vendor/light.js'), [], null, true);
 
 
   if (is_single() && comments_open() && get_option('thread_comments')) {

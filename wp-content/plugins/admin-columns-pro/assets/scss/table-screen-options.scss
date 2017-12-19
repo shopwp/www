@@ -1,0 +1,37 @@
+body.acp-overflow-table {
+
+	table.wp-list-table.fixed {
+		display: block;
+		overflow-x: auto;
+
+		thead tr th {
+			white-space: nowrap;
+			min-width: 100px;
+			padding-right: 30px;
+
+			&.sortable a {
+				white-space: nowrap;
+			}
+
+			&.sorted,
+			&.sortable {
+
+				a > span {
+					float: none;
+				}
+
+				.sorting-indicator {
+					display: inline-block;
+					float: none;
+					margin-top: 0;
+					vertical-align: middle;
+				}
+			}
+
+			&:last-child {
+				width: 100%;
+			}
+		}
+	}
+
+}

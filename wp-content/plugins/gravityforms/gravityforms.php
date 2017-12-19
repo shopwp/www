@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms
 Plugin URI: http://www.gravityforms.com
 Description: Easily create web forms and manage form entries within the WordPress admin.
-Version: 2.3-beta-3
+Version: 2.3-rc-1
 Author: rocketgenius
 Author URI: http://www.rocketgenius.com
 Text Domain: gravityforms
@@ -132,7 +132,7 @@ define( 'GF_SUPPORTED_WP_VERSION', version_compare( get_bloginfo( 'version' ), G
  *
  * @var string GF_MIN_WP_VERSION_SUPPORT_TERMS The version number
  */
-define( 'GF_MIN_WP_VERSION_SUPPORT_TERMS', '4.7' );
+define( 'GF_MIN_WP_VERSION_SUPPORT_TERMS', '4.8' );
 
 
 if ( ! defined( 'GRAVITY_MANAGER_URL' ) ) {
@@ -193,6 +193,7 @@ if ( is_admin() && ( GFForms::is_gravity_page() || GFForms::is_gravity_ajax_acti
 
 add_action( 'plugins_loaded', array( 'GFForms', 'loaded' ) );
 
+register_activation_hook( __FILE__, array( 'GFForms', 'activation_hook' ) );
 register_deactivation_hook( __FILE__, array( 'GFForms', 'deactivation_hook' ) );
 
 gf_upgrade();
@@ -212,14 +213,14 @@ class GFForms {
 	 *
 	 * @var string $version The version number.
 	 */
-	public static $version = '2.3-beta-3';
+	public static $version = '2.3-rc-1';
 
 	/**
 	 * Handles background upgrade tasks.
 	 *
 	 * @var GF_Background_Upgrader Background upgrader class
 	 */
-	public static $background_upgrader;
+	public static $background_upgrader = null;
 
 	/**
 	 * Runs after Gravity Forms is loaded.
@@ -288,10 +289,7 @@ class GFForms {
 
 		self::register_scripts();
 
-
-		require_once( plugin_dir_path( __FILE__ ) . 'includes/class-gf-background-upgrader.php' );
-
-		self::$background_upgrader = new GF_Background_Upgrader();
+		self::init_background_upgrader();
 
 		// Run background feed processing.
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/addon/class-gf-feed-processor.php' );
@@ -495,7 +493,7 @@ class GFForms {
 	 */
 	public static function load_first() {
 		$plugin_path    = basename( dirname( __FILE__ ) ) . '/gravityforms.php';
-		$active_plugins = get_option( 'active_plugins' );
+		$active_plugins = array_values( maybe_unserialize( self::get_wp_option( 'active_plugins' ) ) );
 		$key            = array_search( $plugin_path, $active_plugins );
 		if ( $key > 0 ) {
 			array_splice( $active_plugins, $key, 1 );
@@ -517,6 +515,17 @@ class GFForms {
 	public static function deactivation_hook() {
 		GFCache::flush( true );
 		flush_rewrite_rules();
+	}
+
+	/**
+	 * Performs Gravity Forms activation tasks.
+	 *
+	 * @since  2.3
+	 * @access public
+	 */
+	public static function activation_hook() {
+		self::init_background_upgrader();
+		gf_upgrade()->maybe_upgrade();
 	}
 
 	/**
@@ -4971,6 +4980,18 @@ class GFForms {
 		_deprecated_function( 'This function has been deprecated. Use gf_upgrade()->upgrade_schema()', '2.2', 'gf_upgrade()->upgrade_schema()' );
 
 		gf_upgrade()->upgrade_schema();
+	}
+
+	/**
+	 * Creates an instance of GF_Background_Upgrader and stores it in GFForms::$background_upgrader
+	 *
+	 * @since 2.3
+	 */
+	public static function init_background_upgrader() {
+		if ( empty( self::$background_upgrader ) ) {
+			require_once( plugin_dir_path( __FILE__ ) . 'includes/class-gf-background-upgrader.php' );
+			self::$background_upgrader = new GF_Background_Upgrader();
+		}
 	}
 }
 

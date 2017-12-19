@@ -38,17 +38,17 @@
 
         <div class="header-account l-row l-col-center">
 
-          <a href="https://join.slack.com/wpshopify/shared_invite/MTg5OTQxODEwOTM1LTE0OTU5ODY2MTktN2Y1ODk0YzBlNg" class="header-social-link gtm-link-support" target="_blank">
-            <i class="fa fa-slack gtm-link-support" aria-hidden="true"></i>
-          </a>
+          <!-- <a href="https://join.slack.com/wpshopify/shared_invite/MTg5OTQxODEwOTM1LTE0OTU5ODY2MTktN2Y1ODk0YzBlNg" class="header-social-link gtm-link-support" target="_blank">
+            <i class="fab fa-slack gtm-link-support" aria-hidden="true"></i>
+          </a> -->
 
-          <a href="https://github.com/arobbins/wp-shopify" class="header-social-link" target="_blank">
+          <!-- <a href="https://github.com/arobbins/wp-shopify" class="header-social-link" target="_blank">
             <i class="fa fa-github"></i>
           </a>
 
           <a href="https://twitter.com/andrewmrobbins" class="header-social-link" target="_blank">
             <i class="fa fa-twitter"></i>
-          </a>
+          </a> -->
 
           <?php if(is_user_logged_in()) { ?>
             <a href="/account" class="btn btn-account btn-s">My Account</a>

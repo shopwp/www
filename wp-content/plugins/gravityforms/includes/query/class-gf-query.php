@@ -141,7 +141,18 @@ class GF_Query {
 		$sort_field = isset( $sorting['key'] ) ? $sorting['key'] : 'id';
 		$sort_dir = isset( $sorting['direction'] ) ? strtoupper( $sorting['direction'] ) : 'DESC';
 
-		$sort_dir_query = $sort_dir == 'DESC' ? self::DESC : self::ASC;
+		switch ( $sort_dir ) {
+			case 'DESC':
+				$sort_dir_query = self::DESC;
+				break;
+			case 'RAND':
+				$sort_dir_query = 'RAND';
+				break;
+			case 'ASC':
+			default:
+				$sort_dir_query = self::ASC;
+				break;
+		}
 
 		$from = ! is_array( $form_id ) ? array( $form_id ) : $form_id;
 
@@ -170,11 +181,16 @@ class GF_Query {
 			$order = GF_Query_Call::CAST( $order, GF_Query::TYPE_SIGNED );
 		}
 
-		$this->from( $from )
-		     ->order( $order, $sort_dir_query )
-		     ->limit( $page_size )
-		     ->offset( $offset );
+		$this->from( $from );
 
+		if ( $sort_dir_query == 'RAND' ) {
+			$this->order( GF_Query_Call::RAND() );
+		} else {
+			$this->order( $order, $sort_dir_query );
+		}
+
+		$this->limit( $page_size )
+		     ->offset( $offset );
 
 		$properties_condition = null;
 		$filters_condition = null;
@@ -512,22 +528,28 @@ class GF_Query {
 	 * Sets the order.
 	 *
 	 * @param GF_Query_Column|GF_Query_Call $column The field, function to order by.
-	 * @param string $order The order (one of self::ASC, self::DESC or empty). Default: self::ASC
+	 * @param string $order The order (one of self::ASC, self::DESC or empty). Default for GF_Query_Column: self::ASC Default for GF_Query_Call: empty
 	 *
 	 * @return GF_Query Chainable $this.
 	 */
-	public function order( $column, $order = self::ASC ) {
-
-		if ( ! in_array( $order, array( self::ASC, self::DESC ) ) ) {
-			return $this;
-		}
+	public function order( $column, $order = null ) {
 
 		/**
 		 * This is a function.
 		 */
 		if ( $column instanceof GF_Query_Call ) {
+
+			if ( ! in_array( $order, array( self::ASC, self::DESC ) ) ) {
+				$order = '';
+			}
+
 			$this->order[ spl_object_hash( $column ) . '()' ] = array( $column, $order );
 		} elseif ( $column instanceof GF_Query_Column ) {
+
+			if ( ! in_array( $order, array( self::ASC, self::DESC ) ) ) {
+				$order = self::ASC;
+			}
+
 			$source_id = $column->source;
 			$field_id = $column->field_id ? $column->field_id : '-';
 			$this->order[ "{$source_id}_{$field_id}" ] = array( $column, $order );
@@ -754,7 +776,7 @@ class GF_Query {
 		foreach ( $orders as $o ) {
 			list( $column, $order ) = $o;
 
-			if ( ! in_array( $order, array( self::ASC, self::DESC ) ) ) {
+			if ( ! in_array( $order, array( self::ASC, self::DESC, '' ) ) ) {
 				continue;
 			}
 
@@ -774,6 +796,8 @@ class GF_Query {
 				}
 			}
 		}
+
+		$order_clauses = array_map( 'trim', $order_clauses );
 
 		return $order_clauses;
 	}

@@ -1,0 +1,15 @@
+.component-changelog {
+
+  &.wrap.l-contain-narrow {
+    margin-bottom: $space-xxxl*2;
+  }
+
+  ol + h1 {
+    margin-top: $space-xl;
+  }
+
+  br {
+    display: none;
+  }
+
+}

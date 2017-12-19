@@ -1,4 +1,13 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 2.3-rc-1
+    - Updated the migration batch size from 10k to 20k to speed up the migration for larger sites.
+    - Fixed some issues with the background process lock which may cause the upgrade to take longer than expected.
+    - Fixed an issue with background tasks on multisite.
+    - Fixed RAND support in the entry search criteria.
+    - Fixed debug warnings when activating using the WP CLI.
+    - AF: Updated GFFeedAddOn::duplicate_feed() to return new feed ID.
+
+------------------------------------------------------------------------------------------------------------------
 Version 2.3-beta-3
     - Added the gform_form_list_count filter for overriding the filter counts on the forms list page. Credit: Randall-Reilly and 10up.
     - Added the gform_form_list_forms filter for overriding the forms included on the forms list page. Credit: Randall-Reilly and 10up.

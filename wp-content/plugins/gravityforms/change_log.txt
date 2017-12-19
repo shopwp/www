@@ -1,4 +1,35 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.15
+	- Updated the minimum version of WordPress required for support to 4.8.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.14
+	- Fixed a JavaScript error on form display when the "Disable the visual editor when writing" setting is enabled for the current user and the "Use the Rich Text Editor" setting is enabled on a Paragraph or Post Body field.
+	- AF: Fixed the payment_gateway entry meta item not being set for some add-ons when using the gform_post_payment_completed hook.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.13
+	- Fixed dynamic population of administrative Date and Time fields.
+	- Fixed PHP notice during submission with WordPress 4.8.3+ when the no duplicates setting was enabled on a field.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.12
+	- Fixed GFCommon::is_valid_email_list() returning false when commas were followed by a space.
+	- Fixed the $form_id passed to the gform_custom_merge_tags filter for new forms and when getting the merge tags for calculation fields.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.11
+	- Added the "gform_validation_error_form_editor" JS filter allowing the form editor validation error to be overridden.
+	- Added the "gform_field_choice_selected_type_form_editor" JS filter allowing the choice selected input type to be overridden.
+	- Fixed an issue during post creation where the value from multi-select type custom fields, created with GF2.2+, were not processed correctly.
+	- Fixed an issue on some sites where a outdated version of the active_plugins option could be used when updating the option so the plugin loads first.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.5.10
+    - Added security enhancements.
+	- Fixed notices on WP 4.8.3 while performing entry searches with certain field filters.
+
+------------------------------------------------------------------------------------------------------------------
 Version 2.2.5.9
 	- Added the theme to the system report.
 

@@ -1,6 +1,6 @@
 .component-marquee {
   width: 100%;
-  min-height: 67vh;
+  min-height: 75vh;
   margin-top: 0;
 
 
@@ -91,7 +91,7 @@
 .marquee-content {
   position: relative;
   text-align: center;
-  top: 3vh;
+  top: 8vh;
   left: -10px;
 
   @include device(1500, 'max') {
@@ -135,11 +135,17 @@
     // font-size: $font-xxl*1.7;
   }
 
+  .fa-cog,
+  .fa-sync-alt {
+    margin: 0 20px;
+  }
+
 }
 
 .marquee-short-desc {
   margin: $space-xl auto;
   font-size: $font-xxl;
+  max-width: 800px;
 
   @include device(1500, 'max') {
     max-width: 720px;

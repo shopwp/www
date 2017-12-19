@@ -9,19 +9,20 @@ import { initAccount } from './account/account';
 import { initDocs } from './docs/docs';
 import { initMobile } from './mobile/mobile';
 import { initDriftTracking } from './analytics/analytics';
+import { initFAQs } from './faqs/faqs';
 
 (function($) {
   "use strict";
 
   $(function() {
 
-    if (!$('body').hasClass('is-mobile')) {
-      Pace.restart();
-
-    } else {
-      Pace.stop();
-
-    }
+    // Only show Pace on docs template
+    // if ($('body').hasClass('docs-template-default')) {
+    //   Pace.restart();
+    //
+    // } else {
+    //   Pace.stop();
+    // }
 
     initPlugins($);
     initForms($);
@@ -29,6 +30,7 @@ import { initDriftTracking } from './analytics/analytics';
     initCheckout($);
     initAccount($);
     initDocs($);
+    initFAQs();
 
     initMobile($);
 

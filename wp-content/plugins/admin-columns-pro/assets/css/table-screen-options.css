@@ -1,0 +1,18 @@
+body.acp-overflow-table table.wp-list-table.fixed {
+  display: block;
+  overflow-x: auto; }
+  body.acp-overflow-table table.wp-list-table.fixed thead tr th {
+    white-space: nowrap;
+    min-width: 100px;
+    padding-right: 30px; }
+    body.acp-overflow-table table.wp-list-table.fixed thead tr th.sortable a {
+      white-space: nowrap; }
+    body.acp-overflow-table table.wp-list-table.fixed thead tr th.sorted a > span, body.acp-overflow-table table.wp-list-table.fixed thead tr th.sortable a > span {
+      float: none; }
+    body.acp-overflow-table table.wp-list-table.fixed thead tr th.sorted .sorting-indicator, body.acp-overflow-table table.wp-list-table.fixed thead tr th.sortable .sorting-indicator {
+      display: inline-block;
+      float: none;
+      margin-top: 0;
+      vertical-align: middle; }
+    body.acp-overflow-table table.wp-list-table.fixed thead tr th:last-child {
+      width: 100%; }

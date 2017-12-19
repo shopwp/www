@@ -372,8 +372,11 @@ class GFCommon {
 			return false;
 		}
 
+		// Trim values.
+		$emails = array_map( 'trim', $emails );
+
 		foreach ( $emails as $email ) {
-			if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+			if ( ! self::is_valid_email( $email ) ) {
 				return false;
 			}
 		}
@@ -592,7 +595,8 @@ class GFCommon {
 		$other_group[] = array( 'tag' => '{user:user_email}', 'label' => esc_html__( 'User Email', 'gravityforms' ) );
 		$other_group[] = array( 'tag' => '{user:user_login}', 'label' => esc_html__( 'User Login', 'gravityforms' ) );
 
-		$form_id = isset( $fields[0] ) ? $fields[0]->formId : 0;
+		$form_id = isset( $fields[0] ) ? $fields[0]->formId : rgget( 'id' );
+		$form_id = absint( $form_id );
 
 		$custom_group = apply_filters( 'gform_custom_merge_tags', array(), $form_id, $fields, $element_id );
 
@@ -768,7 +772,9 @@ class GFCommon {
 			</optgroup>
 
 			<?php
-			$form_id           = isset( $forms[0] ) ? $fields[0]->formId : 0;
+			$form_id = isset( $fields[0] ) ? $fields[0]->formId : rgget( 'id' );
+			$form_id = absint( $form_id );
+
 			$custom_merge_tags = apply_filters( 'gform_custom_merge_tags', array(), $form_id, $fields, $element_id );
 
 			if ( is_array( $custom_merge_tags ) && ! empty( $custom_merge_tags ) ) {
@@ -3218,7 +3224,9 @@ Content-Type: text/html;
 				break;
 
 			case 'adminonly_hidden' :
-				if ( ! is_array( $field->inputs ) ) {
+				$inputs = $field->get_entry_inputs();
+
+				if ( ! is_array( $inputs ) ) {
 					if ( is_array( $value ) ) {
 						$value = json_encode( $value );
 					}
@@ -3228,7 +3236,7 @@ Content-Type: text/html;
 
 
 				$fields = '';
-				foreach ( $field->inputs as $input ) {
+				foreach ( $inputs as $input ) {
 					$fields .= sprintf( "<input name='input_%s' class='gform_hidden' type='hidden' value='%s'/>", $input['id'], esc_attr( rgar( $value, strval( $input['id'] ) ) ) );
 				}
 

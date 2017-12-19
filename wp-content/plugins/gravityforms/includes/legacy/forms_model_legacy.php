@@ -738,12 +738,13 @@ class GF_Forms_Model_Legacy {
 		$input_count = 1;
 		if ( is_array( $field->get_entry_inputs() ) ) {
 			$input_count = sizeof( $field->inputs );
+			$inner_sql   = '';
 			foreach ( $field->inputs as $input ) {
 				$union = empty( $inner_sql ) ? '' : ' UNION ALL ';
-				$inner_sql .= $union . $wpdb->prepare( $inner_sql_template, $input['id'], $form_id, $form_id, $input['id'], $value[ $input['id'] ], $value[ $input['id'] ] );
+				$inner_sql .= $union . $wpdb->prepare( $inner_sql_template, $input['id'], $form_id, $form_id, $input['id'] - 0.0001, $input['id'] + 0.0001, $value[ $input['id'] ] );
 			}
 		} else {
-			$inner_sql = $wpdb->prepare( $inner_sql_template, $field->id, $form_id, $form_id, doubleval( $field->id ) - 0.0001, doubleval( $field->id ) + 0.0001, $value, $value );
+			$inner_sql = $wpdb->prepare( $inner_sql_template, $field->id, $form_id, $form_id, doubleval( $field->id ) - 0.0001, doubleval( $field->id ) + 0.0001, $value );
 		}
 
 		$sql .= $inner_sql . "
@@ -1410,7 +1411,7 @@ class GF_Forms_Model_Legacy {
 			$form_id_where = $form_id > 0 ? $wpdb->prepare( 'AND form_id=%d', $form_id ) : '';
 		}
 		$info_column_keys = self::get_lead_db_columns();
-		$entry_meta       = GFFormsModel::get_entry_meta( is_array( $form_id ) ? 0 : $form_id );
+		$entry_meta       = self::get_entry_meta( is_array( $form_id ) ? 0 : $form_id );
 		array_push( $info_column_keys, 'id' );
 		foreach ( $field_filters as $search ) {
 
@@ -1425,7 +1426,7 @@ class GF_Forms_Model_Legacy {
 
 			$val = rgar( $search, 'value' );
 
-			$operator = GFFormsModel::is_valid_operator( rgar( $search, 'operator' ) ) ? strtolower( $search['operator'] ) : '=';
+			$operator = self::is_valid_operator( rgar( $search, 'operator' ) ) ? strtolower( $search['operator'] ) : '=';
 
 			if ( 'is' == $operator ) {
 				$operator = '=';
@@ -1455,13 +1456,15 @@ class GF_Forms_Model_Legacy {
 					$is_number_field = false;
 					if ( $operator != 'like' && ! is_array( $form_id ) && $form_id > 0 ) {
 						$form               = GFAPI::get_form( $form_id );
-						$field              = GFFormsModel::get_field( $form, $key );
-						if (  GFFormsModel::get_input_type( $field ) == 'number' ){
+						$field              = self::get_field( $form, $key );
+						if (  self::get_input_type( $field ) == 'number' ){
 							$is_number_field = true;
 						}
 					}
 
-					$search_term_placeholder = rgar( $search, 'is_numeric' ) || $is_number_field ? '%f' : '%s';
+
+
+					$upper_field_number_limit = (string) (int) $key === (string) $key ? (float) $key + 0.9999 : (float) $key + 0.0001;
 
 					if ( is_array( $search_term ) ) {
 						if ( in_array( $operator, array( '=', 'in' ) ) ) {
@@ -1471,14 +1474,24 @@ class GF_Forms_Model_Legacy {
 						}
 						// Format in SQL and sanitize the strings in the list
 						$search_terms = array_fill( 0, count( $search_term ), '%s' );
-						$search_term_placeholder = $wpdb->prepare( '( ' . implode( ', ', $search_terms ) . ' )', $search_term );
-						$search_term = ''; // Set to blank, still gets passed to wpdb::prepare below but isn't used
-					}
+						$search_terms_in = $wpdb->prepare( '( ' . implode( ', ', $search_terms ) . ' )', $search_term );
 
-					$upper_field_number_limit = (string) (int) $key === (string) $key ? (float) $key + 0.9999 : (float) $key + 0.0001;
-					/* doesn't support "<>" for checkboxes */
-					$field_query = $wpdb->prepare(
-						"
+						/* doesn't support "<>" for checkboxes */
+						$field_query = $wpdb->prepare(
+							"
+                        l.id IN
+                        (
+                        SELECT
+                        lead_id
+                        from {$lead_details_table_name}
+                        WHERE (field_number BETWEEN %s AND %s AND value {$operator} {$search_terms_in})
+                        {$form_id_where}
+                        )", (float) $key - 0.0001, $upper_field_number_limit );
+					} else {
+						$search_term_placeholder = rgar( $search, 'is_numeric' ) || $is_number_field ? '%f' : '%s';
+						/* doesn't support "<>" for checkboxes */
+						$field_query = $wpdb->prepare(
+							"
                         l.id IN
                         (
                         SELECT
@@ -1487,8 +1500,8 @@ class GF_Forms_Model_Legacy {
                         WHERE (field_number BETWEEN %s AND %s AND value {$operator} {$search_term_placeholder})
                         {$form_id_where}
                         )", (float) $key - 0.0001, $upper_field_number_limit, $search_term
-					);
-
+						);
+					}
 
 					if ( ( empty( $val ) && $operator != '<>' ) || $val === '%%' || ( $operator === '<>' && ! empty( $val ) ) ) {
 						$skipped_field_query = $wpdb->prepare(
@@ -1500,7 +1513,7 @@ class GF_Forms_Model_Legacy {
                             from {$lead_details_table_name}
                             WHERE (field_number BETWEEN %s AND %s)
                             {$form_id_where}
-                            )", (float) $key - 0.0001, $upper_field_number_limit, $search_term
+                            )", (float) $key - 0.0001, $upper_field_number_limit
 						);
 						$field_query = '(' . $field_query . ' OR ' . $skipped_field_query . ')';
 					}
@@ -1584,10 +1597,6 @@ class GF_Forms_Model_Legacy {
 				case 'meta':
 					/* doesn't support '<>' for multiple values of the same key */
 
-					$meta        = rgar( $entry_meta, $key );
-					$placeholder = rgar( $meta, 'is_numeric' ) ? '%s' : '%s';
-					$search_term = 'like' == $operator ? "%$val%" : $val;
-
 					if ( is_array( $search_term ) ) {
 						if ( in_array( $operator, array( '=', 'in' ) ) ) {
 							$operator = 'IN';
@@ -1595,13 +1604,24 @@ class GF_Forms_Model_Legacy {
 							$operator = 'NOT IN';
 						}
 						$search_terms = array_fill( 0, count( $search_term ), '%s' );
-						$placeholder = $wpdb->prepare( '( ' . implode( ', ', $search_terms ) . ' )', $search_term );
+						$search_terms_in = $wpdb->prepare( '( ' . implode( ', ', $search_terms ) . ' )', $search_term );
 
-						$search_term = '';
-					}
-
-					$sql_array[] = $wpdb->prepare(
-						"
+						$sql_array[] = $wpdb->prepare(
+							"
+                        l.id IN
+                        (
+                        SELECT
+                        lead_id
+                        FROM $lead_meta_table_name
+                        WHERE meta_key=%s AND meta_value $operator $search_terms_in
+                        $form_id_where
+                        )", $search['key'] );
+					} else {
+						$meta = rgar( $entry_meta, $key );
+						$placeholder = rgar( $meta, 'is_numeric' ) ? '%s' : '%s';
+						$search_term = 'like' == $operator ? "%$val%" : $val;
+						$sql_array[] = $wpdb->prepare(
+							"
                         l.id IN
                         (
                         SELECT
@@ -1610,9 +1630,10 @@ class GF_Forms_Model_Legacy {
                         WHERE meta_key=%s AND meta_value $operator $placeholder
                         $form_id_where
                         )", $search['key'], $search_term
-					);
-					break;
+						);
+					}
 
+					break;
 			}
 		}
 

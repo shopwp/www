@@ -3188,7 +3188,7 @@ class GFFormsModel {
 				if ( ! empty( $val ) ) {
 
 					// replace commas in individual values to prevent individual value from being split into multiple values (checkboxes, multiselects)
-					if ( in_array( $field->get_input_type(), array( 'checkbox', 'multiselect' ) ) ) {
+					if ( $field->get_input_type() === 'checkbox' ) {
 						$val = str_replace( ',', '&#44;', $val );
 					}
 
@@ -3198,6 +3198,16 @@ class GFFormsModel {
 			$value = implode( ',', $value );
 		} else {
 			$value = isset( $lead[ $field->id ] ) ? $lead[ $field->id ] : '';
+
+			if ( ! empty( $value ) && $field->get_input_type() === 'multiselect' ) {
+				$items = $field->to_array( $value );
+
+				foreach ( $items as &$item ) {
+					$item = str_replace( ',', '&#44;', $item );
+				}
+
+				$value = implode( ',', $items );
+			}
 		}
 
 		return $value;
@@ -6055,16 +6065,17 @@ function gform_get_meta_values_for_entries( $entry_ids, $meta_keys ) {
 	return $meta_value_array;
 }
 
-
 /**
- * Add or update metadata associated with an entry
+ * Add or update metadata associated with an entry.
  *
  * Data will be serialized. Don't forget to sanitize user input.
  *
- * @param int $entry_id The ID of the entry to be updated
- * @param string $meta_key The key for the meta data to be stored
- * @param mixed $meta_value The data to be stored for the entry
- * @param int|null $form_id The form ID of the entry (optional, saves extra query if passed when creating the metadata)
+ * @since Unknown
+ *
+ * @param int      $entry_id   The ID of the entry to be updated.
+ * @param string   $meta_key   The key for the meta data to be stored.
+ * @param mixed    $meta_value The data to be stored for the entry.
+ * @param int|null $form_id    The form ID of the entry (optional, saves extra query if passed when creating the metadata).
  */
 function gform_update_meta( $entry_id, $meta_key, $meta_value, $form_id = null ) {
 	global $wpdb, $_gform_lead_meta;
@@ -6108,14 +6119,16 @@ function gform_update_meta( $entry_id, $meta_key, $meta_value, $form_id = null )
 }
 
 /**
- * Add metadata associated with an entry
+ * Add metadata associated with an entry.
  *
  * Data will be serialized; Don't forget to sanitize user input.
  *
- * @param int $entry_id The ID of the entry where metadata is to be added
- * @param string $meta_key The key for the meta data to be stored
- * @param mixed $meta_value The data to be stored for the entry
- * @param int|null $form_id The form ID of the entry (optional, saves extra query if passed when creating the metadata)
+ * @since Unknown
+ *
+ * @param int      $entry_id   The ID of the entry where metadata is to be added.
+ * @param string   $meta_key   The key for the meta data to be stored.
+ * @param mixed    $meta_value The data to be stored for the entry.
+ * @param int|null $form_id    The form ID of the entry (optional, saves extra query if passed when creating the metadata).
  */
 function gform_add_meta( $entry_id, $meta_key, $meta_value, $form_id = null ) {
 	global $wpdb, $_gform_lead_meta;
@@ -6149,6 +6162,14 @@ function gform_add_meta( $entry_id, $meta_key, $meta_value, $form_id = null ) {
 	$_gform_lead_meta[ $cache_key ] = $meta_value;
 }
 
+/**
+ * Delete metadata associated with an entry.
+ *
+ * @since Unknown
+ *
+ * @param int    $entry_id The ID of the entry to be deleted.
+ * @param string $meta_key The key for the meta data to be deleted.
+ */
 function gform_delete_meta( $entry_id, $meta_key = '' ) {
 	global $wpdb, $_gform_lead_meta;
 

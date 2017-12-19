@@ -2,14 +2,14 @@
 
   <div class="marquee-content">
 
-    <h1 class="marquee-heading"><span class="wordpress">WordPress</span> <i class="fa fa-refresh fa-spin fa-fw"></i> <span class="shopify">Shopify</span></h1>
+    <h1 class="marquee-heading"><span class="wordpress">WordPress</span> <i class="fas fa-sync-alt fa-spin"></i> <span class="shopify">Shopify</span></h1>
 
-    <div class="marquee-short-desc l-contain-narrow">
+    <div class="marquee-short-desc">
       <?php the_sub_field('short_description'); ?>
     </div>
 
     <div class="btn-group l-row l-row-center">
-      <a href="/how" class="btn btn-l btn-secondary" data-gtm="learn-home"><i class="fa fa-book" aria-hidden="true"></i> Learn more</a>
+      <a href="/how" class="btn btn-l btn-secondary" data-gtm="learn-home"><i class="fab fa-leanpub"></i> Learn more</a>
       <a href="/purchase" class="btn btn-l" data-gtm="purchase-home"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Purchase</a>
     </div>
   </div>

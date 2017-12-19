@@ -97,7 +97,7 @@
     margin: $space-l auto 0 auto;
     display: block;
     height: 1px;
-    width: 100px;
+    width: 80px;
     background-color: color(medium-grey);
   }
 
@@ -172,7 +172,7 @@
   width: auto;
   height: 50px;
   position: relative;
-  top: 3px;
+  top: 8px;
 }
 
 .logo-link {
@@ -206,7 +206,8 @@
   margin-left: $space-l;
   text-decoration: none;
   position: relative;
-
+  width: 1.125em;
+  
   .fa-shopping-cart {
     color: color(base);
     font-size: $font-s*2;

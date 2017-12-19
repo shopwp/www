@@ -59,6 +59,24 @@ class GF_Query_Call {
 	}
 
 	/**
+	 * A RAND call.
+	 *
+	 * @return GF_Query_Call|null instance or null.
+	 */
+	public static function RAND( ) {
+		return new self( 'RAND' );
+	}
+
+	/**
+	 * Generate the RAND call SQL.
+	 *
+	 * @return string The generated SQL.
+	 */
+	private function rand_sql() {
+		return 'RAND()';
+	}
+
+	/**
 	 * Generate the CAST call SQL.
 	 *
 	 * @param GF_Query $query The query.

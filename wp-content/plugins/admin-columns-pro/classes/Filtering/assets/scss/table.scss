@@ -1,0 +1,162 @@
+/* =Dropdowns
+-------------------------------------------------------------- */
+.tablenav.top {
+	.alignleft.actions {
+		select {
+			margin-bottom: 4px;
+		}
+	}
+}
+
+// Ranges
+.acp-range {
+	display: block;
+	float: left;
+	white-space: nowrap;
+	margin-top: 1px;
+	margin-bottom: 4px;
+	margin-right: 5px;
+
+	// User screen exception
+	body.users-php & {
+		float: none;
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.input_group {
+		padding: 0;
+		border: solid 1px darken(#DFDFDF, 4);
+		border-radius: 5px;
+
+		.prepend,
+		.append {
+			display: inline-block;
+			vertical-align: middle;
+			font-size: 12px;
+			padding: 0 10px;
+		}
+
+		input {
+			display: inline-block;
+			vertical-align: middle;
+			width: 90px;
+			margin: 0;
+			line-height: 20px;
+			border: 1px solid #fff;
+			padding: 2px 5px;
+			box-shadow: none;
+
+			&.min {
+				border-radius: 0;
+				border-left: 1px solid #d5d5d5;
+				border-right: 1px solid #d5d5d5;
+			}
+
+			&.max {
+				border-radius: 0 5px 5px 0;
+				border-left: 1px solid #d5d5d5;
+			}
+
+			&.active {
+				box-shadow: 0 0 3px rgba(0, 115, 170, .8);
+				border: 1px solid #5b9dd9;
+			}
+
+			&[type='number'] {
+				height: 26px;
+			}
+		}
+	}
+
+	&.date {
+		input.hasDatepicker {
+			min-width: 96px;
+		}
+	}
+}
+
+// media
+body.upload-php .filter-items,
+	// post, user, comments
+.tablenav .actions {
+	select.acp-filter.active {
+		box-shadow: 0 0 3px rgba(0, 115, 170, .8);
+		border-color: #5b9dd9;
+	}
+}
+
+// MS Users
+#ac_form-user-list {
+	display: block;
+	clear: both;
+}
+select.postform.active {
+	box-shadow: 0 0 3px rgba(0, 115, 170, .8);
+	border-color: #5b9dd9;
+}
+
+
+.cpac_ui {
+	.ui-datepicker {
+		a {
+			transition: none !important;
+			-webkit-transition: none !important;
+		}
+
+		.ui-datepicker-prev,
+		.ui-datepicker-next {
+			top: 6px !important;
+
+			&:hover {
+				top: 5px !important;
+			}
+		}
+	}
+}
+
+// Media screen
+body.upload-php .wp-filter .actions {
+	select {
+		margin-top: 2px;
+		margin-bottom: 2px;
+		margin-right: 5px;
+		float: left; // custom columns
+	}
+	.acp-range {
+		margin-top: 2px;
+		margin-bottom: 2px;
+
+		.input_group {
+			background-color: #f1f1f1;
+		}
+	}
+	#post-query-submit {
+		margin-top: 2px;
+		margin-bottom: 2px;
+	}
+	#filter-by-date {
+		float: left;
+		margin-right: 5px;
+	}
+}
+
+// User screen
+body.users-php .tablenav .actions {
+	#changeit {
+		margin-right: 10px;
+	}
+
+	select.postform {
+		float: none;
+		margin-bottom: 4px;
+	}
+	a.add-new-h2 {
+		top: 0 !important
+	}
+	.cpac_numberrange {
+		float: none;
+	}
+}
+
+@import '_ac-jquery-ui-v1114';

@@ -6,7 +6,7 @@
         <h1>
 
           <?php if (get_sub_field('support_has_icon')) { ?>
-            <i class="fa <?php the_sub_field('support_icon'); ?>" aria-hidden="true"></i>
+            <i class="fas <?php the_sub_field('support_icon'); ?>" aria-hidden="true"></i>
           <?php } ?>
 
            <?php the_sub_field('support_heading'); ?>

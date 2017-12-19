@@ -14,7 +14,7 @@ h1 {
   font-size: $heading-1;
   font-weight: bold;
 
-  @include device(600, 'max') {
+  @include device(700, 'max') {
     font-size: $font-xxxl;
   }
 }
@@ -22,10 +22,20 @@ h1 {
 h2 {
   font-size: $heading-2;
   font-weight: bold;
+
+  @include device(700, 'max') {
+    font-size: $heading-3;
+  }
+
 }
 
 h3 {
   font-size: $heading-3;
+
+  @include device(700, 'max') {
+    font-size: $heading-4;
+  }
+
 }
 
 h4 {

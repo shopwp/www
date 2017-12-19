@@ -157,12 +157,15 @@ a.button.edd-slg-social-unlink-profile {
   }
 
   span.edd-add-to-cart-label {
+
     &:after {
-      content: '\f178';
-      font-family: FontAwesome;
+      font-family: 'FontAwesome';
+      content: '\f217';
       display: inline-block;
       margin-left: $space-s;
+      display: none;
     }
+
   }
 
 }
@@ -171,7 +174,7 @@ a.button.edd-slg-social-unlink-profile {
 .receipt-account-wrapper .btn {
   &:after {
     content: '\f178';
-    font-family: FontAwesome;
+    font-family: 'FontAwesome';
     display: inline-block;
     margin-left: $space-s;
   }

@@ -1,0 +1,1 @@
+window.Select2=1;

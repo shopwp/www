@@ -57,19 +57,21 @@ function onDocClick($) {
               url = "/docs/" + data.slug;
 
 
+              console.log("data.slug: ", data.slug);
+
               window.history.pushState("object or string", "Title", url);
 
               // jQuery('html, body').animate({
               //   scrollTop: jQuery('.main').offset().top - 150
               // }, 200);
 
-              DISQUS.reset({
-                reload: true,
-                config: function config() {
-                  this.page.identifier = $doc.data('doc-id').toString();
-                  this.page.url = "https://staging.wpshop.dev/#!newthread";
-                }
-              });
+              // DISQUS.reset({
+              //   reload: true,
+              //   config: function () {
+              //     this.page.identifier = $doc.data('doc-id').toString();
+              //     this.page.url = "https://staging.wpshop.dev/#!newthread";
+              //   }
+              // });
 
             case 14:
             case 'end':

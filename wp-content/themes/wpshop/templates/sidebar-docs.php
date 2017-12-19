@@ -1,3 +1,5 @@
+<h1>Documentation</h1>
+
 <div class="sidebar-inner docs">
   <ul class="doc-cats">
 

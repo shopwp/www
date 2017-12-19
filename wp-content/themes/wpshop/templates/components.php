@@ -29,6 +29,21 @@
 
         get_template_part('components/features/features-controller');
 
+      // FAQs
+      } else if(get_row_layout() == 'component_faqs') {
+
+        get_template_part('components/faqs/faqs-controller');
+
+      // Downloads
+      } else if(get_row_layout() == 'component_downloads') {
+
+        get_template_part('components/downloads/downloads-controller');
+
+      // Changelog
+      } else if(get_row_layout() == 'component_changelog') {
+
+        get_template_part('components/changelog/changelog-controller');
+
       }
 
     endwhile;

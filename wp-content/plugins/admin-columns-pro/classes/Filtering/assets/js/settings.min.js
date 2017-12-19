@@ -1,0 +1,1 @@
+jQuery(document).ready(function(n){n(document).bind("column_init column_change column_add",function(e,t){var a=n(t),i=a.find(".ac-setting-input_label"),l=a.find(".ac-setting-input_filter_label");if(0!==l.length){var c=i.val(),u=l.attr("placeholder");i.bind("keyup change",function(){l.attr("placeholder",u.replace(c,n(this).val()))})}})});

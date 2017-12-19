@@ -1,0 +1,1 @@
+jQuery(document).ready(function(e){e("#acp_overflow_list_screen_table").on("click",function(){e(this).is(":checked")?e("body").addClass("acp-overflow-table"):e("body").removeClass("acp-overflow-table"),e.post(ajaxurl,{action:"acp_update_table_option_overflow",value:e(this).is(":checked"),layout:AC.layout,list_screen:AC.list_screen,_ajax_nonce:AC.ajax_nonce})})});

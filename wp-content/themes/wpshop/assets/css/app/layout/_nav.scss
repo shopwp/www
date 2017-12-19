@@ -41,11 +41,11 @@
   a {
     border: none;
     text-decoration: none;
-    text-transform: uppercase;
-    font-size: $font-m;
+    // text-transform: uppercase;
+    font-size: $font-l;
     letter-spacing: 0.04em;
     color: color(base);
-    padding:  $space-m;
+    padding: 1.2em 1em;
   }
 }
 
@@ -62,7 +62,7 @@
   .menu-item {
 
     &:last-child {
-      margin-right: $space-l;
+      // margin-right: $space-l;
     }
 
   }
@@ -79,7 +79,7 @@
 
   &:after {
     content: '';
-    width: 50%;
+    width: 35%;
     height: 1px;
     background: #898989;
     position: absolute;

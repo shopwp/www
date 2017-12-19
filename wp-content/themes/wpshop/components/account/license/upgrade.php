@@ -1,5 +1,5 @@
 <section class="component component-account-licenses-upgrades">
-  <h4 class="component-account-heading"><i class="fa fa-map-signs" aria-hidden="true"></i> Upgrades</h4>
+  <h4 class="component-account-heading">Upgrades</h4>
 
   <table id="edd_sl_license_upgrades" class="edd-table">
 

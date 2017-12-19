@@ -1,0 +1,8 @@
+/* =Button
+-------------------------------------------------------------- */
+.column-meta .column_label .inner .indicator-edit:before {
+  content: "\f464";
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  font: normal 24px/17px 'dashicons';
+  vertical-align: top; }

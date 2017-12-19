@@ -29,7 +29,7 @@
     <div class="card l-box">
       <h3 class="card-heading">
         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-cart.svg" class="card-heading-icon" alt="Cart" /> Cart</h3>
-      <p>We use the Shopify Buy Button SDK givng you a fully featured cart experience out of the box. The checkout page is handled by Shopify allowing you to lay your security concerns to rest.</p>
+      <p>We use the Shopify Buy Button SDK giving you a fully featured cart experience out of the box. The checkout page is handled by Shopify allowing you to lay your security concerns to rest.</p>
     </div>
 
     <div class="card l-box">

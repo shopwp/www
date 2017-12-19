@@ -1,5 +1,5 @@
 <section class="component component-account-licenses">
-  <h4 class="component-account-heading"><i class="fa fa-key" aria-hidden="true"></i> Licenses</h4>
+  <h4 class="component-account-heading">Licenses</h4>
 
   <?php
 

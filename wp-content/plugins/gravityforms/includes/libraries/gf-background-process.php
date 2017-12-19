@@ -70,6 +70,16 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		protected $cron_interval_identifier;
 
 		/**
+		 * Query_url
+		 *
+		 * @since 2.3
+		 *
+		 * @var string
+		 * @access protected
+		 */
+		protected $query_url;
+
+		/**
 		 * Initiate new background process
 		 *
 		 * @since 2.2
@@ -77,6 +87,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		public function __construct() {
 			parent::__construct();
 
+			$this->query_url                = admin_url( 'admin-ajax.php' );
 			$this->cron_hook_identifier     = $this->identifier . '_cron';
 			$this->cron_interval_identifier = $this->identifier . '_cron_interval';
 
@@ -247,7 +258,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 				$column = 'meta_key';
 			}
 
-			$key = $this->identifier . '_batch_%';
+			$key = $wpdb->esc_like( $this->identifier . '_batch_' ) . '%';
 
 			$count = $wpdb->get_var( $wpdb->prepare( "
 			SELECT COUNT(*)
@@ -267,12 +278,21 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		 * @since 2.2
 		 */
 		protected function is_process_running() {
-			if ( get_site_transient( $this->identifier . '_process_lock' ) ) {
-				// Process already running.
-				return true;
+			$running = false;
+			$lock_timestamp = get_site_option( $this->identifier . '_process_lock' );
+			if ( $lock_timestamp ) {
+
+				$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
+				$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
+
+				if ( microtime( true ) - $lock_timestamp > $lock_duration ) {
+					$this->unlock_process();
+				} else {
+					$running = true;
+				}
 			}
 
-			return false;
+			return $running;
 		}
 
 		/**
@@ -287,10 +307,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		protected function lock_process() {
 			$this->start_time = time(); // Set start time of current process.
 
-			$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
-			$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
-
-			set_site_transient( $this->identifier . '_process_lock', microtime(), $lock_duration );
+			update_site_option( $this->identifier . '_process_lock', microtime( true ) );
 		}
 
 		/**
@@ -303,7 +320,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		 * @return $this
 		 */
 		protected function unlock_process() {
-			delete_site_transient( $this->identifier . '_process_lock' );
+			delete_site_option( $this->identifier . '_process_lock' );
 
 			return $this;
 		}
@@ -330,7 +347,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 				$value_column = 'meta_value';
 			}
 
-			$key = $this->identifier . '_batch_%';
+			$key = $wpdb->esc_like( $this->identifier . '_batch_' ) . '%';
 
 			$query = $wpdb->get_row( $wpdb->prepare( "
 			SELECT *
@@ -363,8 +380,9 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 			do {
 				$batch = $this->get_batch();
 
-				if ( is_multisite() ) {
-					switch_to_blog( $batch->blog_id );
+				if ( is_multisite() && get_current_blog_id() !== $batch->blog_id ) {
+					$this->spawn_multisite_child_process( $batch->blog_id );
+					wp_die();
 				}
 
 				foreach ( $batch->data as $key => $value ) {
@@ -404,6 +422,20 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		}
 
 		/**
+		 * Spawn a new background process on the multisite that scheduled the current task
+		 *
+		 * @param int $blog_id
+		 *
+		 * @since 2.3
+		 */
+		protected function spawn_multisite_child_process( $blog_id ) {
+			switch_to_blog( $blog_id );
+			$this->query_url = admin_url( 'admin-ajax.php' );
+			$this->unlock_process();
+			parent::dispatch();
+		}
+
+		/**
 		 * Memory exceeded
 		 *
 		 * Ensures the batch process never exceeds 90%
@@ -440,7 +472,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 				$memory_limit = '128M';
 			}
 
-			if ( ! $memory_limit || -1 === $memory_limit ) {
+			if ( ! $memory_limit || -1 === intval( $memory_limit ) ) {
 				// Unlimited, set to 32GB.
 				$memory_limit = '32000M';
 			}
@@ -602,7 +634,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 				$key .= 'blog_id_' . get_current_blog_id() . '_';
 			}
 
-			$key .= '%';
+			$key = $wpdb->esc_like( $key ) . '%';
 
 			$result = $wpdb->query( $wpdb->prepare( "
 			DELETE FROM {$table}

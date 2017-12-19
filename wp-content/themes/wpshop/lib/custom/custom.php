@@ -33,6 +33,21 @@ function get_taxonomy_hierarchy( $taxonomy, $parent = 0 ) {
 Checking if user is logged in and checking out
 
 */
+function formatHashSlug($slug) {
+
+  $newSlug = (str_replace(' ', '-', strtolower($slug)));
+  $newSlug = preg_replace('/[,\'?]/', '', $newSlug);
+
+  return $newSlug;
+
+}
+
+
+/*
+
+Checking if user is logged in and checking out
+
+*/
 function isRegisteredAndPurchasing() {
 
   if( is_page('Checkout') && is_user_logged_in() ) {
@@ -77,7 +92,6 @@ function wps_forgot_password_shortcode($atts) {
 add_shortcode('wps_forgot_password', 'wps_forgot_password_shortcode');
 
 
-
 /*
 
 wps_reset_password_shortcode
@@ -94,6 +108,31 @@ function wps_reset_password_shortcode($atts) {
 add_shortcode('wps_reset_password', 'wps_reset_password_shortcode');
 
 
+/*
+
+Adds a shortcode to output the changelog
+
+*/
+function edd_changelog_callback($atts) {
+
+	// Available attributes
+	$shortcode_atts = array(
+		'download_id' => 0,
+	);
+
+	$shortcode_atts = shortcode_atts( $shortcode_atts, $atts );
+error_log('---- $shortcode_atts -----');
+error_log(print_r($shortcode_atts, true));
+error_log('---- /$shortcode_atts -----');
+  // Extract each att to a variable
+	extract( $shortcode_atts );
+
+  // Return the changelog data
+	return get_post_meta( $download_id, '_edd_sl_changelog', true );
+
+}
+
+add_shortcode( 'edd_changelog', 'edd_changelog_callback' );
 
 
 /*
@@ -162,9 +201,6 @@ function wps_update_customer_email($newEmail) {
 
   }
 
-  error_log('-----------------------');
-  error_log(print_r($user, true));
-
 }
 
 
@@ -197,8 +233,6 @@ function wps_update_customer_name($newName) {
 }
 
 
-
-
 /*
 
 Update customer name
@@ -206,67 +240,19 @@ Update customer name
 */
 function wps_check_current_pass_valid($passCurrent, $userID) {
 
-
-
   $user = get_user_by('id', $userID);
 
-  error_log('->>>>>> user ->>>>>>');
-  error_log(print_r($user, true));
-
   if ( $user && wp_check_password($passCurrent, $user->data->user_pass, $user->ID) ) {
-
-    error_log('->>>>>> yes ->>>>>>');
 
     return true;
 
   } else {
-
-    error_log('->>>>>> no ->>>>>>');
-    error_log(print_r(wp_check_password($passCurrent, $user->data->user_pass, $user->ID), true));
 
     return false;
 
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*
@@ -328,5 +314,6 @@ function wps_do_password_reset($data) {
   }
 
 }
+
 
 ?>

@@ -1,0 +1,1 @@
+jQuery(document).ready(function(c){c("#toggle-ssl").length>0&&jQuery.post(ajaxurl,{action:"cpac_check_connection"},function(e){"1"!==jQuery.trim(e)&&(c("#toggle-ssl").show(),c("#licence_activation").hide())})});

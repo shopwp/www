@@ -1,0 +1,339 @@
+span.select2-container {
+  z-index: 1; }
+
+.select2-container--open .select2-dropdown--below {
+  margin-top: -1px; }
+
+.select2-container--default.select2-container--focus .selection .select2-selection--multiple, .select2-container--default.select2-container--open .selection .select2-selection--multiple {
+  border-color: #a5bfd1; }
+
+.select2-container--default .selection .select2-selection--multiple {
+  border-color: #ddd;
+  border-radius: 0;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07); }
+
+.select2-container--default .select2-dropdown {
+  border-color: #a5bfd1; }
+
+.select2-container--default .select2-results__option[aria-selected=true] {
+  display: none; }
+
+.layout-selector {
+  overflow: hidden;
+  margin: 16px 0 14px; }
+  .layout-selector ul {
+    margin: 0; }
+    .layout-selector ul .first {
+      margin-right: 4px; }
+      .layout-selector ul .first .read-only {
+        border-radius: 3px;
+        font-size: 12px;
+        padding: 2px 3px;
+        background-color: #808080;
+        color: #fff; }
+      .layout-selector ul .first .dashicons {
+        margin-top: -2px;
+        margin-left: -1px;
+        color: #7a7a7a; }
+    .layout-selector ul li.read-only a {
+      color: #606060; }
+
+.sidebox.layouts {
+  box-shadow: none !important;
+  background: transparent !important;
+  border: none !important; }
+  .sidebox.layouts .header {
+    padding: 11px 10px;
+    background-color: #fff;
+    border-left: 1px solid #E1E1E1;
+    border-top: 1px solid #E1E1E1;
+    border-right: 1px solid #E1E1E1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+    .sidebox.layouts .header h3 {
+      margin: 0;
+      padding: 0;
+      min-height: 1px;
+      overflow: hidden; }
+      .sidebox.layouts .header h3 span.header-content {
+        display: block;
+        float: left;
+        margin-top: 5px; }
+      .sidebox.layouts .header h3 span {
+        position: relative;
+        padding-right: 13px; }
+      .sidebox.layouts .header h3 a {
+        float: right;
+        font-size: 13px;
+        font-weight: normal;
+        cursor: pointer; }
+    .sidebox.layouts .header .add-new span {
+      padding: 0; }
+      .sidebox.layouts .header .add-new span.close {
+        display: none; }
+    .sidebox.layouts .header .add-new.open span.add {
+      display: none; }
+    .sidebox.layouts .header .add-new.open span.close {
+      display: inline-block; }
+  .sidebox.layouts input.name {
+    padding: 4px 5px; }
+  .sidebox.layouts .select2 li.select2-search {
+    width: auto; }
+    .sidebox.layouts .select2 li.select2-search input {
+      height: 20px;
+      min-height: 20px;
+      margin-top: 3px;
+      background-image: none !important; }
+  .sidebox.layouts .select2 .select2-selection__rendered {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 5px !important; }
+  .sidebox.layouts .select2 .select2-search__field {
+    max-width: 155px !important; }
+    .sidebox.layouts .select2 .select2-search__field::-webkit-input-placeholder {
+      font-size: 14px; }
+    .sidebox.layouts .select2 .select2-search__field:-moz-placeholder {
+      font-size: 14px; }
+    .sidebox.layouts .select2 .select2-search__field::-moz-placeholder {
+      font-size: 14px; }
+    .sidebox.layouts .select2 .select2-search__field:-ms-input-placeholder {
+      font-size: 14px; }
+  .sidebox.layouts .select2 .select2-selection__choice {
+    border-color: #bbb;
+    background: #f9f9f9;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+    margin: 5px 5px 0 0; }
+    .sidebox.layouts .select2 .select2-selection__choice .select2-selection__choice__remove {
+      font-size: 14px; }
+  .sidebox.layouts .select2 .select2-search--inline {
+    margin-bottom: 0; }
+  .sidebox.layouts .item {
+    background-color: #fff;
+    border: 1px solid #dfdfdf; }
+    .sidebox.layouts .item .body {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding-top: 15px; }
+      .sidebox.layouts .item .body .row {
+        padding: 0 15px;
+        margin-bottom: 15px; }
+        .sidebox.layouts .item .body .row label {
+          display: none; }
+        .sidebox.layouts .item .body .row.info {
+          color: #5e5e5e; }
+          .sidebox.layouts .item .body .row.info p {
+            margin: 0; }
+        .sidebox.layouts .item .body .row.name input {
+          width: 100%;
+          margin: 0;
+          box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07);
+          border: 1px solid #ddd; }
+          .sidebox.layouts .item .body .row.name input:focus {
+            border-color: #5b9dd9;
+            box-shadow: 0 0 2px rgba(30, 140, 190, 0.8);
+            outline: none; }
+        .sidebox.layouts .item .body .row.actions {
+          margin: 0;
+          overflow: hidden;
+          padding-bottom: 15px; }
+          .sidebox.layouts .item .body .row.actions .spinner {
+            float: right; }
+          .sidebox.layouts .item .body .row.actions .save {
+            float: right; }
+            .sidebox.layouts .item .body .row.actions .save.button {
+              background-color: #fff; }
+          .sidebox.layouts .item .body .row.actions .instructions {
+            text-decoration: none;
+            color: #808080;
+            cursor: help;
+            line-height: 26px; }
+        .sidebox.layouts .item .body .row.actions {
+          border-top: 1px solid #dfdfdf;
+          background-color: #f5f5f5;
+          padding-top: 14px; }
+        .sidebox.layouts .item .body .row .ac-error-message {
+          display: none; }
+        .sidebox.layouts .item .body .row.save-error .ac-error-message {
+          background: #F55E4F;
+          color: #fff;
+          position: relative;
+          display: block;
+          border-radius: 3px;
+          margin: 5px 0 15px;
+          padding: 1px 10px;
+          min-height: 0; }
+          .sidebox.layouts .item .body .row.save-error .ac-error-message p {
+            font-size: 13px !important;
+            line-height: 1.4;
+            margin: 8px 0;
+            padding: 0;
+            color: #fff;
+            text-shadow: 0 1px 0 #DD4232; }
+          .sidebox.layouts .item .body .row.save-error .ac-error-message:after {
+            content: "";
+            width: 0;
+            height: 0;
+            border: transparent 5px solid;
+            border-top-color: #F55E4F;
+            display: block;
+            position: absolute;
+            bottom: -10px;
+            left: 10px; }
+    .sidebox.layouts .item.layout {
+      margin-top: -1px; }
+      .sidebox.layouts .item.layout.loading {
+        position: relative; }
+        .sidebox.layouts .item.layout.loading .body {
+          position: relative; }
+          .sidebox.layouts .item.layout.loading .body:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.5); }
+        .sidebox.layouts .item.layout.loading .spinner {
+          visibility: visible; }
+      .sidebox.layouts .item.layout.read_only .head span.title {
+        color: #b8b8b8;
+        padding-right: 24px;
+        position: relative;
+        font-weight: normal; }
+        .sidebox.layouts .item.layout.read_only .head span.title:after {
+          position: absolute;
+          top: -2px;
+          right: 0;
+          content: "\f160";
+          font-family: dashicons, sans-serif;
+          display: inline-block;
+          font-size: 18px;
+          color: #bfbfbf; }
+      .sidebox.layouts .item.layout.read_only .head .actions .delete,
+      .sidebox.layouts .item.layout.read_only .head .actions .pipe {
+        display: none; }
+      .sidebox.layouts .item.layout.read_only .body input.name {
+        background-color: #eee; }
+      .sidebox.layouts .item.layout.read_only .body .error-notice {
+        background-color: #ebaa00;
+        color: #fff;
+        padding: 6px 10px;
+        line-height: 24px;
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-bottom: 15px; }
+      .sidebox.layouts .item.layout.read_only.current .head span.title {
+        color: #9f9f9f; }
+      .sidebox.layouts .item.layout .head {
+        color: #505050;
+        font-size: 13px;
+        margin: 0;
+        font-weight: bold;
+        text-decoration: none;
+        padding: 10px 14px 6px;
+        display: block;
+        position: relative;
+        min-height: 42px;
+        border: 1px solid transparent; }
+        .sidebox.layouts .item.layout .head:after {
+          content: "";
+          display: table;
+          clear: both; }
+        .sidebox.layouts .item.layout .head:focus {
+          box-shadow: none; }
+        .sidebox.layouts .item.layout .head .left {
+          margin-right: 38px; }
+        .sidebox.layouts .item.layout .head .right {
+          position: absolute;
+          top: 10px;
+          right: 14px;
+          width: 38px; }
+        .sidebox.layouts .item.layout .head .title-div {
+          margin: 4px 0 2px; }
+          .sidebox.layouts .item.layout .head .title-div span.description {
+            font-style: italic;
+            color: #b3b3b3;
+            font-weight: normal;
+            font-size: 13px;
+            margin-left: 4px; }
+        .sidebox.layouts .item.layout .head .actions {
+          display: none;
+          position: relative; }
+          .sidebox.layouts .item.layout .head .actions a {
+            text-decoration: none;
+            font-weight: normal; }
+            .sidebox.layouts .item.layout .head .actions a.delete {
+              color: #BC0B0B; }
+          .sidebox.layouts .item.layout .head .actions form.delete {
+            display: inline; }
+            .sidebox.layouts .item.layout .head .actions form.delete input.delete {
+              font-size: 13px;
+              color: #BC0B0B;
+              border: none;
+              font-weight: normal;
+              background: transparent;
+              display: inline;
+              cursor: pointer;
+              padding: 0;
+              margin: 0; }
+              .sidebox.layouts .item.layout .head .actions form.delete input.delete:hover {
+                color: #f00; }
+          .sidebox.layouts .item.layout .head .actions .pipe {
+            color: #ddd;
+            padding-left: 3px;
+            padding-right: 3px; }
+        .sidebox.layouts .item.layout .head .toggle {
+          display: block;
+          float: right;
+          width: 38px;
+          height: 38px;
+          background: transparent url("../images/arrow.png") no-repeat 19px 15px;
+          cursor: pointer; }
+        .sidebox.layouts .item.layout .head span.label {
+          text-transform: uppercase;
+          font-size: 11px;
+          font-weight: bold;
+          color: #808080;
+          margin-left: 10px; }
+        .sidebox.layouts .item.layout .head:hover {
+          background-color: #fafafa; }
+          .sidebox.layouts .item.layout .head:hover .actions {
+            display: inline-block; }
+      .sidebox.layouts .item.layout .body {
+        display: none;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-top: 1px solid #dfdfdf;
+        position: relative; }
+        .sidebox.layouts .item.layout .body .save-message {
+          display: none;
+          background-color: #46b450;
+          color: #fff;
+          text-align: center;
+          height: 34px;
+          line-height: 34px;
+          margin-left: 15px;
+          margin-right: 15px;
+          margin-bottom: 15px; }
+      .sidebox.layouts .item.layout.current {
+        border: 1px solid #b6cbd9;
+        position: relative; }
+        .sidebox.layouts .item.layout.current .head {
+          background-color: #f2f7fc; }
+          .sidebox.layouts .item.layout.current .head .title {
+            color: #000; }
+          .sidebox.layouts .item.layout.current .head .body {
+            border-color: #c7d7e2; }
+        .sidebox.layouts .item.layout.current.open {
+          border-color: #a5bfd1; }
+          .sidebox.layouts .item.layout.current.open .head {
+            background-color: #eaf2fa; }
+      .sidebox.layouts .item.layout.open {
+        border-color: #cbcbcb;
+        margin-bottom: 6px; }
+        .sidebox.layouts .item.layout.open .head {
+          background-color: #fafafa; }
+          .sidebox.layouts .item.layout.open .head .title {
+            text-shadow: 0 1px 0 #FFFFFF; }
+          .sidebox.layouts .item.layout.open .head .toggle {
+            background-position: 19px -112px; }
+    .sidebox.layouts .item.new {
+      display: none;
+      margin-bottom: 10px; }

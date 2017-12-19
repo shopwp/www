@@ -24,16 +24,24 @@ function isValidHMAC($) {
       timestamp: result.timestamp
     };
 
+    console.log("dataToVerify: ", dataToVerify);
+
     var message = $.param(dataToVerify);
+
+    console.log("message: ", message);
+
     var secret = 'd73e5e7fa67a54ac25a9af8ff8df3814';
     var finalDigest = crypto.createHmac('sha256', secret).update(message).digest('hex');
 
-    if(finalDigest === origHMAC) {
+    console.log("finalDigest: ", finalDigest);
+    console.log("origHMAC: ", origHMAC);
+
+    if (finalDigest === origHMAC) {
       resolve("Valid HMAC");
 
     } else {
-      // reject('Error: Invalid HMAC. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
-      resolve();
+      reject('Error: Invalid HMAC. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
+      // resolve();
     }
 
   });
@@ -78,19 +86,33 @@ function isValidNonce($) {
     var url = getUrlParams(location.search);
 
     if (!url.hasOwnProperty('state')) {
+
       reject('Error: Nonce not available. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
 
     } else {
 
       var nonce = url.state;
+      console.log('nonce: ', nonce);
+
+
+      /*
+
+      Here is where we need to compare nonces
+
+      */
+
+
 
       getStoredAuthData().then(function(response) {
 
         response = JSON.parse(response);
 
-        var nonceMatches = find(propEq('nonce', nonce))(response);
+        console.log("response: ", response);
 
-        if(nonceMatches) {
+        var nonceMatches = find(propEq('nonce', nonce))(response);
+        console.log("nonceMatches: ", nonceMatches);
+
+        if (nonceMatches) {
           resolve(response);
 
         } else {
@@ -167,17 +189,17 @@ Control center
 
 */
 async function onShopifyAuth($) {
-
+console.log('HI');
   /*
 
   Step 1. Check if HMAC is valid
 
   */
   try {
-    await isValidHMAC($);
-
+    var validHMAC = await isValidHMAC($);
+    console.log('Valid HMAC: ', validHMAC);
   } catch(error) {
-
+    console.log('INVALID HMAC');
     insertMessage(error, 'error', true);
     hideLoader($('body'));
 
@@ -193,9 +215,9 @@ async function onShopifyAuth($) {
   */
   try {
     await isValidHostname($);
-
+    console.log('Valid Hostname');
   } catch(error) {
-
+    console.log('INVALID Hostname');
     insertMessage(error, 'error', true);
     hideLoader($('body'));
 
@@ -211,9 +233,9 @@ async function onShopifyAuth($) {
   */
   try {
     var authData = await isValidNonce($);
-
+    console.log('Valid Nonce');
   } catch(error) {
-
+    console.log('INVALID Nonce');
     insertMessage(error, 'error', true);
     hideLoader($('body'));
 
@@ -252,7 +274,7 @@ async function onShopifyAuth($) {
 
     insertMessage(error, 'error', true);
     hideLoader($('body'));
-    
+
     return error;
 
   }

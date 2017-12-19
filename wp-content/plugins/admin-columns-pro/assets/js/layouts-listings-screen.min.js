@@ -1,0 +1,1 @@
+jQuery(document).ready(function(t){t(".wrap > a.page-title-action").length?t(".layout-switcher").insertAfter(".wrap a.page-title-action:first"):t(".wrap h1").length?t(".layout-switcher").appendTo(".wrap h1:first"):t(".wrap h2").length?t(".layout-switcher").appendTo(".wrap h2:first"):t(".wrap div").length&&t(".layout-switcher").appendTo(".wrap div:first")});

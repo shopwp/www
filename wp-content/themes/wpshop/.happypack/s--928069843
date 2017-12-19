@@ -20,16 +20,20 @@ var _mobile = require('./mobile/mobile');
 
 var _analytics = require('./analytics/analytics');
 
+var _faqs = require('./faqs/faqs');
+
 (function ($) {
   "use strict";
 
   $(function () {
 
-    if (!$('body').hasClass('is-mobile')) {
-      Pace.restart();
-    } else {
-      Pace.stop();
-    }
+    // Only show Pace on docs template
+    // if ($('body').hasClass('docs-template-default')) {
+    //   Pace.restart();
+    //
+    // } else {
+    //   Pace.stop();
+    // }
 
     (0, _plugins.initPlugins)($);
     (0, _forms.initForms)($);
@@ -37,6 +41,7 @@ var _analytics = require('./analytics/analytics');
     (0, _checkout.initCheckout)($);
     (0, _account.initAccount)($);
     (0, _docs.initDocs)($);
+    (0, _faqs.initFAQs)();
 
     (0, _mobile.initMobile)($);
 

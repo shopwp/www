@@ -86,7 +86,6 @@ $mobileBodyClass = $detect->isMobile() ? 'l-col is-mobile' : 'l-col';
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-
     <?php if (is_front_page()) { ?>
       <div class="wrap container l-fill l-row <?php echo isRegisteredAndPurchasing() ? 'is-registered-and-purchasing' : ''; ?>" role="document">
 

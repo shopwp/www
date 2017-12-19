@@ -175,6 +175,8 @@ class GF_Upgrade {
 	 * @since  2.2
 	 */
 	public function install() {
+		$this->flush_versions();
+
 		// Setting Database version
 		update_option( 'gf_db_version', GFForms::$version );
 
@@ -688,7 +690,7 @@ WHERE lfv.id NOT IN
 		if ( defined( 'GFORM_DB_MIGRATION_BATCH_SIZE' ) ) {
 			$limit = GFORM_DB_MIGRATION_BATCH_SIZE;
 		} else {
-			$limit = 10000;
+			$limit = 20000;
 		}
 
 		$lead_table = GFFormsModel::get_lead_table_name();
@@ -1000,11 +1002,10 @@ WHERE ln.id NOT IN
 	 * @return string The option value, if found.
 	 */
 	public function get_wp_option( $option_name ) {
-		global $wpdb;
 
-		$wpdb->flush();
+		wp_cache_delete( $option_name );
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name ) );
+		return get_option( $option_name );
 	}
 
 
@@ -1498,7 +1499,7 @@ HAVING count(*) > 1;" );
 
 		$this->versions = array(
 			'version'             => GFForms::$version,
-			'current_version'     => get_option( 'rg_form_version' ),
+			'current_version'     => $this->get_wp_option( 'rg_form_version' ),
 			'current_db_version'  => GFFormsModel::get_database_version(),
 			'previous_db_version' => empty( $previous_db_version ) ? '0' : $previous_db_version,
 		);

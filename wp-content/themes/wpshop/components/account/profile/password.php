@@ -1,6 +1,8 @@
 <section class="component-account-sub">
 
-  <h4 class="component-heading accordion-heading"><i class="fa fa-plus-square-o" aria-hidden="true"></i> Change Password</h4>
+  <h4 class="component-heading accordion-heading">
+    <i class="fas fa-plus-square" aria-hidden="true"></i> Change Password
+  </h4>
 
   <?php
 

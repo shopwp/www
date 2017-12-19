@@ -48,6 +48,60 @@
 
 .docs-template-default {
 
+  .header-content,
+  .wrap.container {
+    max-width: 100%;
+    padding: 0 $space-l;
+  }
+
+  .logo-header {
+    height: 40px;
+  }
+
+  .header-account {
+    display: none;
+  }
+
+  .menu-item {
+
+    &.menu-item-170 {
+
+      a {
+        position: relative;
+
+        &:after {
+          content: "";
+          width: 35%;
+          height: 1px;
+          background: #898989;
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+      }
+
+    }
+
+    a {
+      font-size: $font-m;
+    }
+
+  }
+
+  h1 {
+    font-size: $heading-2;
+  }
+
+  h3 {
+    margin-top: $space-s;
+  }
+
+  .main {
+    margin-top: $space-xxl*2;
+  }
+
   .docs {
     width: 100%;
   }
@@ -79,7 +133,7 @@
     }
 
     .btn {
-      float: right;
+      float: left;
       margin: $space-xxl 0 $space-xxl*3 0;
     }
 

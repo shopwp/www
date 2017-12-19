@@ -1,0 +1,138 @@
+@import "multi-select";
+
+/* =Export Import
+-------------------------------------------------------------- */
+#cpac_export_types {
+	width: 95%;
+}
+
+#cpac_export_output {
+	display: none;
+}
+
+#cpac_export_output textarea {
+	width: 100%;
+	height: 80%;
+}
+
+#cpac_export_submit {
+	display: inline-block;
+	margin: 10px 8px;
+	padding: 4px 14px;
+	height: auto;
+}
+
+#cpac_import_input {
+}
+
+#cpac_import_input textarea {
+	width: 100%;
+	height: 200px;
+}
+
+#cpac_import_submit {
+	display: inline-block;
+	margin: 10px 0;
+}
+
+.export-message,
+.import-message {
+	background-color: #FFFFE0;
+	border: 1px solid #E6DB55;
+	padding: 4px 6px;
+	border-radius: 3px;
+	display: none;
+}
+
+#import-submit {
+	margin-top: 10px;
+	display: block;
+}
+
+.ac-export .ms-container {
+	background: transparent url('../images/switch_bw.png') no-repeat 50% 50%;
+}
+
+.ac-export .ms-container .ms-selectable {
+	width: 48%;
+	margin-right: 0;
+}
+
+.ac-export .ms-container .ms-selection {
+	float: right;
+	width: 48%;
+}
+
+.ac-export .ms-container ul.ms-list {
+	width: 100%;
+}
+
+.ac-export {
+
+	form {
+		&.large {
+			.ms-list {
+				height: 400px;
+			}
+		}
+	}
+	.actions {
+		padding: 10px 0;
+		overflow: hidden;
+
+		.actions-left {
+			float: left;
+			width: 48%;
+		}
+		.actions-right {
+			float: right;
+			width: 48%;
+		}
+
+		a {
+			margin-left: 6px;
+			display: inline-block;
+			text-decoration: none;
+		}
+	}
+	.submit {
+		display: block;
+		margin: 0;
+		padding: 0;
+		text-align: right;
+
+		input {
+			margin-left: 8px;
+		}
+	}
+
+	.ms-container {
+		background: transparent url('../images/switch_bw.png') no-repeat 50% 50%;
+
+		.ms-selectable {
+			width: 48%;
+			margin-right: 0;
+		}
+		.ms-selection {
+			float: right;
+			width: 48%;
+		}
+
+		ul.ms-list {
+			width: 100%;
+
+			li {
+				margin: 0;
+				padding-top: 5px;
+				padding-bottom: 5px;
+			}
+		}
+
+		.ms-selection {
+			li.ms-optgroup-container {
+				padding: 0;
+				margin-bottom: 5px;
+			}
+		}
+	}
+}

@@ -2455,17 +2455,19 @@ class GFFormDisplay {
 	}
 
 	public static function get_counter_init_script( $form ) {
-
 		$script = '';
+
+		/** @var GF_Field $field */
 		foreach ( $form['fields'] as $field ) {
 
 			$max_length = $field->maxLength;
 			$input_id   = "input_{$form['id']}_{$field->id}";
 
 			if ( ! empty( $max_length ) && ! $field->is_administrative() ) {
-				$truncate = 		$field->useRichTextEditor === true ? 'false' : 'true' ;
-				$tinymce_style = 	$field->useRichTextEditor === true ? ' ginput_counter_tinymce' : '' ;
-				$error_style = 		$field->useRichTextEditor === true ? ' ginput_counter_error' : '' ;
+				$rte_enabled   = $field instanceof GF_Field_Textarea && $field->is_rich_edit_enabled();
+				$truncate      = $rte_enabled ? 'false' : 'true';
+				$tinymce_style = $rte_enabled ? ' ginput_counter_tinymce' : '';
+				$error_style   = $rte_enabled ? ' ginput_counter_error' : '';
 
 				$field_script =
 					"jQuery('#{$input_id}').textareaCount(" .

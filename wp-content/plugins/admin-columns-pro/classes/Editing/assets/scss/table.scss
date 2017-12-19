@@ -1,0 +1,444 @@
+/*
+ * Bootstrap v3.0.0
+ * ----------------------------------------------------------------------------
+ */
+
+// Core variables and mixins
+@import "variables";
+@import "mixins";
+
+// Overwrite variables
+$zindex-popover: 9999;
+$btn-primary-bg: #0085ba;
+
+// Core CSS
+@import "forms";
+@import "buttons";
+
+// Components
+@import "glyphicons";
+@import "dropdowns";
+@import "input-groups";
+
+// Components w/ JavaScript
+@import "popovers";
+
+$zindex-popover: 9999;
+
+/**
+ * Colors
+ * ----------------------------------------------------------------------------
+ */
+$color-wp-red: #D54E21;
+$color-wp-yellow: #ffff00;
+$color-wp-yellow-light: #fffbcc;
+
+/**
+ * Edit icons
+ * ----------------------------------------------------------------------------
+ */
+.cacie-action-icon {
+  color: #E6E6E6;
+  cursor: pointer;
+
+  &:after {
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    font: 14px/1 'dashicons';
+    position: relative;
+    z-index: 10;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    vertical-align: middle;
+    text-align: center;
+  }
+}
+
+.cacie-action-icon.active {
+  color: #D6D6D6;
+
+  &:before {
+    margin: 0;
+    padding: 0;
+    background: #FFF;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    box-shadow: 0 0 5px #D5D5D5;
+    display: block;
+    content: '';
+    position: absolute;
+    z-index: 5;
+  }
+}
+
+.cacie-action-icon.focus {
+  color: #0074A2;
+}
+
+/**
+ * Action Bar
+ * ----------------------------------------------------------------------------
+ */
+// Quick inline: button
+#cacie-toggle-edit {
+
+	&:after {
+		content: "\f119";
+		 -moz-osx-font-smoothing: grayscale;
+	    display: inline-block;
+	    font: 17px/1 'dashicons';
+	    line-height: 12px;
+	    position: relative;
+	    top: 3px;
+	    left: 3px;
+	}
+
+	&.active {
+		//background: #2ea2cc;
+		background: $color-wp-red;
+		color: #fff;
+	}
+}
+
+ /**
+ * Table
+ * ----------------------------------------------------------------------------
+ */
+
+table.wp-list-table tbody {
+
+	.cacie-item {
+		display: inline-block;
+		//display: block;
+		//float: left;
+		margin-right: 8px;
+		margin-bottom: 8px;
+	}
+
+	.editable-click {
+		border-bottom: none;
+	}
+
+	&.cacie-enabled {
+
+		td {
+
+			form.editableform {
+				.editable-buttons {
+					.glyphicon-remove {
+						top: 2px;
+					}
+				}
+			}
+
+			// General
+			.editable-click {
+				border: none;
+
+				&:hover {
+					border: none;
+				}
+			}
+
+			.cacie-cell-actions {
+				display: inline-block;
+				position: relative;
+			}
+
+			.cacie-cell-action {
+				@extend .cacie-action-icon;
+				display: inline-block;
+				margin-right: 4px;
+				margin-bottom: 6px;
+
+				&.cacie-edit:after {
+					content: "\f327";
+				}
+
+				&.cacie-undo:after {
+					content: "\f171";
+				}
+
+				&.cacie-download:after {
+					content: "\f316";
+				}
+
+				&.cacie-redo:after {
+					content: "\f172";
+				}
+
+				&.cacie-clear,
+				&.cacie-delete {
+					&:hover:after {
+						color: $color-wp-red;
+					}
+					&:after {
+						content: "\f335";
+					}
+				}
+
+				&:last-child {
+					margin-right: 0;
+				}
+
+				&:hover {
+					@extend .cacie-action-icon.focus;
+				}
+			}
+
+			// Editable Field
+			.cacie-editable {
+				cursor: pointer;
+				display: inline-block;
+				position: relative;
+				padding-right: 4px;
+				word-break: break-all;
+
+				&.bg-transition {
+					/*background-color: $color-wp-yellow;
+					-webkit-transition: background-color 1400ms ease-out;
+					-moz-transition: background-color 1400ms ease-out;
+					-o-transition: background-color 1400ms ease-out;
+					-ms-transition: background-color 1400ms ease-out;
+					transition: background-color 1400ms ease-out;*/
+				}
+			}
+
+			// Order status column
+			&.column-order_status .inner {
+				display: inline-block;
+			}
+
+			// Comment status
+			&.cacie-editable-togglable .cacie-editable img {
+				cursor: pointer;
+			}
+
+			// Textarea
+			&.cacie-editable-textarea {
+
+				span.cacie-editable {
+					white-space: normal;
+				}
+				textarea.form-control {
+					min-width: 280px;
+				}
+				.editable-buttons {
+					text-align: right;
+					display: block;
+					margin: 10px 0 0 0;
+				}
+			}
+
+			// Media
+			&.cacie-editable-media {
+				 .cacie-editable {
+					display: inline-block;
+					width: 100%;
+
+					.cacie-item {
+						display: block;
+						position: relative;
+						float: left;
+						margin-right: 8px;
+						margin-bottom: 8px;
+
+						img {
+							display: block;
+						}
+
+						.cacie-item-actions {
+							position: absolute;
+							top: 5px;
+							left: 5px;
+						}
+					}
+				}
+
+				&.cacie-nonempty {
+					.cacie-cell-actions {
+						position: absolute;
+						top: 5px;
+						left: 5px;
+						float: none;
+
+						.cacie-separator {
+							display: block;
+						}
+					}
+
+					.cacie-cell-action {
+						@extend .cacie-action-icon.active;
+						opacity: 0.85;
+						margin-right: 6px;
+
+						&:hover {
+							@extend .cacie-action-icon.focus;
+						}
+
+						&.cacie-undo,
+						&.cacie-redo {
+							float: right;
+						}
+					}
+
+					&.cacie-multiple .cacie-cell-actions {
+						right: 5px;
+						left: auto;
+					}
+				}
+
+				&.cacie-empty {
+					.cacie-separator {
+						display: none;
+					}
+				}
+
+				&:hover .cacie-cell-action {
+					opacity: 1;
+				}
+			}
+
+			&:hover {
+				.cacie-cell-action {
+					@extend .cacie-action-icon.active;
+
+					&:hover {
+						@extend .cacie-action-icon.focus;
+					}
+				}
+			}
+		}
+
+		// Ajax loader
+		.spinner.cacie-ajax-loading {
+			display: inline-block;
+			float: none;
+			position: absolute;
+			margin-top: -2px;
+			z-index: 100;
+		}
+	}
+
+	// TODO: move to ACF add-on
+	.cac-subfield {
+		display: inline-block;
+
+		&.cac-subfield-newline {
+			display: block;
+		}
+	}
+}
+
+/**
+ * Datepicker
+ * ----------------------------------------------------------------------------
+ */
+.datepicker {
+	padding: 15px;
+
+	.prev {
+		&:before {
+			content: "\f141";
+			display: inline-block;
+			-webkit-font-smoothing: antialiased;
+			font: normal 20px/1 'dashicons';
+			vertical-align: top;
+		}
+	}
+	.next {
+		&:before {
+			content: "\f139";
+			display: inline-block;
+			-webkit-font-smoothing: antialiased;
+			font: normal 20px/1 'dashicons';
+			vertical-align: top;
+		}
+	}
+}
+
+
+
+/**
+ * Inline edit
+ * ----------------------------------------------------------------------------
+ */
+.editable-container {
+	.btn.btn-primary {
+		&:hover {
+			background: #008ec2;
+			border-color: #006799;
+		}
+	}
+}
+.editable-input {
+	label {
+		margin: 4px 0;
+		width: 100px;
+	}
+
+	input[type="checkbox"] {
+		margin-top: 0;
+		margin-left: 2px;
+	}
+
+	.price-schedule {
+		display: none;
+	}
+
+	.small-text {
+		width: 65px;
+	}
+}
+
+.select2-drop {
+	z-index: 9999;
+}
+
+@media screen and (max-width: 782px) {
+	.wp-list-table #the-list {
+		.is-expanded td.cacie-editable-container {
+			overflow: visible;
+			min-height: 30px;
+
+			.editable-container.popover {
+				position: relative;
+				margin-left: calc( -30vw );
+				width: calc(85vw - 30px);
+				left: 0!important;
+
+				.arrow {
+					display: none;
+				}
+				.editable-input {
+					width: 100%;
+
+					.select2-container {
+						width: 100%!important;
+					}
+				}
+				.editable-buttons {
+					clear: both;
+					display: block;
+					margin-left: 0; margin-top: 7px;
+				}
+
+				+ .cacie-cell-actions {
+					display: none!important;
+				}
+			}
+
+			&.column-attachment.cacie-nonempty {
+				.cacie-cell-actions {
+					position: relative;
+					left: 0;
+					top: 0;
+					float: none;
+				}
+			}
+		}
+	}
+
+}

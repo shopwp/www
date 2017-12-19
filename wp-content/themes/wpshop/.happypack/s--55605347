@@ -92,9 +92,9 @@ function initAccordions($) {
     $(this).toggleClass('is-open');
 
     if ($(this).hasClass('is-open')) {
-      $(this).find('.fa').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+      $(this).find('[data-icon]').removeClass('fas fa-plus-square').addClass('fas fa-minus-square');
     } else {
-      $(this).find('.fa').removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+      $(this).find('[data-icon]').removeClass('fas fa-minus-square').addClass('fas fa-plus-square');
     }
   });
 }

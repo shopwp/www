@@ -1,0 +1,12 @@
+/* =Button
+-------------------------------------------------------------- */
+a.reset-sorting.disabled {
+  cursor: default;
+  opacity: 0.6; }
+
+.wrap .tablenav.top a.reset-sorting {
+  top: 2px;
+  display: inline-block;
+  vertical-align: middle;
+  float: left;
+  margin-bottom: 4px; }

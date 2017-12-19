@@ -887,31 +887,41 @@ abstract class GFFeedAddOn extends GFAddOn {
 	/**
 	 * Duplicates the feed.
 	 *
-	 * @param int|array $id The ID of the feed to be duplicated or the feed object when duplicating a form.
-	 * @param mixed $new_form_id False when using feed actions or the ID of the new form when duplicating a form.
+	 * @since  1.9.15
+	 * @access public
+	 *
+	 * @param int|array $id          The ID of the feed to be duplicated or the feed object when duplicating a form.
+	 * @param mixed     $new_form_id False when using feed actions or the ID of the new form when duplicating a form.
+	 *
+	 * @uses   GFFeedAddOn::can_duplicate_feed()
+	 * @uses   GFFeedAddOn::get_feed()
+	 * @uses   GFFeedAddOn::insert_feed()
+	 * @uses   GFFeedAddOn::is_unique_feed_name()
+	 *
+	 * @return int New feed ID.
 	 */
 	public function duplicate_feed( $id, $new_form_id = false ) {
 
-		/* Get original feed. */
+		// Get original feed.
 		$original_feed = is_array( $id ) ? $id : $this->get_feed( $id );
 
-		/* If feed doesn't exist, exit. */
+		// If feed doesn't exist, exit.
 		if ( ! $original_feed || ! $this->can_duplicate_feed( $original_feed ) ) {
 			return;
 		}
 
-		/* Get feed name key. */
+		// Get feed name key.
 		$feed_name_key = rgars( $original_feed, 'meta/feed_name' ) ? 'feed_name' : 'feedName';
 
-		/* Make sure the new feed name is unique. */
-		$count = 2;
+		// Make sure the new feed name is unique.
+		$count     = 2;
 		$feed_name = rgars( $original_feed, 'meta/' . $feed_name_key ) . ' - ' . esc_html__( 'Copy 1', 'gravityforms' );
 		while ( ! $this->is_unique_feed_name( $feed_name, $original_feed['form_id'] ) ) {
 			$feed_name = rgars( $original_feed, 'meta/' . $feed_name_key ) . ' - ' . sprintf( esc_html__( 'Copy %d', 'gravityforms' ), $count );
-			$count ++;
+			$count++;
 		}
 
-		/* Copy the feed meta. */
+		// Copy the feed meta.
 		$meta                   = $original_feed['meta'];
 		$meta[ $feed_name_key ] = $feed_name;
 
@@ -919,8 +929,8 @@ abstract class GFFeedAddOn extends GFAddOn {
 			$new_form_id = $original_feed['form_id'];
 		}
 
-		/* Create the new feed. */
-		$this->insert_feed( $new_form_id, $original_feed['is_active'], $meta );
+		// Create the new feed.
+		return $this->insert_feed( $new_form_id, $original_feed['is_active'], $meta );
 
 	}
 
