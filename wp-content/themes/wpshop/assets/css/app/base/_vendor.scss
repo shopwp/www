@@ -169,16 +169,35 @@ EDD
 
 #edd_sl_license_keys2 .edd_sl_license_row td {
   padding-bottom: 0;
+  width: auto;
 }
 
-#edd_sl_license_keys .edd_sl_license_row td {
-  vertical-align: middle;
-}
 
 #edd_user_history td.edd_download_download_files {
   padding-bottom: 2em;
 }
 
+#edd_sl_license_keys {
+
+  .edd_sl_license_row td {
+    width: auto;
+
+    &:first-child {
+      width: 410px;
+    }
+
+  }
+
+  .fa-key {
+    margin-top: 0;
+    margin-left: $space-m;
+  }
+
+  .edd_sl_license_row td {
+    vertical-align: middle;
+  }
+
+}
 
 /*
 
@@ -439,11 +458,11 @@ EDD
 .edd_sl_license_status {}
 
 .edd-sl-inactive {
-  color: color(error);
+  color: color(error-dark);
 }
 
 .edd-sl-active {
-  color: color(success);
+  color: green;
 }
 
 
