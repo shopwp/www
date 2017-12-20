@@ -9,7 +9,7 @@
 .faq-question {
   padding: $space-l 0;
   font-size: $font-l;
-  border-bottom: 1px solid color(light-grey);
+  border-bottom: 1px solid color(medium-grey);
 
   .fa-plus-square,
   .fa-minus-square {
@@ -20,7 +20,7 @@
 
   &:hover {
     cursor: pointer;
-    opacity: $opacity-soft;
+    color: lighten(color(black), 60%);
   }
 
   @include device(700, 'max') {
@@ -34,6 +34,10 @@
   margin-top: 0;
   padding-top: $space-l;
   display: none;
+
+  ol {
+    margin-left: $space-l*2;
+  }
 
   &.is-open {
     margin-bottom: $space-xxl;

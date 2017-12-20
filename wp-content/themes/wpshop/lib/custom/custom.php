@@ -121,9 +121,7 @@ function edd_changelog_callback($atts) {
 	);
 
 	$shortcode_atts = shortcode_atts( $shortcode_atts, $atts );
-error_log('---- $shortcode_atts -----');
-error_log(print_r($shortcode_atts, true));
-error_log('---- /$shortcode_atts -----');
+
   // Extract each att to a variable
 	extract( $shortcode_atts );
 
