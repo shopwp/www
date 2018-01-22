@@ -2050,6 +2050,11 @@ class GFFormDetail {
 						<option value="large"><?php esc_html_e( 'Large', 'gravityforms' ); ?></option>
 					</select>
 				</li>
+
+	            <?php
+	            do_action( 'gform_field_appearance_settings', 500, $form_id );
+	            ?>
+
             </ul>
         </div>
 

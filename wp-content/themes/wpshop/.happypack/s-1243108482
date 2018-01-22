@@ -88,6 +88,11 @@ function initPlugins($) {
       return this.substr(Position - searchStr.length, searchStr.length) === searchStr;
     };
   }
+
+  $(document).ready(function () {
+    // Target your .container, .wrapper, .post, etc.
+    // $(".entry-content p").fitVids();
+  });
 }
 
 exports.initPlugins = initPlugins;

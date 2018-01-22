@@ -198,7 +198,12 @@ class GFLogging extends GFAddOn {
 					$redirect_url = remove_query_arg( array( 'delete_log', 'gform_delete_log' ) );
 					$redirect_url = add_query_arg( array( 'deleted' => '1' ), $redirect_url );
 					$redirect_url = esc_url_raw( $redirect_url );
-					wp_safe_redirect( $redirect_url );
+
+					?>
+					<script type="text/javascript">
+						document.location.href = <?php echo json_encode( $redirect_url ); ?>;
+					</script>
+					<?php
 					die();
 
 				} else {

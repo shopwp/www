@@ -1,4 +1,10 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 2.3-rc-2
+    - Fixed an issue where the database migration can fail if the collation of the new tables is different to the existing tables.
+    - Fixed a notice in the conversions column of the forms list for some forms with PHP 7.1.
+    - Fixed an issue with logging in the background processor.
+
+------------------------------------------------------------------------------------------------------------------
 Version 2.3-rc-1
     - Updated the migration batch size from 10k to 20k to speed up the migration for larger sites.
     - Fixed some issues with the background process lock which may cause the upgrade to take longer than expected.

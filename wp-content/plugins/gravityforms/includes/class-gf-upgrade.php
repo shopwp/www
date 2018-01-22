@@ -364,12 +364,7 @@ class GF_Upgrade {
 
 		$tables = array();
 
-		if ( ! empty( $wpdb->charset ) ) {
-			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-		}
-		if ( ! empty( $wpdb->collate ) ) {
-			$charset_collate .= " COLLATE $wpdb->collate";
-		}
+		$charset_collate = $wpdb->get_charset_collate();
 
 		$form_table_name            = $wpdb->prefix . 'gf_form';
 		$tables[ $form_table_name ] =
@@ -792,13 +787,15 @@ WHERE ld.id NOT IN ( SELECT em.id FROM {$entry_meta_table} em )";
 		$lead_meta_table = GFFormsModel::get_lead_meta_table_name();
 		$entry_meta_table = GFFormsModel::get_entry_meta_table_name();
 
+		$collate = ! empty( $wpdb->collate ) ? " COLLATE {$wpdb->collate}" : '';
+
 		$lead_meta_ids_sql = "
 SELECT
   id
 FROM
   {$lead_meta_table} lm
 WHERE NOT EXISTS
-      (SELECT * FROM {$entry_meta_table} em WHERE em.entry_id = lm.lead_id AND em.meta_key = lm.meta_key)
+      (SELECT * FROM {$entry_meta_table} em WHERE em.entry_id = lm.lead_id AND em.meta_key = lm.meta_key {$collate})
 LIMIT {$limit}";
 
 		do {
@@ -829,7 +826,7 @@ SELECT COUNT(id)
 FROM
   {$lead_meta_table} lm
 WHERE NOT EXISTS
-      (SELECT * FROM {$entry_meta_table} em WHERE em.entry_id = lm.lead_id AND em.meta_key = lm.meta_key)";
+      (SELECT * FROM {$entry_meta_table} em WHERE em.entry_id = lm.lead_id AND em.meta_key = lm.meta_key {$collate})";
 					$remaining = $wpdb->get_var( $sql_remaining );
 					if ( $remaining > 0 ) {
 						$this->update_upgrade_status( sprintf( esc_html__( 'Migrating leads. Step 3/3 Migrating entry meta. %d rows remaining.', 'gravityforms' ), $remaining ) );
@@ -855,13 +852,14 @@ WHERE NOT EXISTS
 
 		$incomplete_submissions_table = GFFormsModel::get_incomplete_submissions_table_name();
 		$draft_submissions_table = GFFormsModel::get_draft_submissions_table_name();
+		$collate = ! empty( $wpdb->collate ) ? " COLLATE {$wpdb->collate}" : '';
 
 		$sql = "
 INSERT INTO {$draft_submissions_table}
 SELECT *
 FROM
   {$incomplete_submissions_table} insub
-WHERE insub.uuid NOT IN
+WHERE insub.uuid {$collate} NOT IN
       ( SELECT uuid FROM {$draft_submissions_table} )";
 
 		$wpdb->query( $sql );
@@ -1030,7 +1028,7 @@ WHERE ln.id NOT IN
 
 		// The format the version info changed to JSON. Make sure the old format is not cached.
 		if ( version_compare( $versions['current_version'], '1.8.0.3', '<' ) ) {
-			delete_transient( 'gform_update_info' );
+			delete_option( 'gform_version_info' );
 		}
 
 		//fix leading and trailing spaces in Form objects and entry values

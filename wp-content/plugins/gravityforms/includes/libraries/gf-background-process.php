@@ -96,7 +96,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		}
 
 		/**
-		 * Dispatch
+		 * Dispatches the queued tasks to Admin Ajax for processing and schedules a cron job in case processing fails.
 		 *
 		 * @since 2.2
 		 *
@@ -105,17 +105,41 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		 * @return array|WP_Error
 		 */
 		public function dispatch() {
+			GFCommon::log_debug( sprintf( '%s(): Running for %s.', __METHOD__, $this->action ) );
 
 			if ( $this->is_queue_empty() ) {
 				$this->clear_scheduled_event();
-				return new WP_Error( 'queue_empty', 'Nothing left to process' );
+
+				$dispatched = new WP_Error( 'queue_empty', 'Nothing left to process' );
+			} else {
+				// Schedule the cron healthcheck.
+				$this->schedule_event();
+
+				// Perform remote post.
+				$dispatched = parent::dispatch();
 			}
 
-			// Schedule the cron healthcheck.
-			$this->schedule_event();
+			if ( is_wp_error( $dispatched ) ) {
+				GFCommon::log_debug( sprintf( '%s(): Unable to dispatch tasks to Admin Ajax: %s', __METHOD__, $dispatched->get_error_message() ) );
+			}
 
-			// Perform remote post.
-			return parent::dispatch();
+			return $dispatched;
+		}
+
+		/**
+		 * Get the dispatch request arguments.
+		 *
+		 * @since 2.3-rc-2
+		 *
+		 * @return array
+		 */
+		protected function get_post_args() {
+			$post_args = parent::get_post_args();
+
+			// Blocking prevents some issues such as cURL connection errors being reported.
+			unset( $post_args['blocking'] );
+
+			return $post_args;
 		}
 
 		/**
@@ -220,6 +244,8 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		 * @since 2.2
 		 */
 		public function maybe_handle() {
+			GFCommon::log_debug( sprintf( '%s(): Running for %s.', __METHOD__, $this->action ) );
+
 			// Don't lock up other requests while processing
 			session_write_close();
 
@@ -385,6 +411,8 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 					wp_die();
 				}
 
+				GFCommon::log_debug( sprintf( '%s(): Processing batch for %s.', __METHOD__, $this->action ) );
+
 				foreach ( $batch->data as $key => $value ) {
 
 					$task = $this->task( $value );
@@ -408,6 +436,8 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 					$this->delete( $batch->key );
 				}
 			} while ( ! $this->time_exceeded() && ! $this->memory_exceeded() && ! $this->is_queue_empty() );
+
+			GFCommon::log_debug( sprintf( '%s(): Batch completed for %s.', __METHOD__, $this->action ) );
 
 			$this->unlock_process();
 
@@ -548,6 +578,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		 * @since 2.2
 		 */
 		public function handle_cron_healthcheck() {
+			GFCommon::log_debug( sprintf( '%s(): Running for %s.', __METHOD__, $this->action ) );
 
 			if ( $this->is_process_running() ) {
 				// Background process already running.
@@ -573,7 +604,8 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 		 */
 		protected function schedule_event() {
 			if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
-				wp_schedule_event( time(), $this->cron_interval_identifier, $this->cron_hook_identifier );
+				GFCommon::log_debug( sprintf( '%s(): Scheduling cron event for %s.', __METHOD__, $this->action ) );
+				wp_schedule_event( time() + 10, $this->cron_interval_identifier, $this->cron_hook_identifier );
 			}
 		}
 
@@ -586,6 +618,7 @@ if ( ! class_exists( 'GF_Background_Process' ) ) {
 			$timestamp = wp_next_scheduled( $this->cron_hook_identifier );
 
 			if ( $timestamp ) {
+				GFCommon::log_debug( sprintf( '%s(): Clearing cron event for %s.', __METHOD__, $this->action ) );
 				wp_unschedule_event( $timestamp, $this->cron_hook_identifier );
 			}
 		}

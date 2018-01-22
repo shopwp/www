@@ -98,7 +98,7 @@ class GFExport {
 			GFCommon::log_debug( __METHOD__ . '(): Import Failed. Invalid form objects.' );
 
 			return 0;
-		} else if ( version_compare( $forms['version'], self::$min_import_version, '<' ) ) {
+		} else if ( ! rgar( $forms, 'version' ) || version_compare( $forms['version'], self::$min_import_version, '<' ) ) {
 			GFCommon::log_debug( __METHOD__ . '(): Import Failed. The JSON version is not compatible with the current Gravity Forms version.' );
 
 			return - 1;
@@ -797,9 +797,13 @@ class GFExport {
 				foreach ( $fields as $field_id ) {
 					switch ( $field_id ) {
 						case 'date_created' :
-							$lead_gmt_time   = mysql2date( 'G', $lead['date_created'] );
-							$lead_local_time = GFCommon::get_local_timestamp( $lead_gmt_time );
-							$value           = date_i18n( 'Y-m-d H:i:s', $lead_local_time, true );
+						case 'payment_date' :
+							$value = $lead[ $field_id ];
+							if ( $value ) {
+								$lead_gmt_time   = mysql2date( 'G', $value );
+								$lead_local_time = GFCommon::get_local_timestamp( $lead_gmt_time );
+								$value           = date_i18n( 'Y-m-d H:i:s', $lead_local_time, true );
+							}
 							break;
 						default :
 							$field = RGFormsModel::get_field( $form, $field_id );

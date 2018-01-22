@@ -644,7 +644,7 @@ class GF_Form_List_Table extends WP_List_Table {
 	function column_conversion( $form ) {
 		$conversion = '0%';
 		if ( $form->view_count > 0 ) {
-			$conversion = ( number_format( $form->entry_count / $form->view_count, 3 ) * 100 ) . '%';
+			$conversion = ( (float) number_format( $form->entry_count / $form->view_count, 3 ) * 100 ) . '%';
 		}
 		echo $conversion;
 	}
@@ -763,24 +763,29 @@ class GF_Form_List_Table extends WP_List_Table {
 			$form_id = rgpost( 'single_action_argument' );
 			switch ( $single_action ) {
 				case 'trash' :
-					RGFormsModel::trash_form( $form_id );
-					$message = __( 'Form moved to the trash.', 'gravityforms' );
+					$trashed = RGFormsModel::trash_form( $form_id );
+					$message = is_wp_error( $trashed ) ? $trashed->get_error_message() : __( 'Form moved to the trash.', 'gravityforms' );
+					$message_class = is_wp_error( $trashed ) ? 'error' : 'updated';
 					break;
 				case 'restore' :
-					RGFormsModel::restore_form( $form_id );
-					$message = __( 'Form restored.', 'gravityforms' );
+					$restored = RGFormsModel::restore_form( $form_id );
+					$message = is_wp_error( $restored ) ? $restored->get_error_message() : __( 'Form restored.', 'gravityforms' );
+					$message_class = is_wp_error( $restored ) ? 'error' : 'updated';
 					break;
 				case 'delete' :
 					if ( GFCommon::current_user_can_any( 'gravityforms_delete_forms' ) ) {
-						RGFormsModel::delete_form( $form_id );
-						$message = __( 'Form deleted.', 'gravityforms' );
+						$deleted = RGFormsModel::delete_form( $form_id );
+					    $message = is_wp_error( $deleted ) ? $deleted->get_error_message() : __( 'Form deleted.', 'gravityforms' );
+					    $message_class = is_wp_error( $deleted ) ? 'error' : 'updated';
 					} else {
 						$message = __( "You don't have adequate permission to delete forms.", 'gravityforms' );
+						$message_class = 'error';
 					}
 					break;
 				case 'duplicate' :
-					RGFormsModel::duplicate_form( $form_id );
-					$message = __( 'Form duplicated.', 'gravityforms' );
+					$duplicated = RGFormsModel::duplicate_form( $form_id );
+					$message = is_wp_error( $duplicated ) ? $duplicated->get_error_message() : __( 'Form duplicated.', 'gravityforms' );
+					$message_class = is_wp_error( $duplicated ) ? 'error' : 'updated';
 					break;
 
 			}
@@ -792,13 +797,15 @@ class GF_Form_List_Table extends WP_List_Table {
 
 					check_admin_referer( "gf_delete_form_{$form_id}" );
 
-					RGFormsModel::trash_form( $form_id );
-					$message = __( 'Form moved to the trash.', 'gravityforms' );
+					$trashed = RGFormsModel::trash_form( $form_id );
+					$message = is_wp_error( $trashed ) ? $trashed->get_error_message() : __( 'Form moved to the trash.', 'gravityforms' );
+					$message_class = is_wp_error( $trashed ) ? 'error' : 'updated';
 					break;				
 				case 'duplicate' :
 					check_ajax_referer( "gf_duplicate_form_{$form_id}" );
-					RGFormsModel::duplicate_form( $form_id );
-					$message = __( 'Form duplicated.', 'gravityforms' );
+					$duplicated = RGFormsModel::duplicate_form( $form_id );
+					$message = is_wp_error( $duplicated ) ? $duplicated->get_error_message() : __( 'Form duplicated.', 'gravityforms' );
+					$message_class = is_wp_error( $duplicated ) ? 'error' : 'updated';
 					break;
 
 			}
@@ -868,7 +875,7 @@ class GF_Form_List_Table extends WP_List_Table {
 
 		if ( ! empty( $message ) ) {
 
-			echo '<div id="message" class="updated notice is-dismissible"><p>' . $message . '</p></div>';
+			echo '<div id="message" class="' . ( isset( $message_class ) ? $message_class : 'updated' ) . ' notice is-dismissible"><p>' . $message . '</p></div>';
 		};
 	}
 

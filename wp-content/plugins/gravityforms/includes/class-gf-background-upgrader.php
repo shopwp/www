@@ -29,44 +29,6 @@ class GF_Background_Upgrader extends GF_Background_Process {
 	protected $action = 'gf_upgrader';
 
 	/**
-	 * Dispatch upgrader.
-	 *
-	 * Updater will still run via cron job if this fails for any reason.
-	 *
-	 * @return array|WP_Error
-	 */
-	public function dispatch() {
-		$dispatched = parent::dispatch();
-
-		if ( is_wp_error( $dispatched ) ) {
-			GFCommon::log_debug( sprintf( '%s(): Unable to dispatch upgrader: %s', __METHOD__, $dispatched->get_error_message() ) );
-		}
-
-		return $dispatched;
-	}
-
-	/**
-	 * Handle cron healthcheck
-	 *
-	 * Restart the background process if not already running
-	 * and data exists in the queue.
-	 */
-	public function handle_cron_healthcheck() {
-		if ( $this->is_process_running() ) {
-			// Background process already running.
-			return;
-		}
-
-		if ( $this->is_queue_empty() ) {
-			// No data to process.
-			$this->clear_scheduled_event();
-			return;
-		}
-
-		$this->handle();
-	}
-
-	/**
 	 * Is the queue empty for all blogs?
 	 *
 	 * @since 2.3
@@ -75,15 +37,6 @@ class GF_Background_Upgrader extends GF_Background_Process {
 	 */
 	public function is_queue_empty() {
 		return parent::is_queue_empty();
-	}
-
-	/**
-	 * Schedule fallback event.
-	 */
-	protected function schedule_event() {
-		if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
-			wp_schedule_event( time() + 10, $this->cron_interval_identifier, $this->cron_hook_identifier );
-		}
 	}
 
 	/**

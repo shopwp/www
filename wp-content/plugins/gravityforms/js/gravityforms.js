@@ -956,6 +956,9 @@ function gformInitCurrencyFormatFields(fieldList){
 
 var GFCalc = function(formId, formulaFields){
 
+	this.formId = formId;
+	this.formulaFields = formulaFields;
+
     this.patt = /{[^{]*?:(\d+(\.\d+)?)(:(.*?))?}/i;
     this.exprPatt = /^[0-9 -/*\(\)]+$/i;
     this.isCalculating = {};
@@ -964,11 +967,8 @@ var GFCalc = function(formId, formulaFields){
 
         var calc = this;
         jQuery(document).bind("gform_post_conditional_logic", function(){
-            for(var i=0; i<formulaFields.length; i++) {
-                var formulaField = jQuery.extend({}, formulaFields[i]);
-                calc.runCalc(formulaField, formId);
-            }
-        });
+            calc.runCalcs( formId, formulaFields );
+        } );
 
         for(var i=0; i<formulaFields.length; i++) {
             var formulaField = jQuery.extend({}, formulaFields[i]);
@@ -982,7 +982,7 @@ var GFCalc = function(formId, formulaFields){
 
         var calcObj      = this,
             field        = jQuery('#field_' + formId + '_' + formulaField.field_id),
-            formulaInput = jQuery('#input_' + formId + '_' + formulaField.field_id),
+            formulaInput = field.hasClass( 'gfield_price' ) ? jQuery( '#ginput_base_price_' + formId + '_' + formulaField.field_id ) : jQuery( '#input_' + formId + '_' + formulaField.field_id ),
             previous_val = formulaInput.val(),
             formula      = gform.applyFilters( 'gform_calculation_formula', formulaField.formula, formulaField, formId, calcObj ),
             expr         = calcObj.replaceFieldTags( formId, formula, formulaField ).replace(/(\r\n|\n|\r)/gm,""),
@@ -1044,8 +1044,8 @@ var GFCalc = function(formId, formulaFields){
 
         // if this is a calculation product, handle differently
         if(field.hasClass('gfield_price')) {
-            formulaInput.text(result);
-            jQuery('#ginput_base_price_' + formId + '_' + formulaField.field_id).val(result).trigger('change');
+            jQuery('#input_' + formId + '_' + formulaField.field_id).text(result);
+            formulaInput.val(result).trigger('change');
             gformCalculateTotalPrice(formId);
         } else {
             formulaInput.val(result).trigger('change');
@@ -1053,6 +1053,12 @@ var GFCalc = function(formId, formulaFields){
 
     }
 
+    this.runCalcs = function( formId, formulaFields ) {
+	    for(var i=0; i<formulaFields.length; i++) {
+		    var formulaField = jQuery.extend({}, formulaFields[i]);
+		    this.runCalc( formulaField, formId );
+	    }
+    }
 
     this.bindCalcEvents = function(formulaField, formId) {
 
@@ -1331,17 +1337,30 @@ function renderRecaptcha() {
 	            'tabindex': $elem.data( 'tabindex' )
             };
 
-        if( ! $elem.is( ':empty' ) ) {
+        if ( ! $elem.is( ':empty' ) ) {
             return;
         }
 
-        if( $elem.data( 'stoken' ) ) {
+        if ( $elem.data( 'stoken' ) ) {
             parameters.stoken = $elem.data( 'stoken' );
         }
 
+	    /**
+	     * Allows a custom callback function to be executed when the user successfully submits the captcha.
+	     *
+	     * @since 2.2.5.20
+	     *
+	     * @param string|false callback The name of the callback function to be executed when the user successfully submits the captcha.
+	     * @param object       $elem    The jQuery object containing the div element with the ginput_recaptcha class for the current reCaptcha field.
+	     */
+	    var callback = gform.applyFilters( 'gform_recaptcha_callback', false, $elem );
+	    if ( callback ) {
+		    parameters.callback = callback;
+	    }
+
         grecaptcha.render( this.id, parameters );
 
-	    if( parameters.tabindex ) {
+	    if ( parameters.tabindex ) {
 		    $elem.find( 'iframe' ).attr( 'tabindex', parameters.tabindex );
 	    }
 

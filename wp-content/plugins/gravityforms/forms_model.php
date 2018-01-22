@@ -1488,6 +1488,11 @@ class GFFormsModel {
 	 * @param int $form_id The form ID.
 	 */
 	public static function delete_views( $form_id ) {
+
+		if ( gf_upgrade()->get_submissions_block() ) {
+			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
+		}
+
 		global $wpdb;
 
 		$form_view_table = self::get_form_view_table_name();
@@ -1505,6 +1510,11 @@ class GFFormsModel {
 	}
 
 	public static function delete_form( $form_id ) {
+
+		if ( gf_upgrade()->get_submissions_block() ) {
+			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
+		}
+
 		global $wpdb;
 
         /**
@@ -1540,6 +1550,11 @@ class GFFormsModel {
 	}
 
 	public static function trash_form( $form_id ) {
+
+		if ( gf_upgrade()->get_submissions_block() ) {
+			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
+		}
+
 		global $wpdb;
 		$form_table_name = self::get_form_table_name();
 		$sql             = $wpdb->prepare( "UPDATE $form_table_name SET is_trash=1 WHERE id=%d", $form_id );
@@ -1565,6 +1580,11 @@ class GFFormsModel {
 	}
 
 	public static function restore_form( $form_id ) {
+
+		if ( gf_upgrade()->get_submissions_block() ) {
+			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
+		}
+
 		global $wpdb;
 		$form_table_name = self::get_form_table_name();
 		$sql             = $wpdb->prepare( "UPDATE $form_table_name SET is_trash=0 WHERE id=%d", $form_id );
@@ -1599,7 +1619,9 @@ class GFFormsModel {
 	 */
 	public static function duplicate_form( $form_id ) {
 
-		global $wpdb;
+		if ( gf_upgrade()->get_submissions_block() ) {
+			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
+		}
 
 		// Get form to be duplicated.
 		$form = self::get_form( $form_id );
@@ -3369,11 +3391,11 @@ class GFFormsModel {
 
 		// special format for Post Category fields
 		if ( $field->type == 'post_category' ) {
-
-			$full_values = array();
+			$is_multiselect = $field->inputType === 'multiselect';
+			$full_values    = array();
 
 			if ( ! is_array( $value ) ) {
-				$value = explode( ',', $value );
+				$value = $is_multiselect ? $field->to_array( $value ) : explode( ',', $value );
 			}
 
 			foreach ( $value as $cat_id ) {
@@ -3381,7 +3403,7 @@ class GFFormsModel {
 				$full_values[] = ! is_wp_error( $cat ) && is_object( $cat ) ? $cat->name . ':' . $cat_id : '';
 			}
 
-			$value = implode( ',', $full_values );
+			$value = $is_multiselect ? $field->to_string( $full_values ) : implode( ',', $full_values );
 		}
 
 		//do not save price fields with blank price
@@ -6080,6 +6102,10 @@ function gform_get_meta_values_for_entries( $entry_ids, $meta_keys ) {
 function gform_update_meta( $entry_id, $meta_key, $meta_value, $form_id = null ) {
 	global $wpdb, $_gform_lead_meta;
 
+	if ( gf_upgrade()->get_submissions_block() ) {
+		return;
+	}
+
 	if ( intval( $entry_id ) <= 0 ) {
 		return;
 	}
@@ -6133,6 +6159,10 @@ function gform_update_meta( $entry_id, $meta_key, $meta_value, $form_id = null )
 function gform_add_meta( $entry_id, $meta_key, $meta_value, $form_id = null ) {
 	global $wpdb, $_gform_lead_meta;
 
+	if ( gf_upgrade()->get_submissions_block() ) {
+		return;
+	}
+
 	if ( intval( $entry_id ) <= 0 ) {
 		return;
 	}
@@ -6172,6 +6202,10 @@ function gform_add_meta( $entry_id, $meta_key, $meta_value, $form_id = null ) {
  */
 function gform_delete_meta( $entry_id, $meta_key = '' ) {
 	global $wpdb, $_gform_lead_meta;
+
+	if ( gf_upgrade()->get_submissions_block() ) {
+		return;
+	}
 
 	if ( version_compare( GFFormsModel::get_database_version(), '2.3-dev-1', '<' ) ) {
 		GF_Forms_Model_Legacy::gform_delete_meta( $entry_id, $meta_key );
