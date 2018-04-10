@@ -7,13 +7,11 @@ wp-config.php
 node_modules
 npm-debug.log
 .hot-update.json
+.happypack
 
 # Content files
 wp-content/uploads
-
-# useless plugins file
-wp-content/plugins/hello.php
-wp-content/plugins/wp-shopify
+wp-content/plugins
 
 # packaged files
 *.7z

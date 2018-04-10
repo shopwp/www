@@ -516,8 +516,8 @@ class GF_Form_List_Table extends WP_List_Table {
 		) );
 
 
-		if ( in_array( $sort_column, array( 'view_count', 'lead_count', 'conversion' ) ) ) {
-			usort( $forms, array( $this, 'compare_' . $sort_column . '_'  . $sort_direction ) );
+		if ( in_array( $sort_column, array( 'view_count', 'entry_count', 'conversion' ) ) ) {
+			usort( $forms, array( $this, 'compare_' . $sort_column . '_' . $sort_direction ) );
 		}
 
 		$offset = ( $this->get_pagenum() - 1 ) * $per_page;

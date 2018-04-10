@@ -1,3 +1,5 @@
+<h1>docs.php</h1>
+
 <!-- <section class="doc-section l-col l-col-left">
   <h1>Heading 1</h1>
   <h2>Heading 2</h2>

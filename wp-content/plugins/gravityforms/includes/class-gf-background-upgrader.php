@@ -27,6 +27,17 @@ class GF_Background_Upgrader extends GF_Background_Process {
 	 * @var string
 	 */
 	protected $action = 'gf_upgrader';
+	
+	/**
+	 * Returns the data for the background upgrader.
+	 *
+	 * @since 2.3
+	 *
+	 * @return array
+	 */
+	public function get_data() {
+		return $this->data;
+	}
 
 	/**
 	 * Is the queue empty for all blogs?

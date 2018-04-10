@@ -139,6 +139,10 @@ class GF_System_Report {
 				// Loop through section items.
 				foreach ( $table['items'] as $item ) {
 
+					if ( rgar( $item, 'export_only' ) ) {
+						continue;
+					}
+
 					// Open item row.
 					echo '<tr>';
 
@@ -308,6 +312,25 @@ class GF_System_Report {
 		$wp_cron_disabled  = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
 		$alternate_wp_cron = defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON;
 
+		$args = array(
+			'timeout'   => 0.01,
+			'blocking'  => true,
+			'body'      => 'test',
+			'cookies'   => $_COOKIE,
+			'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
+		);
+
+		$query_args = array(
+			'action' => 'gf_check_background_tasks',
+			'nonce'  => wp_create_nonce( 'gf_check_background_tasks' ),
+		);
+
+		$url = add_query_arg( $query_args, admin_url( 'admin-ajax.php' ) );
+
+		$response = wp_remote_post( $url, $args );
+
+		$background_tasks = ! is_wp_error( $response ) && wp_remote_retrieve_body( $response ) == 'ok';
+
 		// Prepare system report.
 		$system_report = array(
 			array(
@@ -418,6 +441,15 @@ class GF_System_Report {
 								'label_export' => 'WordPress Alternate Cron',
 								'value'        => $alternate_wp_cron ? __( 'Yes', 'gravityforms' ) : __( 'No', 'gravityforms' ),
 								'value_export' => $alternate_wp_cron ? 'Yes' : 'No',
+							),
+							array(
+								'label'        => esc_html__( 'Background tasks', 'gravityforms' ),
+								'label_export' => 'Background tasks',
+								'type'         => 'wordpress_background_tasks',
+								'value'        => $background_tasks ? __( 'Yes', 'gravityforms' ) : __( 'No', 'gravityforms' ),
+								'value_export' => $background_tasks ? 'Yes' : 'No',
+								'is_valid'     => $background_tasks,
+
 							),
 						),
 					),
@@ -597,7 +629,7 @@ class GF_System_Report {
 		// Get display as type.
 		$type = rgar( $item, 'type' );
 
-		// Preapre value.
+		// Prepare value.
 		switch ( $type ) {
 
 			case 'csv':
@@ -731,6 +763,7 @@ class GF_System_Report {
 		// Prepare versions array.
 		$gravityforms = array(
 			array(
+				'export_only'               => true,
 				'label'                     => esc_html__( 'Registration', 'gravityforms' ),
 				'label_export'              => 'Registration',
 				'value'                     => $is_registered ? esc_html__( 'Site registered ', 'gravityforms' ) . ' ( ' . $site_key . ' ) ' : '',

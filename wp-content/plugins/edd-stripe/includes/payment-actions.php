@@ -157,11 +157,11 @@ function edds_process_stripe_payment( $purchase_data ) {
 							foreach ( $address_info as $key => $value ) {
 								switch( $key ) {
 									case 'line1':
-										$card->address_line1 = $value;
+										$card->address_line1 = ! empty( $value ) ? $value : NULL;
 										break;
 
 									case 'line2':
-										$card->address_line2 = $value;
+										$card->address_line2 = ! empty( $value ) ? $value : NULL;
 										break;
 
 									case 'city':

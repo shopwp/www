@@ -467,6 +467,10 @@ function gformGetProductQuantity(formId, productFieldId) {
         quantityInput = jQuery('#ginput_quantity_' + formId + '_' + productFieldId),
         numberFormat;
 
+    if (gformIsHidden(quantityInput)) {
+        return 0;
+    }
+
     if (quantityInput.length > 0) {
 
         quantity = quantityInput.val();
@@ -1542,7 +1546,7 @@ function gformValidateFileSize( field, max_file_size ) {
                     + '" class="ginput_preview">'
                     + htmlEncode(file.name)
                     + ' (' + size + ') <b></b> '
-                    + '<a href="javascript:void(0)" title="' + strings.cancel_upload + '" onclick=\'$this=jQuery(this); var uploader = gfMultiFileUploader.uploaders.' + up.settings.container + ';uploader.stop();uploader.removeFile(uploader.getFile("' + file.id +'"));$this.after("' + strings.cancelled + '"); uploader.start();$this.remove();\' onkeypress=\'$this=jQuery(this); var uploader = gfMultiFileUploader.uploaders.' + up.settings.container + ';uploader.stop();uploader.removeFile(uploader.getFile("' + file.id +'"));$this.after("' + strings.cancelled + '"); uploader.start();$this.remove();\'>' + strings.cancel + '</a>'
+                    + '<a href="javascript:void(0)" title="' + strings.cancel_upload + '" onclick=\'$this=jQuery(this); var uploader = gfMultiFileUploader.uploaders.' + up.settings.container.id + ';uploader.stop();uploader.removeFile(uploader.getFile("' + file.id +'"));$this.after("' + strings.cancelled + '"); uploader.start();$this.remove();\' onkeypress=\'$this=jQuery(this); var uploader = gfMultiFileUploader.uploaders.' + up.settings.container.id + ';uploader.stop();uploader.removeFile(uploader.getFile("' + file.id +'"));$this.after("' + strings.cancelled + '"); uploader.start();$this.remove();\'>' + strings.cancel + '</a>'
                     + '</div>';
 
                 $('#' + up.settings.filelist).prepend(status);
@@ -1603,7 +1607,20 @@ function gformValidateFileSize( field, max_file_size ) {
             up.refresh(); // Reposition Flash
         });
 
+		uploader.bind('ChunkUploaded', function(up, file, result) {
+			var response = $.secureEvalJSON(result.response);
+			if(response.status == "error"){
+				up.removeFile(file);
+				addMessage(up.settings.gf_vars.message_id, file.name + " - " + response.error.message);
+				$('#' + file.id ).html('');
+			}
+		});
+
         uploader.bind('FileUploaded', function(up, file, result) {
+			if( ! up.getFile(file.id) ) {
+				// The file has been removed from the queue.
+				return;
+			}
             var response = $.secureEvalJSON(result.response);
             if(response.status == "error"){
                 addMessage(up.settings.gf_vars.message_id, file.name + " - " + response.error.message);

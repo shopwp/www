@@ -1,12 +1,12 @@
-=== WP OAuth Server - CE ===
+=== WP OAuth Server ===
 
 Contributors: justingreerbbi
 Donate link: http://justin-greer.com/
-Tags: OAuth2 Service, oauth2, OAuth provider, Provider, OAuth, OAuth client, Single Sign On, SSO, OpenID Connect, OIDC, OpenID, Connect
+Tags: OAuth 2.0 Service, oauth2, OAuth 2, SSO, Single Sign On, Authentication
 Requires at least: 4.7.2
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 3.4.3
+Stable tag: 3.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,8 +14,7 @@ Create and Manage an OAuth 2.0 server powered by WordPress. Become a Single Sign
 
 == Description ==
 
-This plugin is a full OAuth 2.0 authorization server/provider for WordPress. 
-The goal of WP OAuth Server is to provide an easy to use authorization method that 3rd party platforms can use to securely authorize users from your WordPress site.
+This plugin is a full OAuth 2.0 authorization server for WordPress. The goal of WP OAuth Server is to provide an authorization method that 3rd party platforms can use to securely authorize users from your WordPress site.
 
 = Features =
 
@@ -32,15 +31,13 @@ The goal of WP OAuth Server is to provide an easy to use authorization method th
 * Refresh Token - pro
 * OpenID Connect with discovery - pro
 
-= How to Use =
+= Connect Mobile Applications to WordPress =
 
-Visit https://wp-oauth.com/support/documentation/ for detailed documentation on installing, configuring and using
-WordPress OAuth Server.
+WP OAuth Server allows you to connect a mobile application to any WordPress site. The application can then use the REST API as any given user. This feature allow allow just for a simple user login for mobile devices.
 
-= Licensing = 
+= Documentation =
 
-WP OAuth Server is free to used. Please support the project by licensing. You can view more information at
-https://wp-oauth.com.
+Visit https://wp-oauth.com/support/documentation/ for detailed documentation on installing, configuring and using WordPress OAuth Server.
 
 = Minimum Requirements =
 
@@ -95,17 +92,33 @@ For any upgrade or modification, PLEASE PLEASE PLEASE make a full backup of your
 
 == Changelog ==
 
+= 3.4.5 =
+*Release Date - March 6 2018*
+
+* Updated code for 7.2 stricter standards
+
+= 3.4.4 =
+*Release Date - 1 December 2017*
+
+* FIX: Undefined notice error
+
 = 3.4.3 =
+*Release Date - 26 October 2017*
+
 * FIX: Notice Error
 * ENHANCEMENT: UX while editing clients
 * UPDATE: Base code updates
 
 = 3.4.2 =
+*Release Date - 23 October 2017*
+
 * NEW: Updated entire code base to match
 * FIX: License error using older PHP version
 * FIX: Clash with thickbox in admin area
 
 = 3.4.1 =
+*Release Date - 13 october 2017*
+
 * NEW: Added prompt parameter support for "login", "consent", and "none"
 * NEW: Added User consent window for Authorization code flow.
 * NEW: Added filter "wo_use_grant_request" to enable user consent dialog. Boolean.

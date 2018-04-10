@@ -79,6 +79,18 @@ class GF_Feed_Processor extends GF_Background_Process {
 		$entry = GFAPI::get_entry( $item['entry_id'] );
 		$form  = GFAPI::get_form( $item['form_id'] );
 
+		// Remove task if entry cannot be found.
+		if ( is_wp_error( $entry ) ) {
+
+			call_user_func( array(
+				$addon,
+				'log_debug',
+			), __METHOD__ . "(): attempted feed (#{$feed['id']} - {$feed_name}) for entry #{$item['entry_id']} for {$addon->get_slug()} but entry could not be found. Bailing." );
+
+			return false;
+
+		}
+
 		// Get feed name.
 		$feed_name = rgars( $feed, 'meta/feed_name' ) ? $feed['meta']['feed_name'] : rgars( $feed, 'meta/feedName' );
 

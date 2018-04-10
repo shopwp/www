@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: WP OAuth Server - CE
- * Plugin URI: http://wp-oauth.com
- * Version: 3.4.3
+ * Plugin Name: WP OAuth Server
+ * Plugin URI: https://wp-oauth.com
+ * Version: 3.4.5
  * Description: Full OAuth 2.0 Server for WordPress. User Authorization Management Systems For WordPress. This is the Free community version of this plugin. Download the full version <a href="https://wp-oauth.com">by clicking here</a>.
- * Author: WP OAuth Server
- * Author URI: http://wp-oauth.com
+ * Author: Dash10 Digital
+ * Author URI: https://dash10.digital
  * Text Domain: wp-oauth
  *
  * @author  Justin Greer <justin@justin-greer.com>
@@ -19,7 +19,7 @@ if ( ! defined( 'WPOAUTH_FILE' ) ) {
 }
 
 if ( ! defined( 'WPOAUTH_VERSION' ) ) {
-	define( 'WPOAUTH_VERSION', '3.4.3' );
+	define( 'WPOAUTH_VERSION', '3.4.5' );
 }
 
 // localize

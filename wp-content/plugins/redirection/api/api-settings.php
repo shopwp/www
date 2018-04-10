@@ -9,6 +9,10 @@ class Redirection_Api_Settings extends Redirection_Api_Route {
 	}
 
 	public function route_settings( WP_REST_Request $request ) {
+		if ( ! function_exists( 'get_home_path' ) ) {
+			include_once ABSPATH . '/wp-admin/includes/file.php';
+		}
+
 		return array(
 			'settings' => red_get_options(),
 			'groups' => $this->groups_to_json( Red_Group::get_for_select() ),
@@ -19,6 +23,10 @@ class Redirection_Api_Settings extends Redirection_Api_Route {
 	}
 
 	public function route_save_settings( WP_REST_Request $request ) {
+		if ( ! function_exists( 'get_plugin_data' ) ) {
+			include_once ABSPATH.'/wp-admin/includes/plugin.php';
+		}
+
 		red_set_options( $request->get_params() );
 
 		return $this->route_settings( $request );

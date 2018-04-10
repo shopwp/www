@@ -9,8 +9,8 @@
     </div>
 
     <div class="btn-group l-row l-row-center">
-      <a href="/how" class="btn btn-l btn-secondary" data-gtm="learn-home"><i class="fab fa-leanpub"></i> Learn more</a>
-      <a href="/purchase" class="btn btn-l" data-gtm="purchase-home"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Purchase</a>
+      <a href="/how" class="btn btn-l btn-secondary" data-gtm="learn-home">Download</a>
+      <a href="/purchase" class="btn btn-l" data-gtm="purchase-home">Purchase</a>
     </div>
   </div>
 

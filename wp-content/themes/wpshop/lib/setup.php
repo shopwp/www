@@ -113,19 +113,23 @@ Theme assets
 */
 function assets() {
 
-
+  wp_enqueue_script('fontawesome-js', Assets\asset_path('js/vendor/fontawesome-all.min.js'), [], null, true);
 
   wp_enqueue_style('Animate CSS', '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);
-  // wp_enqueue_style('Font Awesome CSS', Assets\asset_path('css/vendor/fontawesome-all.min.css'), false, null);
 
-  wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Open+Sans:400,700|Catamaran:400,700', false, null);
+  wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro|Catamaran:400,700', false, null);
+
+
+  wp_enqueue_style('Highlight CSS', Assets\asset_path('css/vendor/ocean.css'), false, null, false);
+  wp_enqueue_script('Highlight JS', Assets\asset_path('js/vendor/highlight.pack.js'), [], null, true);
+
 
 
   // TODO: Enque within plugin?
-  wp_enqueue_script('modernizr-js', Assets\asset_path('js/vendor/modernizr.min.js'), [], null, true);
-  wp_enqueue_script('fontawesome-js', Assets\asset_path('js/vendor/fontawesome-all.min.js'), [], null, true);
-  // wp_enqueue_script('fontawesome-light-js', Assets\asset_path('js/vendor/light.js'), [], null, true);
-  wp_enqueue_script('fitvid-js', Assets\asset_path('js/vendor/fitvid.min.js'), [], null, true);
+  wp_enqueue_script('modernizr-js', Assets\asset_path('js/vendor/modernizr.min.js'), [], null, false);
+
+
+  // wp_enqueue_script('fitvid-js', Assets\asset_path('js/vendor/fitvid.min.js'), [], null, true);
 
 
   if (is_single() && comments_open() && get_option('thread_comments')) {
@@ -182,7 +186,7 @@ function assets() {
   // }
   //
   // Docs
-  if(is_page('Docs') || get_post_type( get_the_ID() ) === 'docs') {
+  if (is_page('Docs') || get_post_type( get_the_ID() ) === 'docs') {
     // wp_enqueue_style('Prism CSS', Assets\asset_path('css/vendor/prism.min.css'), false, null);
     // wp_enqueue_script('WPS Auth', Assets\asset_path('prod/js/docs.min.js'), [], null, true);
     // wp_enqueue_script('Prism JS', Assets\asset_path('js/vendor/prism.min.js'), [], null, true);

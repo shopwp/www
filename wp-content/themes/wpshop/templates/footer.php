@@ -14,7 +14,7 @@
       <i class="fab fa-slack" aria-hidden="true"></i>
     </a>
 
-    <a href="https://github.com/arobbins/wp-shopify" class="footer-social-link" target="_blank">
+    <a href="https://github.com/wpshopify" class="footer-social-link" target="_blank">
       <i class="fab fa-github"></i>
     </a>
 

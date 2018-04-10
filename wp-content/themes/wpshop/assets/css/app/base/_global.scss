@@ -26,15 +26,25 @@ body {
 
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 ::selection {
   background-color: color(notice-light);
 }
 
 code, kbd, pre, samp {
-  border-radius: $space-s / 2;
-  font-size: 98%;
+  font-size: 16px;
   margin-top: 0;
+  font-family: 'Source Code Pro', monospace;
 }
+
+.hljs {
+  background: #1e2940;
+}
+
 
 ul, ol, dl {
   padding: 0;

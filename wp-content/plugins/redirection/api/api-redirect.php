@@ -15,7 +15,7 @@ class Redirection_Api_Redirect extends Redirection_Api_Filter_Route {
 			$this->get_route( WP_REST_Server::EDITABLE, 'route_update' ),
 		) );
 
-		$this->register_bulk( $namespace, '/bulk/redirect/(?P<action>delete|enable|disable|reset)', $filters, $orders, 'route_bulk' );
+		$this->register_bulk( $namespace, '/bulk/redirect/(?P<bulk>delete|enable|disable|reset)', $filters, $orders, 'route_bulk' );
 	}
 
 	public function route_list( WP_REST_Request $request ) {
@@ -40,7 +40,7 @@ class Redirection_Api_Redirect extends Redirection_Api_Filter_Route {
 			$result = $redirect->update( $params );
 
 			if ( is_wp_error( $result ) ) {
-				return $this->add_error_details( $result, __LINE );
+				return $this->add_error_details( $result, __LINE__ );
 			}
 
 			return array( 'item' => $redirect->to_json() );
@@ -50,24 +50,29 @@ class Redirection_Api_Redirect extends Redirection_Api_Filter_Route {
 	}
 
 	public function route_bulk( WP_REST_Request $request ) {
-		$action = $request['action'];
+		$action = $request['bulk'];
+		$items = explode( ',', $request['items'] );
 
-		foreach ( $request['items'] as $item ) {
-			$redirect = Red_Item::get_by_id( intval( $item, 10 ) );
+		if ( is_array( $items ) ) {
+			foreach ( $items as $item ) {
+				$redirect = Red_Item::get_by_id( intval( $item, 10 ) );
 
-			if ( $redirect ) {
-				if ( $action === 'delete' ) {
-					$redirect->delete();
-				} else if ( $action === 'disable' ) {
-					$redirect->disable();
-				} else if ( $action === 'enable' ) {
-					$redirect->enable();
-				} else if ( $action === 'reset' ) {
-					$redirect->reset();
+				if ( $redirect ) {
+					if ( $action === 'delete' ) {
+						$redirect->delete();
+					} else if ( $action === 'disable' ) {
+						$redirect->disable();
+					} else if ( $action === 'enable' ) {
+						$redirect->enable();
+					} else if ( $action === 'reset' ) {
+						$redirect->reset();
+					}
 				}
 			}
+
+			return $this->route_list( $request );
 		}
 
-		return $this->route_list( $request );
+		return $this->add_error_details( new WP_Error( 'redirect', 'Invalid array of items' ), __LINE__ );
 	}
 }

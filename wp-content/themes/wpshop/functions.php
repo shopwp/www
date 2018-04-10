@@ -48,9 +48,9 @@ Hack for Webpack dev server
 TODO: Remove before pushing live
 
 */
-if(DISABLE_CANONICAL == 'Y') {
-  remove_filter('template_redirect', 'redirect_canonical');
-}
+// if (DISABLE_CANONICAL == 'Y') {
+//   remove_filter('template_redirect', 'redirect_canonical');
+// }
 
 
 /*
@@ -92,9 +92,6 @@ add_action('template_redirect', 'wps_reset_pass_redirect');
 function wps_identifier_for_post($post) {
   return $post->ID;
 }
-
-
-
 
 
 
@@ -186,6 +183,27 @@ function wps_identifier_for_post($post) {
 
 
 
+function wpa_show_permalinks( $post_link, $post ) {
+
+  if ( is_object($post) && $post->post_type == 'docs') {
+
+    $terms = wp_get_object_terms( $post->ID, 'types' );
+
+    if ($terms) {
+      return str_replace( '%types%' , $terms[0]->slug , $post_link );
+    }
+
+  }
+
+  return $post_link;
+
+}
+
+add_filter( 'post_type_link', 'wpa_show_permalinks', 1, 2 );
+
+
+
+
 function your_function($product_data) {
 
   echo '<small class="purchase-options-note">(You need to manually renew your license key each year. We will <b>not</b> auto-renew your account by charging your credit card)</small>';
@@ -216,3 +234,329 @@ add_action('login_init', function(){
 add_action('edd_after_price_option', function(){
   echo '<small style="display:block;text-align:center;margin-top:-10px;">per year</small>';
 });
+
+
+
+
+//
+//
+//
+//
+// /*
+//  * Replace Taxonomy slug with Post Type slug in url
+//  * Version: 1.1
+//  */
+// function taxonomy_slug_rewrite($wp_rewrite) {
+//
+//   $rules = array();
+//
+//   // get all custom taxonomies
+//   $taxonomies = get_taxonomies(array('_builtin' => false), 'objects');
+//   // get all custom post types
+//   $post_types = get_post_types(array('public' => true, '_builtin' => false), 'objects');
+//
+//   foreach ($post_types as $post_type) {
+//
+//       foreach ($taxonomies as $taxonomy) {
+//
+//           // go through all post types which this taxonomy is assigned to
+//           foreach ($taxonomy->object_type as $object_type) {
+//
+//               // check if taxonomy is registered for this custom type
+//               if ($object_type == $post_type->rewrite['slug']) {
+//
+//                   // get category objects
+//                   $terms = get_categories(array('type' => $object_type, 'taxonomy' => $taxonomy->name, 'hide_empty' => 0));
+//                   // error_log('---- $terms -----');
+//                   // error_log(print_r($terms, true));
+//                   // error_log('---- /$terms -----');
+//
+//
+//                   // make rules
+//                   foreach ($terms as $term) {
+//
+//
+//
+//                     // error_log('---- $object_type -----');
+//                     // error_log(print_r($object_type, true));
+//                     // error_log('---- /$object_type -----');
+//                     //
+//                     // error_log('---- $term->slug -----');
+//                     // error_log(print_r($term->slug, true));
+//                     // error_log('---- /$term->slug -----');
+//
+//
+//                     if (isset($term->category_parent) && $term->category_parent) {
+//
+//
+//                       $parentID = $term->category_parent;
+//
+//                       $filtered = array_filter($terms, function($key) use ($parentID, $terms) {
+//
+//                         return $terms[$key]->term_id === $parentID;
+//
+//                       }, ARRAY_FILTER_USE_KEY);
+//
+//
+//                       $filtered = array_values($filtered);
+//
+//
+//                       if (!empty($filtered)) {
+//
+//                         $rules[$object_type . '/' . $filtered[0]->slug . '/' . $term->slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+//
+//                         error_log('---- $rules -----');
+//                         error_log(print_r($rules, true));
+//                         error_log('---- /$rules -----');
+//
+//                       }
+//
+//
+//                     } else {
+//                       $rules[$object_type . '/' . $term->slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+//
+//                     }
+//
+//
+//                   }
+//               }
+//           }
+//       }
+//   }
+//
+//   // merge with global rules
+//   $wp_rewrite->rules = $rules + $wp_rewrite->rules;
+//
+// }
+//
+// add_filter('generate_rewrite_rules', 'taxonomy_slug_rewrite');
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//
+//
+//
+//
+//
+// add_action( 'init', 'register_my_types' );
+// function register_my_types() {
+// 	register_post_type( 'recipes',
+// 		array(
+// 			'labels' => array(
+// 				'name' => __( 'Recipes' ),
+// 				'singular_name' => __( 'Recipee' )
+// 			),
+// 			'public' => true,
+// 			'has_archive' => true,
+// 		)
+// 	);
+// 	register_taxonomy( 'occasion', array( 'recipes' ), array(
+// 			'hierarchical' => true,
+// 			'label' => 'Occasions'
+// 		)
+// 	);
+// }
+//
+//
+//
+//
+//
+//
+//
+//
+// // Add our custom permastructures for custom taxonomy and post
+//
+// add_action( 'wp_loaded', 'add_clinic_permastructure' );
+//
+// function add_clinic_permastructure() {
+//
+// 	global $wp_rewrite;
+//
+//   // error_log('---- $wp_rewrite -----');
+//   // error_log(print_r($wp_rewrite, true));
+//   // error_log('---- /$wp_rewrite -----');
+//
+// 	add_permastruct( 'types', 'docs/%types%', false );
+// 	add_permastruct( 'docs', 'docs/%types%/%docs%', false );
+//   add_permastruct( 'templates', 'docs/templates/%types%/%docs%', false );
+//
+// }
+//
+// // Make sure that all links on the site, include the related texonomy terms
+// add_filter( 'post_type_link', 'recipe_permalinks', 10, 2 );
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+// function recipe_permalinks( $permalink, $post ) {
+// 	if ( $post->post_type !== 'docs' )
+// 		return $permalink;
+// 	$terms = get_the_terms( $post->ID, 'types' );
+//
+// 	if ( ! $terms )
+// 		return str_replace( '%types%/', '', $permalink );
+// 	$post_terms = array();
+// 	foreach ( $terms as $term )
+// 		$post_terms[] = $term->slug;
+//
+//
+//
+//
+// 	return str_replace( '%types%', implode( ',', $post_terms ) , $permalink );
+// }
+// // Make sure that all term links include their parents in the permalinks
+// add_filter( 'term_link', 'add_term_parents_to_permalinks', 10, 2 );
+// function add_term_parents_to_permalinks( $permalink, $term ) {
+// 	$term_parents = get_term_parents( $term );
+// 	foreach ( $term_parents as $term_parent )
+// 		$permlink = str_replace( $term->slug, $term_parent->slug . ',' . $term->slug, $permalink );
+// 	return $permlink;
+// }
+// // Helper function to get all parents of a term
+// function get_term_parents( $term, &$parents = array() ) {
+// 	$parent = get_term( $term->parent, $term->taxonomy );
+//
+// 	if ( is_wp_error( $parent ) )
+// 		return $parents;
+//
+// 	$parents[] = $parent;
+// 	if ( $parent->parent )
+// 		get_term_parents( $parent, $parents );
+//     return $parents;
+// }
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//
+//
+//
+//
+// add_filter('request', 'rudr_change_term_request', 1, 1 );
+//
+// function rudr_change_term_request($query){
+//
+// 	$tax_name = 'types'; // specify you taxonomy name here, it can be also 'category' or 'post_tag'
+//
+// 	// Request for child terms differs, we should make an additional check
+// 	if( $query['attachment'] ) :
+// 		$include_children = true;
+// 		$name = $query['attachment'];
+// 	else:
+// 		$include_children = false;
+// 		$name = $query['name'];
+// 	endif;
+//
+//
+// 	$term = get_term_by('slug', $name, $tax_name); // get the current term to make sure it exists
+//
+// 	if (isset($name) && $term && !is_wp_error($term)): // check it here
+//
+// 		if( $include_children ) {
+// 			unset($query['attachment']);
+// 			$parent = $term->parent;
+// 			while( $parent ) {
+// 				$parent_term = get_term( $parent, $tax_name);
+// 				$name = $parent_term->slug . '/' . $name;
+// 				$parent = $parent_term->parent;
+// 			}
+// 		} else {
+// 			unset($query['name']);
+// 		}
+//
+// 		switch( $tax_name ):
+// 			case 'category':{
+// 				$query['category_name'] = $name; // for categories
+// 				break;
+// 			}
+// 			case 'post_tag':{
+// 				$query['tag'] = $name; // for post tags
+// 				break;
+// 			}
+// 			default:{
+// 				$query[$tax_name] = $name; // for another taxonomies
+// 				break;
+// 			}
+// 		endswitch;
+//
+// 	endif;
+//
+// 	return $query;
+//
+// }
+//
+//
+// add_filter( 'term_link', 'rudr_term_permalink', 10, 3 );
+//
+// function rudr_term_permalink( $url, $term, $taxonomy ){
+//
+// 	$taxonomy_name = 'types'; // your taxonomy name here
+// 	$taxonomy_slug = 'types'; // the taxonomy slug can be different with the taxonomy name (like 'post_tag' and 'tag' )
+//
+// 	// exit the function if taxonomy slug is not in URL
+// 	if ( strpos($url, $taxonomy_slug) === FALSE || $taxonomy != $taxonomy_name ) return $url;
+//
+// 	$url = str_replace('/' . $taxonomy_slug, '', $url);
+//
+// 	return $url;
+// }

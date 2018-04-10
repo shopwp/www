@@ -163,7 +163,7 @@ class GFFormDetail {
 				?>
 				<div class="error_base gform_editor_status" id="after_update_error_dialog">
 					<?php esc_html_e( 'There was an error while saving your form.', 'gravityforms' ) ?>
-					<?php printf( __( 'Please %scontact our support team%s.', 'gravityforms' ), '<a href="http://www.gravityhelp.com">', '</a>' ) ?>
+					<?php printf( __( 'Please %scontact our support team%s.', 'gravityforms' ), '<a href="https://www.gravityforms.com/support/">', '</a>' ) ?>
 				</div>
 				<?php
 				break;
@@ -2452,7 +2452,7 @@ class GFFormDetail {
 					</div>
 					<div class="error_base" id="after_update_error_dialog" style="padding:10px 10px 16px 10px; display:none;">
 						<?php esc_html_e( 'There was an error while saving your form.', 'gravityforms' ) ?>
-						<?php printf( __( 'Please %scontact our support team%s.', 'gravityforms' ), '<a href="http://www.gravityhelp.com">', '</a>' ) ?>
+						<?php printf( __( 'Please %scontact our support team%s.', 'gravityforms' ), '<a href="https://www.gravityforms.com/support/">', '</a>' ) ?>
 					</div>
 
 					<!-- this field allows us to force onblur events for field setting inputs that are otherwise not triggered
@@ -2591,6 +2591,13 @@ class GFFormDetail {
 				'value'     => GFCommon::get_field_type_title( 'creditcard' )
 			);
 		}
+		
+		/**
+		 * Modify the field groups before fields are added
+	         *
+        	 * @param array $field_groups The field groups, including group name, label and fields.
+		 */
+		$field_groups = apply_filters( 'gform_field_groups_form_editor', $field_groups );
 
 		// Remove array keys from field groups array.
 		$field_groups = array_values( $field_groups );

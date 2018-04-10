@@ -191,6 +191,12 @@
   width: 90px;
 }
 
+.is-docs .logo-header {
+  top: 0;
+  height: 45px;
+  margin-top: 0;
+}
+
 .logo-header-auth-wrapper {
   text-align: center;
   position: relative;
@@ -207,7 +213,7 @@
   text-decoration: none;
   position: relative;
   width: 1.125em;
-  
+
   .fa-shopping-cart {
     color: color(base);
     font-size: $font-s*2;

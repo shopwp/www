@@ -118,7 +118,7 @@ class GFAsyncUpload {
 		 */
 		$whitelisting_disabled = apply_filters( 'gform_file_upload_whitelisting_disabled', false );
 
-		if ( empty( $allowed_extensions ) && ! $whitelisting_disabled ) {
+		if ( ! $whitelisting_disabled ) {
 			// Whitelist the file type
 			$valid_uploaded_filename = GFCommon::check_type_and_ext( $_FILES['file'], $uploaded_filename );
 

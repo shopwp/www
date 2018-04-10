@@ -114,6 +114,7 @@
   max-width: 80vw;
   font-size: $font-xxl*2.8;
   font-weight: bold;
+  margin-bottom: 0;
 
   @include device(1500, 'max') {
     right: 90px;
@@ -143,7 +144,7 @@
 }
 
 .marquee-short-desc {
-  margin: $space-xl auto;
+  margin: 0 auto $space-xl auto;
   font-size: $font-xxl;
   max-width: 800px;
 

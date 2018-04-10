@@ -1,7 +1,17 @@
-.home .main {
+.home {
 
-  @include device(500, 'max') {
-    display: none;
+  .main {
+    @include device(500, 'max') {
+      display: none;
+    }
+  }
+
+  .component-support {
+    .l-contain-narrow {
+      box-shadow: none;
+      border: none;
+      max-width: 1200px;
+    }
   }
 
 }
@@ -14,6 +24,23 @@
 
   @include device(800, 'max') {
     padding: 0 $space-m;
+  }
+
+}
+
+.is-docs {
+
+  .main {
+    width: calc(100% - 520px);
+    margin-left: 520px;
+    margin-right: 0;
+    margin-top: 3em;
+    margin-bottom: 10em;
+    padding-right: 5em;
+  }
+
+  + .footer {
+    display: none;
   }
 
 }
@@ -45,6 +72,10 @@
 
 }
 
+.single-docs #drift-widget-container,
+.docs-template-default #drift-widget-container {
+  display: none;
+}
 
 .docs-template-default {
 
@@ -52,10 +83,11 @@
   .wrap.container {
     max-width: 100%;
     padding: 0 $space-l;
-  }
 
-  .logo-header {
-    height: 40px;
+    &.is-docs {
+      padding: 0;
+    }
+
   }
 
   .header-account {
@@ -96,11 +128,13 @@
 
   h3 {
     margin-top: $space-s;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+    text-transform: lowercase;
+    font-size: 20px;
+    font-weight: bold;
   }
 
-  .main {
-    margin-top: $space-xl*2;
-  }
 
   .docs {
     width: 100%;
@@ -113,7 +147,6 @@
     img {
       margin-bottom: $space-l;
       display: block;
-      margin-top: $space-s;
     }
 
   }
@@ -143,7 +176,7 @@
     border-bottom: 1px solid color(medium-grey);
     padding-bottom: 10px;
     margin-bottom: 20px;
-    font-size: $font-xxl;
+    font-size: $font-xxxl;
   }
 
   p + h1,

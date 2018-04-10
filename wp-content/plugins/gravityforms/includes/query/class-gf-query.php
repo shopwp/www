@@ -676,7 +676,7 @@ class GF_Query {
 			GFCommon::log_debug( 'Reusing GF_Query is undefined behavior. Create a new instance instead.' );
 		}
 
-		if ( ! count( $this->from ) ) {
+		if ( ! is_array( $this->from ) || ! count( $this->from ) ) {
 			return array();
 		}
 
@@ -1306,7 +1306,7 @@ class GF_Query {
 		$entry_meta = GFFormsModel::get_entry_meta( $form_id );
 		$meta_keys  = array_keys( $entry_meta );
 		foreach ( $meta_keys as $meta_key ) {
-			$entry[ $meta_key ] = isset( $db_values[ $meta_key ] ) ? $db_values[ $meta_key ] : null;
+			$entry[ $meta_key ] = isset( $db_values[ $meta_key ] ) ? maybe_unserialize( $db_values[ $meta_key ] ) : false;
 		}
 		return $entry;
 	}

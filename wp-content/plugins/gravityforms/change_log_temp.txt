@@ -1,4 +1,37 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 2.3-rc-5
+	- Added a PHP notice which triggers if a legacy table is accessed in a db query from an outdated add-on or custom code.
+	- Updated the System Report to indicate whether background tasks are possible.
+	- Fixed an issue where the upgrade admin notices can't be dismissed.
+    - AF: Fixed an issue with registered entry meta returning null instead of false for newly added entries.
+    - AF: Fixed an issue with registered entry meta where the value is not deserialized.
+    - AF: Fixed an issue with the entry array during form submission where the values for multi-input fields are not registered properly in the entry array.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.3-rc-4
+    - Added security enhancements.
+    - Added accessibility enhancements.
+    - Fixed evaluation of conditional logic rules using the entry value of multi-select type post custom fields created with GF2.2+.
+    - Fixed the HTML for the Forms menu item on the admin toolbar containing an extra closing a tag.
+    - Fixed the link to the updates page in the admin notice displayed when updates are available.
+    - Fixed the upgrade process for older installations where WordPress failed to upgrade tables from utf8 to utf8mb4.
+    - Fixed an issue with entry searching on PHP 7.2.
+    - Fixed an issue with the nl_BE translations.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.3-rc-3
+    - Added security enhancements.
+    - Fixed a PHP 7.2 warning which occurred when deleting fields for a form where the entry list columns have not been customised.
+    - Fixed a PHP 7.2 deprecation notice which occurred when processing an Ajax enabled form submission.
+    - Fixed an issue introduced in 2.3-dev-1 preventing the form list from being sorted by entry count.
+    - Fixed an issue introduced in 2.3-dev-1 causing incomplete entries to be created when using the gform_entry_id_pre_save_lead filter.
+    - Fixed an issue introduced in 2.3-dev-1 which causes calculations based on calculations in other fields to be saved incorrectly.
+    - Fixed an issue introduced in 2.3-beta-1 which causes the form editor to jump to the top of the page when clicking on the open field button.
+    - API: Fixed an issue with the result of GFAPI::update_feed() where a not_found error is returned when no changes are made to the feed meta. The result now returns the number of rows updated or a WP_Error in the case of an error.
+    - API: Added GFAPI::get_field() for retrieving the field object for the requested field or input ID from the supplied form or form ID.
+    - AF: Fixed results page processing of Multi Select fields created with GF2.2+.
+
+------------------------------------------------------------------------------------------------------------------
 Version 2.3-rc-2
     - Fixed an issue where the database migration can fail if the collation of the new tables is different to the existing tables.
     - Fixed a notice in the conversions column of the forms list for some forms with PHP 7.1.

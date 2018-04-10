@@ -253,7 +253,7 @@ class GF_Upgrade {
 
 			$lock_params_serialized = serialize( $lock_params );
 
-			$sql = $wpdb->prepare( "INSERT INTO {$wpdb->options}(option_name, option_value) VALUES('gf_upgrade_lock', %s)", $lock_params_serialized );
+			$sql = $wpdb->prepare( "INSERT INTO {$wpdb->options}(option_name, option_value) VALUES('gf_upgrade_lock', %s) ON DUPLICATE KEY UPDATE `option_name` = VALUES(`option_name`), `option_value` = VALUES(`option_value`)", $lock_params_serialized );
 
 			// Lock upgrade
 			$wpdb->query( $sql );
@@ -273,7 +273,9 @@ class GF_Upgrade {
 		/* translators: 1: version number 2: open link tag 3: closing link tag. */
 		$message = sprintf( esc_html__( 'Gravity Forms is currently upgrading the database to version %1$s. For sites with a large number of entries this may take a long time. Check the %2$sSystem Status%3$s page for further details.', 'gravityforms' ), GFForms::$version, $system_status_link_open, $system_status_link_close );
 
-		GFCommon::add_dismissible_message( $message, 'gravityforms_upgrading_' . $versions['version'], 'warning', 'gform_full_access', true );
+		$key = sanitize_key( 'gravityforms_upgrading_' . $versions['version'] );
+
+		GFCommon::add_dismissible_message( $message, $key, 'warning', 'gform_full_access', true );
 
 		return true;
 	}
@@ -309,7 +311,9 @@ class GF_Upgrade {
 
 		$this->flush_versions();
 
-		GFCommon::remove_dismissible_message( 'gravityforms_upgrading_' . GFForms::$version );
+		$key = sanitize_key( 'gravityforms_upgrading_' . GFForms::$version );
+
+		GFCommon::remove_dismissible_message( $key );
 
 		GFCommon::log_debug( __METHOD__ . '(): Upgrade Completed.' );
 	}
@@ -555,8 +559,14 @@ class GF_Upgrade {
 		}
 		*/
 
-		GFForms::$background_upgrader->push_to_queue( array( $this, 'post_background_upgrade' ) );
-		GFForms::$background_upgrader->save()->dispatch();
+		if ( GFForms::$background_upgrader->get_data() ) {
+			GFForms::$background_upgrader->push_to_queue( array( $this, 'post_background_upgrade' ) );
+			GFForms::$background_upgrader->save()->dispatch();
+		} else {
+			GFCommon::log_debug( __METHOD__ . '(): Background upgrade not necessary. Setting new version.' );
+			$this->update_db_version();
+			$this->set_upgrade_ended();
+		}
 	}
 
 	/**
@@ -701,6 +711,13 @@ LIMIT {$limit}";
 
 			$lead_ids = $wpdb->get_col( $lead_ids_sql );
 
+			if ( $wpdb->last_error ) {
+				/* translators: %s: the database error */
+				$this->update_upgrade_status( sprintf( esc_html__( 'Error Migrating Entry Headers: %s', 'gravityforms' ), $wpdb->last_error ) );
+				// wp_die() is not used here because it would trigger another async task
+				exit;
+			}
+
 			if ( ! empty( $lead_ids ) ) {
 				$lead_ids = array_map( 'absint', $lead_ids );
 
@@ -717,7 +734,15 @@ id, form_id, post_id, date_created, null, is_starred, is_read, ip, source_url, u
 FROM
 $lead_table l
 WHERE l.id IN ( {$lead_ids_in} )";
+
 					$wpdb->query( $sql );
+
+					if ( $wpdb->last_error ) {
+						/* translators: %s: the database error */
+						$this->update_upgrade_status( sprintf( esc_html__( 'Error Migrating Entry Headers: %s', 'gravityforms' ), $wpdb->last_error ) );
+						// wp_die() is not used here because it would trigger another async task
+						exit;
+					}
 
 					$current_time = microtime( true );
 					$execution_time = ( $current_time - $time_start );
@@ -749,6 +774,14 @@ LIMIT {$limit}";
 		do {
 			$lead_detail_ids = $wpdb->get_col( $lead_detail_ids_sql );
 
+			if ( $wpdb->last_error ) {
+				error_log('error: ' . $wpdb->last_error );
+				/* translators: %s: the database error */
+				$this->update_upgrade_status( sprintf( esc_html__( 'Error Migrating Entry Details: %s', 'gravityforms' ), $wpdb->last_error ) );
+				// wp_die() is not used here because it would trigger another async task
+				exit;
+			}
+
 			if ( ! empty( $lead_detail_ids ) ) {
 				$lead_detail_ids = array_map( 'absint', $lead_detail_ids );
 
@@ -765,6 +798,14 @@ FROM
 WHERE ld.id IN ( {$lead_detail_ids_in} )";
 
 				$wpdb->query( $sql );
+
+				if ( $wpdb->last_error ) {
+					error_log('error: ' . $wpdb->last_error );
+					/* translators: %s: the database error */
+					$this->update_upgrade_status( sprintf( esc_html__( 'Error Migrating Entry Details: %s', 'gravityforms' ), $wpdb->last_error ) );
+					// wp_die() is not used here because it would trigger another async task
+					exit;
+				}
 
 				$current_time = microtime( true );
 				$execution_time = ( $current_time - $time_start );
@@ -787,6 +828,8 @@ WHERE ld.id NOT IN ( SELECT em.id FROM {$entry_meta_table} em )";
 		$lead_meta_table = GFFormsModel::get_lead_meta_table_name();
 		$entry_meta_table = GFFormsModel::get_entry_meta_table_name();
 
+		$charset_db = empty( $wpdb->charset ) ? 'utf8mb4' : $wpdb->charset;
+
 		$collate = ! empty( $wpdb->collate ) ? " COLLATE {$wpdb->collate}" : '';
 
 		$lead_meta_ids_sql = "
@@ -795,11 +838,18 @@ SELECT
 FROM
   {$lead_meta_table} lm
 WHERE NOT EXISTS
-      (SELECT * FROM {$entry_meta_table} em WHERE em.entry_id = lm.lead_id AND em.meta_key = lm.meta_key {$collate})
+      (SELECT * FROM {$entry_meta_table} em WHERE em.entry_id = lm.lead_id AND CONVERT(em.meta_key USING {$charset_db}) = CONVERT(lm.meta_key USING {$charset_db}) {$collate})
 LIMIT {$limit}";
 
 		do {
 			$lead_meta_ids = $wpdb->get_col( $lead_meta_ids_sql );
+
+			if ( $wpdb->last_error ) {
+				/* translators: %s: the database error */
+				$this->update_upgrade_status( sprintf( esc_html__( 'Error Migrating Entry Meta: %s', 'gravityforms' ), $wpdb->last_error ) );
+				// wp_die() is not used here because it would trigger another async task
+				exit;
+			}
 
 			if ( ! empty( $lead_meta_ids ) ) {
 				$lead_meta_ids = array_map( 'absint', $lead_meta_ids );
@@ -818,6 +868,13 @@ WHERE lm.id IN ( {$lead_meta_ids_in} )";
 
 				$wpdb->query( $sql );
 
+				if ( $wpdb->last_error ) {
+					/* translators: %s: the database error */
+					$this->update_upgrade_status( sprintf( esc_html__( 'Error Migrating Entry Meta: %s', 'gravityforms' ), $wpdb->last_error ) );
+					// wp_die() is not used here because it would trigger another async task
+					exit;
+				}
+
 				$current_time = microtime( true );
 				$execution_time = ( $current_time - $time_start );
 				if ( $execution_time > 15 ) {
@@ -826,7 +883,7 @@ SELECT COUNT(id)
 FROM
   {$lead_meta_table} lm
 WHERE NOT EXISTS
-      (SELECT * FROM {$entry_meta_table} em WHERE em.entry_id = lm.lead_id AND em.meta_key = lm.meta_key {$collate})";
+      (SELECT * FROM {$entry_meta_table} em WHERE em.entry_id = lm.lead_id AND CONVERT(em.meta_key USING {$charset_db}) = CONVERT(lm.meta_key USING {$charset_db}) {$collate})";
 					$remaining = $wpdb->get_var( $sql_remaining );
 					if ( $remaining > 0 ) {
 						$this->update_upgrade_status( sprintf( esc_html__( 'Migrating leads. Step 3/3 Migrating entry meta. %d rows remaining.', 'gravityforms' ), $remaining ) );
@@ -851,7 +908,10 @@ WHERE NOT EXISTS
 		$this->update_upgrade_status( esc_html__( 'Migrating incomplete submissions.', 'gravityforms' ) );
 
 		$incomplete_submissions_table = GFFormsModel::get_incomplete_submissions_table_name();
-		$draft_submissions_table = GFFormsModel::get_draft_submissions_table_name();
+		$draft_submissions_table      = GFFormsModel::get_draft_submissions_table_name();
+
+		$charset_db = empty( $wpdb->charset ) ? 'utf8mb4' : $wpdb->charset;
+
 		$collate = ! empty( $wpdb->collate ) ? " COLLATE {$wpdb->collate}" : '';
 
 		$sql = "
@@ -859,10 +919,17 @@ INSERT INTO {$draft_submissions_table}
 SELECT *
 FROM
   {$incomplete_submissions_table} insub
-WHERE insub.uuid {$collate} NOT IN
+WHERE CONVERT(insub.uuid USING {$charset_db}) {$collate} NOT IN
       ( SELECT uuid FROM {$draft_submissions_table} )";
 
 		$wpdb->query( $sql );
+
+		if ( $wpdb->last_error ) {
+			/* translators: %s: the database error */
+			$this->update_upgrade_status( sprintf( esc_html__( 'Error Migrating incomplete submissions: %s', 'gravityforms' ), $wpdb->last_error ) );
+			// wp_die() is not used here because it would trigger another async task
+			exit;
+		}
 		return false;
 	}
 
@@ -1652,7 +1719,8 @@ HAVING count(*) > 1;" );
 		$lock_params = $this->get_upgrade_lock();
 		if ( $lock_params ) {
 			$to_version = rgar( $lock_params, 'to_gf_version' );
-			GFCommon::remove_dismissible_message( 'gravityforms_upgrading_' . $to_version );
+			$key        = sanitize_key( 'gravityforms_upgrading_' . $to_version );
+			GFCommon::remove_dismissible_message( $key );
 		}
 
 		// Clear the upgrade lock

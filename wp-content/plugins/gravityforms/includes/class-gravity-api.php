@@ -34,10 +34,11 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 		/**
 		 * Retrieves site key and site secret key from remote API and stores them as WP options. Returns false if license key is invalid; otherwise, returns true.
 		 *
-		 * @since  1.9.?
+		 * @since  2.3
 		 * @access public
 		 *
-		 * @param string $license_key
+		 * @param string $license_key License key to be registered
+		 * @param boolean $is_md5 Specifies if $license_key provided is an MD5 or unhashed license key.
 		 *
 		 * @return bool Success
 		 */
@@ -48,16 +49,18 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			$body['site_url']  = get_bloginfo( 'url' );
 
 			if ( $is_md5 ) {
+
 				$body['license_key_md5'] = $license_key;
-				$license_key_md5 = $license_key;
+
 			} else {
+
 				$body['license_key'] = $license_key;
-				$license_key_md5 = md5( $license_key );
+
 			}
 
 			GFCommon::log_debug( __METHOD__ . '(): registering site' );
 
-			$result = $this->request( 'sites', $body, 'POST', array( 'headers' => $this->get_license_auth_header( $license_key_md5 ) ) );
+			$result = $this->request( 'sites', $body, 'POST', array( 'headers' => $this->get_license_auth_header( $license_key ) ) );
 			$result = $this->prepare_response_body( $result );
 
 			if ( is_wp_error( $result ) || ! is_object( $result ) ) {
@@ -74,6 +77,16 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			return true;
 		}
 
+		/**
+		 * Updates license key for a site that has already been registered.
+		 *
+		 * @since  2.3
+		 * @access public
+		 *
+		 * @param string $new_license_key_md5 Hash license key to be updated
+		 *
+		 * @return bool Success
+		 */
 		public function update_current_site( $new_license_key_md5 ) {
 
 			$site_key = $this->get_site_key();
@@ -86,9 +99,9 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			$body = GFCommon::get_remote_post_params();
 			$body['site_name'] = get_bloginfo( 'name' );
 			$body['site_url']  = get_bloginfo( 'url' );
-			$body['license_key_md5'] = $new_license_key_md5;
 			$body['site_key'] = $site_key;
 			$body['site_secret'] = $site_secret;
+			$body['license_key_md5'] = $new_license_key_md5;
 
 			GFCommon::log_debug( __METHOD__ . '(): refreshing license info' );
 
@@ -105,6 +118,13 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 			return true;
 		}
 
+		/***
+		 * Removes a license key from a registered site. NOTE: It doesn't actually deregister the site.
+		 *
+		 * @deprecated Use gapi()->update_current_site('') instead.
+		 *
+		 * @return bool|WP_Error
+		 */
 		public function deregister_current_site() {
 
 			$site_key = $this->get_site_key();
@@ -154,14 +174,13 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 
 			if ( is_wp_error( $raw_response ) ) {
 				return $raw_response;
-			}
-			else if ( $raw_response['response']['code'] != 200 ) {
+			} elseif ( $raw_response['response']['code'] != 200 ) {
 				return new WP_Error( 'server_error', 'Error from server: ' . $raw_response['response']['message'] );
 			}
 
 			$response_body = json_decode( $raw_response['body'] );
 
-			if ( $response_body === null ){
+			if ( $response_body === null ) {
 				return new WP_Error( 'invalid_response', 'Invalid response from server: ' . $raw_response['body'] );
 			}
 
@@ -230,28 +249,6 @@ if ( ! class_exists( 'Gravity_Api' ) ) {
 
 		public function get_gravity_api_url() {
 			return trailingslashit( GRAVITY_API_URL );
-		}
-
-		public function ensure_site_registered() {
-
-			if ( ! $this->is_site_registered() ) {
-
-				$license_key_md5 = GFCommon::get_key();
-				if ( empty( $license_key_md5 ) ) {
-					return false;
-				}
-
-				$result = $this->register_current_site( $license_key_md5, true );
-
-				if ( ! $result || is_wp_error( $result ) ) {
-					return false;
-				}
-			}
-
-			return array(
-				'site_key' => $this->get_site_key(),
-				'site_secret' => $this->get_site_secret(),
-			);
 		}
 
 		public function is_site_registered() {

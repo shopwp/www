@@ -116,14 +116,14 @@ a.button.edd-slg-social-unlink-profile,
 .btn-l,
 .edd-add-to-cart-label,
 #edd-purchase-button {
-  font-size: $font-l;
+  font-size: $font-xl;
 }
 
 
 .menu-item-back a,
 .btn-s,
 a.button.edd-slg-social-unlink-profile {
-  font-size: $font-s;
+  font-size: $font-m;
 }
 
 
@@ -189,4 +189,13 @@ a.button.edd-slg-social-unlink-profile {
     background-color: darken(color(primary), 12);
   }
 
+}
+
+.btn-copy {
+  background: color(base);
+  color: #fff;
+  display: inline;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 5px;
 }

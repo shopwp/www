@@ -457,36 +457,6 @@ function wo_license_key() {
 }
 
 /**
- * Cheater watch
- * @return [type] [description]
- */
-function wo_cheater_watch() {
-	$wo_license_key = get_option( "wo_license_key", '' );
-	if ( wo_is_licensed() && strlen( $wo_license_key ) > 0 ) {
-		return;
-	}
-
-	$api_params = array(
-		'edd_action' => 'activate_license',
-		'license'    => $wo_license_key,
-		'item_name'  => urlencode( 'WP OAuth Server' ),
-		'url'        => home_url()
-	);
-
-	$response = wp_remote_get(
-		add_query_arg( $api_params, "https://wp-oauth.com" )
-	);
-
-	if ( ! is_wp_error( $response ) ) {
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-		update_option( "wo_license_key", $wo_license_key );
-		update_option( 'wo_license_information', (array) $license_data );
-	}
-}
-
-add_action( 'wo_daily_tasks_hook', 'wo_cheater_watch' );
-
-/**
  * Determine is environment is development
  * @return [type] [description]
  *

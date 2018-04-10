@@ -604,7 +604,7 @@ function edd_stripe_purchase_link_output( $download_id = 0, $args = array() ) {
 					var amount = 0;
 
 					<?php foreach( edd_get_variable_prices( $download_id ) as $price_id => $price ) : ?>
-						prices[<?php echo $price_id; ?>] = <?php echo $price['amount']*100; ?>;
+						prices[<?php echo $price_id; ?>] = <?php echo $price['amount']; ?>;
 					<?php endforeach; ?>
 
 					if( form.find( '.edd_price_option_<?php echo $download_id; ?>' ).length > 1 ) {
@@ -612,7 +612,7 @@ function edd_stripe_purchase_link_output( $download_id = 0, $args = array() ) {
 						if( form.find('.edd_price_options input:checked').hasClass( 'edd_cp_radio' ) ) {
 
 							custom_price = true;
-							amount = form.find( '.edd_cp_price' ).val() * 100;
+							amount = form.find( '.edd_cp_price' ).val();
 
 						} else {
 							price_id = form.find('.edd_price_options input:checked').val();
@@ -631,10 +631,15 @@ function edd_stripe_purchase_link_output( $download_id = 0, $args = array() ) {
 					}
 
 				} else if( form.find( '.edd_cp_price' ).length && form.find( '.edd_cp_price' ).val() ) {
-					amount = form.find( '.edd_cp_price' ).val() * 100;
+					amount = form.find( '.edd_cp_price' ).val();
 
 				} else {
-					amount = <?php echo edd_get_download_price( $download_id ) * 100; ?>;
+					amount = <?php echo edd_get_download_price( $download_id ); ?>;
+				}
+
+				if ( 'true' != edd_stripe_vars.is_zero_decimal ) {
+					amount *= 100;
+					amount = Math.round( amount );
 				}
 
 				StripeCheckout.configure({

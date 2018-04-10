@@ -121,3 +121,31 @@ table {
 tr.edd_download_history_row:not(:first-child) {
   display: none;
 }
+
+
+
+.is-docs {
+
+  table {
+    max-width: 700px;
+  }
+  
+  table, td, th {
+    border-collapse: collapse;
+    border: 1px solid color(medium-grey);
+    width: auto;
+    margin-top: 0;
+  }
+
+  table + table, table + table tr:first-child th,
+  table + table tr:first-child td {
+    border-top: 0;
+  }
+
+  td,
+  th {
+    padding: $space-s;
+    font-size: 1em;
+  }
+
+}

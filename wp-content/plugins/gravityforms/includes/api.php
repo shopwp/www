@@ -924,7 +924,7 @@ class GFAPI {
 
 		foreach ( $current_entry as $k => $v ) {
 			$lead_detail_id = GFFormsModel::get_lead_detail_id( $current_fields, $k );
-			$field          = GFFormsModel::get_field( $form, $k );
+			$field          = self::get_field( $form, $k );
 			$result         = GFFormsModel::queue_batch_field_operation( $form, $entry, $field, $lead_detail_id, $k, '' );
 			if ( false === $result ) {
 				return new WP_Error( 'update_field_values_failed', __( 'There was a problem while updating the field values', 'gravityforms' ), $wpdb->last_error );
@@ -1157,7 +1157,7 @@ class GFAPI {
 	 *
 	 * @uses GFAPI::get_entry()
 	 * @uses GFAPI::get_form()
-	 * @uses GFFormsModel::get_field()
+	 * @uses GFAPI::get_field()
 	 * @uses GFFormsModel::get_lead_details_table_name()
 	 * @uses GFFormsModel::update_lead_field_value()
 	 *
@@ -1190,7 +1190,7 @@ class GFAPI {
 			return false;
 		}
 
-		$field = GFFormsModel::get_field( $form, $input_id );
+		$field = self::get_field( $form, $input_id );
 
 		$entry_meta_table_name = GFFormsModel::get_entry_meta_table_name();
 
@@ -1446,13 +1446,19 @@ class GFAPI {
 	 * @param array $feed_meta The feed meta to replace the existing feed meta.
 	 * @param null  $form_id   The ID of the form that the feed is associated with
 	 *
-	 * @return false|int|WP_Error
+	 * @return int|WP_Error The number of rows updated or a WP_Error instance
 	 */
 	public static function update_feed( $feed_id, $feed_meta, $form_id = null ) {
 		global $wpdb;
 
 		if ( gf_upgrade()->get_submissions_block() ) {
 			return new WP_Error( 'submissions_blocked', __( 'Submissions are currently blocked due to an upgrade in progress', 'gravityforms' ) );
+		}
+
+		$lookup_result = self::get_feeds( $feed_id, $form_id );
+
+		if ( is_wp_error( $lookup_result ) ) {
+			return $lookup_result;
 		}
 
 		$feed_meta_json = json_encode( $feed_meta );
@@ -1467,10 +1473,6 @@ class GFAPI {
 
 		if ( false === $results ) {
 			return new WP_Error( 'error_updating', sprintf( __( 'There was an error while updating feed id %s', 'gravityforms' ), $feed_id ), $wpdb->last_error );
-		}
-
-		if ( 0 === $results ) {
-			return new WP_Error( 'not_found', sprintf( __( 'Feed id %s not found', 'gravityforms' ), $feed_id ) );
 		}
 
 		return $results;
@@ -1633,6 +1635,25 @@ class GFAPI {
 	 */
 	public static function get_fields_by_type( $form, $types, $use_input_type = false ) {
 		return GFFormsModel::get_fields_by_type( $form, $types, $use_input_type );
+	}
+
+	/**
+	 * Returns the field object for the requested field or input ID from the supplied or specified form.
+	 *
+	 * @since  2.3
+	 * @access public
+	 *
+	 * @param array|int  $form_or_id The Form Object or ID.
+	 * @param string|int $field_id   The field or input ID.
+	 *
+	 * @uses   GFFormsModel::get_field()
+	 *
+	 * @return GF_Field|false
+	 */
+	public static function get_field( $form_or_id, $field_id ) {
+		$field = GFFormsModel::get_field( $form_or_id, $field_id );
+
+		return $field ? $field : false;
 	}
 
 	// HELPERS ----------------------------------------------------

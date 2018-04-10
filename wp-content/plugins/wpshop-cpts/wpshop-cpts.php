@@ -33,19 +33,19 @@ function wpshop_custom_post_type_docs() {
     'labels'              => $labels,
     'supports'            => array('title', 'editor', 'comments'),
     'taxonomies'          => array('category', 'types'),
-    'hierarchical'        => false,
-    'public'              => false,
+    'hierarchical'        => true,
+    'public'              => true,
     'show_ui'             => true,
     'show_in_menu'        => true,
     'menu_position'       => 100,
     'menu_icon'           => 'dashicons-groups',
     'show_in_admin_bar'   => true,
     'can_export'          => true,
-    'has_archive'         => false,
+    'has_archive'         => true,
     'exclude_from_search' => true,
     'publicly_queryable'  => true,
-    'capability_type'     => 'page',
-    'rewrite'             => array( 'slug' => '/docs')
+    'query_var'           => true,
+    'capability_type'     => 'post'
   );
 
   register_post_type('docs', $args);
@@ -82,7 +82,10 @@ function wpshop_custom_taxonomy_docs() {
     'show_ui' => true,
     'show_admin_column' => true,
     'query_var' => true,
-    'rewrite' => array( 'slug' => 'type' ),
+    'rewrite' => array(
+      'slug' => 'docs',
+      'hierarchical' => true
+    )
   ));
 }
 

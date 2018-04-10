@@ -160,14 +160,12 @@ Get doc
 */
 function wps_get_doc() {
 
-  $post = get_post( $_POST['docId'] );
-
-  $content = apply_filters('the_content', $post->post_content);
-  $slug = $post->post_name;
+  $post = get_post($_POST['docId']);
 
   $store = array(
-    'content' => $content,
-    'slug'    => $slug
+    'content' => $post->post_content,
+    'slug'    => $post->post_name,
+    'url'     => get_post_permalink($post->ID)
   );
 
   echo json_encode($store);

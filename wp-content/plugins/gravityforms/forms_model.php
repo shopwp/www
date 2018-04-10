@@ -1453,6 +1453,15 @@ class GFFormsModel {
 				 */
 				do_action( 'gform_delete_entry', $entry_id );
 
+
+				/**
+				 * Fires before a lead is deleted
+				 * @param $lead_id
+				 * @deprecated Use gform_delete_entry instead
+				 * @see gform_delete_entry
+				 */
+				do_action( 'gform_delete_lead', $entry_id );
+
 			}
 
 		}
@@ -1995,13 +2004,15 @@ class GFFormsModel {
 
 		//Delete from grid column meta
 		$columns = self::get_grid_column_meta( $form_id );
-		$count   = sizeof( $columns );
-		for ( $i = $count - 1; $i >= 0; $i -- ) {
-			if ( intval( rgar( $columns, $i ) ) == intval( $field_id ) ) {
-				unset( $columns[ $i ] );
+		if ( is_array( $columns ) ) {
+			$count = sizeof( $columns );
+			for ( $i = $count - 1; $i >= 0; $i -- ) {
+				if ( intval( rgar( $columns, $i ) ) == intval( $field_id ) ) {
+					unset( $columns[ $i ] );
+				}
 			}
+			self::update_grid_column_meta( $form_id, $columns );
 		}
-		self::update_grid_column_meta( $form_id, $columns );
 
 		self::delete_field_values( $form_id, $field_id );
 
@@ -2066,6 +2077,15 @@ class GFFormsModel {
 		 * @param $entry_id
 		 */
 		do_action( 'gform_delete_entry', $entry_id );
+
+		/**
+		 * Fires before a lead is deleted
+		 * @param $lead_id
+		 * @deprecated Use gform_delete_entry instead
+		 * @see gform_delete_entry
+		 */
+		do_action( 'gform_delete_lead', $entry_id );
+
 
 		$entry_table             = self::get_entry_table_name();
 		$entry_notes_table       = self::get_entry_notes_table_name();
@@ -2165,7 +2185,7 @@ class GFFormsModel {
 		 * Use this filter if the server is behind a proxy.
 		 *
 		 * @since 2.2
-		 * @example https://www.gravityhelp.com/documentation/article/gform_ip_address/
+		 * @example https://docs.gravityforms.com/gform_ip_address/
 		 *
 		 * @param string $ip The IP being used.
 		 */
@@ -2204,13 +2224,15 @@ class GFFormsModel {
 
 		$die_message = esc_html__( 'An error prevented the entry for this form submission being saved. Please contact support.', 'gravityforms' );
 
+		$entry_table = GFFormsModel::get_entry_table_name();
+
 		//Inserting lead if null
 		if ( $is_new_lead ) {
 
 			global $current_user;
 			$user_id = $current_user && $current_user->ID ? $current_user->ID : 'NULL';
 
-			$entry_table = GFFormsModel::get_entry_table_name();
+
 			$user_agent = self::truncate( rgar( $_SERVER, 'HTTP_USER_AGENT' ), 250 );
 			$user_agent = sanitize_text_field( $user_agent );
 			$source_url = self::truncate( self::get_current_page_url(), 200 );
@@ -2265,6 +2287,15 @@ class GFFormsModel {
 
 
 			GFCommon::log_debug( __METHOD__ . "(): Entry record created in the database. ID: {$lead_id}." );
+		} elseif ( ! empty( $entry['id'] ) ) {
+			// Make sure the entry array contains all the entry properties.
+			$sql = $wpdb->prepare( "SELECT * FROM $entry_table WHERE id=%d", $entry['id'] );
+			$current_properties = $wpdb->get_row( $sql, ARRAY_A );
+			foreach ( $current_properties as $key => $property ) {
+				if ( ! isset( $entry[ (string) $key ] ) ) {
+					$entry[ (string) $key ] = $current_properties[ $key ];
+				}
+			}
 		}
 
 		$current_fields = $wpdb->get_results( $wpdb->prepare( "SELECT id, meta_key FROM $entry_meta_table WHERE entry_id=%d", $entry['id'] ) );
@@ -2399,7 +2430,7 @@ class GFFormsModel {
 					$value = GFCommon::openssl_decrypt( $value );
 				}
 
-				$lead[ $field->id ] = gf_apply_filters( array( 'gform_get_input_value', $form['id'], $field->id ), $value, $entry, $field, '' );
+				$entry[ (string) $field->id ] = gf_apply_filters( array( 'gform_get_input_value', $form['id'], $field->id ), $value, $entry, $field, '' );
 
 			}
 		}
@@ -2687,7 +2718,7 @@ class GFFormsModel {
 		if ( $source_field && is_subclass_of( $source_field, 'GF_Field' ) ) {
 			if ( $source_field->type == 'post_category' ) {
 				$field_value = GFCommon::prepare_post_category_value( $field_value, $source_field, 'conditional_logic' );
-			} elseif ( $source_field->type == 'multiselect' && ! empty( $field_value ) && ! is_array( $field_value ) ) {
+			} elseif ( $source_field instanceof GF_Field_MultiSelect && ! empty( $field_value ) && ! is_array( $field_value ) ) {
 				// Convert the comma-delimited string into an array.
 				$field_value = $source_field->to_array( $field_value );
 			} elseif ( $source_field->get_input_type() != 'checkbox' && is_array( $field_value ) && $source_field->id != $rule['fieldId'] && is_array( $source_field->get_entry_inputs() ) ) {
@@ -3540,19 +3571,18 @@ class GFFormsModel {
 
 
 	public static function choice_value_match( $field, $choice, $value ) {
-		$choice_value 		= GFFormsModel::maybe_trim_input( $choice['value'], $field->formId, $field );
-		$value        		= GFFormsModel::maybe_trim_input( $value, $field->formId, $field );
+		$choice_value = GFFormsModel::maybe_trim_input( $choice['value'], $field->formId, $field );
+		$value        = GFFormsModel::maybe_trim_input( $value, $field->formId, $field );
 
-		$allowed_html	= wp_kses_allowed_html( 'post' );
-		$sanitized_value  	= wp_kses( $value, $allowed_html );
-
+		$allowed_html    = wp_kses_allowed_html( 'post' );
+		$sanitized_value = wp_kses( $value, $allowed_html );
 
 		if ( $choice_value == $value || $choice_value == $sanitized_value ) {
 			return true;
 		} else if ( $field->enablePrice ) {
-			$ary   = explode( '|', $value );
+			$ary = explode( '|', $value );
 
-			$val   = count( $ary ) > 0 ? $ary[0] : '';
+			$val           = count( $ary ) > 0 ? $ary[0] : '';
 			$sanitized_val = wp_kses( $val, $allowed_html );
 
 			$price = count( $ary ) > 1 ? $ary[1] : '';
@@ -3562,8 +3592,8 @@ class GFFormsModel {
 			}
 		} // add support for prepopulating multiselects @alex
 		else if ( RGFormsModel::get_input_type( $field ) == 'multiselect' ) {
-			$values = explode( ',', $value );
-			$sanitized_values = explode( ',', $sanitized_value );
+			$values           = $field->to_array( $value );
+			$sanitized_values = $field->to_array( $sanitized_value );
 
 			if ( in_array( $choice_value, $values ) || in_array( $choice_value, $sanitized_values ) ) {
 				return true;
@@ -4037,7 +4067,7 @@ class GFFormsModel {
 		}
 
 		//processing values so that they are in the correct format for each input type
-		$value = self::prepare_value( $form, $field, $value, $input_name, rgar( $lead, 'id' ) );
+		$value = self::prepare_value( $form, $field, $value, $input_name, rgar( $lead, 'id' ), $lead );
 
         //ignore fields that have not changed
         if ( $lead != null && isset( $lead[ $input_id ] ) && $value === rgget( (string) $input_id, $lead ) ) {
@@ -4195,7 +4225,7 @@ class GFFormsModel {
 			return false;
 		}
 
-		$entry[ $input_id ] = $value;
+		$entry[ (string) $input_id ] = $value;
 
 		$entry_id = $entry['id'];
 		$form_id  = $form['id'];
@@ -4490,7 +4520,7 @@ class GFFormsModel {
 		return $drop_tables;
 	}
 
-	public static function insert_form_view( $form_id, $ip ) {
+	public static function insert_form_view( $form_id, $deprecated = null ) {
 		global $wpdb;
 		$table_name = self::get_form_view_table_name();
 
@@ -4809,18 +4839,40 @@ class GFFormsModel {
 		return GF_Forms_Model_Legacy::build_lead_array( $results );
 	}
 
+
+	/***
+	 * Saves the Gravity Forms license key to the database and registers the site and license key with the Gravity Forms licensing server.
+	 *
+	 * @since 1.0
+	 *
+	 * @param $new_key Gravity Forms license key to be saved.
+	 */
 	public static function save_key( $new_key ) {
 
+		$new_key = trim( $new_key );
 		$previous_key = get_option( 'rg_gforms_key' );
 
 		if ( empty( $new_key ) ) {
 
 			delete_option( 'rg_gforms_key' );
 
+			GFCommon::update_site_registration( '' );
+
 		} else if ( $previous_key != $new_key ) {
 
-			$new_key = trim( $new_key );
-			update_option( 'rg_gforms_key', md5( $new_key ) );
+			$key_md5 = md5( $new_key );
+
+			// Saving new key
+			update_option( 'rg_gforms_key', $key_md5 );
+
+			// Updating site registration with Gravity Server
+			GFCommon::update_site_registration( $key_md5, true );
+
+		} else {
+
+			// Updating site registration even if keys did not change.
+			// This will boost site registration from sites that already have a license key entered
+			GFCommon::update_site_registration( $new_key, true );
 
 		}
 
@@ -5113,18 +5165,27 @@ class GFFormsModel {
 	}
 
 	/**
-	 * @param $form
-	 * @param $field_id
+	 * Returns the field object for the requested field or input ID from the supplied or specified form.
 	 *
-	 * @return GF_Field
+	 * @since  2.3 Updated to support being passed the form id or form object as the first parameter.
+	 * @since  unknown.
+	 * @access public
+	 *
+	 * @param array|int  $form_or_id The Form Object or ID.
+	 * @param string|int $field_id   The field or input ID.
+	 *
+	 * @return GF_Field|null
 	 */
-	public static function get_field( $form, $field_id ) {
-		if ( is_numeric( $field_id ) ) {
-			$field_id = intval( $field_id );
-		} //removing floating part of field (i.e 1.3 -> 1) to return field by input id
+	public static function get_field( $form_or_id, $field_id ) {
+		$form = is_numeric( $form_or_id ) ? self::get_form_meta( $form_or_id ) : $form_or_id;
 
 		if ( ! isset( $form['fields'] ) || ! isset( $form['id'] ) || ! is_array( $form['fields'] ) ) {
 			return null;
+		}
+
+		if ( is_numeric( $field_id ) ) {
+			// Removing floating part of field (i.e 1.3 -> 1) to return field by input id.
+			$field_id = intval( $field_id );
 		}
 
 		global $_fields;

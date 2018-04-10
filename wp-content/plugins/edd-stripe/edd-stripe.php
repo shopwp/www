@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Stripe Payment Gateway
 Plugin URL: https://easydigitaldownloads.com/downloads/stripe-gateway/
 Description: Adds a payment gateway for Stripe.com
-Version: 2.6.9
+Version: 2.6.13
 Author: Easy Digital Downloads
 Author URI: https://easydigitaldownloads.com
 Text Domain: edds
@@ -30,7 +30,7 @@ class EDD_Stripe {
 
 				self::$instance->setup_constants();
 
-				add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
+				add_action( 'init', array( self::$instance, 'load_textdomain' ) );
 
 				self::$instance->includes();
 
@@ -60,7 +60,7 @@ class EDD_Stripe {
 			define( 'EDDSTRIPE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		}
 
-		define( 'EDD_STRIPE_VERSION', '2.6.9' );
+		define( 'EDD_STRIPE_VERSION', '2.6.13' );
 	}
 
 	private function includes() {

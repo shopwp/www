@@ -3,7 +3,7 @@
 Plugin Name: Redirection
 Plugin URI: https://redirection.me/
 Description: Manage all your 301 redirects and monitor 404 errors
-Version: 3.0.1
+Version: 3.2
 Author: John Godley
 Author URI: https://johngodley.com
 Text Domain: redirection
@@ -65,13 +65,14 @@ function red_start_rest() {
 }
 
 if ( red_is_admin() || red_is_wpcli() ) {
-	include dirname( __FILE__ ).'/redirection-admin.php';
+	include_once dirname( __FILE__ ).'/redirection-admin.php';
+	include_once dirname( __FILE__ ).'/redirection-api.php';
 } else {
-	include dirname( __FILE__ ).'/redirection-front.php';
+	include_once dirname( __FILE__ ).'/redirection-front.php';
 }
 
 if ( red_is_wpcli() ) {
-	include dirname( __FILE__ ).'/redirection-cli.php';
+	include_once dirname( __FILE__ ).'/redirection-cli.php';
 }
 
 add_action( 'rest_api_init', 'red_start_rest' );

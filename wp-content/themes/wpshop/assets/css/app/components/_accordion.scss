@@ -1,17 +1,61 @@
+.component.component-faq {
+  margin-bottom: $space-xxxl;
+}
+
+.faqs {
+  margin-left: 0;
+}
+
 .accordion-heading {
-  margin-bottom: $space-l;
+  padding: $space-l 0;
+  font-size: $font-l;
+  border-bottom: 1px solid color(medium-grey);
+
+  .fa-plus-square,
+  .fa-minus-square {
+    font-size: $font-l;
+    position: relative;
+    top: 5px;
+  }
 
   &:hover {
     cursor: pointer;
+    // color: lighten(color(black), 60%);
   }
 
-  .fa {
-    font-size: $font-s;
-    margin-right: $space-xxxs;
+  @include device(700, 'max') {
+    font-size: $font-m;
   }
 
 }
 
 .accordion-content {
+  margin-left: 0;
+  margin-top: 0;
+  padding-top: $space-l;
   display: none;
+
+  ol {
+    margin-left: $space-l*2;
+  }
+
+  &.is-open {
+    margin-bottom: $space-xxl;
+  }
+
+}
+
+.faqs-group {
+  margin-bottom: $space-xl*2;
+}
+
+.accordion-heading {
+  &:before {
+    display: block;
+    content: " ";
+    margin-top: -30px;
+    height: 30px;
+    visibility: hidden;
+    pointer-events: none;
+  }
 }

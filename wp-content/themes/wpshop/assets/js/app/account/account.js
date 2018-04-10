@@ -220,6 +220,14 @@ function showUpgrades($) {
 }
 
 
+function selectElementContents(el) {
+  var range = document.createRange();
+  range.selectNodeContents(el);
+  var sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
 
 /*
 
@@ -233,18 +241,25 @@ function initAccount($) {
   onPasswordChange($);
   showUpgrades($);
 
-  var clipboard = new Clipboard('.btn-copy');
+  var clipboard = new Clipboard('.copy-trigger');
 
   clipboard.on('success', function(e) {
 
-    jQuery(e.trigger).next().addClass('is-notifying');
+    var $notice = jQuery('.notice-copy');
+
+    $notice.addClass('is-notifying');
 
     setTimeout(function() {
-      jQuery(e.trigger).next().removeClass('is-notifying');
+      $notice.removeClass('is-notifying');
       e.clearSelection();
-    }, 2000);
+    }, 2500);
 
-    jQuery(e.trigger).focus().select();
+    // jQuery(e.trigger).focus().select();
+
+    selectElementContents(jQuery(e.trigger)[0]);
+
+
+
 
 
   });

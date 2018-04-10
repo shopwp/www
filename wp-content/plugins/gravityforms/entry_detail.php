@@ -1097,7 +1097,7 @@ class GFEntryDetail {
 					 * Filter the markup of the order summary which appears on the Entry Detail, the {all_fields} merge tag and the {pricing_fields} merge tag.
                      *
                      * @since 2.1.2.5
-                     * @see   https://www.gravityhelp.com/documentation/article/gform_order_summary/
+                     * @see   https://docs.gravityforms.com/gform_order_summary/
 					 *
 					 * @var string $markup          The order summary markup.
 					 * @var array  $form            Current form object.

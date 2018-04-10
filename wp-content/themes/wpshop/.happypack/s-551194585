@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.clearFormFields = exports.insertMessage = exports.reduceFormData = exports.hasValue = exports.disable = exports.enable = exports.enableForm = exports.disableForm = exports.hideLoader = exports.showLoader = exports.getUrlParams = undefined;
+exports.selectText = exports.clearFormFields = exports.insertMessage = exports.reduceFormData = exports.hasValue = exports.disable = exports.enable = exports.enableForm = exports.disableForm = exports.hideLoader = exports.showLoader = exports.getUrlParams = undefined;
 
 var _reduce = require("lodash/reduce");
 
@@ -27,6 +27,27 @@ function getUrlParams(url) {
 
   return urlParams;
 };
+
+/*
+
+Selects text
+
+*/
+function selectText(element) {
+
+  if (document.body.createTextRange) {
+    var range = document.body.createTextRange();
+    range.moveToElementText(element);
+    range.select();
+  } else if (window.getSelection) {
+
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(element);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+}
 
 /*
 
@@ -195,3 +216,4 @@ exports.hasValue = hasValue;
 exports.reduceFormData = reduceFormData;
 exports.insertMessage = insertMessage;
 exports.clearFormFields = clearFormFields;
+exports.selectText = selectText;

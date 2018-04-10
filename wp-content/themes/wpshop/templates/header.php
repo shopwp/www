@@ -1,19 +1,11 @@
-<?php if (!is_page('auth')) { ?>
+<?php if ( $post->post_type !== 'docs') { ?>
 
   <header class="header">
 
     <div class="header-content l-row l-row-justify l-contain">
 
       <a class="logo-link" href="<?= esc_url(home_url('/')); ?>">
-
-        <!-- <?php if( is_page('home') ) { ?>
-          <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header">
-        <?php } else { ?>
-          <img src="<?php the_field('theme_logo_primary', 'option'); ?>" alt="WP Shopify" class="logo-header">
-        <?php } ?> -->
-
         <img src="<?php the_field('theme_logo_primary', 'option'); ?>" alt="WP Shopify" class="logo-header">
-
       </a>
 
       <?php if( is_page('checkout') ) { ?>
@@ -83,14 +75,5 @@
     <?php endif; ?>
 
   </header>
-
-<?php } else { ?>
-
-  <div class="l-contain l-col l-col-center l-row-center logo-header-auth-wrapper">
-    <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header-auth">
-    <h1>Authenticating</h1>
-    <p class="auth-notifying">Please wait ...</p>
-    <div class="spinner is-visible"></div>
-  </div>
 
 <?php } ?>

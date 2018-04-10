@@ -874,7 +874,7 @@ class GF_Forms_Model_Legacy {
 
 		$where = self::get_leads_where_sql( compact( 'form_id', 'search', 'status', 'star', 'read', 'start_date', 'end_date', 'payment_status' ) );
 
-		$entry_meta          = GFFormsModel::get_entry_meta( $form_id );
+		$entry_meta          = self::get_entry_meta( $form_id );
 		$entry_meta_sql_join = '';
 		if ( false === empty( $entry_meta ) && array_key_exists( $sort_field, $entry_meta ) ) {
 			$entry_meta_sql_join = $wpdb->prepare(
@@ -1266,7 +1266,7 @@ class GF_Forms_Model_Legacy {
 		$lead_table_name        = GFFormsModel::get_lead_table_name();
 		$lead_meta_table_name   = GFFormsModel::get_lead_meta_table_name();
 
-		$entry_meta               = GFFormsModel::get_entry_meta( is_array( $form_id ) ? 0 : $form_id );
+		$entry_meta               = self::get_entry_meta( is_array( $form_id ) ? 0 : $form_id );
 		$entry_meta_sql_join      = '';
 		$sort_field_is_entry_meta = false;
 		if ( false === empty( $entry_meta ) && array_key_exists( $sort_field, $entry_meta ) ) {
@@ -1640,6 +1640,54 @@ class GF_Forms_Model_Legacy {
 		$sql = empty( $sql_array ) ? '' : join( ' ' . $search_operator . ' ', $sql_array );
 
 		return $sql;
+	}
+
+	/**
+	 * Checks whether the conditional logic operator passed in is valid.
+	 *
+	 * @since  2.0.7.20 Refactored and added filter gform_is_valid_conditional_logic_operator.
+	 * @access public
+	 *
+	 * @param string $operator Conditional logic operator.
+	 *
+	 * @return bool true if a valid operator, false if not.
+	 */
+	public static function is_valid_operator( $operator ) {
+		$operators = array( 'is', 'isnot', '<>', 'not in', 'in', '>', '<', 'contains', 'starts_with', 'ends_with', 'like', '>=', '<=' );
+		$is_valid = in_array( strtolower( $operator ), $operators );
+		/**
+		 * Filter which checks whether the operator is valid.
+		 *
+		 * Allows custom operators to be validated.
+		 *
+		 * @since 2.0.7.20
+		 *
+		 * @param bool   $is_valid Whether the operator is valid or not.
+		 * @param string $operator The conditional logic operator.
+		 */
+		return apply_filters( 'gform_is_valid_conditional_logic_operator', $is_valid, $operator );
+	}
+
+	public static function get_entry_meta( $form_ids ) {
+		global $_entry_meta;
+
+		if ( $form_ids == 0 ) {
+			$form_ids = GFFormsModel::get_form_ids();
+		}
+
+		if ( ! is_array( $form_ids ) ) {
+			$form_ids = array( $form_ids );
+		}
+		$meta = array();
+		foreach ( $form_ids as $form_id ) {
+			if ( ! isset( $_entry_meta[ $form_id ] ) ) {
+				$_entry_meta           = array();
+				$_entry_meta[ $form_id ] = apply_filters( 'gform_entry_meta', array(), $form_id );
+			}
+			$meta = array_merge( $meta, $_entry_meta[ $form_id ] );
+		}
+
+		return $meta;
 	}
 
 	private static function get_date_range_where( $search_criteria ) {
@@ -2117,7 +2165,7 @@ class GF_Forms_Model_Legacy {
 		}
 
 		// Save the entry meta values - only for the entry meta currently available for the form, ignore the rest.
-		$entry_meta = GFFormsModel::get_entry_meta( $form_id );
+		$entry_meta = self::get_entry_meta( $form_id );
 		if ( is_array( $entry_meta ) ) {
 			foreach ( array_keys( $entry_meta ) as $key ) {
 				if ( isset( $entry[ $key ] ) ) {
