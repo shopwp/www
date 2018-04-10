@@ -1,8 +1,4 @@
-[![N|Solid](https://simpleblend.net/wpshop-temp-logo-new.png)](https://wpshop.io)
-
-> Sell your Shopify products on WordPress. A plugin designed to be extensible, seamless, and powerful
-
-Website: https://wpshop.io
+# www for https://wpshop.io
 
 ## What is WP Shopify?
 At its core, WP Shopify (WPS) syncs your Shopify data (products, collections, etc) directly into WordPress. We save the data as a Custom Post Type which gives you full control to decide how they look on the front-end. Contrary to the official Shopify plugin, we do not use limiting iFrames or restrict what data is synced. It’s your store pure and simple.
@@ -18,6 +14,4 @@ We’re of the opinion that WordPress and Shopify should focus on what they’re
 
 WPS will give businesses the flexibility they need in communicating their brand to the world. Whether you’re using WordPress as a landing page to promote a single product or selling a whole store along side your blog, WPS will give you tools you need.
 ___
-*Note: WP Shopify is currently in development. Sign up at https://wpshop.io to be notified when it's ready!*
-
 Website: https://wpshop.io
