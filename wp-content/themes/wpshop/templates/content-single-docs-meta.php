@@ -1,4 +1,4 @@
-<h1 class="doc-meta-title"><?php the_title(); ?></h1>
+<h1 class="doc-meta-title"><?= $post->post_title; ?></h1>
 
 <div class="doc-meta-wrapper l-row">
 
@@ -9,19 +9,22 @@
   <?php } ?>
 
 
-  <?php if ($since) { ?>
-    <p class="doc-meta-item doc-since">Version added: v<?= $since; ?></p>
+  <?php if ($since && $type[0]->slug !== 'getting-started') { ?>
+    <p class="doc-meta-item doc-since <?= !$source ? 'doc-meta-item-last' : ''; ?>">Since: v<?= $since; ?></p>
+
+  <?php } else { ?>
+    <p class="doc-meta-item doc-since doc-meta-item-last <?= !$source ? 'doc-meta-item-last' : ''; ?>">Updated on: <?= date("F d, Y", strtotime($post->post_modified)); ?></p>
+
   <?php } ?>
 
 
-  <?php if ($source) { ?>
-    <p class="doc-meta-item doc-source doc-meta-item-last"><a href="<?= $source; ?>" class="doc-source-link">Source: <i class="fas fa-external-link-square-alt"></i></a></p>
+  <?php if ($source && $type[0]->slug !== 'getting-started') { ?>
+    <p class="doc-meta-item doc-source doc-meta-item-last"><a href="<?= $source; ?>" class="doc-source-link" target="_blank">Source: <i class="fas fa-external-link-square-alt"></i></a></p>
   <?php } ?>
 
 
 </div>
 
 <div class="doc-meta-description">
-  <!-- <h2 class="doc-heading doc-sub-heading">Description:</h2> -->
-  <?php the_field('shortcode_description', $post->ID); ?>
+  <?php the_field('doc_description', $post->ID); ?>
 </div>

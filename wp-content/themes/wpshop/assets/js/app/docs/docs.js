@@ -21,14 +21,18 @@ function onDocClick($) {
 
   $('.doc-term').on('click', async function(e) {
 
+    e.stopPropagation();
+    e.preventDefault();
+
     var $doc = jQuery(this);
 
     if (!$doc.hasClass('is-current-doc')) {
 
       $('.is-docs > .fa-cog').addClass('is-visible fa-spin');
+      $('.docs-content-loader').addClass('is-visible');
 
       $doc.addClass('is-loading');
-      jQuery('.entry-content').addClass('is-loading');
+      jQuery('.doc-content-wrapper').addClass('is-loading');
       jQuery('.doc-term.is-current-doc').removeClass('is-current-doc');
       $doc.addClass('is-current-doc');
 
@@ -44,7 +48,7 @@ function onDocClick($) {
       data = JSON.parse(data);
 
       showDocContent(data.content);
-      jQuery('.entry-content').removeClass('is-loading');
+      jQuery('.doc-content-wrapper').removeClass('is-loading');
       $doc.removeClass('is-loading');
       $('.is-docs > .fa-cog').removeClass('is-visible fa-spin');
 
@@ -80,11 +84,12 @@ Show Doc Content
 */
 function showDocContent(docContent) {
 
-  jQuery('.main').empty().append( jQuery('<div class="entry-content">' + docContent + '</div>') );
-  jQuery('.entry-content').after( jQuery('<div id="disqus_thread"></div>') );
+  jQuery('.main').empty().append( jQuery('<div class="doc-content-wrapper">' + docContent + '</div>') );
 
-  Prism.highlightAll();
+  hljs.initHighlighting.called = false;
+  hljs.initHighlighting();
 
+  jQuery('.docs-content-loader').removeClass('is-visible');
 }
 
 
@@ -119,7 +124,7 @@ function getLatestVersion() {
     method: 'GET',
     url: 'https://api.github.com/repos/arobbins/wp-shopify/tags',
     beforeSend: function(xhr) {
-      xhr.setRequestHeader('Authorization', 'token 552b09291a92c2d6b5d19899a27833c71047f92e');
+      xhr.setRequestHeader('Authorization', 'token 256460cc4351f765540bc4f496cb45ccdbabad82');
       xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
       xhr.setRequestHeader('Content-Type', 'application/json');
     },

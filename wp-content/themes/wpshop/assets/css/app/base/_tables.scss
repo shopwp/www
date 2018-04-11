@@ -106,7 +106,7 @@ table {
     tr:last-of-type {
 
       td {
-        padding-bottom: $space-m;
+        // padding-bottom: $space-m;
       }
 
     }
@@ -127,9 +127,9 @@ tr.edd_download_history_row:not(:first-child) {
 .is-docs {
 
   table {
-    max-width: 700px;
+    max-width: 780px;
   }
-  
+
   table, td, th {
     border-collapse: collapse;
     border: 1px solid color(medium-grey);

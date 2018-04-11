@@ -6,16 +6,21 @@
   margin-left: 0;
 }
 
+.accordions {
+  margin-top: 0;
+}
+
 .accordion-heading {
-  padding: $space-l 0;
-  font-size: $font-l;
+  padding: $space-m 0;
+  font-size: $font-m;
   border-bottom: 1px solid color(medium-grey);
 
   .fa-plus-square,
   .fa-minus-square {
     font-size: $font-l;
     position: relative;
-    top: 5px;
+    top: 3px;
+    margin-right: $space-s;
   }
 
   &:hover {
@@ -32,6 +37,7 @@
 .accordion-content {
   margin-left: 0;
   margin-top: 0;
+  margin-bottom: $space-xxl;
   padding-top: $space-l;
   display: none;
 
@@ -49,13 +55,24 @@
   margin-bottom: $space-xl*2;
 }
 
+.accordion {
+  margin: 0;
+}
+
 .accordion-heading {
-  &:before {
-    display: block;
-    content: " ";
-    margin-top: -30px;
-    height: 30px;
-    visibility: hidden;
-    pointer-events: none;
+  margin-bottom: 0;
+  margin-left: 3px;
+  
+  &:hover {
+    opacity: $opacity-soft;
   }
+
+  // &:before {
+  //   display: block;
+  //   content: " ";
+  //   margin-top: -30px;
+  //   height: 30px;
+  //   visibility: hidden;
+  //   pointer-events: none;
+  // }
 }

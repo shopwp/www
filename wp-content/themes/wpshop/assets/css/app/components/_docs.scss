@@ -1,5 +1,54 @@
 .docs {}
 
+.docs-content-loader {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 40px;
+
+  svg {
+    font-size: 40px;
+  }
+
+  &.is-visible {
+    opacity: 1;
+  }
+
+}
+
+.doc-template-info-single-value {
+  padding-top: 0;
+}
+
+.doc-template-examples {
+  margin-top: 4em;
+}
+
+.doc-shortcode-examples {
+
+  .code-snippet {
+    min-height: 360px;
+
+    @include device(1440, 'max') {
+      min-height: 305px;
+    }
+
+    code {
+
+      > span:first-child {
+        margin-left: -8px;
+      }
+
+    }
+
+  }
+
+  &:hover {
+    cursor: text;
+  }
+
+}
+
 .doc-type {
   position: absolute;
   right: 0;
@@ -27,6 +76,34 @@
   background: #ff6a67;
 }
 
+.doc-type-common-issue,
+.doc-type-guide,
+.doc-type-getting-started {
+  background: color(base);
+}
+
+.sidebar .doc-type-common-issue,
+.sidebar .doc-type-guide,
+.sidebar .doc-type-getting-started {
+  display: none;
+}
+
+
+.docs-template-default {
+  .doc-heading-secondary {
+    font-size: 26px;
+    margin-top: 2em;
+    text-transform: initial;
+  }
+}
+
+.doc-heading-secondary {
+  font-size: 26px;
+  margin-top: 2em;
+  text-transform: initial;
+}
+
+
 .doc-heading.doc-sub-heading {
   font-size: 20px;
   margin: 0;
@@ -44,7 +121,7 @@
 
 .code-snippet {
   border-radius: 0;
-  z-index: -1;
+  z-index: 1;
   width: calc(100% + (5em + 43px));
   margin-left: -53px;
   border-radius: 0;
@@ -53,10 +130,18 @@
   background: #1e2940;
   position: relative;
 
+  @include device(1440, 'max') {
+    width: calc(100% + (5em + 68px));
+  }
+
+  &:hover {
+    cursor: text;
+  }
+
   .loader {
     position: absolute;
-    top: calc(50% - 10px);
-    left: calc(50% + 19px);
+    top: calc(50% - 17px);
+    left: calc(50% + 10px);
     transform: translate(-50%, -50%);
     z-index: 2;
     color: #fff;
@@ -147,16 +232,25 @@
 
 .doc-shortcode-attribute-description {
   max-width: 1100px;
+
+  small {
+    display: block;
+    margin-top: 1em;
+    font-style: normal;
+    font-size: 85%;
+  }
+
 }
 
 .doc-shortcode-attribute-name {
   width: 100%;
-  min-width: 160px;
+  min-width: 200px;
 
   svg {
     font-size: 16px;
     margin-right: 5px;
   }
+
 }
 
 .doc-source-link {
@@ -302,6 +396,10 @@
   visibility: hidden;
 }
 
+
+
+
+
 .fontawesome-i2svg-pending {
   body {
     background: #f1f1f1;
@@ -377,6 +475,22 @@
   }
 
 }
+
+.doc-title {
+  color: color(base);
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
+
+.doc-content-wrapper {
+  &.is-loading {
+    opacity: $opacity-hard;
+  }
+}
+
+
 
 .doc-term {
   padding-top: $space-xxs;
@@ -484,7 +598,18 @@
 
   &:hover {
     opacity: 1;
-    cursor: text;
+    cursor: not-allowed;
+
+    a {
+      opacity: 1;
+      cursor: not-allowed;
+
+      &:hover {
+        cursor: not-allowed;
+      }
+
+    }
+
   }
 
 }

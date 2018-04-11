@@ -114,13 +114,18 @@ global $post;
 
         <?php include Wrapper\template_path(); ?>
 
-        <?php if(is_page('docs')) {
+        <?php if (is_page('docs')) {
+
           get_template_part('templates/docs');
+
         } ?>
 
-        <small class="notice-copy notice-inline"><i class="fal fa-thumbs-up"></i> Copied!</small>
-
       </main>
+
+      <?php if (get_post_type( get_the_ID() ) === 'docs' ) : ?>
+        <div class="docs-content-loader"><i class="fal fa-cog fa-spin"></i></div>
+        <small class="notice-copy notice-inline"><i class="fal fa-thumbs-up"></i> Copied!</small>
+      <?php endif; ?>
 
     </div>
 

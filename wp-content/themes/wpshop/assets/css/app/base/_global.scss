@@ -39,6 +39,11 @@ code, kbd, pre, samp {
   font-size: 16px;
   margin-top: 0;
   font-family: 'Source Code Pro', monospace;
+
+  @include device(1440, 'max') {
+    font-size: 13px;
+  }
+  
 }
 
 .hljs {

@@ -184,10 +184,6 @@ function wps_edd_on_complete_purchase( $payment_id ) {
 
 	// do something with payment data here
 
-  error_log( '-------------' );
-  error_log( print_r($cart_items, true) );
-  error_log( '-------------' );
-
 }
 
 add_action( 'edd_complete_purchase', 'wps_edd_on_complete_purchase' );
@@ -310,8 +306,6 @@ function process_add_transfer() {
     die();
 
   } else {
-    echo 'HIHIHI';
-    error_log('weeee');
     // wp_redirect($redirect_url_for_non_ajax_request);
   }
 }
@@ -376,9 +370,6 @@ function wps_redirect_to_custom_password_reset() {
   global $wpdb;
 
   if ('GET' == $_SERVER['REQUEST_METHOD'] ) {
-
-    error_log('>>>>>>>>>  HHIHIH <<<<<<<<<<');
-    error_log(print_r($_REQUEST['key'], true));
 
     $user = $wpdb->get_row( $wpdb->prepare( "SELECT ID, user_activation_key FROM $wpdb->users WHERE user_login = %s", $_REQUEST['login'] ) );
 

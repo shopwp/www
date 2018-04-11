@@ -94,8 +94,6 @@ add_action('wp_ajax_nopriv_mailinglist_get_list_id', 'mailinglist_get_list_id');
 //
 function mailinglist_signup() {
 
-  error_log( print_r($_POST, true) );
-
   $email = $_POST['email'];
   $nonce = $_POST['nonce'];
 
@@ -162,8 +160,13 @@ function wps_get_doc() {
 
   $post = get_post($_POST['docId']);
 
+  ob_start();
+  include(locate_template('templates/content-single-docs.php'));
+  $content = ob_get_contents();
+  ob_end_clean();
+
   $store = array(
-    'content' => $post->post_content,
+    'content' => $content,
     'slug'    => $post->post_name,
     'url'     => get_post_permalink($post->ID)
   );
@@ -184,16 +187,7 @@ Get Account Cat
 */
 function wps_get_account_cat() {
 
-  // $catSlug = $_POST['cat'];
-  // $path = 'components/account/' . $catSlug . '/' . $catSlug;
-  // $stuff = get_template_part($path);
-  // $okok = do_shortcode('[edd_license_keys]');
-  // $license = edd_software_licensing();
   $customer = new EDD_Customer(get_current_user_id(), true);
-
-  // if($catSlug === 'downloads') {
-  //   $stuff += do_shortcode('[download_history]');
-  // }
 
   echo do_shortcode('[download_history]');
   die();
@@ -249,9 +243,9 @@ add_action('wp_ajax_nopriv_wps_check_existing_username', 'wps_check_existing_use
 
 
 function wps_account_update_profile() {
-  error_log('000000000000000000000000000');
+
   wps_verify_nonce('account-profile-general');
-  error_log('111111111111111111111111111');
+
   $response = array(
     'name' => false,
     'email' => false
@@ -266,9 +260,6 @@ function wps_account_update_profile() {
     $responseEmail = wps_update_customer_email($_POST['data']['wps_customer_email']);
     $response['email'] = $responseEmail;
   }
-
-  error_log('->>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-  error_log(print_r($responseEmail, true));
 
   echo json_encode($response);
   die();
@@ -294,40 +285,15 @@ function wps_change_customer_password() {
   $userID =  $_POST['data']['wps_customer_id'];
   $error = '';
 
-  // error_log('->>>>>> $passCurrent ->>>>>>');
-  // error_log(print_r($passCurrent, true));
-  //
-  // error_log('->>>>>> $passNew ->>>>>>');
-  // error_log(print_r($passNew, true));
-  //
-  // error_log('->>>>>> $userID ->>>>>>');
-  // error_log(print_r($userID, true));
-
   if (wps_check_current_pass_valid($passCurrent, $userID)) {
 
-    error_log('->>>>>> pass valid ->>>>>>');
-
-    // wp_set_password($passNew, $userID);
-
-
-
     $userId = wp_update_user( array('ID' => $userID, 'user_pass' => $passNew) );
-
     $result = $userId;
-
-    error_log('->>>>>> new pass set ->>>>>>');
 
   } else {
 
     $result = false;
-
-    error_log('->>>>>> nada ->>>>>>');
-    error_log(print_r($result, true));
-
   }
-
-  error_log('->>>>>> RESULT ->>>>>>');
-  error_log(print_r($result, true));
 
   echo json_encode($result);
   die();
@@ -336,9 +302,6 @@ function wps_change_customer_password() {
 
 add_action('wp_ajax_wps_change_customer_password', 'wps_change_customer_password');
 add_action('wp_ajax_nopriv_wps_change_customer_password', 'wps_change_customer_password');
-
-
-
 
 
 
@@ -355,10 +318,7 @@ function wps_generate_password_reset($email) {
 
   $user = get_user_by( 'email', $email );
 
-  if(isset($user) && $user) {
-
-    error_log('---------------> FOUND USER <---------------');
-    error_log(print_r($user, true));
+  if (isset($user) && $user) {
 
     $user_email = $email;
 
@@ -371,11 +331,6 @@ function wps_generate_password_reset($email) {
     $key = wp_generate_password(40, false);
     $hash = password_hash($key, PASSWORD_DEFAULT);
 
-    error_log('>>>>>>>>>> generated key <<<<<<<<<<<');
-    error_log(print_r($key, true));
-
-    error_log('>>>>>>>>>> generated hash <<<<<<<<<<<');
-    error_log(print_r($hash, true));
 
     do_action('retrieve_password_key', $user_login, $hash);
     // Now insert the new md5 key into the db
@@ -414,9 +369,6 @@ function wps_generate_password_reset($email) {
 }
 
 
-
-
-
 /*
 
 Reset password
@@ -427,9 +379,6 @@ function wps_account_forgot_password() {
   wps_verify_nonce('account-forgot-pass');
 
   $passReset = wps_generate_password_reset($_POST['data']['wps_account_forgot_password']);
-
-  error_log('-------');
-  error_log(print_r($passReset, true));
 
   if(isset($passReset) && $passReset) {
     echo json_encode($passReset);
@@ -444,49 +393,6 @@ function wps_account_forgot_password() {
 }
 
 add_action('wp_ajax_nopriv_wps_account_forgot_password', 'wps_account_forgot_password');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

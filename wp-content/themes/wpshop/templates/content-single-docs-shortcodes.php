@@ -1,12 +1,12 @@
 
-<?php if (get_field('shortcode_example')) { ?>
+<?php if (get_field('shortcode_example', $post->ID)) { ?>
 
   <section class="doc-shortcode-examples">
 
     <h2 class="doc-heading doc-sub-heading">Examples:</h2>
     <pre class="code-snippet">
       <div class="loader"><?php include(locate_template('components/loader/loader-cog.php')); ?></div>
-      <code class="js"> <?php the_field('shortcode_example'); ?> </code>
+      <code class="js"> <?php the_field('shortcode_example', $post->ID); ?> </code>
     </pre>
   </section>
 
@@ -96,10 +96,7 @@
             <?php } ?>
 
 
-
-
-
-            <td class="doc-shortcode-attribute-name">
+            <td class="doc-shortcode-attribute-default">
 
               <?php
 
@@ -115,8 +112,6 @@
               <?= $defaultValue; ?>
 
             </td>
-
-
 
 
           </tr>

@@ -132,7 +132,7 @@ function get_doc_name($templateCat) {
           $title = $doc->post_title; ?>
 
           <li class="doc-term <?= $currentID === $doc->ID ? 'is-current-doc' : ''; ?>" data-doc-id="<?= $doc->ID; ?>">
-            <span class="doc-title"><?= $title; ?></span>
+            <a href="<?= get_permalink($doc->ID); ?>" class="doc-title"><?= $title; ?></a>
             <span class="doc-type doc-type-<?= rtrim($term->slug, "s"); ?>"><?= rtrim($term->slug, "s"); ?> <i class="fal fa-cog fa-spin"></i></span>
           </li>
 
