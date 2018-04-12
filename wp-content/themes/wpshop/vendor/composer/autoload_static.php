@@ -52,11 +52,22 @@ class ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'H' => 
+        array (
+            'Highlight\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/scrivo/highlight.php',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

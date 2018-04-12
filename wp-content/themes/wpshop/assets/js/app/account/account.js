@@ -12,7 +12,8 @@ import {
   enableForm,
   disableForm,
   insertMessage,
-  clearFormFields
+  clearFormFields,
+  copyToClipboard
 } from '../utils/utils';
 
 
@@ -220,15 +221,6 @@ function showUpgrades($) {
 }
 
 
-function selectElementContents(el) {
-  var range = document.createRange();
-  range.selectNodeContents(el);
-  var sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-}
-
-
 /*
 
 Init Account
@@ -241,33 +233,7 @@ function initAccount($) {
   onPasswordChange($);
   showUpgrades($);
 
-  var clipboard = new Clipboard('.copy-trigger');
-
-  clipboard.on('success', function(e) {
-
-    var $notice = jQuery('.notice-copy');
-
-    $notice.addClass('is-notifying');
-
-    setTimeout(function() {
-      $notice.removeClass('is-notifying');
-      e.clearSelection();
-    }, 2500);
-
-    // jQuery(e.trigger).focus().select();
-
-    selectElementContents(jQuery(e.trigger)[0]);
-
-
-
-
-
-  });
-
-  clipboard.on('error', function(e) {
-
-  });
-
+  copyToClipboard();
 
   $('.edd_download_file_link').text('Download WP Shopify').show();
 

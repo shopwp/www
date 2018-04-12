@@ -34,15 +34,8 @@ module.exports = () => {
       app: [
         path.resolve('assets/js/app/app.js'),
       ],
-      // checkout: path.resolve('assets/js/app/checkout/checkout'),
-      // account: path.resolve('assets/js/app/account/account'),
-      // auth: path.resolve('assets/js/app/security/security'),
-      // docs: path.resolve('assets/js/app/docs/docs'),
-      // plugins: path.resolve('assets/js/app/plugins/plugins'),
-      // forms: path.resolve('assets/js/app/forms/forms'),
-      // mailinglist: path.resolve('assets/js/app/mailinglist/mailinglist')
+      docs: path.resolve('assets/js/app/docs/docs')
     },
-
     output: {
       path: path.resolve('assets/prod/js'),
       publicPath: `//${HOST}:${PORT}/wp-content/themes/${THEME_NAME}/`,

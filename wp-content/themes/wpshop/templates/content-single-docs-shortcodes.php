@@ -6,7 +6,7 @@
     <h2 class="doc-heading doc-sub-heading">Examples:</h2>
     <pre class="code-snippet">
       <div class="loader"><?php include(locate_template('components/loader/loader-cog.php')); ?></div>
-      <code class="js"> <?php the_field('shortcode_example', $post->ID); ?> </code>
+      <code data-language="php"> <?php the_field('shortcode_example', $post->ID); ?> </code>
     </pre>
   </section>
 
@@ -66,7 +66,7 @@
               <td class="doc-shortcode-attribute-name">
 
                 <?php if (get_sub_field('is_real_value')) { ?>
-                  <pre class="code-snippet-inline"><code class="markdown"><?php the_sub_field('value'); ?></code></pre>
+                  <span class="code-snippet-inline copy-trigger" data-clipboard-text='<?php the_sub_field('value') ?>'><?php the_sub_field('value'); ?></span>
 
                 <?php } else { ?>
                   <?php the_sub_field('value'); ?>
@@ -84,7 +84,7 @@
               <td class="doc-shortcode-attribute-description">
 
               <?php if (get_sub_field('is_example')) { ?>
-                <pre class="code-snippet-inline"><code class="markdown copy-trigger" data-clipboard-text='<?php the_sub_field('description') ?>'><?php the_sub_field('description'); ?></code></pre>
+                <span class="code-snippet-inline copy-trigger" data-clipboard-text='<?php the_sub_field('description') ?>'><?php the_sub_field('description'); ?></span>
 
               <?php } else { ?>
                 <?php the_sub_field('description'); ?>

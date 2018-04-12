@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.initForms = undefined;
+exports.initAccordions = exports.initForms = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -326,3 +326,4 @@ function initForms($) {
 }
 
 exports.initForms = initForms;
+exports.initAccordions = initAccordions;

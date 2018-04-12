@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.selectText = exports.clearFormFields = exports.insertMessage = exports.reduceFormData = exports.hasValue = exports.disable = exports.enable = exports.enableForm = exports.disableForm = exports.hideLoader = exports.showLoader = exports.getUrlParams = undefined;
+exports.copyToClipboard = exports.selectText = exports.clearFormFields = exports.insertMessage = exports.reduceFormData = exports.hasValue = exports.disable = exports.enable = exports.enableForm = exports.disableForm = exports.hideLoader = exports.showLoader = exports.getUrlParams = undefined;
 
 var _reduce = require("lodash/reduce");
 
@@ -27,6 +27,47 @@ function getUrlParams(url) {
 
   return urlParams;
 };
+
+/*
+
+Select Element Contents
+
+*/
+function selectElementContents(el) {
+  var range = document.createRange();
+  range.selectNodeContents(el);
+  var sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+/*
+
+Copy to Clipboard
+
+*/
+function copyToClipboard() {
+
+  var clipboard = new Clipboard('.copy-trigger');
+
+  clipboard.on('success', function (e) {
+
+    var $notice = jQuery('.notice-copy');
+
+    $notice.addClass('is-notifying');
+
+    setTimeout(function () {
+      $notice.removeClass('is-notifying');
+      e.clearSelection();
+    }, 2500);
+
+    selectElementContents(jQuery(e.trigger)[0]);
+  });
+
+  clipboard.on('error', function (e) {
+    console.error('Copy error: ', e);
+  });
+}
 
 /*
 
@@ -217,3 +258,4 @@ exports.reduceFormData = reduceFormData;
 exports.insertMessage = insertMessage;
 exports.clearFormFields = clearFormFields;
 exports.selectText = selectText;
+exports.copyToClipboard = copyToClipboard;

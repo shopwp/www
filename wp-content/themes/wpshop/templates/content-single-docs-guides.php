@@ -52,8 +52,9 @@ Guide Steps
         -->
         <pre class="step-example code-snippet">
           <div class="loader"><?php include(locate_template('components/loader/loader-cog.php')); ?></div>
-          <code class="<?php the_sub_field('step_language'); ?>"><?php the_sub_field('step_example'); ?></code>
+          <code data-language="php"> <?php the_sub_field('step_example'); ?> </code>
         </pre>
+
 
       <?php } ?>
 

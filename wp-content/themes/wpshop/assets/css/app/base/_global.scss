@@ -40,10 +40,21 @@ code, kbd, pre, samp {
   margin-top: 0;
   font-family: 'Source Code Pro', monospace;
 
+  * {
+    -webkit-font-smoothing: initial;
+  }
+
   @include device(1440, 'max') {
     font-size: 13px;
   }
-  
+
+}
+
+[data-language] code,
+[class^="lang"] code,
+pre [data-language],
+pre [class^="lang"] {
+  animation: 300ms ease-in-out 2s forwards fade-in;
 }
 
 .hljs {

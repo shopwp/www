@@ -3,8 +3,13 @@ import {
 } from "../ws/ws";
 
 import {
-  selectText
+  selectText,
+  copyToClipboard
 } from "../utils/utils";
+
+import {
+  initAccordions
+} from "../forms/forms";
 
 /*
 
@@ -13,13 +18,13 @@ On click
 */
 function onDocClick($) {
 
-  $('.doc-collapsable-trigger').on('click', function() {
-    $(this).next().slideToggle();
-    $(this).find('svg').toggleClass('fa-minus-circle fa-plus-circle');
+  jQuery('.doc-collapsable-trigger').on('click', function() {
+    jQuery(this).next().slideToggle();
+    jQuery(this).find('svg').toggleClass('fa-minus-circle fa-plus-circle');
   });
 
 
-  $('.doc-term').on('click', async function(e) {
+  jQuery('.doc-term').on('click', async function(e) {
 
     e.stopPropagation();
     e.preventDefault();
@@ -28,15 +33,14 @@ function onDocClick($) {
 
     if (!$doc.hasClass('is-current-doc')) {
 
-      $('.is-docs > .fa-cog').addClass('is-visible fa-spin');
-      $('.docs-content-loader').addClass('is-visible');
+      jQuery('.is-docs > .fa-cog').addClass('is-visible fa-spin');
+      jQuery('.docs-content-loader').addClass('is-visible');
 
       $doc.addClass('is-loading');
       jQuery('.doc-content-wrapper').addClass('is-loading');
       jQuery('.doc-term.is-current-doc').removeClass('is-current-doc');
       $doc.addClass('is-current-doc');
 
-      console.log('$doc: ', $doc);
 
       setTimeout(function() {
         $doc.find('.doc-type .svg-inline--fa').addClass('fa-spin');
@@ -44,18 +48,18 @@ function onDocClick($) {
 
 
       var data = await getDoc( $doc.data('doc-id') );
-
       data = JSON.parse(data);
 
       showDocContent(data.content);
       jQuery('.doc-content-wrapper').removeClass('is-loading');
       $doc.removeClass('is-loading');
-      $('.is-docs > .fa-cog').removeClass('is-visible fa-spin');
+      jQuery('.is-docs > .fa-cog').removeClass('is-visible fa-spin');
 
       window.history.pushState("object or string", "Title", data.url);
 
 
-
+      copyToClipboard();
+      initAccordions(jQuery);
 
 
       // jQuery('html, body').animate({
@@ -85,11 +89,9 @@ Show Doc Content
 function showDocContent(docContent) {
 
   jQuery('.main').empty().append( jQuery('<div class="doc-content-wrapper">' + docContent + '</div>') );
-
-  hljs.initHighlighting.called = false;
-  hljs.initHighlighting();
-
+  Rainbow.color();
   jQuery('.docs-content-loader').removeClass('is-visible');
+
 }
 
 
@@ -117,14 +119,18 @@ function getLatestBuild() {
 }
 
 
+/*
 
+Get Latest Plugin Version
+
+*/
 function getLatestVersion() {
 
   var options = {
     method: 'GET',
     url: 'https://api.github.com/repos/arobbins/wp-shopify/tags',
     beforeSend: function(xhr) {
-      xhr.setRequestHeader('Authorization', 'token 256460cc4351f765540bc4f496cb45ccdbabad82');
+      xhr.setRequestHeader('Authorization', 'token 6162a37a62d5bda0ddf8161c1e1d4e80e6b5659e');
       xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
       xhr.setRequestHeader('Content-Type', 'application/json');
     },
@@ -162,11 +168,15 @@ async function showLatestBuildVersion() {
 Init Docs
 
 */
-function initDocs($) {
+function initDocs() {
 
-  onDocClick($);
+  onDocClick();
   showLatestBuildVersion();
+  copyToClipboard();
+  initAccordions(jQuery);
 
 }
 
-export { initDocs }
+initDocs();
+
+// export { initDocs }

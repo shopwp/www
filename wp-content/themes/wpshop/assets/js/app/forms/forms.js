@@ -308,4 +308,4 @@ function initForms($) {
   initPurchaseForm();
 }
 
-export { initForms }
+export { initForms, initAccordions }

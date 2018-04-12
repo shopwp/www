@@ -24,6 +24,51 @@ function getUrlParams(url) {
 
 /*
 
+Select Element Contents
+
+*/
+function selectElementContents(el) {
+  var range = document.createRange();
+  range.selectNodeContents(el);
+  var sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+
+/*
+
+Copy to Clipboard
+
+*/
+function copyToClipboard() {
+
+  var clipboard = new Clipboard('.copy-trigger');
+
+  clipboard.on('success', function(e) {
+
+    var $notice = jQuery('.notice-copy');
+
+    $notice.addClass('is-notifying');
+
+    setTimeout(function() {
+      $notice.removeClass('is-notifying');
+      e.clearSelection();
+    }, 2500);
+
+    selectElementContents(jQuery(e.trigger)[0]);
+
+  });
+
+  clipboard.on('error', function(e) {
+    console.error('Copy error: ', e);
+  });
+
+}
+
+
+/*
+
 Selects text
 
 */
@@ -228,5 +273,6 @@ export {
   reduceFormData,
   insertMessage,
   clearFormFields,
-  selectText
+  selectText,
+  copyToClipboard
 };

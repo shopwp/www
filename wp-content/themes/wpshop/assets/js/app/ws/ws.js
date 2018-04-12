@@ -53,10 +53,9 @@ function getDoc(docId) {
 
   var options = {
     method: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-json/wpshop/v1/docs/get',
     dataType: 'HTML',
     data: {
-      action: 'wps_get_doc',
       docId: docId
     }
   };

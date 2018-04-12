@@ -24,19 +24,15 @@
   margin-top: 4em;
 }
 
+.doc-template-examples,
 .doc-shortcode-examples {
 
   .code-snippet {
-    min-height: 360px;
-
-    @include device(1440, 'max') {
-      min-height: 305px;
-    }
 
     code {
 
       > span:first-child {
-        margin-left: -8px;
+        margin-left: -70px;
       }
 
     }
@@ -48,6 +44,18 @@
   }
 
 }
+
+
+
+.doc-template-examples {
+
+  .code-snippet {
+    // min-height: 120px;
+  }
+
+}
+
+
 
 .doc-type {
   position: absolute;
@@ -119,6 +127,11 @@
 }
 
 
+.preloader {
+  display: none;
+}
+
+
 .code-snippet {
   border-radius: 0;
   z-index: 1;
@@ -140,8 +153,8 @@
 
   .loader {
     position: absolute;
-    top: calc(50% - 17px);
-    left: calc(50% + 10px);
+    top: calc(50% - 5px);
+    left: calc(50% + 5px);
     transform: translate(-50%, -50%);
     z-index: 2;
     color: #fff;
@@ -157,11 +170,16 @@
   }
 
   code {
-    padding-left: 53px;
+    padding-left: 0;
     padding-top: 0;
     padding-bottom: 0;
     border-radius: 0;
     visibility: hidden;
+    position: relative;
+    top: 50%;
+    left: 3.7%;
+    // transform: translate(-50%, -50%);
+    width: 83%;
   }
 
 }
@@ -178,22 +196,21 @@
   overflow: visible;
   margin: 0;
   display: inline;
-
-  code.hljs {
-    display: inline;
-    padding: 5px 10px;
-    font-size: 14px;
-    background: color(offwhite);
-    color: color(base);
-    top: 5px;
-    margin-top: 0;
-    border-radius: 5px;
-  }
-
+  display: inline;
+  padding: 5px 10px;
+  font-size: 14px;
+  background: color(offwhite);
+  color: color(base);
+  top: 5px;
+  margin-top: 0;
+  border-radius: 5px;
+  -webkit-font-smoothing: initial;
+  
 }
 
 .hljs {
   color: white;
+  overflow: initial;
 }
 
 .hljs-string, .hljs-symbol, .hljs-bullet, .hljs-addition {
@@ -202,6 +219,22 @@
 
 .hljs-comment, .hljs-quote {
   color: #81919d;
+}
+
+.doc-info-value {
+
+  .hljs-name,
+  .hljs-attr,
+  .hljs-tag {
+    font-weight: bold;
+    color: black;
+  }
+
+}
+
+
+.doc-info-key {
+  min-width: 250px;
 }
 
 
@@ -232,6 +265,7 @@
 
 .doc-shortcode-attribute-description {
   max-width: 1100px;
+  min-width: 210px;
 
   small {
     display: block;
@@ -245,6 +279,7 @@
 .doc-shortcode-attribute-name {
   width: 100%;
   min-width: 200px;
+  max-width: 200px;
 
   svg {
     font-size: 16px;
@@ -486,7 +521,7 @@
 
 .doc-content-wrapper {
   &.is-loading {
-    opacity: $opacity-hard;
+    opacity: $opacity-soft;
   }
 }
 
