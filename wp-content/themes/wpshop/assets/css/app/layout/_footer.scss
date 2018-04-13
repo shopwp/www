@@ -2,7 +2,7 @@
   text-align: center;
   font-size: $font-s;
   margin-top: 0;
-  background: rgb(57, 71, 82);
+  background: color(base);
 
   @include device(800, 'max') {
 

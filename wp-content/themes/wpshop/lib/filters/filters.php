@@ -105,7 +105,7 @@ wps_edd_register_email_template
 
 */
 function wps_empty_cart_text() {
-  return '<div class="msg msg-not-fixed msg-notice">Your cart is empty. <a href="/downloads/wp-shopify">Please go back</a></div>';
+  return '<div class="msg msg-not-fixed msg-notice">Your cart is empty. <a href="/purchase">Check out our plans</a></div>';
 }
 
 add_filter('edd_empty_cart_message', 'wps_empty_cart_text');
@@ -148,6 +148,10 @@ function wps_checkout_button($btn) {
 
   $splitButton = explode('/>', $btn);
   $finalButton = $splitButton[0] . ' disabled />';
+
+  error_log('---- debug -----');
+  error_log(print_r($finalButton, true));
+  error_log('---- /debug -----');
 
   return $finalButton;
 

@@ -21,9 +21,7 @@ Template Name: Account
 
   <aside class="sidebar sidebar-account">
 
-    <h4 class="component-account-heading">
-      <i class="fas fa-user-circle" aria-hidden="true"></i> Account
-    </h4>
+    <h4 class="component-account-heading">Account</h4>
 
     <div class="sidebar-inner">
 

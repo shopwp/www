@@ -144,12 +144,12 @@
 }
 
 .marquee-short-desc {
-  margin: 0 auto $space-xl auto;
+  margin: 15px auto $space-xl auto;
   font-size: $font-xxl;
   max-width: 800px;
 
   @include device(1500, 'max') {
-    max-width: 720px;
+    max-width: 740px;
     margin: $space-l auto;
   }
 

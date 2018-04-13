@@ -6,7 +6,6 @@ import { initForms } from './forms/forms';
 import { initMailinglist } from './mailinglist/mailinglist';
 import { initCheckout } from './checkout/checkout';
 import { initAccount } from './account/account';
-import { initDocs } from './docs/docs';
 import { initMobile } from './mobile/mobile';
 import { initDriftTracking } from './analytics/analytics';
 import { initFAQs } from './faqs/faqs';
@@ -29,7 +28,6 @@ import { initFAQs } from './faqs/faqs';
     initMailinglist($);
     initCheckout($);
     initAccount($);
-    initDocs($);
     initFAQs();
 
     initMobile($);

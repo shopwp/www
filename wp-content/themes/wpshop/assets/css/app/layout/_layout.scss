@@ -8,9 +8,9 @@
 
   .component-support {
     .l-contain-narrow {
-      box-shadow: none;
-      border: none;
-      max-width: 1200px;
+      // box-shadow: none;
+      // border: none;
+      // max-width: 1200px;
     }
   }
 
@@ -274,7 +274,7 @@
     &:before {
       text-align: center;
       font-size: $font-xl;
-
+      font-weight: bold;
       background: color(offwhite);
       margin-top: -1em;
       width: calc(100% + 2em);

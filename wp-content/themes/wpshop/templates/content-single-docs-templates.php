@@ -19,11 +19,15 @@ Info table
               <b><?php the_sub_field('key'); ?></b>
             </td>
 
-            <td class="doc-info-value">
+            <td class="doc-info-value <?php echo get_sub_field('has_code') ? 'copy-trigger' : ''; ?>" data-clipboard-text='<?php the_sub_field('value'); ?>'>
 
               <?php if (get_sub_field('has_code')) { ?>
 
-                <span class="code-snippet-inline copy-trigger" data-clipboard-text='<?php the_sub_field('value'); ?>'><?= htmlspecialchars(get_sub_field('value')); ?></span>
+                <span class="code-snippet-inline">
+                  <?= htmlspecialchars(get_sub_field('value')); ?>
+                </span>
+
+                <i class="fal fa-copy"></i>
 
               <?php } else { ?>
                 <?php the_sub_field('value'); ?>
@@ -54,7 +58,7 @@ Data table
   <section class="doc-template-data">
 
     <br><h2 class="doc-heading doc-sub-heading">Data</h2>
-    <p>Many WP Shopify templates require data to populate dynamic fields such as a price or title. This data is stored inside a <span class="code-inline">$data</span> Object and can be automatically accessed from within the template if it exists. The <span class="code-inline">$data</span> variable will contain the below properties:</p>
+    <p>Many WP Shopify templates require data to populate dynamic values such as a price or title. These values are stored inside a <span class="code-inline">$data</span> variable that can be accessed from within the template. The <span class="code-inline">$data</span> variable will be a PHP Object containing the below properties:</p>
 
     <table class="template-table">
 
@@ -73,9 +77,13 @@ Data table
         <?php while ( have_rows('template_data', $post->ID) ) : the_row(); ?>
 
           <tr>
-            <td><span class="code-snippet-inline copy-trigger" data-clipboard-text='<?php the_sub_field('variable', $post->ID); ?>'><?php the_sub_field('variable', $post->ID); ?></span></td>
-            <td><?php the_sub_field('type', $post->ID); ?></td>
-            <td><?php the_sub_field('description', $post->ID); ?></td>
+            <td class="template-data-property">
+              <span class="code-snippet-inline">
+                <?php the_sub_field('variable', $post->ID); ?>
+              </span>
+            </td>
+            <td class="template-data-type"><?php the_sub_field('type', $post->ID); ?></td>
+            <td class="template-data-description"><?php the_sub_field('description', $post->ID); ?></td>
           </tr>
 
         <?php endwhile; ?>

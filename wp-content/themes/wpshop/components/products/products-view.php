@@ -33,7 +33,7 @@
     <div class="edd_purchase_submit_wrapper">
 
       <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=1" class="edd-add-to-cart edd-submit edd-has-js" data-action="edd_add_to_cart" data-download-id="35" data-variable-price="yes" data-price-mode="single" data-price="0">
-        <span class="">Go to checkout</span>
+        <span class="">Checkout <i class="fas fa-share-all"></i></span>
       </a>
     </div>
 

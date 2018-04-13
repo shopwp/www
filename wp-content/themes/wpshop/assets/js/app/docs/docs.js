@@ -130,7 +130,7 @@ function getLatestVersion() {
     method: 'GET',
     url: 'https://api.github.com/repos/arobbins/wp-shopify/tags',
     beforeSend: function(xhr) {
-      xhr.setRequestHeader('Authorization', 'token 6162a37a62d5bda0ddf8161c1e1d4e80e6b5659e');
+      xhr.setRequestHeader('Authorization', 'token 6ae61f2b30019142ef50a6693be5df29f6be4c44');
       xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
       xhr.setRequestHeader('Content-Type', 'application/json');
     },

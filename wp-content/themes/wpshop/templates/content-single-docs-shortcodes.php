@@ -66,7 +66,7 @@
               <td class="doc-shortcode-attribute-name">
 
                 <?php if (get_sub_field('is_real_value')) { ?>
-                  <span class="code-snippet-inline copy-trigger" data-clipboard-text='<?php the_sub_field('value') ?>'><?php the_sub_field('value'); ?></span>
+                  <span class="code-snippet-inline"><?php the_sub_field('value'); ?></span>
 
                 <?php } else { ?>
                   <?php the_sub_field('value'); ?>
@@ -81,10 +81,13 @@
 
             <?php if (get_sub_field('description')) { ?>
 
-              <td class="doc-shortcode-attribute-description">
+              <td class="doc-shortcode-attribute-description <?php echo get_sub_field('is_example') ? 'copy-trigger' : ''; ?>" data-clipboard-text='<?php the_sub_field('description') ?>'>
 
               <?php if (get_sub_field('is_example')) { ?>
-                <span class="code-snippet-inline copy-trigger" data-clipboard-text='<?php the_sub_field('description') ?>'><?php the_sub_field('description'); ?></span>
+                <span class="code-snippet-inline">
+                  <?php the_sub_field('description'); ?>
+                </span>
+                <i class="fal fa-copy"></i>
 
               <?php } else { ?>
                 <?php the_sub_field('description'); ?>

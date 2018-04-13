@@ -32,7 +32,7 @@
     code {
 
       > span:first-child {
-        margin-left: -70px;
+        margin-left: -69px;
       }
 
     }
@@ -184,13 +184,17 @@
 
 }
 
-
+.template-data-property {
+  min-width: 190px;
+}
 
 .doc-table {
   // position: relative;
 }
 
-
+.fa-copy {
+  margin: 0 7px 0 7px;
+}
 
 .code-snippet-inline {
   overflow: visible;
@@ -199,13 +203,30 @@
   display: inline;
   padding: 5px 10px;
   font-size: 14px;
-  background: color(offwhite);
+  // background: color(offwhite);
   color: color(base);
   top: 5px;
   margin-top: 0;
   border-radius: 5px;
   -webkit-font-smoothing: initial;
-  
+
+  background: #f1f6ff;
+  border: 1px solid #90b9e5;
+
+
+}
+
+.copy-trigger {
+
+  &:hover {
+    cursor: pointer;
+
+    .code-snippet-inline {
+      background-color: #e2eaf7;
+    }
+
+  }
+
 }
 
 .hljs {
@@ -265,7 +286,7 @@
 
 .doc-shortcode-attribute-description {
   max-width: 1100px;
-  min-width: 210px;
+  min-width: 240px;
 
   small {
     display: block;
@@ -422,13 +443,17 @@
 .docs-version {
   margin: 0;
   font-size: 12px;
-  background: color(offwhite);
+  // background: color(offwhite);
   padding: 5px 15px;
   border-radius: 5px;
   position: relative;
   top: 19px;
   right: 0;
   visibility: hidden;
+
+  background: #f1f6ff;
+  border: 1px solid #90b9e5;
+
 }
 
 
@@ -702,10 +727,15 @@
 
 
 .code-inline {
-  background-color: color(offwhite);
+  // background-color: color(offwhite);
   padding: 2px 10px;
+  margin: 0 3px;
   border-radius: 6px;
   font-size: 88%;
+
+  background: #f1f6ff;
+  border: 1px solid #90b9e5;
+
 }
 
 .copy-trigger {

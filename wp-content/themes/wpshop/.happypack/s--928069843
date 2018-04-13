@@ -14,8 +14,6 @@ var _checkout = require('./checkout/checkout');
 
 var _account = require('./account/account');
 
-var _docs = require('./docs/docs');
-
 var _mobile = require('./mobile/mobile');
 
 var _analytics = require('./analytics/analytics');
@@ -40,7 +38,6 @@ var _faqs = require('./faqs/faqs');
     (0, _mailinglist.initMailinglist)($);
     (0, _checkout.initCheckout)($);
     (0, _account.initAccount)($);
-    (0, _docs.initDocs)($);
     (0, _faqs.initFAQs)();
 
     (0, _mobile.initMobile)($);

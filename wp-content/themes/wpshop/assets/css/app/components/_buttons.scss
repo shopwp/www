@@ -82,12 +82,22 @@ a.button.edd-slg-social-unlink-profile,
     // opacity: $opacity-soft;
   }
 
+  .svg-inline--fa {
+    box-sizing: border-box;
+    font-variant-caps: normal;
+    font-variant-ligatures: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    margin-right: 8px;
+  }
+
 }
 
 .edd-submit,
 .menu-item-back a,
 .edd_download_file_link,
 .btn-secondary {
+  font-size: 1.2em;
   background-color: color(secondary);
 
   &:hover {
