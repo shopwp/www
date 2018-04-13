@@ -186,18 +186,7 @@ class WP_Migrate_DB_Pro_Tweaks {
 
 		global $wpdb;
 
-		// 60b6c7e2_postmeta
-		// 60b6c7e2_posts
-
-		// if ( $wpdb->prefix . 'posts' != $table || $wpdb->prefix . 'postmeta' != $table ) {
-		// 	error_log('---- Returning ----');
-		// 	return $where;
-		// }
-
-
 		if ($wpdb->prefix . 'posts' === $table) {
-
-			error_log('---- We are now on the postsmeta table ----');
 
 			$where .= ( empty( $where ) ? 'WHERE ' : ' AND ' );
 			$where .= "`post_type` NOT LIKE '%edd_%'";
@@ -206,16 +195,10 @@ class WP_Migrate_DB_Pro_Tweaks {
 
 		if ($wpdb->prefix . 'postmeta' === $table) {
 
-			error_log('---- We are now on the posts table ----');
-
 			$where .= ( empty( $where ) ? 'WHERE ' : ' AND ' );
 			$where .= "`meta_key` NOT LIKE '%edd_%'";
 
 		}
-
-		error_log('---- $where -----');
-		error_log(print_r($where, true));
-		error_log('---- /$where -----');
 
 		return $where;
 
