@@ -9,7 +9,7 @@
     </div>
 
     <div class="btn-group l-row l-row-center">
-      <a href="/demo" class="btn btn-l btn-secondary" data-gtm="learn-home"><i class="fas fa-download"></i> Download</a>
+      <a href="/demo" class="btn btn-l btn-secondary" data-gtm="learn-home"><i class="fas fa-download"></i> Free trial</a>
       <a href="/purchase" class="btn btn-l" data-gtm="purchase-home"><i class="fas fa-cart-plus"></i> Purchase</a>
     </div>
   </div>
