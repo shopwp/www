@@ -8,6 +8,7 @@ node_modules
 npm-debug.log
 .hot-update.json
 .happypack
+wp-content/themes/wpshop/.happypack/**/*.json
 
 # Content files
 wp-content/uploads
