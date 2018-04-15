@@ -8,6 +8,10 @@ import {
 } from "../utils/utils";
 
 import {
+  getDocsToken
+} from "../utils/utils-token";
+
+import {
   initAccordions
 } from "../forms/forms";
 
@@ -97,40 +101,18 @@ function showDocContent(docContent) {
 
 /*
 
-Accordion
-
-*/
-function getLatestBuild() {
-
-  var options = {
-    method: 'GET',
-    url: 'https://api.travis-ci.org/repo/16428850',
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader('Travis-API-Version', '3');
-      xhr.setRequestHeader('Authorization', 'token TorU8IJ9DU4scRFdwowoiw');
-      xhr.setRequestHeader('Accept', 'application/json');
-      xhr.setRequestHeader('Content-Type', 'application/json');
-    },
-    dataType: 'json'
-  };
-
-  return jQuery.ajax(options);
-
-}
-
-
-/*
-
 Get Latest Plugin Version
 
 */
-function getLatestVersion() {
+async function getLatestVersion() {
+
+  var token = await getDocsToken();
 
   var options = {
     method: 'GET',
     url: 'https://api.github.com/repos/arobbins/wp-shopify/tags',
     beforeSend: function(xhr) {
-      xhr.setRequestHeader('Authorization', 'token 4374cb077b1dd5213414d618cebd838723e17f3a');
+      xhr.setRequestHeader('Authorization', token);
       xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
       xhr.setRequestHeader('Content-Type', 'application/json');
     },
@@ -142,7 +124,6 @@ function getLatestVersion() {
 }
 
 
-
 /*
 
 Accordion
@@ -151,8 +132,10 @@ Accordion
 async function showLatestBuildVersion() {
 
   try {
-    // var response = await getLatestBuild();
+
     var response = await getLatestVersion();
+
+    console.log("response: ", response);
 
     jQuery('.docs-version').html('v' + response[0].name);
 

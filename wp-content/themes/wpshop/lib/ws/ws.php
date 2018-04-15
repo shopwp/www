@@ -17,6 +17,23 @@ add_action('wp_ajax_wps_check_valid_nonce', 'wps_check_valid_nonce');
 add_action('wp_ajax_nopriv_wps_check_valid_nonce', 'wps_check_valid_nonce');
 
 
+
+/*
+
+Checking for valid nonce
+
+*/
+function wps_get_access_token() {
+
+  echo json_encode( get_field('github_access_token', 'option') );
+  die();
+
+}
+
+add_action('wp_ajax_wps_get_access_token', 'wps_get_access_token');
+add_action('wp_ajax_nopriv_wps_get_access_token', 'wps_get_access_token');
+
+
 /*
 
 Saving auth data
