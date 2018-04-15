@@ -29,7 +29,7 @@
 
       <div class="l-col l-row-center snippet-content">
         <h2 class="snippet-heading">Free your brand.</h2>
-        <p class="snippet-copy">Keeping your brand consistent is important to build trust with your customers. WP Shopify syncs your data directly into WordPress without restrictive iFrames giving you complete control over styling.</p>
+        <p class="snippet-copy">Keeping your brand consistent is important to build trust with your customers. Sync your data into WordPress without restrictive iFrames.</p>
       </div>
     </div>
 
@@ -45,7 +45,7 @@
 
       <div class="l-col l-row-center snippet-content">
         <h2 class="snippet-heading">Sync what you need,<br>display what you want.</h2>
-        <p class="snippet-copy">WP Shopify is built around hooks and has an action or filter for everything. You control the data and how it's shown to your users.</p>
+        <p class="snippet-copy">You control the data and how it's shown to your users. We provide templates and over 100 + actions and filters.</p>
 
       </div>
 
@@ -62,7 +62,7 @@
 
       <div class="l-col l-row-center snippet-content">
         <h2 class="snippet-heading">One plugin for two platforms.</h2>
-        <p class="snippet-copy">Webhooks are used under the hood to keep your data in sync. Change something in Shopify and watch it automatically appear in WordPress.</p>
+        <p class="snippet-copy">Change something in Shopify and watch it automatically appear in WordPress. Webhooks are used to keep your data in sync.</p>
 
       </div>
     </div>

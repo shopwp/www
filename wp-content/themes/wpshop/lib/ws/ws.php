@@ -151,76 +151,19 @@ add_action('wp_ajax_mailinglist_signup', 'mailinglist_signup');
 add_action('wp_ajax_nopriv_mailinglist_signup', 'mailinglist_signup');
 
 
-/*
-
-Get doc
-
-*/
-// function wps_get_doc() {
-//
-//   $docID = $_POST['docId'];
-//   $cache = get_transient('wpshopify_' . $docID);
-//
-//   error_log('---- $cache -----');
-//   error_log(print_r($cache, true));
-//   error_log('---- /$cache -----');
-//
-//   if ($cache) {
-//
-//     echo json_encode($cache);
-//     die();
-//
-//   } else {
-//     $post = get_post($docID);
-//
-//     ob_start();
-//     include(locate_template('templates/content-single-docs.php'));
-//     $content = ob_get_contents();
-//     ob_end_clean();
-//
-//     $store = array(
-//       'content' => $content,
-//       'slug'    => $post->post_name,
-//       'url'     => get_post_permalink($post->ID)
-//     );
-//
-//     set_transient('wpshopify_' . $docID, $store);
-//
-//     echo json_encode($store);
-//     die();
-//
-//   }
-//
-//
-//
-//
-//
-// }
-//
-// add_action('wp_ajax_wps_get_doc', 'wps_get_doc');
-// add_action('wp_ajax_nopriv_wps_get_doc', 'wps_get_doc');
-
-
 
 
 function wpshopify_doc_updated($post_id) {
 
   if (get_post_type($post_id) !== 'docs') {
-    error_log('Post type other than doc saved, returning ...');
     return;
-  }
-
-  error_log('Doc saved checking cache ...');
+  };
 
   $transientExists = get_transient('wpshopify_' . $post_id);
 
   if ($transientExists) {
-    error_log('Transient found for this doc, deleting transient ...');
     delete_transient('wpshopify_' . $post_id);
     delete_transient('wpshopify_sidebar_docs');
-
-  } else {
-    error_log('Transient not found for this doc, returning ...');
   }
 
 }
@@ -239,15 +182,9 @@ function get_doc() {
 
   if ($cache) {
 
-    error_log('Cache found for this doc, returning ...');
-
-    // echo json_encode($cache);
-    // die();
     return new WP_REST_Response($cache, 200);
 
   } else {
-
-    error_log('Cache NOT found for this doc, getting markup ...');
 
     $post = get_post($docID);
 
@@ -262,14 +199,9 @@ function get_doc() {
       'url'     => get_post_permalink($post->ID)
     );
 
-    error_log('Setting cache for this doc');
     set_transient('wpshopify_' . $docID, $docData);
 
     return new \WP_REST_Response($docData, 200);
-
-
-    // echo json_encode($docData);
-    // die();
 
   }
 

@@ -18,7 +18,7 @@
       </h1>
 
     <?php } else { ?>
-      <h1> <?= Titles\title(); ?> </h1>
+      <h1><?= Titles\title(); ?></h1>
 
     <?php } ?>
 

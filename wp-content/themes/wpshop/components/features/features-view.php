@@ -10,7 +10,7 @@
 
     <div class="card l-box">
       <h3 class="card-heading">
-        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-sync.svg" class="card-heading-icon" alt="Syncing" /> Syncing</h3>
+        <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-sync.svg" class="card-heading-icon" alt="Syncing" /> Easy Syncing</h3>
         <p>When you make a change in Shopify that change is updated in WordPress without any additional steps. We use Webhooks to capture the event behind the scenes allowing you to keep both sites in sync.</p>
     </div>
 

@@ -8,7 +8,6 @@
     </p>
   <?php } ?>
 
-
   <?php if ($since && $type[0]->slug !== 'getting-started') { ?>
     <p class="doc-meta-item doc-since <?= !$source ? 'doc-meta-item-last' : ''; ?>">Since: v<?= $since; ?></p>
 

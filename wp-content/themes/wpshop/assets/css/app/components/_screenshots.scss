@@ -1,0 +1,41 @@
+.component-screenshots {
+  background: white;
+  margin: 0;
+  border-top: 5em solid white;
+}
+
+.screenshots {
+  list-style: none;
+  margin: 0;
+  max-width: 100%;
+  padding: 0;
+}
+
+.screenshot {
+  margin-bottom: $space-xxl;
+}
+
+.screenshot-image {
+  @include shadow();
+  
+  border: 1px solid #c2c2c2;
+  left: 13%;
+  max-width: 87%;
+  position: relative;
+}
+
+.screenshot-image-wrapper {
+  padding-left: 0;
+  width: 55%;
+  max-width: 55%;
+  flex: 0 0 55%;
+  margin-right: 3em;
+}
+
+.screenshot-image-description {
+  width: 40%;
+  max-width: 40%;
+  flex: 0 0 40%;
+  padding-right: 4em;
+  margin-top: 2px;
+}

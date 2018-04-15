@@ -149,10 +149,6 @@ function wps_checkout_button($btn) {
   $splitButton = explode('/>', $btn);
   $finalButton = $splitButton[0] . ' disabled />';
 
-  error_log('---- debug -----');
-  error_log(print_r($finalButton, true));
-  error_log('---- /debug -----');
-
   return $finalButton;
 
 }

@@ -71,11 +71,6 @@ function get_doc_name($templateCat) {
     $stuff = construct_category_struct();
 
 
-    // error_log('---- $terms$terms$terms$terms -----');
-    // error_log(print_r($terms, true));
-    // error_log('---- /$terms$terms$terms$terms -----');
-
-
     /*
 
     For each "types" taxonomy

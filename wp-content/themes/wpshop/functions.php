@@ -44,17 +44,6 @@ unset($file, $filepath);
 
 /*
 
-Hack for Webpack dev server
-TODO: Remove before pushing live
-
-*/
-// if (DISABLE_CANONICAL == 'Y') {
-//   remove_filter('template_redirect', 'redirect_canonical');
-// }
-
-
-/*
-
 my_lost_password_page
 
 */
