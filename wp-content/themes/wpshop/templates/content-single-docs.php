@@ -14,10 +14,6 @@
     $since = get_field('doc_since', $post->ID);
     $source = get_field('doc_source', $post->ID);
 
-    error_log('---- $post -----');
-    error_log(print_r($post, true));
-    error_log('---- /$post -----');
-
     ob_start();
     include(locate_template('templates/content-single-docs-meta.php'));
     include(locate_template('templates/content-single-docs-' . $type[0]->slug . '.php'));

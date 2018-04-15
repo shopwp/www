@@ -85,6 +85,9 @@ add_action('rest_api_init', function () {
 // Fetching Mailchimp API Key
 //
 function mailchimp_auth_creds() {
+
+
+
   return array('arobbins', '275cafe2706cafae258728fc0f11132d-us11');
 }
 
@@ -114,16 +117,20 @@ function mailinglist_signup() {
   $email = $_POST['email'];
   $nonce = $_POST['nonce'];
 
-  if(wp_verify_nonce($nonce, 'mailinglist_signup')) {
+  if (wp_verify_nonce($nonce, 'mailinglist_signup')) {
 
     $resp = [];
 
+    $apiKey = get_field('theme_mailchimp_api_key', 'option');
+
     try {
+
       $client = new GuzzleHttp\Client(['base_uri' => 'https://us11.api.mailchimp.com/3.0/']);
 
       $response = $client->request('POST', 'lists/5c6bd183d4/members', [
         'auth' => [
-          'arobbins', '275cafe2706cafae258728fc0f11132d-us11'
+          'arobbins',
+          $apiKey
         ],
         'json' => [
           'email_address' => $email,
@@ -144,9 +151,6 @@ function mailinglist_signup() {
       $response = $e->getResponse();
       $statusCode = $response->getStatusCode();
       $message = $e->getMessage();
-
-      // print_r( json_encode($e->getMessage()) );
-      // echo $e->getMessage();
 
       $resp['code'] = $statusCode;
       $resp['message'] = json_decode($response->getBody());
