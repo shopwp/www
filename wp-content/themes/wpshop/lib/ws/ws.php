@@ -82,17 +82,6 @@ add_action('rest_api_init', function () {
 
 
 //
-// Fetching Mailchimp API Key
-//
-function mailchimp_auth_creds() {
-
-
-
-  return array('arobbins', '275cafe2706cafae258728fc0f11132d-us11');
-}
-
-
-//
 // Fetching Mailchimp List ID
 //
 function mailinglist_get_list_id() {
