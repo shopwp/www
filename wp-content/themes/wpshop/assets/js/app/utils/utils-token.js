@@ -8,6 +8,7 @@ function getDocsToken() {
       action: 'wps_get_access_token'
     }
   };
+  
 
   return jQuery.ajax(options);
 

@@ -135,8 +135,6 @@ async function showLatestBuildVersion() {
 
     var response = await getLatestVersion();
 
-    console.log("response: ", response);
-
     jQuery('.docs-version').html('v' + response[0].name);
 
   } catch (e) {
