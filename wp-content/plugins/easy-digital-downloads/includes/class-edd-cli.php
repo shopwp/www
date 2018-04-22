@@ -47,7 +47,6 @@ class EDD_CLI extends WP_CLI_Command {
 	 *
 	 * wp edd details
 	 *
-	 * @access		public
 	 * @param		array $args
 	 * @param		array $assoc_args
 	 * @return		void
@@ -618,7 +617,7 @@ class EDD_CLI extends WP_CLI_Command {
 			// Create the purchases
 			foreach( $products as $key => $download ) {
 
-				if( ! is_a( $download, 'WP_Post' ) ) {
+				if( ! $download instanceof WP_Post ) {
 					continue;
 				}
 

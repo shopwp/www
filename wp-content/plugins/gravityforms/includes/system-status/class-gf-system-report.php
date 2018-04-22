@@ -313,8 +313,7 @@ class GF_System_Report {
 		$alternate_wp_cron = defined( 'ALTERNATE_WP_CRON' ) && ALTERNATE_WP_CRON;
 
 		$args = array(
-			'timeout'   => 0.01,
-			'blocking'  => true,
+			'timeout'   => 2,
 			'body'      => 'test',
 			'cookies'   => $_COOKIE,
 			'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
@@ -329,7 +328,18 @@ class GF_System_Report {
 
 		$response = wp_remote_post( $url, $args );
 
-		$background_tasks = ! is_wp_error( $response ) && wp_remote_retrieve_body( $response ) == 'ok';
+		$background_tasks              = wp_remote_retrieve_body( $response ) == 'ok';
+		$background_validation_message = '';
+		if ( is_wp_error( $response ) ) {
+			$background_validation_message = $response->get_error_message();
+		} elseif ( ! $background_tasks ) {
+			$response_code = wp_remote_retrieve_response_code( $response );
+			if ( $response_code == 200 ) {
+				$background_validation_message = esc_html__( 'Unexpected content in the response.', 'gravityforms' );
+			} else {
+				$background_validation_message = sprintf( esc_html__( 'Response code: %s', 'gravityforms' ), $response_code );
+			}
+		}
 
 		// Prepare system report.
 		$system_report = array(
@@ -443,13 +453,13 @@ class GF_System_Report {
 								'value_export' => $alternate_wp_cron ? 'Yes' : 'No',
 							),
 							array(
-								'label'        => esc_html__( 'Background tasks', 'gravityforms' ),
-								'label_export' => 'Background tasks',
-								'type'         => 'wordpress_background_tasks',
-								'value'        => $background_tasks ? __( 'Yes', 'gravityforms' ) : __( 'No', 'gravityforms' ),
-								'value_export' => $background_tasks ? 'Yes' : 'No',
-								'is_valid'     => $background_tasks,
-
+								'label'              => esc_html__( 'Background tasks', 'gravityforms' ),
+								'label_export'       => 'Background tasks',
+								'type'               => 'wordpress_background_tasks',
+								'value'              => $background_tasks ? __( 'Yes', 'gravityforms' ) : __( 'No', 'gravityforms' ),
+								'value_export'       => $background_tasks ? 'Yes' : 'No',
+								'is_valid'           => $background_tasks,
+								'validation_message' => $background_validation_message,
 							),
 						),
 					),
@@ -1000,7 +1010,7 @@ class GF_System_Report {
 						'confirm' => $warning_message,
 					),
 					'is_valid'       => true,
-					'message'        => 'upgrade_database' == rgpost( 'gf_action' ) ? __( 'Database upgraded successfully.', 'gravityforms' ) : __( 'Your database is up-to-date.', 'gravityforms' ),
+					'message'        => 'upgrade_database' == rgpost( 'gf_action' ) ? __( 'Database upgraded successfully.', 'gravityforms' ) : __( 'Your database is up-to-date.', 'gravityforms' ) . ' ' . __( 'Warning: downgrading Gravity Forms is not recommended.', 'gravityforms' ),
 					'message_export' => 'upgrade_database' == rgpost( 'gf_action' ) ? 'Database upgraded successfully.' : 'Your database is up-to-date.',
 				)
 			);

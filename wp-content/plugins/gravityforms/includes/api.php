@@ -635,6 +635,18 @@ class GFAPI {
 	 */
 	public static function get_entry( $entry_id ) {
 
+		if ( version_compare( GFFormsModel::get_database_version(), '2.3-dev-1', '<' ) ) {
+			$search_criteria['field_filters'][] = array( 'key' => 'id', 'value' => $entry_id );
+
+			$paging  = array( 'offset' => 0, 'page_size' => 1 );
+			$entries = self::get_entries( 0, $search_criteria, null, $paging );
+			if ( empty( $entries ) ) {
+				return new WP_Error( 'not_found', sprintf( __( 'Entry with id %s not found', 'gravityforms' ), $entry_id ), $entry_id );
+			}
+
+			return $entries[0];
+		}
+
 		$q = new GF_Query();
 
 		$entry = $q->get_entry( $entry_id );

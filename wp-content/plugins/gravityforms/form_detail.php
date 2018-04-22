@@ -2593,9 +2593,11 @@ class GFFormDetail {
 		}
 		
 		/**
-		 * Modify the field groups before fields are added
-	         *
-        	 * @param array $field_groups The field groups, including group name, label and fields.
+		 * Modify the field groups before fields are added.
+		 *
+		 * @since 2.2.6
+		 *
+		 * @param array $field_groups The field groups, including group name, label and fields.
 		 */
 		$field_groups = apply_filters( 'gform_field_groups_form_editor', $field_groups );
 

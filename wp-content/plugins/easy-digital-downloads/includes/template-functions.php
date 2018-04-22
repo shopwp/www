@@ -184,7 +184,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			if ( ! edd_is_ajax_disabled() ) {
 
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label"><i class="fas fa-cart-arrow-down"></i> ' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
 
 			}
 
@@ -344,8 +344,8 @@ function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = arra
 	$download = new EDD_Download( $download_id );
 	?>
 	<span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-		<meta itemprop="price" content="<?php esc_attr_e( $download->price ); ?>" />
-		<meta itemprop="priceCurrency" content="<?php esc_attr_e( edd_get_currency() ); ?>" />
+		<meta itemprop="price" content="<?php echo esc_attr( $download->price ); ?>" />
+		<meta itemprop="priceCurrency" content="<?php echo esc_attr( edd_get_currency() ); ?>" />
 	</span>
 	<?php
 }

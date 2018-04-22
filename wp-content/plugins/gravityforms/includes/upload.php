@@ -81,7 +81,20 @@ class GFAsyncUpload {
 		$file_name = isset( $_REQUEST['name'] ) ? $_REQUEST['name'] : '';
 		$field_id  = rgpost( 'field_id' );
 		$field_id  = absint( $field_id );
-		$field     = gf_apply_filters( array( 'gform_multifile_upload_field', $form['id'], $field_id ), GFFormsModel::get_field( $form, $field_id ), $form, $field_id );
+
+		/**
+		 * Filter the field object that will be associated with the uploaded file.
+		 *
+		 * This is useful when you want to use Gravity Forms' upload system to upload files. Using this filter you can return a one-time-use field object
+		 * to process the file as desired.
+		 *
+		 * @since 2.2.2
+		 *
+		 * @param GF_Field $field    The current field object.
+		 * @param array    $form     The current form object.
+		 * @param int      $field_id The field ID as passed via the $_POST. Used to fetch the current $field.
+		 */
+		$field = gf_apply_filters( array( 'gform_multifile_upload_field', $form['id'], $field_id ), GFFormsModel::get_field( $form, $field_id ), $form, $field_id );
 
 		if ( empty( $field ) || GFFormsModel::get_input_type( $field ) != 'fileupload' ) {
 			die();

@@ -4606,6 +4606,12 @@ Content-Type: text/html;
 				if ( isset( $sticky_messages[ $message['key'] ] ) && isset( $message['page'] ) && $message['page'] && $page !== $message['page'] ) {
 					continue;
 				}
+
+				if ( empty( $message['page'] ) && $page == 'site-wide' ) {
+					// Prevent double display on GF pages
+					continue;
+				}
+
 				if ( empty( $message['key'] ) || self::is_message_dismissed( $message['key'] ) ) {
 					continue;
 				}
@@ -4621,7 +4627,7 @@ Content-Type: text/html;
 					'success',
 				) ) ? $message['key'] : 'error';
 				?>
-				<div class="notice below-h2 notice-<?php echo $class; ?> is-dismissible"
+				<div class="notice below-h1 notice-<?php echo $class; ?> is-dismissible"
 				     data-gf_dismissible_key="<?php echo $message['key'] ?>"
 				     data-gf_dismissible_nonce="<?php echo wp_create_nonce( 'gf_dismissible_nonce' ) ?>">
 					<p>

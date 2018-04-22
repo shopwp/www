@@ -68,6 +68,7 @@ abstract class GFFeedAddOn extends GFAddOn {
 		parent::init();
 
 		add_filter( 'gform_entry_post_save', array( $this, 'maybe_process_feed' ), 10, 2 );
+		add_action( 'gform_after_delete_form', array( $this, 'delete_feeds' ) );
 
 	}
 
@@ -878,10 +879,19 @@ abstract class GFFeedAddOn extends GFAddOn {
 	public function delete_feeds( $form_id = null ) {
 		global $wpdb;
 
-		$where  = is_numeric( $form_id ) ? array( 'addon_slug' => $this->_slug, 'form_id' => $form_id ) : array( 'addon_slug' => $this->_slug );
-		$format = is_numeric( $form_id ) ? array( '%s', '%d' ) : array( '%s' );
+		$form_filter = is_numeric( $form_id ) ? $wpdb->prepare( 'AND form_id=%d', absint( $form_id ) ) : '';
 
-		$wpdb->delete( "{$wpdb->prefix}gf_addon_feed", $where, $format );
+		$sql = $wpdb->prepare(
+			"SELECT id FROM {$wpdb->prefix}gf_addon_feed
+                               WHERE addon_slug=%s {$form_filter} ORDER BY `feed_order`, `id` ASC", $this->_slug
+		);
+
+		$feed_ids = $wpdb->get_col( $sql );
+
+		if ( ! empty( $feed_ids ) ) {
+			array_map( array( $this, 'delete_feed' ), $feed_ids );
+		}
+
 	}
 
 	/**
@@ -1633,8 +1643,8 @@ abstract class GFFeedAddOn extends GFAddOn {
 
 		$this->log_debug( 'GFFeedAddOn::paypal_fulfillment(): Checking PayPal fulfillment for transaction ' . $transaction_id . ' for ' . $this->_slug );
 		$is_fulfilled = gform_get_meta( $entry['id'], "{$this->_slug}_is_fulfilled" );
-		if ( $is_fulfilled ) {
-			$this->log_debug( 'GFFeedAddOn::paypal_fulfillment(): Entry ' . $entry['id'] . ' is already fulfilled for ' . $this->_slug . '. No action necessary.' );
+		if ( $is_fulfilled || ! $this->is_delayed( $paypal_config ) ) {
+			$this->log_debug( 'GFFeedAddOn::paypal_fulfillment(): Entry ' . $entry['id'] . ' is already fulfilled or feeds are not delayed. No action necessary.' );
 			return false;
 		}
 

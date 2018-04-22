@@ -1456,8 +1456,8 @@ class GF_Forms_Model_Legacy {
 					$is_number_field = false;
 					if ( $operator != 'like' && ! is_array( $form_id ) && $form_id > 0 ) {
 						$form               = GFAPI::get_form( $form_id );
-						$field              = self::get_field( $form, $key );
-						if (  self::get_input_type( $field ) == 'number' ){
+						$field              = GFFormsModel::get_field( $form, $key );
+						if (  GFFormsModel::get_input_type( $field ) == 'number' ){
 							$is_number_field = true;
 						}
 					}

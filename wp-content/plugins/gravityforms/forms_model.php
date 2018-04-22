@@ -72,6 +72,8 @@ class GFFormsModel {
 	/**
 	 * Returns the current database version.
 	 *
+	 * @since 2.2
+	 *
 	 * @return string
 	 */
 	public static function get_database_version() {
@@ -4826,7 +4828,12 @@ class GFFormsModel {
 	 * @return string
 	 */
 	public static function get_leads_where_sql( $args ) {
-		return GF_Forms_Model_Legacy::get_leads_where_sql( $args );
+
+		if ( version_compare( self::get_database_version(), '2.3-dev-1', '<' ) ) {
+			return GF_Forms_Model_Legacy::get_leads_where_sql( $args ) ;
+		}
+
+		return self::get_entries_where_sql( $args );
 	}
 
 	/**
@@ -4879,6 +4886,9 @@ class GFFormsModel {
 	}
 
 	/**
+	 * Use GFAPI::count_entries() instead.
+	 *
+	 * @deprecated 2.3.0.1
 	 *
 	 *
 	 * @param $form_id
@@ -4893,6 +4903,9 @@ class GFFormsModel {
 	 * @return null|string
 	 */
 	public static function get_lead_count( $form_id, $search, $star = null, $read = null, $start_date = null, $end_date = null, $status = null, $payment_status = null ) {
+
+		_deprecated_function( 'GFFormsModel::get_lead_count', '2.3.0.1', 'GFAPI::count_entries');
+
 		global $wpdb;
 
 		if ( version_compare( self::get_database_version(), '2.3-dev-1', '<' ) ) {
@@ -4906,14 +4919,88 @@ class GFFormsModel {
 		$entry_meta_table_name = self::get_entry_meta_table_name();
 		$entry_table_name   = self::get_entry_table_name();
 
-		$where = self::get_leads_where_sql( compact( 'form_id', 'search', 'status', 'star', 'read', 'start_date', 'end_date', 'payment_status', 'is_default' ) );
+		$where = self::get_entries_where_sql( compact( 'form_id', 'search', 'status', 'star', 'read', 'start_date', 'end_date', 'payment_status', 'is_default' ) );
 
 		$sql = "SELECT count(distinct l.id)
                 FROM $entry_table_name l
-                INNER JOIN $entry_meta_table_name ld ON l.id = ld.lead_id
+                INNER JOIN $entry_meta_table_name ld ON l.id = ld.entry_id
                 $where";
 
 		return $wpdb->get_var( $sql );
+	}
+
+	/**
+	 * Returns the WHERE clause for an entry search.
+	 *
+	 * This function is not used and is only included for backwards compatibility. Use GFAPI::count_entries() instead.
+	 *
+	 * @deprecated 2.3.0.1
+	 *
+	 * @since 2.3.0.1
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	public static function get_entries_where_sql( $args ) {
+
+		_doing_it_wrong( 'GFFormsModel::get_entries_where_sql', 'Use GFAPI::count_entries instead', '2.3.0.1');
+
+		global $wpdb;
+
+		extract(
+			wp_parse_args(
+				$args, array(
+					'form_id'        => false,
+					'search'         => '',
+					'status'         => 'active',
+					'star'           => null,
+					'read'           => null,
+					'start_date'     => null,
+					'end_date'       => null,
+					'payment_status' => null,
+					'is_default'     => true,
+				)
+			)
+		);
+
+		$where = array();
+
+		if ( $is_default ) {
+			$where[] = "l.form_id = $form_id";
+		}
+
+		if ( $search && $is_default ) {
+			$where[] = $wpdb->prepare( 'meta_value LIKE %s', "%$search%" );
+		} else if ( $search ) {
+			$where[] = $wpdb->prepare( 'd.meta_value LIKE %s', "%$search%" );
+		}
+
+		if ( $star !== null && $status == 'active' ) {
+			$where[] = $wpdb->prepare( "is_starred = %d AND status = 'active'", $star );
+		}
+
+		if ( $read !== null && $status == 'active' ) {
+			$where[] = $wpdb->prepare( "is_read = %d AND status = 'active'", $read );
+		}
+
+		if ( $payment_status ) {
+			$where[] = $wpdb->prepare( "payment_status = '%s'", $payment_status );
+		}
+
+		if ( $status !== null ) {
+			$where[] = $wpdb->prepare( 'status = %s', $status );
+		}
+
+		if ( ! empty( $start_date ) ) {
+			$where[] = "timestampdiff(SECOND, '$start_date', date_created) >= 0";
+		}
+
+		if ( ! empty( $end_date ) ) {
+			$where[] = "timestampdiff(SECOND, '$end_date', date_created) <= 0";
+		}
+
+		return 'WHERE ' . implode( ' AND ', $where );
 	}
 
 	/**
@@ -4944,11 +5031,11 @@ class GFFormsModel {
 		$entry_meta_table_name = self::get_entry_meta_table_name();
 		$entry_table_name   = self::get_entry_table_name();
 
-		$where = self::get_leads_where_sql( compact( 'form_id', 'search', 'status', 'star', 'read', 'start_date', 'end_date', 'payment_status', 'is_default' ) );
+		$where = self::get_entries_where_sql( compact( 'form_id', 'search', 'status', 'star', 'read', 'start_date', 'end_date', 'payment_status', 'is_default' ) );
 
 		$sql = "SELECT distinct l.id
                 FROM $entry_table_name l
-                INNER JOIN $entry_meta_table_name ld ON l.id = ld.lead_id
+                INNER JOIN $entry_meta_table_name ld ON l.id = ld.entry_id
                 $where";
 
 		$rows = $wpdb->get_results( $sql );
@@ -4957,11 +5044,13 @@ class GFFormsModel {
 			return array();
 		}
 
+		$entry_ids = array();
+
 		foreach ( $rows as $row ) {
-			$lead_ids[] = $row->id;
+			$entry_ids[] = $row->id;
 		}
 
-		return $lead_ids;
+		return $entry_ids;
 
 	}
 

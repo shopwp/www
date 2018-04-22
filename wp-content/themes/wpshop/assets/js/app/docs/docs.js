@@ -15,6 +15,28 @@ import {
   initAccordions
 } from "../forms/forms";
 
+
+
+function toggleChangelogs() {
+
+  jQuery('.changelog-type').on('click', function() {
+
+    var type = jQuery(this).data('changelog-type');
+
+    jQuery('.changelog-type').removeClass('is-active');
+    jQuery(this).addClass('is-active');
+
+    jQuery('.changelog-wrapper.is-active').removeClass('is-active');
+    jQuery('.changelog-wrapper[data-changelog-type=' + type + ']').addClass('is-active');
+
+    jQuery('.changelog-type-heading span').text(type);
+
+  });
+
+}
+
+
+
 /*
 
 On click
@@ -156,6 +178,7 @@ function initDocs() {
   showLatestBuildVersion();
   copyToClipboard();
   initAccordions(jQuery);
+  toggleChangelogs();
 
 }
 

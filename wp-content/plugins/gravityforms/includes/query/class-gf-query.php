@@ -138,7 +138,7 @@ class GF_Query {
 		$page_size = isset( $paging['page_size'] ) ? $paging['page_size'] : 20;
 		$offset = isset( $paging['offset'] ) ? $paging['offset'] : 0;
 
-		$sort_field = isset( $sorting['key'] ) ? $sorting['key'] : 'id';
+		$sort_field = ! empty( $sorting['key'] ) ? $sorting['key'] : 'id';
 		$sort_dir = isset( $sorting['direction'] ) ? strtoupper( $sorting['direction'] ) : 'DESC';
 
 		switch ( $sort_dir ) {
@@ -1277,6 +1277,11 @@ class GF_Query {
 		}
 		$form_id = $entry['form_id'];
 		$form = RGFormsModel::get_form_meta( $form_id );
+		
+		if( ! $form ) {
+			return false;
+		}
+		
 		// running entry through gform_get_field_value filter
 		foreach ( $form['fields'] as $field ) {
 			/* @var GF_Field $field */

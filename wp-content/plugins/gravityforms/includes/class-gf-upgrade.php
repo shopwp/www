@@ -315,6 +315,8 @@ class GF_Upgrade {
 
 		GFCommon::remove_dismissible_message( $key );
 
+		$this->add_post_upgrade_admin_notices();
+
 		GFCommon::log_debug( __METHOD__ . '(): Upgrade Completed.' );
 	}
 
@@ -908,7 +910,15 @@ WHERE NOT EXISTS
 		$this->update_upgrade_status( esc_html__( 'Migrating incomplete submissions.', 'gravityforms' ) );
 
 		$incomplete_submissions_table = GFFormsModel::get_incomplete_submissions_table_name();
-		$draft_submissions_table      = GFFormsModel::get_draft_submissions_table_name();
+
+		$table_check_query = $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->esc_like( $incomplete_submissions_table ) );
+
+		if ( $wpdb->get_var( $table_check_query ) != $incomplete_submissions_table ) {
+			// The table doesn't exist. Maybe an upgrade from a very early version.
+			return false;
+		}
+
+		$draft_submissions_table = GFFormsModel::get_draft_submissions_table_name();
 
 		$charset_db = empty( $wpdb->charset ) ? 'utf8mb4' : $wpdb->charset;
 
@@ -1806,5 +1816,97 @@ HAVING count(*) > 1;" );
 		$timestamp = $wpdb->get_var( "SELECT option_value FROM {$wpdb->options} WHERE option_name='gf_submissions_block'" );
 
 		return $timestamp;
+	}
+
+	/**
+	 * Adds dismissible admin notices.
+	 *
+	 * @since 2.3
+	 */
+	public function add_post_upgrade_admin_notices() {
+
+		$previous_db_version = get_option( 'gf_previous_db_version' );
+
+		$key = sanitize_key( 'gravityforms_outdated_addons_2.3' );
+
+		if ( version_compare( $previous_db_version, '2.3-beta-1', '>' ) ) {
+			GFCommon::remove_dismissible_message( $key );
+			return;
+		}
+
+		$add_ons = $this->get_min_addon_requirements();
+
+		$outdated = array();
+
+		foreach ( $add_ons as $plugin_slug => $add_on ) {
+			$plugin_path = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_slug;
+			if ( ! file_exists( $plugin_path ) ) {
+				continue;
+			}
+			$plugin_data     = get_plugin_data( $plugin_path, false, false );
+			$current_version = $plugin_data['Version'];
+			$add_on          = $add_ons[ $plugin_slug ];
+			$min_version     = $add_on['min_version'];
+			if ( version_compare( $current_version, $min_version, '<' ) ) {
+				$name       = $add_on['name'];
+				$outdated[] = $name;
+			}
+		}
+
+		if ( empty( $outdated ) ) {
+			return;
+		}
+
+		$number_outdated = count( $outdated );
+
+		if ( $number_outdated == 1 ) {
+			/* translators: %s: the add-on name */
+			$message = sprintf( esc_html__( 'The %s is not compatible with version of this version of Gravity Forms. See the plugins list for further details.', 'gravityforms' ), $outdated[0] );
+		} else {
+			/* translators: %d: the number of outdated add-ons */
+			$message = sprintf( esc_html__( 'There are %d add-ons installed that are not compatible with version of this version of Gravity Forms. See the plugins list for further details.', 'gravityforms' ), $number_outdated );
+		}
+
+		GFCommon::add_dismissible_message( $message, $key, 'error', 'gform_full_access', true, 'site-wide' );
+	}
+
+	/**
+	 * Returns an array of add-ons with the minimum version required for this version of Gravity Forms.
+	 *
+	 * @since 2.3
+	 *
+	 * @return array
+	 */
+	public function get_min_addon_requirements() {
+		return array(
+			'gravityformspaypal/paypal.php'                       => array(
+				'name'        => 'Gravity Forms PayPal Add-On',
+				'min_version' => '2.9',
+			),
+			'gravityformsauthorizenet/authorizenet.php'           => array(
+				'name'        => 'Gravity Forms Authorize.Net Add-On',
+				'min_version' => '2.4',
+			),
+			'gravityformspartialentries/partialentries.php'       => array(
+				'name'        => 'Gravity Forms Partial Entries Add-On',
+				'min_version' => '1.1',
+			),
+			'gravityformspaypalpaymentspro/paypalpaymentspro.php' => array(
+				'name'        => 'Gravity Forms PayPal Payments Pro Add-On',
+				'min_version' => '2.3',
+			),
+			'gravityformssignature/signature.php'                 => array(
+				'name'        => 'Gravity Forms Signature Add-On',
+				'min_version' => '3.4',
+			),
+			'gravityformsuserregistration/userregistration.php'   => array(
+				'name'        => 'Gravity Forms User Registration Add-On',
+				'min_version' => '3.9',
+			),
+			'gravityformspaypalpro/paypalpro.php'                 => array(
+				'name'        => 'Gravity Forms PayPal Pro Add-On',
+				'min_version' => '1.8',
+			),
+		);
 	}
 }

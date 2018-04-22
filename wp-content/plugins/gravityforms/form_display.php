@@ -812,7 +812,7 @@ class GFFormDisplay {
 			/**
 			 * Filter the form not found message that will be displayed
 			 *
-			 * @since 2.3
+			 * @since 2.2.6
 			 *
 			 * @param string                The default form not found message
 			 * @param int|string $form_id   The ID of the form we tried to retrieve
@@ -3120,11 +3120,17 @@ class GFFormDisplay {
 	 */
 	public static function validate_entry_limit( $form ) {
 
-		//If form has a limit of entries, check current entry count
+		// If form has a limit of entries, check current entry count
 		if ( rgar( $form, 'limitEntries' ) ) {
 			$period      = rgar( $form, 'limitEntriesPeriod' );
 			$range       = self::get_limit_period_dates( $period );
-			$entry_count = RGFormsModel::get_lead_count( $form['id'], '', null, null, $range['start_date'], $range['end_date'], 'active' );
+			$search_criteria = array(
+				'status' => 'active',
+				'start_date' => $range['start_date'],
+				'end_date' => $range['end_date'],
+			);
+
+			$entry_count = GFAPI::count_entries( $form['id'], $search_criteria );
 
 			if ( $entry_count >= $form['limitEntriesCount'] ) {
 				return empty( $form['limitEntriesMessage'] ) ? "<div class='gf_submission_limit_message'><p>" . esc_html__( 'Sorry. This form is no longer accepting new submissions.', 'gravityforms' ) . '</p></div>' : '<p>' . GFCommon::gform_do_shortcode( $form['limitEntriesMessage'] ) . '</p>';

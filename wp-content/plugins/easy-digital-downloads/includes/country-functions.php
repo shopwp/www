@@ -405,7 +405,6 @@ function edd_get_country_list() {
 /**
  * Get States List
  *
- * @access      public
  * @since       1.2
  * @return      array
  */
@@ -518,7 +517,6 @@ function edd_get_angola_provinces_list() {
 /**
  * Get Provinces List
  *
- * @access      public
  * @since       1.2
  * @return      array
  */
@@ -1375,7 +1373,7 @@ function edd_get_italian_states_list() {
 		'FG' => 'Foggia',
 		'FC' => 'Forli-Cesena',
 		'FR' => 'Frosinone',
-		'GE' => 'Genova',
+		'GE' => 'Genoa',
 		'GO' => 'Gorizia',
 		'GR' => 'Grosseto',
 		'IM' => 'Imperia',

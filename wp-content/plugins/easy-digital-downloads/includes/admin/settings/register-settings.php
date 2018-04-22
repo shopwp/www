@@ -745,7 +745,7 @@ function edd_get_registered_settings() {
 					),
 					'free_checkout_label' => array(
 						'id'   => 'free_checkout_label',
-						'name' => __( 'Register Text', 'easy-digital-downloads' ),
+						'name' => __( 'Complete Free Purchase Text', 'easy-digital-downloads' ),
 						'desc' => __( 'The button label for completing a free purchase.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'std'  => __( 'Free Download', 'easy-digital-downloads' ),
@@ -853,6 +853,14 @@ function edd_get_registered_settings() {
 					),
 				),
 				'site_terms'     => array(
+					array(
+					'id'   => 'terms_settings',
+						'name' => '<h3>' . __( 'Terms and Privacy Policy', 'easy-digital-downloads' ) . '</h3>',
+						'desc' => '',
+						'type' => 'header',
+						'tooltip_title' => __( 'Terms and Privacy Policy Settings', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Depending on legal and regulatory requirements, it may be necessary for your site to show checkboxes for Terms of Agreement and/or Privacy Policy.','easy-digital-downloads' ),
+					),
 					'show_agree_to_terms' => array(
 						'id'   => 'show_agree_to_terms',
 						'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
@@ -871,6 +879,34 @@ function edd_get_registered_settings() {
 						'name' => __( 'Agreement Text', 'easy-digital-downloads' ),
 						'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'easy-digital-downloads' ),
 						'type' => 'rich_editor',
+					),
+					'show_agree_to_privacy_policy' => array(
+						'id'   => 'show_agree_to_privacy_policy',
+						'name' => __( 'Agree to Privacy Policy', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to show an agree to privacy policy on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'agree_privacy_label' => array(
+						'id'   => 'privacy_agree_label',
+						'name' => __( 'Agree to Privacy Policy Label', 'easy-digital-downloads' ),
+						'desc' => __( 'Label shown next to the agree to privacy policy check box.', 'easy-digital-downloads' ),
+						'type' => 'text',
+						'size' => 'regular',
+					),
+					'show_privacy_policy_on_checkout' => array(
+						'id'   => 'show_to_privacy_policy_on_checkout',
+						'name' => __( 'Show the privacy policy on checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Display your privacy policy on checkout.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'agree_privacy_page' => array(
+						'id'   => 'privacy_agree_page',
+						'name' => __( 'Privacy Agreement Page', 'easy-digital-downloads' ),
+						'desc' => __( 'If Agree to Privacy Policy is checked, select a page for the Privacy Agreement here.', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_pages(),
+						'chosen'      => true,
+						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					),
 				),
 			)
@@ -963,6 +999,11 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
+				case 'text':
+					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) ) {
+						unset( $output[ $key ] );
+					}
+					break;
 				default:
 					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
 						unset( $output[ $key ] );
@@ -998,7 +1039,6 @@ function edd_settings_sanitize( $input = array() ) {
 function edd_get_registered_settings_types( $filtered_tab = false, $filtered_section = false ) {
 	$settings      = edd_get_registered_settings();
 	$setting_types = array();
-
 	foreach ( $settings as $tab_id => $tab ) {
 
 		if ( false !== $filtered_tab && $filtered_tab !== $tab_id ) {
@@ -1008,7 +1048,7 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 		foreach ( $tab as $section_id => $section_or_setting ) {
 
 			// See if we have a setting registered at the tab level for backwards compatibility
-			if ( is_array( $section_or_setting ) && array_key_exists( 'type', $section_or_setting ) ) {
+			if ( false !== $filtered_section && is_array( $section_or_setting ) && array_key_exists( 'type', $section_or_setting ) ) {
 				$setting_types[ $section_or_setting['id'] ] = $section_or_setting['type'];
 				continue;
 			}
@@ -1018,8 +1058,13 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 			}
 
 			foreach ( $section_or_setting as $section => $section_settings ) {
-				$setting_types[ $section_settings['id'] ] = $section_settings['type'];
+
+				if ( ! empty( $section_settings['type'] ) ) {
+					$setting_types[ $section_settings['id'] ] = $section_settings['type'];
+				}
+
 			}
+
 		}
 
 	}
@@ -1250,13 +1295,13 @@ function edd_get_settings_tabs() {
  */
 function edd_get_settings_tab_sections( $tab = false ) {
 
-	$tabs     = false;
+	$tabs     = array();
 	$sections = edd_get_registered_settings_sections();
 
 	if( $tab && ! empty( $sections[ $tab ] ) ) {
 		$tabs = $sections[ $tab ];
 	} else if ( $tab ) {
-		$tabs = false;
+		$tabs = array();
 	}
 
 	return $tabs;
@@ -2031,7 +2076,7 @@ function edd_tax_rates_callback($args) {
 				<th scope="col" class="edd_tax_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></th>
 				<th scope="col" class="edd_tax_global"><?php _e( 'Country Wide', 'easy-digital-downloads' ); ?></th>
-				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically. Enter a percentage, such as 6.5 for 6.5%.' ); ?>"></span></th>
+				<th scope="col" class="edd_tax_rate"><?php _e( 'Rate', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Regional tax rates: </strong>When a customer enters an address on checkout that matches the specified region for this tax rate, the cart tax will adjust automatically. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ); ?>"></span></th>
 				<th scope="col"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></th>
 			</tr>
 		</thead>

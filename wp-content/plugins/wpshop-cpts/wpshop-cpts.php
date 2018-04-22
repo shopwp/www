@@ -31,7 +31,7 @@ function wpshop_custom_post_type_docs() {
     'label'               => __('Docs', 'wpshop'),
     'description'         => __('Custom Post Type for Docs', 'wpshop'),
     'labels'              => $labels,
-    'supports'            => array('title', 'editor', 'comments'),
+    'supports'            => array('title', 'editor', 'comments', 'page-attributes'),
     'taxonomies'          => array('category', 'types'),
     'hierarchical'        => true,
     'public'              => true,
