@@ -1,12 +1,28 @@
 ------------------------------------------------------------------------------------------------------------------
-Version 2.3.0.2
-    - Fixed a potential fatal error that can occur during or before the database upgrade.
+Version 2.3.1
+	- Added percentage complete to the System Status page when upgrading from 2.2.x.
+	- Added a message to the status report when background tasks are not enabled warning that the upgrade will take longer than usual.
 
-------------------------------------------------------------------------------------------------------------------
-Version 2.3.0.1
-    - Fixed an issue retrieving the entry before the entry migration has completed successfully.
-    - Fixed an issue preventing the entry limit feature from limiting entries.
-    - Fixed an issue preventing the upgrade process from completing when the incomplete submissions table does not exist.
+	- Updated the 'force the upgrade' link on the System Status page trigger the upgrade synchronously and then poll the cron task until complete when upgrading from 2.2.x. This provides a way to upgrade if neither background tasks nor the cron are working.
+    - Updated the way background tasks are handled on multisite. Tasks are processed for the current blog ID before processing tasks for other blog IDs.
+
+   	- Fixed an issue where form imports could fail if the file contain any extra characters before the JSON.
+   	- Fixed an issue where the previous button can not be clicked on multipage forms when the submit button is hidden by conditional logic.
+   	- Fixed an issue where URL is not be removed from entry value when deleting file.
+   	- Fixed an issue with the submissions block which may affect some systems under rare circumstances.
+   	- Fixed an issue on the entry list page when searching for the value of any field.
+   	- Fixed a database error during the daily cron task which can occur before the database has been upgraded.
+   	- Fixed the cron healthcheck when spawning a background task for a different blog ID on multisite.
+	- Fixed an issue which can cause merge tags to be blank while the database upgrade is queued.
+	- Fixed a potential fatal error that can occur during or before the database upgrade.
+   	- Fixed an issue retrieving the entry before the entry migration has completed successfully.
+	- Fixed an issue preventing the entry limit feature from limiting entries.
+	- Fixed an issue preventing the upgrade process from completing when the incomplete submissions table does not exist.
+
+   	- AF: Fixed an issue preventing field mapping from rendering when field labels contain HTML tags.
+
+   	- API: Fixed an issue searching entries with the != operator when combining clauses with multi-input fields.
+   	- API: Fixed an issue searching entries where the is operator is ignored.
 
 ------------------------------------------------------------------------------------------------------------------
 Version 2.3

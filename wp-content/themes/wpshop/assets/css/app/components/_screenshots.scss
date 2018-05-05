@@ -17,7 +17,7 @@
 
 .screenshot-image {
   @include shadow();
-  
+
   border: 1px solid #c2c2c2;
   left: 13%;
   max-width: 87%;
@@ -38,4 +38,8 @@
   flex: 0 0 40%;
   padding-right: 4em;
   margin-top: 2px;
+}
+
+.screenshots-short-description {
+  margin-bottom: 3em;
 }

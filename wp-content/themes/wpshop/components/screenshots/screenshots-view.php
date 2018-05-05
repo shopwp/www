@@ -1,5 +1,11 @@
 <section class="component component-screenshots l-col l-col-center">
 
+  <?php if ($short_desc) { ?>
+    <div class="screenshots-short-description">
+      <?= $short_desc; ?>
+    </div>
+  <?php } ?>
+
   <ul class="screenshots">
 
     <?php

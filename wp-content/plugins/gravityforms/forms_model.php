@@ -1883,13 +1883,12 @@ class GFFormsModel {
 
 		self::delete_physical_file( $file_url );
 
-		// update lead field value - simulate form submission
+		// Update entry field value - simulate form submission.
+		$entry_meta_table_name = self::get_entry_meta_table_name();
+		$sql                   = $wpdb->prepare( "SELECT id FROM {$entry_meta_table_name} WHERE entry_id=%d AND meta_key = %s", $entry_id, $field_id );
+		$entry_meta_id         = $wpdb->get_var( $sql );
 
-		$lead_detail_table = self::get_lead_details_table_name();
-		$sql               = $wpdb->prepare( "SELECT id FROM $lead_detail_table WHERE entry_id=%d AND meta_key = %s", $entry_id, $field_id );
-		$entry_detail_id   = $wpdb->get_var( $sql );
-
-		self::update_entry_field_value( $form, $entry, $field, $entry_detail_id, $field_id, $field_value );
+		self::update_entry_field_value( $form, $entry, $field, $entry_meta_id, $field_id, $field_value );
 
 	}
 
@@ -2208,6 +2207,7 @@ class GFFormsModel {
 
 		if ( version_compare( self::get_database_version(), '2.3-dev-1', '<' ) ) {
 			GF_Forms_Model_Legacy::save_lead( $form, $entry );
+			$entry = GFAPI::get_entry( $entry['id'] );
 			return;
 		}
 

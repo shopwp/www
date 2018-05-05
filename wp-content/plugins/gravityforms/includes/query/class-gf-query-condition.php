@@ -278,7 +278,8 @@ class GF_Query_Condition {
 							 */
 						} else {
 							$operator = $this->operator;
-							if ( $is_negative = in_array( $operator, array( self::NLIKE, self::NBETWEEN ) ) ) {
+							$is_negative = in_array( $operator, array( self::NLIKE, self::NBETWEEN, self::NEQ ) );
+							if ( $is_negative ) {
 								/**
 								 * Convert operator to positive, since we're doing it the NOT EXISTS way.
 								 */
@@ -288,6 +289,9 @@ class GF_Query_Condition {
 										break;
 									case self::NBETWEEN:
 										$operator = self::BETWEEN;
+										break;
+									case self::NEQ:
+										$operator = self::EQ;
 										break;
 								}
 							}

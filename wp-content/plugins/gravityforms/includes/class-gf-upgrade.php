@@ -163,7 +163,7 @@ class GF_Upgrade {
 
 		// Start upgrade routine
 		if ( $force_upgrade || ! ( defined( 'GFORM_AUTO_DB_MIGRATION_DISABLED' ) && GFORM_AUTO_DB_MIGRATION_DISABLED ) ) {
-			$this->post_upgrade_schema( $from_db_version );
+			$this->post_upgrade_schema( $from_db_version, $force_upgrade );
 		}
 
 		return true;
@@ -523,9 +523,10 @@ class GF_Upgrade {
 	 *
 	 * @since  2.2
 	 *
-	 * @param $from_db_version
+	 * @param string $from_db_version
+	 * @param bool   $force_upgrade
 	 */
-	protected function post_upgrade_schema( $from_db_version ) {
+	protected function post_upgrade_schema( $from_db_version, $force_upgrade ) {
 
 		$versions = $this->get_versions();
 
@@ -563,7 +564,13 @@ class GF_Upgrade {
 
 		if ( GFForms::$background_upgrader->get_data() ) {
 			GFForms::$background_upgrader->push_to_queue( array( $this, 'post_background_upgrade' ) );
-			GFForms::$background_upgrader->save()->dispatch();
+			GFForms::$background_upgrader->save();
+			if ( $force_upgrade ) {
+				// Simulate triggering the cron task
+				GFForms::$background_upgrader->handle_cron_healthcheck();
+			} else {
+				GFForms::$background_upgrader->dispatch();
+			}
 		} else {
 			GFCommon::log_debug( __METHOD__ . '(): Background upgrade not necessary. Setting new version.' );
 			$this->update_db_version();
@@ -1078,7 +1085,7 @@ WHERE ln.id NOT IN
 	 */
 	public function get_wp_option( $option_name ) {
 
-		wp_cache_delete( $option_name );
+		wp_cache_delete( 'alloptions', 'options' );
 
 		return get_option( $option_name );
 	}
@@ -1744,13 +1751,10 @@ HAVING count(*) > 1;" );
 	 *
 	 * @since 2.3
 	 *
-	 * @return int|false Number of rows affected/selected or false on error
+	 * @return bool False if value was not updated and true if value was updated.
 	 */
 	public function clear_upgrade_lock() {
-		global $wpdb;
-
-		$result = $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name='gf_upgrade_lock'" );
-
+		$result = update_option( 'gf_upgrade_lock', false );
 		return $result;
 	}
 
@@ -1776,15 +1780,10 @@ HAVING count(*) > 1;" );
 	 *
 	 * @since 2.3
 	 *
-	 * @return int|false Number of rows affected/selected or false on error
+	 * @return bool False if value was not updated and true if value was updated.
 	 */
 	public function set_submissions_block() {
-		global $wpdb;
-
-		$sql = $wpdb->prepare( "INSERT INTO {$wpdb->options}(option_name, option_value) VALUES('gf_submissions_block', %s)", time() );
-
-		$result = $wpdb->query( $sql );
-
+		$result = update_option( 'gf_submissions_block', time() );
 		return $result;
 	}
 
@@ -1793,13 +1792,10 @@ HAVING count(*) > 1;" );
 	 *
 	 * @since 2.3
 	 *
-	 * @return int|false Number of rows affected/selected or false on error
+	 * @return bool False if value was not updated and true if value was updated.
 	 */
 	public function clear_submissions_block() {
-		global $wpdb;
-
-		$result = $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name='gf_submissions_block'" );
-
+		$result = update_option( 'gf_submissions_block', false );
 		return $result;
 	}
 
