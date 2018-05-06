@@ -38,4 +38,16 @@ function initMailinglistTracking() {
 }
 
 
-export { initDriftTracking, initMailinglistTracking }
+function initDownloadTracking() {
+
+  jQuery('.btn-download-free').on('click', function() {
+
+    dataLayer.push({
+      'event': 'downloadFree'
+    });
+
+  });
+
+}
+
+export { initDriftTracking, initMailinglistTracking, initDownloadTracking }

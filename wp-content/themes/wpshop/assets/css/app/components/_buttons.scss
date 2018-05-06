@@ -169,6 +169,10 @@ a.button.edd-slg-social-unlink-profile {
     opacity: 1;
   }
 
+  + input.edd-add-to-cart {
+    display: none;
+  }
+
   span.edd-add-to-cart-label {
 
     &:after {

@@ -135,5 +135,5 @@ add_action('login_init', function(){
 
 
 add_action('edd_after_price_option', function(){
-  echo '<small style="display:block;text-align:center;margin-top:-10px;">per year</small>';
+  echo '<small style="display:block;text-align:center;margin-top:-10px;">/per year</small>';
 });

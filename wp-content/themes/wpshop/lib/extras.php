@@ -34,6 +34,14 @@ add_filter('excerpt_more', __NAMESPACE__ . '\\excerpt_more');
 
 
 
+/*
+
+Get latest WP Shopify free version link
+
+*/
+function wps_get_latest_free_version() {
+  return get_field('theme_latest_free_version', 'option');
+}
 
 
 

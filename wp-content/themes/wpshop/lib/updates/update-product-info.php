@@ -4,6 +4,7 @@ define( 'SHORTINIT', true );
 
 require(dirname(__FILE__) . '/../../../../../wp/wp-load.php');
 
+
 /*
 
 Grab the current database values
@@ -24,6 +25,7 @@ $argv[1] will always equal the new version number that gets passed in
 
 */
 $version['meta_value'] = $argv[1];
+$tier = $argv[2];
 
 
 /*
@@ -68,3 +70,10 @@ Performs the updates
 $versionResults = $wpdb->update($wpdb->postmeta, $version, ['meta_key' => '_edd_sl_version', 'post_id' => 35] );
 $downloadResults = $wpdb->update($wpdb->postmeta, $downloadpath, ['meta_key' => 'edd_download_files', 'post_id' => 35] );
 $changelogResults = $wpdb->update($wpdb->postmeta, $changelogEDD, ['meta_key' => '_edd_sl_changelog', 'post_id' => 35] );
+
+
+$themeOptionsVersionNumberUpdateResults = $wpdb->update($wpdb->options, ['option_value' => $version['meta_value']], ['option_name' => 'options_theme_latest_' . $tier . '_version' ] );
+
+if ($themeOptionsVersionNumberUpdateResults === false) {
+  error_log('WP Shopify build error: Unabled to update theme options version number');
+}

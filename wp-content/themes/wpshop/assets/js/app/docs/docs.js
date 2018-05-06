@@ -184,4 +184,4 @@ function initDocs() {
 
 initDocs();
 
-// export { initDocs }
+export { showLatestBuildVersion }

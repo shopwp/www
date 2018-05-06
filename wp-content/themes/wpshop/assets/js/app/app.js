@@ -7,8 +7,9 @@ import { initMailinglist } from './mailinglist/mailinglist';
 import { initCheckout } from './checkout/checkout';
 import { initAccount } from './account/account';
 import { initMobile } from './mobile/mobile';
-import { initDriftTracking } from './analytics/analytics';
+import { initDriftTracking, initDownloadTracking } from './analytics/analytics';
 import { initFAQs } from './faqs/faqs';
+import { showLatestBuildVersion } from './docs/docs';
 
 (function($) {
   "use strict";
@@ -30,9 +31,12 @@ import { initFAQs } from './faqs/faqs';
     initAccount($);
     initFAQs();
 
+    showLatestBuildVersion();
+
     initMobile($);
 
     initDriftTracking($);
+    initDownloadTracking();
 
     if (window.location.pathname === '/auth') {
       onShopifyAuth($);

@@ -784,3 +784,25 @@
   }
 
 }
+
+
+.docs-version-wrapper-inline {
+  text-align: center;
+  font-style: normal;
+  justify-content: center;
+
+  span, p,
+  .docs-version {
+    display: inline-block;
+    width: auto;
+    font-style: normal;
+    top: 0;
+  }
+
+  span {
+    position: relative;
+    top: 4px;
+    left: -8px;
+  }
+
+}

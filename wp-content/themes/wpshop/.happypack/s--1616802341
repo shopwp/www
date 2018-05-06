@@ -36,5 +36,16 @@ function initMailinglistTracking() {
   });
 }
 
+function initDownloadTracking() {
+
+  jQuery('.btn-download-free').on('click', function () {
+
+    dataLayer.push({
+      'event': 'downloadFree'
+    });
+  });
+}
+
 exports.initDriftTracking = initDriftTracking;
 exports.initMailinglistTracking = initMailinglistTracking;
+exports.initDownloadTracking = initDownloadTracking;

@@ -81,6 +81,22 @@ function jquery_cdn() {
 wps_forgot_password_shortcode
 
 */
+function wps_download_shortcode($atts) {
+
+  ob_start();
+  get_template_part('components/downloads/downloads-free-view');
+  return ob_get_clean();
+
+}
+
+add_shortcode('wps_download', 'wps_download_shortcode');
+
+
+/*
+
+wps_forgot_password_shortcode
+
+*/
 function wps_forgot_password_shortcode($atts) {
 
   ob_start();

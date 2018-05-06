@@ -2,6 +2,45 @@
   background: white;
   margin: 0;
   border-top: 5em solid white;
+
+  @include device(1000, 'max') {
+
+    .screenshot {
+      flex-direction: column;
+    }
+
+    .screenshot-image-wrapper {
+      text-align: center;
+      width: 100%;
+      max-width: 100%;
+      flex: 0 0 100%;
+      margin: 0;
+      max-width: 640px;
+    }
+
+    .screenshot-image {
+      max-width: 100%;
+      position: relative;
+      margin: 0 auto;
+      left: 0;
+    }
+
+    .screenshot-image-description {
+      margin: 1em auto 3em;
+      padding: 0;
+      max-width: 700px;
+      width: 100%;
+    }
+
+  }
+
+}
+
+.page.demo,
+.page.purchase {
+  .component-screenshots {
+    margin-bottom: 3em;
+  }
 }
 
 .screenshots {
