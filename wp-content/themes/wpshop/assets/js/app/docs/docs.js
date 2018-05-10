@@ -132,9 +132,9 @@ async function getLatestVersion() {
 
   var options = {
     method: 'GET',
-    url: 'https://api.github.com/repos/arobbins/wp-shopify/tags',
+    url: 'https://api.github.com/repos/arobbins/wp-shopify-pro/tags',
     beforeSend: function(xhr) {
-      xhr.setRequestHeader('Authorization', token);
+      xhr.setRequestHeader('Authorization', 'Token ' + token);
       xhr.setRequestHeader('Accept', 'application/vnd.github.v3+json');
       xhr.setRequestHeader('Content-Type', 'application/json');
     },
