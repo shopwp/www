@@ -120,3 +120,34 @@ function edd_stripe_admin_js( $payment_id  = 0 ) {
 
 }
 add_action( 'edd_view_order_details_before', 'edd_stripe_admin_js', 100 );
+
+/**
+ * Loads the javascript for the Stripe Connect functionality in the settings page.
+ *
+ * @param string $hook The current admin page.
+ */
+function edd_stripe_connect_admin_script( $hook ) {
+
+	if( 'download_page_edd-settings' !== $hook ) {
+		return;
+	}
+
+	wp_enqueue_style( 'edd-stripe-admin-styles', EDDSTRIPE_PLUGIN_URL . 'assets/css/admin-styles.css', array(), EDD_STRIPE_VERSION );
+
+	wp_enqueue_script( 'edd-stripe-admin-scripts', EDDSTRIPE_PLUGIN_URL . 'assets/js/edd-stripe-admin.js', array( 'jquery' ), EDD_STRIPE_VERSION );
+
+	$test_key = edd_get_option( 'test_publishable_key' );
+	$live_key = edd_get_option( 'live_publishable_key' );
+
+	wp_localize_script(
+		'edd-stripe-admin-scripts',
+		'edd_stripe_admin',
+		array(
+			'stripe_enabled' => array_key_exists( 'stripe', edd_get_enabled_payment_gateways() ),
+			'test_mode' => (int) edd_is_test_mode(),
+			'test_key_exists' => ! empty( $test_key ) ? 'true' : 'false',
+			'live_key_exists' => ! empty( $live_key ) ? 'true' : 'false',
+		)
+	);
+}
+add_action( 'admin_enqueue_scripts', 'edd_stripe_connect_admin_script' );

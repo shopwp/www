@@ -225,7 +225,16 @@ function edds_process_stripe_payment( $purchase_data ) {
 						$args[ 'statement_descriptor' ] = $statement_descriptor;
 					}
 
-					$charge = \Stripe\Charge::create( apply_filters( 'edds_create_charge_args', $args, $purchase_data ) );
+					$charge_args = apply_filters( 'edds_create_charge_args', $args, $purchase_data );
+					$charge_options = array();
+
+					$stripe_connect_account_id = edd_get_option( 'stripe_connect_account_id' );
+
+					if( ! empty( $stripe_connect_account_id ) ) {
+						$charge_options['stripe_account'] = $stripe_connect_account_id;
+					}
+
+					$charge = \Stripe\Charge::create( $charge_args, $charge_options );
 				}
 
 				// record the pending payment
@@ -458,17 +467,26 @@ function edds_charge_preapproved( $payment_id = 0 ) {
 		$unsupported_characters = array( '<', '>', '"', '\'' );
 		$statement_descriptor   = str_replace( $unsupported_characters, '', $statement_descriptor );
 
-		$charge = \Stripe\Charge::create( array(
-				"amount"                => $amount,
-				"currency"              => edd_get_currency(),
-				"customer"              => $customer_id,
-				"description"           => sprintf( __( 'Preapproved charge for purchase %s from %s', 'edds' ), edd_get_payment_key( $payment_id ), home_url() ),
-				'statement_descriptor'  => $statement_descriptor,
-				'metadata'              => array(
-					'email'             => edd_get_payment_user_email( $payment_id )
-				)
+		$charge_args = array(
+			'amount'               => $amount,
+			'currency'             => edd_get_currency(),
+			'customer'             => $customer_id,
+			'description'          => sprintf( __( 'Preapproved charge for purchase %s from %s', 'edds' ), edd_get_payment_key( $payment_id ), home_url() ),
+			'statement_descriptor' => $statement_descriptor,
+			'metadata'             => array(
+				'email' => edd_get_payment_user_email( $payment_id )
 			)
 		);
+
+		$charge_options = array();
+
+		$stripe_connect_account_id = edd_get_option( 'stripe_connect_account_id' );
+
+		if( ! empty( $stripe_connect_account_id ) ) {
+			$charge_options['stripe_account'] = $stripe_connect_account_id;
+		}
+
+		$charge = \Stripe\Charge::create( $charge_args, $charge_options );
 
 	} catch ( \Stripe\Error\Card $e ) {
 

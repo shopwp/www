@@ -47,7 +47,7 @@ function get_doc_name($templateCat) {
     <div class="l-row l-row-left">
 
       <a href="https://travis-ci.com/arobbins/wp-shopify-pro" class="docs-travis-build" target="_blank">
-        <img src="https://travis-ci.com/arobbins/wp-shopify-pro.svg?branch=master" alt="WP Shopify Travis CI Build Status">
+        <img src="https://travis-ci.com/arobbins/wp-shopify-pro.svg?token=FmC2p6cxqRrxLpZfViYm&branch=master" alt="WP Shopify Travis CI Build Status">
       </a>
 
       <a href="https://github.com/wpshopify/wp-shopify" class="docs-social-link" target="_blank">
