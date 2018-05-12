@@ -182,6 +182,10 @@ function initDocs() {
 
 }
 
-initDocs();
+// Only show Pace on docs template
+if (jQuery('body').hasClass('docs-template-default')) {
+  initDocs();  
+}
+
 
 export { showLatestBuildVersion }

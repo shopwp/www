@@ -233,7 +233,7 @@ function initAccount($) {
   onPasswordChange($);
   showUpgrades($);
 
-  copyToClipboard();
+  // copyToClipboard();
 
   $('.edd_download_file_link').text('Download WP Shopify').show();
 

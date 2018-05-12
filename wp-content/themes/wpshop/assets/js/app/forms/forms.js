@@ -93,7 +93,10 @@ Init Accordions
 */
 function initAccordions($) {
 
-  $('.accordion-heading').on('click', function() {
+  $('.accordion-heading').on('click', function(e) {
+
+    e.preventDefault();
+    e.stopPropagation();
 
     $(this).next().slideToggle('fast');
     $(this).toggleClass('is-open');

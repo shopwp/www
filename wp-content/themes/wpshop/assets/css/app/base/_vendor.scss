@@ -15,7 +15,7 @@ EDD
 
   th,
   td {
-    padding: $space-s $space-l;
+    padding: $space-l $space-l;
     vertical-align: top;
   }
 
@@ -194,7 +194,7 @@ EDD
   }
 
   .edd_sl_license_row td {
-    vertical-align: middle;
+    vertical-align: top;
   }
 
 }
@@ -458,7 +458,8 @@ EDD
 .edd_sl_license_status {}
 
 .edd-sl-inactive {
-  color: color(error-dark);
+  color: #797979;
+
 }
 
 .edd-sl-active {

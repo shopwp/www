@@ -52,10 +52,10 @@ $body_content_inner = "
 $header_content_h1 = "
 	color: #000000;
 	margin:0;
-	padding: 28px 24px;
+	padding: 20px 24px;
 	display:block;
 	font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-	font-size:32px;
+	font-size:28px;
 	font-weight: 500;
 	line-height: 1.2;
 ";

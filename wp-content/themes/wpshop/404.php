@@ -1,7 +1,5 @@
 <?php get_template_part('templates/page', 'header'); ?>
 
 <div class="alert alert-warning">
-  <?php _e('Woops, looks like that page doesn\'t exist. If you\'re having trouble finding what you\'re looking for <a href="https://join.slack.com/wpshopify/shared_invite/MTg5OTQxODEwOTM1LTE0OTU5ODY2MTktN2Y1ODk0YzBlNg">join our Slack channel</a> and you\'ll be helped as soon as possible!', 'sage'); ?>
+  <?php _e('Uh oh, looks like that page doesn\'t exist! If you\'re having trouble finding what you\'re looking for please <a href="https://wpshop.io">review our documentaion</a> or <a href="mailto:hello@wpshop.io">send us an email</a> and you\'ll be helped as soon as possible! Also if you\'ve purchased a <a href="https://wpshop.io/purchase">WP Shopify Pro</a> license, join our private Slack channel to recieve dedicated live support!', 'sage'); ?>
 </div>
-
-<?php get_search_form();

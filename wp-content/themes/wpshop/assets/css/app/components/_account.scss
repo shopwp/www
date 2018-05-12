@@ -34,8 +34,26 @@
   margin-top: 0;
 }
 
+.component-account-licenses {
+  .edd_sl_expiration {
+    width: 45%;
+  }
+}
+
 .component-account-sub {
   margin-bottom: $space-xl*2;
+}
+
+.component-account-profile {
+  .component-account-sub {
+    margin-bottom: 10px;
+
+    .accordion-heading {
+      padding: 1em 0;
+      font-size: 20px;  
+    }
+
+  }
 }
 
 .user-info {

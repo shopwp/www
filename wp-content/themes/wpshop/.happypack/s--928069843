@@ -27,14 +27,6 @@ var _docs = require('./docs/docs');
 
   $(function () {
 
-    // Only show Pace on docs template
-    // if ($('body').hasClass('docs-template-default')) {
-    //   Pace.restart();
-    //
-    // } else {
-    //   Pace.stop();
-    // }
-
     (0, _plugins.initPlugins)($);
     (0, _forms.initForms)($);
     (0, _mailinglist.initMailinglist)($);
@@ -48,9 +40,5 @@ var _docs = require('./docs/docs');
 
     (0, _analytics.initDriftTracking)($);
     (0, _analytics.initDownloadTracking)();
-
-    if (window.location.pathname === '/auth') {
-      (0, _security.onShopifyAuth)($);
-    }
   });
 })(jQuery);

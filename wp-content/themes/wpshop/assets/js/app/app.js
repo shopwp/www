@@ -16,14 +16,6 @@ import { showLatestBuildVersion } from './docs/docs';
 
   $(function() {
 
-    // Only show Pace on docs template
-    // if ($('body').hasClass('docs-template-default')) {
-    //   Pace.restart();
-    //
-    // } else {
-    //   Pace.stop();
-    // }
-
     initPlugins($);
     initForms($);
     initMailinglist($);
@@ -37,11 +29,6 @@ import { showLatestBuildVersion } from './docs/docs';
 
     initDriftTracking($);
     initDownloadTracking();
-
-    if (window.location.pathname === '/auth') {
-      onShopifyAuth($);
-    }
-
 
   });
 

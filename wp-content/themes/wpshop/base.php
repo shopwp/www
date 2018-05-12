@@ -122,7 +122,9 @@ global $post;
 
       </main>
 
-      <?php if (get_post_type( get_the_ID() ) === 'docs' ) : ?>
+      <?php
+
+      if (get_post_type( get_the_ID() ) === 'docs' ) : ?>
         <div class="docs-content-loader"><i class="fal fa-cog fa-spin"></i></div>
         <small class="notice-copy notice-inline"><i class="fal fa-thumbs-up"></i> Copied!</small>
       <?php endif; ?>
