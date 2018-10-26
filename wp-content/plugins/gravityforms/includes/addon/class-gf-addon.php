@@ -3145,6 +3145,12 @@ abstract class GFAddOn {
 
 		foreach ( $form['fields'] as $field ) {
 
+			if ( ! empty( $args['field_types'] ) && ! in_array( $field->type, $args['field_types'] ) ) {
+
+				continue;
+
+			}
+
 			$input_type               = GFFormsModel::get_input_type( $field );
 			$is_applicable_input_type = empty( $args['input_types'] ) || in_array( $input_type, $args['input_types'] );
 
@@ -4853,7 +4859,7 @@ abstract class GFAddOn {
 		 */
 		$setting_tabs = apply_filters( 'gform_addon_app_settings_menu_' . $this->_slug, $setting_tabs );
 
-		if ( $this->current_user_can_any( $this->_capabilities_uninstall ) ) {
+		if ( $this->current_user_can_uninstall() ) {
 			$setting_tabs[] = array( 'name' => 'uninstall', 'label' => esc_html__( 'Uninstall', 'gravityforms' ), 'callback' => array( $this, 'app_settings_uninstall_tab' ) );
 		}
 
@@ -4877,7 +4883,7 @@ abstract class GFAddOn {
 		<?php
 
 		} else {
-			if ( $this->current_user_can_any( $this->_capabilities_uninstall ) && ( ! function_exists( 'is_multisite' ) || ! is_multisite() || is_super_admin() ) ) {
+			if ( $this->current_user_can_uninstall() ) {
 			?>
 			<form action="" method="post">
 				<?php wp_nonce_field( 'uninstall', 'gf_addon_uninstall' ) ?>
@@ -4967,13 +4973,6 @@ abstract class GFAddOn {
 		<br class="clear" style="clear: both;" />
 
 		</div> <!-- / wrap -->
-
-		<script type="text/javascript">
-			// JS fix for keep content contained on tabs with less content
-			jQuery(document).ready(function ($) {
-				$('#gform_tab_container').css('minHeight', jQuery('#gform_tabs').height() + 100);
-			});
-		</script>
 
 	<?php
 	}
@@ -5163,7 +5162,7 @@ abstract class GFAddOn {
 		?>
 		<form action="" method="post">
 			<?php wp_nonce_field( 'uninstall', 'gf_addon_uninstall' ) ?>
-			<?php if ( $this->current_user_can_any( $this->_capabilities_uninstall ) ) { ?>
+			<?php if ( $this->current_user_can_uninstall() ) { ?>
 
 				<div class="hr-divider"></div>
 
@@ -5214,7 +5213,7 @@ abstract class GFAddOn {
 	 */
 	public function uninstall_addon() {
 
-		if ( ! $this->current_user_can_any( $this->_capabilities_uninstall ) ) {
+		if ( ! $this->current_user_can_uninstall() ) {
 			die( esc_html__( "You don't have adequate permission to uninstall this add-on: " . $this->_title, 'gravityforms' ) );
 		}
 
@@ -6145,4 +6144,18 @@ abstract class GFAddOn {
 		GFCommon::load_gf_text_domain( $this->_slug, plugin_basename( dirname( $this->_full_path ) ) );
 	}
 
+	/***
+	 * Determines if the current user has the proper cabalities to uninstall this add-on
+	 * Add-ons that have been network activated can only be uninstalled by a network admin.
+	 *
+	 * @since 2.3.1.12
+	 * @access public
+	 *
+	 * @return bool True if current user can uninstall this add-on. False otherwise
+	 */
+	public function current_user_can_uninstall(){
+
+		return GFCommon::current_user_can_uninstall( $this->_capabilities_uninstall, $this->_path );
+
+	}
 }

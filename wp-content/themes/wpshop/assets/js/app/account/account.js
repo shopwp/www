@@ -235,7 +235,7 @@ function initAccount($) {
 
   // copyToClipboard();
 
-  $('.edd_download_file_link').text('Download WP Shopify').show();
+  $('.edd_download_file_link').text('Download WP Shopify Pro').show();
 
 }
 

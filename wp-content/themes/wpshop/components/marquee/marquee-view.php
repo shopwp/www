@@ -9,7 +9,7 @@
     </div>
 
     <div class="btn-group l-row l-row-center">
-      <a href="/free-download" class="btn btn-l btn-secondary btn-download-free" data-gtm="learn-home"><i class="fas fa-download"></i> Download</a>
+      <a href="https://wordpress.org/plugins/wpshopify" class="btn btn-l btn-secondary btn-download-free" data-gtm="learn-home"><i class="fas fa-download"></i> Download</a>
       <a href="/purchase" class="btn btn-l" data-gtm="purchase-home"><i class="fas fa-cart-plus"></i> Purchase</a>
     </div>
 

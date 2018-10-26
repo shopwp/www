@@ -46,10 +46,13 @@ function edds_add_settings( $settings ) {
 
 	if( empty( $stripe_connect_account_id ) || ( ( empty( $test_key ) && $test_mode ) || ( empty( $live_key ) && ! $test_mode ) ) ) {
 		$stripe_connect_desc = '<a href="'. esc_url( $stripe_connect_url ) .'" class="edd-stripe-connect"><span>' . __( 'Connect with Stripe', 'edds' ) . '</span></a>';
-		$stripe_connect_desc .= '<p>' . sprintf( __( 'Have questions about connecting with Stripe? See the <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a>.', 'rcp' ), 'https://docs.easydigitaldownloads.com/article/2039-how-does-stripe-connect-affect-me' ) . '</p>';
+		$stripe_connect_desc .= '<p>' . sprintf( __( 'Have questions about connecting with Stripe? See the <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a>.', 'edds' ), 'https://docs.easydigitaldownloads.com/article/2039-how-does-stripe-connect-affect-me' ) . '</p>';
 	} else {
 		$stripe_connect_desc = sprintf( __( 'Your Stripe account is connected in %s mode. If you need to reconnect in %s mode, <a href="%s">click here</a>.', 'edds' ), '<strong>' . $mode . '</strong>', $mode, esc_url( $stripe_connect_url ) );
 	}
+
+	$stripe_connect_desc .= '<p id="edds-api-keys-row-reveal">' . __( '<a href="#">Click here</a> to manage your API keys manually.', 'edds' ) . '</p>';
+	$stripe_connect_desc .= '<p id="edds-api-keys-row-hide" class="edd-hidden">' . __( '<a href="#">Click here</a> to hide your API keys.', 'edds' ) . '</p>';
 
 	$stripe_settings = array(
 		array(
@@ -71,7 +74,7 @@ function edds_add_settings( $settings ) {
 			'desc'  => __( 'Enter your test secret key, found in your Stripe Account Settings', 'edds' ),
 			'type'  => 'text',
 			'size'  => 'regular',
-			'class' => 'edd-hidden',
+			'class' => 'edd-hidden edds-api-key-row',
 		),
 		array(
 			'id'   => 'test_publishable_key',
@@ -79,7 +82,7 @@ function edds_add_settings( $settings ) {
 			'desc'  => __( 'Enter your test publishable key, found in your Stripe Account Settings', 'edds' ),
 			'type'  => 'text',
 			'size'  => 'regular',
-			'class' => 'edd-hidden',
+			'class' => 'edd-hidden edds-api-key-row',
 		),
 		array(
 			'id'   => 'live_secret_key',
@@ -87,7 +90,7 @@ function edds_add_settings( $settings ) {
 			'desc'  => __( 'Enter your live secret key, found in your Stripe Account Settings', 'edds' ),
 			'type'  => 'text',
 			'size'  => 'regular',
-			'class' => 'edd-hidden',
+			'class' => 'edd-hidden edds-api-key-row',
 		),
 		array(
 			'id'   => 'live_publishable_key',
@@ -95,7 +98,7 @@ function edds_add_settings( $settings ) {
 			'desc'  => __( 'Enter your live publishable key, found in your Stripe Account Settings', 'edds' ),
 			'type'  => 'text',
 			'size'  => 'regular',
-			'class' => 'edd-hidden',
+			'class' => 'edd-hidden edds-api-key-row',
 		),
 		array(
 			'id'    => 'stripe_webhook_description',
@@ -203,7 +206,7 @@ function edds_add_settings( $settings ) {
 		$settings = array_merge(
 			array_slice( $settings['main'], $position, 1, true ),
 			$notice,
-			array_slice( $settings['main'], $position, null, true )
+			$settings
 		);
 	}
 

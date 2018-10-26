@@ -573,6 +573,8 @@ class EDD_API {
 					'tag'           => isset( $wp_query->query_vars['tag'] )           ? $this->sanitize_request_term( $wp_query->query_vars['tag'] )           : null,
 					'term_relation' => isset( $wp_query->query_vars['term_relation'] ) ? $this->sanitize_request_term( $wp_query->query_vars['term_relation'] ) : null,
 					's'             => isset( $wp_query->query_vars['s'] )             ? sanitize_text_field( $wp_query->query_vars['s'] )                      : null,
+					'order'         => isset( $wp_query->query_vars['order'] )         ? $wp_query->query_vars['order']                                         : 'DESC',
+					'orderby'       => isset( $wp_query->query_vars['orderby'] )       ? $wp_query->query_vars['orderby']                                       : 'date',
 				);
 
 				$data = $this->routes->get_products( $args );
@@ -1044,7 +1046,7 @@ class EDD_API {
 
 				$customers['customers'][$customer_count]['stats']['total_purchases'] = $customer_obj->purchase_count;
 				$customers['customers'][$customer_count]['stats']['total_spent']     = $customer_obj->purchase_value;
-				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_user( $customer_obj->email );
+				$customers['customers'][$customer_count]['stats']['total_downloads'] = edd_count_file_downloads_of_customer( $customer_obj->id );
 
 				$customer_count++;
 

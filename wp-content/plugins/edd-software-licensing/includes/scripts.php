@@ -22,7 +22,8 @@ function edd_sl_admin_scripts() {
 		'download_page_edd-reports',
 		'download_page_edd-settings',
 		'download_page_edd-tools',
-		'download_page_edd-payment-history'
+		'download_page_edd-payment-history',
+		'download_page_edd-customers',
 	);
 
 	$allowed_screens = apply_filters( 'edd-sl-admin-script-screens', $allowed_screens );
@@ -31,7 +32,10 @@ function edd_sl_admin_scripts() {
 		return;
 	}
 
-	wp_enqueue_script( 'edd-sl-admin', plugins_url( '/js/edd-sl-admin.js', EDD_SL_PLUGIN_FILE ), array( 'jquery' ), EDD_SL_VERSION );
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+	wp_enqueue_script( 'edd-sl-admin', plugins_url( '/js/edd-sl-admin'  . $suffix . '.js', EDD_SL_PLUGIN_FILE ), array( 'jquery' ), EDD_SL_VERSION );
 
 	if( $screen->id === 'download' ) {
 		wp_localize_script( 'edd-sl-admin', 'edd_sl', array(
@@ -43,17 +47,18 @@ function edd_sl_admin_scripts() {
 		) );
 	} else {
 		wp_localize_script( 'edd-sl-admin', 'edd_sl', array(
-			'ajaxurl'        => edd_get_ajax_url(),
-			'delete_license' => __( 'Are you sure you wish to delete this license?', 'edd_sl' ),
-			'action_edit'    => __( 'Edit', 'edd_sl' ),
-			'action_cancel'  => __( 'Cancel', 'edd_sl' ),
-			'send_notice'    => __( 'Send Renewal Notice', 'edd_sl' ),
-			'cancel_notice'  => __( 'Cancel Renewal Notice', 'edd_sl' )
+			'ajaxurl'           => edd_get_ajax_url(),
+			'delete_license'    => __( 'Are you sure you wish to delete this license?', 'edd_sl' ),
+			'action_edit'       => __( 'Edit', 'edd_sl' ),
+			'action_cancel'     => __( 'Cancel', 'edd_sl' ),
+			'send_notice'       => __( 'Send Renewal Notice', 'edd_sl' ),
+			'cancel_notice'     => __( 'Cancel Renewal Notice', 'edd_sl' ),
+			'regenerate_notice' => __( 'Regenerating a license key is not reversible. Click "OK" to continue.', 'edd_sl' ),
 		) );
 	}
 
-	wp_enqueue_style( 'edd-sl-admin-styles', plugins_url( '/css/edd-sl-admin.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
-	wp_enqueue_style( 'edd-sl-styles', plugins_url( '/css/edd-sl.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
+	wp_enqueue_style( 'edd-sl-admin-styles', plugins_url( '/css/edd-sl-admin' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
+	wp_enqueue_style( 'edd-sl-styles', plugins_url( '/css/edd-sl' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'edd_sl_admin_scripts' );
 
@@ -75,7 +80,9 @@ function edd_sl_scripts() {
 
 	$load_scripts_manually = apply_filters( 'edd_sl_load_styles', false );
 
-	wp_register_style( 'edd-sl-styles', plugins_url( '/css/edd-sl.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
+	// Use minified libraries if SCRIPT_DEBUG is turned off
+	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	wp_register_style( 'edd-sl-styles', plugins_url( '/css/edd-sl' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
 
 	$should_load_styles = false;
 	if ( is_admin() || edd_is_checkout() ) {
@@ -141,3 +148,12 @@ function edd_sl_checkout_js() {
 <?php
 }
 add_action( 'wp_head', 'edd_sl_checkout_js' );
+
+function edd_sl_load_edd_admin_scripts( $should_load, $hook ) {
+	if ( 'widgets.php' === $hook ) {
+		$should_load = true;
+	}
+
+	return $should_load;
+}
+add_filter( 'edd_load_admin_scripts', 'edd_sl_load_edd_admin_scripts', 10, 2 );

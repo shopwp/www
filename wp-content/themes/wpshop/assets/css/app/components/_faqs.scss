@@ -16,11 +16,12 @@
     font-size: $font-l;
     position: relative;
     top: 5px;
+    box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);
   }
 
   &:hover {
     cursor: pointer;
-    color: lighten(color(black), 60%);
+    color: lighten(color(black), 40%);
   }
 
   @include device(700, 'max') {
@@ -42,6 +43,8 @@
 
   &.is-open {
     margin-bottom: $space-xxl;
+    background: #f8f8f8;
+    padding: 20px;
   }
 
 }

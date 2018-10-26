@@ -1,4 +1,4 @@
-import '../../css/app/app.scss';
+//  import '../../css/app/app.scss';
 
 import { onShopifyAuth } from './security/security';
 import { initPlugins } from './plugins/plugins';

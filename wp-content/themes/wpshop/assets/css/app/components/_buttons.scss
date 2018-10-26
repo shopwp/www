@@ -5,7 +5,8 @@ a.button.edd-slg-social-unlink-profile,
 .edd_submit,
 .edd-submit,
 .search-submit,
-.menu-item-back a {
+.menu-item-back a,
+.entry-summary a {
   padding: calc(#{$space-m} - 3px) calc(#{$space-xl} - 3px);
   color: color(white);
   background-color: color(primary);

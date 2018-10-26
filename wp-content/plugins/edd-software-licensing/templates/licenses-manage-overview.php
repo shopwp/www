@@ -1,8 +1,13 @@
 <?php
+
+if ( ! is_user_logged_in() ) {
+	return;
+}
+
 $payment_id = absint( $_GET['payment_id' ] );
 $user_id    = edd_get_payment_user_id( $payment_id );
 
-if( ! current_user_can( 'edit_shop_payments' ) && $user_id != get_current_user_id() ) {
+if( ! current_user_can( 'manage_licenses' ) && $user_id != get_current_user_id() ) {
 	return;
 }
 
@@ -10,7 +15,20 @@ $color = edd_get_option( 'checkout_color', 'gray' );
 $color = ( $color == 'inherit' ) ? '' : $color;
 
 ?>
-<script type="text/javascript">jQuery(document).ready(function($){ $(".edd_sl_show_key").on("click",function(e){e.preventDefault(),$(this).parent().find(".edd_sl_license_key").on("click",function(){$(this).select()}).fadeToggle("fast")}); });</script>
+<script type="text/javascript">
+	document.addEventListener('DOMContentLoaded', function() {
+		var showKeys = document.querySelectorAll('.edd_sl_show_key');
+		if (showKeys) {
+			for (var i = 0; i < showKeys.length; i++) {
+				showKeys[i].addEventListener('click', function(e) {
+					e.preventDefault();
+					var key = this.parentNode.querySelector('.edd_sl_license_key');
+					key.style.display = (key.style.display != 'block') ? 'block' : 'none';
+				});
+			}
+		}
+	});
+</script>
 <p><a href="<?php echo esc_url( remove_query_arg( array( 'payment_id', 'edd_sl_error' ) ) ); ?>" class="edd-manage-license-back edd-submit button <?php echo esc_attr( $color ); ?>"><?php _e( 'Go back', 'edd_sl' ); ?></a></p>
 <?php
 // Retrieve all license keys for the specified payment
@@ -18,7 +36,7 @@ $edd_sl = edd_software_licensing();
 $keys   = $edd_sl->get_licenses_of_purchase( $payment_id );
 $keys   = apply_filters( 'edd_sl_manage_template_payment_licenses', $keys, $payment_id );
 if ( $keys ) : ?>
-	<table id="edd_sl_license_keys" class="edd_sl_table">
+	<table id="edd_sl_license_keys" class="edd_sl_table edd-table">
 		<thead>
 			<tr class="edd_sl_license_row">
 				<?php do_action('edd_sl_license_header_before'); ?>

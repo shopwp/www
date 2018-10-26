@@ -89,13 +89,15 @@ function edds_admin_messages() {
 		});
 	}
 
+	$dismissed                 = edd_get_option( 'edds_stripe_connect_intro_notice_dismissed' );
+	$enabled_gateways          = edd_get_enabled_payment_gateways();
 	$stripe_connect_account_id = edd_get_option( 'stripe_connect_account_id' );
-	$enabled_gateways = edd_get_enabled_payment_gateways();
-	if( empty( $stripe_connect_account_id ) && ( array_key_exists( 'stripe', $enabled_gateways ) || array_key_exists( 'stripe_checkout', $enabled_gateways ) ) ) {
-		echo '<div class="notice notice-info"><p>' . sprintf( __( 'Easy Digital Downloads now supports Stripe Connect for easier setup and improved security. <a href="%s">Click here</a> to learn more about connecting your Stripe account.', 'edds' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) ) . '</p></div>';
+
+	if( array_key_exists( 'stripe', $enabled_gateways ) && empty( $stripe_connect_account_id ) && empty( $dismissed ) ) {
+		echo '<div id="edds-stripe-connect-intro" data-nonce="'.wp_create_nonce( 'edds_stripe_connect_intro_nonce' ) .'" class="notice notice-info is-dismissible"><p>' . sprintf( __( 'The Stripe extension for Easy Digital Downloads now supports Stripe Connect for easier setup and improved security. <a href="%s">Click here</a> to learn more about connecting your Stripe account.', 'edds' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) ) . '</p></div>';
 	}
 
-	if( isset( $_GET['edd_gateway_connect_error'] ) && isset( $_GET['edd-message'] ) ) {
+	if( isset( $_GET['edd_gateway_connect_error'], $_GET['edd-message'] ) ) {
 		echo '<div class="notice notice-error"><p>' . sprintf( __( 'There was an error connecting your Stripe account. Message: %s. Please <a href="%s">try again</a>.', 'edds' ), esc_html( urldecode( $_GET['edd-message'] ) ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) ) . '</p></div>';
 		add_filter( 'wp_parse_str', function( $ar ) {
 			if( isset( $ar['edd_gateway_connect_error'] ) ) {

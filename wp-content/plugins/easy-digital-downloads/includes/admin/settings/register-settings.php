@@ -320,6 +320,9 @@ function edd_get_registered_settings() {
 						'options'     => edd_get_country_list(),
 						'chosen'      => true,
 						'placeholder' => __( 'Select a country', 'easy-digital-downloads' ),
+						'data'        => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					),
 					'base_state' => array(
 						'id'          => 'base_state',
@@ -853,24 +856,16 @@ function edd_get_registered_settings() {
 					),
 				),
 				'site_terms'     => array(
-					array(
-					'id'   => 'terms_settings',
-						'name' => '<h3>' . __( 'Terms and Privacy Policy', 'easy-digital-downloads' ) . '</h3>',
-						'desc' => '',
-						'type' => 'header',
-						'tooltip_title' => __( 'Terms and Privacy Policy Settings', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'Depending on legal and regulatory requirements, it may be necessary for your site to show checkboxes for Terms of Agreement and/or Privacy Policy.','easy-digital-downloads' ),
-					),
 					'show_agree_to_terms' => array(
 						'id'   => 'show_agree_to_terms',
 						'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to show an agree to terms on the checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to show an agree to terms on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
 					'agree_label' => array(
 						'id'   => 'agree_label',
 						'name' => __( 'Agree to Terms Label', 'easy-digital-downloads' ),
-						'desc' => __( 'Label shown next to the agree to terms check box.', 'easy-digital-downloads' ),
+						'desc' => __( 'Label shown next to the agree to terms checkbox.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'regular',
 					),
@@ -880,38 +875,94 @@ function edd_get_registered_settings() {
 						'desc' => __( 'If Agree to Terms is checked, enter the agreement terms here.', 'easy-digital-downloads' ),
 						'type' => 'rich_editor',
 					),
+				),
+			)
+		),
+		'privacy' => apply_filters( 'edd_settings_privacy',
+			array(
+				'general' => array(
 					'show_agree_to_privacy_policy' => array(
 						'id'   => 'show_agree_to_privacy_policy',
 						'name' => __( 'Agree to Privacy Policy', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to show an agree to privacy policy on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to show an agree to Privacy Policy on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
 					'agree_privacy_label' => array(
 						'id'   => 'privacy_agree_label',
 						'name' => __( 'Agree to Privacy Policy Label', 'easy-digital-downloads' ),
-						'desc' => __( 'Label shown next to the agree to privacy policy check box.', 'easy-digital-downloads' ),
+						'desc' => __( 'Label shown next to the agree to Privacy Policy checkbox.', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'regular',
 					),
 					'show_privacy_policy_on_checkout' => array(
-						'id'   => 'show_to_privacy_policy_on_checkout',
-						'name' => __( 'Show the privacy policy on checkout', 'easy-digital-downloads' ),
-						'desc' => __( 'Display your privacy policy on checkout.', 'easy-digital-downloads' ),
+						'id'   => 'show_privacy_policy_on_checkout',
+						'name' => __( 'Show the Privacy Policy on checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
 						'type' => 'checkbox',
 					),
-					'agree_privacy_page' => array(
-						'id'   => 'privacy_agree_page',
-						'name' => __( 'Privacy Agreement Page', 'easy-digital-downloads' ),
-						'desc' => __( 'If Agree to Privacy Policy is checked, select a page for the Privacy Agreement here.', 'easy-digital-downloads' ),
-						'type'        => 'select',
-						'options'     => edd_get_pages(),
-						'chosen'      => true,
-						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
-					),
 				),
+				'export_erase' => array()
 			)
 		)
 	);
+
+	$payment_statuses = edd_get_payment_statuses();
+
+	$edd_settings['privacy']['export_erase'][] = array(
+		'id'            => 'payment_privacy_status_action_header',
+		'name'          => '<h3>' . __( 'Payment Status Actions', 'easy-digital-downloads' ) . '</h3>',
+		'type'          => 'descriptive_text',
+		'desc'          => __( 'When a user requests to be anonymized or removed from a site, these are the actions that will be taken on payments associated with their customer, by status.','easy-digital-downloads' ),
+		'tooltip_title' => __( 'What settings should I use?', 'easy-digital-downloads' ),
+		'tooltip_desc'  => __( 'By default, Easy Digital Downloads sets suggested actions based on the Payment Status. These are purely recommendations, and you may need to change them to suit your store\'s needs. If you are unsure, you can safely leave these settings as is.','easy-digital-downloads' ),
+	);
+
+	$edd_settings['privacy']['export_erase'][] = array(
+		'id'   => 'payment_privacy_status_descriptive_text',
+		'name' => '',
+		'type' => 'descriptive_text',
+
+	);
+
+	$select_options = array(
+		'none'      => __( 'No Action', 'easy-digital-downloads' ),
+		'anonymize' => __( 'Anonymize', 'easy-digital-downloads' ),
+		'delete'    => __( 'Delete', 'easy-digital-downloads' ),
+	);
+
+	foreach ( $payment_statuses as $status => $label ) {
+
+		switch ( $status ) {
+
+			case 'publish':
+			case 'refunded':
+			case 'revoked':
+				$action = 'anonymize';
+				break;
+
+			case 'failed':
+			case 'abandoned':
+				$action = 'delete';
+				break;
+
+			case 'pending':
+			case 'processing':
+			default:
+				$action = 'none';
+				break;
+
+		}
+
+		$edd_settings['privacy']['export_erase'][] = array(
+			'id'      => 'payment_privacy_status_action_' . $status,
+			'name'    => sprintf( _x( '%s Payments', 'payment status labels for the privacy export & erase settings: Pending Payments', 'easy-digital-downloads' ), $label ),
+			'desc'    => '',
+			'type'    => 'select',
+			'options' => $select_options,
+			'std'     => $action,
+		);
+
+	}
 
 	if ( ! edd_shop_supports_buy_now() ) {
 		$edd_settings['misc']['button_text']['buy_now_text']['disabled']      = true;
@@ -1140,6 +1191,15 @@ function edd_settings_sanitize_taxes( $input ) {
 
 	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
 
+	foreach ( $new_rates as $key => $rate ) {
+		$rate = array_filter( $rate );
+		if ( empty( $rate ) ) {
+			unset( $new_rates[ $key ] );
+		}
+	}
+
+	$new_rates = ! empty( $new_rates ) ? array_values( $new_rates ) : array();
+
 	update_option( 'edd_tax_rates', $new_rates );
 
 	return $input;
@@ -1204,10 +1264,11 @@ function edd_sanitize_text_field( $input ) {
 			'id'    => array(),
 		),
 		'a' => array(
-			'href' => array(),
-			'title' => array(),
-			'class' => array(),
-			'id'    => array(),
+			'href'   => array(),
+			'target' => array(),
+			'title'  => array(),
+			'class'  => array(),
+			'id'     => array(),
 		),
 		'strong' => array(),
 		'em' => array(),
@@ -1274,6 +1335,7 @@ function edd_get_settings_tabs() {
 	$tabs['emails']   = __( 'Emails', 'easy-digital-downloads' );
 	$tabs['styles']   = __( 'Styles', 'easy-digital-downloads' );
 	$tabs['taxes']    = __( 'Taxes', 'easy-digital-downloads' );
+	$tabs['privacy']  = __( 'Privacy', 'easy-digital-downloads' );
 
 	if( ! empty( $settings['extensions'] ) ) {
 		$tabs['extensions'] = __( 'Extensions', 'easy-digital-downloads' );
@@ -1354,6 +1416,10 @@ function edd_get_registered_settings_sections() {
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+		) ),
+		'privacy'    => apply_filters( 'edd_settings_section_privacy', array(
+			'general'      => __( 'General', 'easy-digital-downloads' ),
+			'export_erase' => __( 'Export & Erase', 'easy-digital-downloads' ),
 		) ),
 	);
 
@@ -1859,11 +1925,15 @@ function edd_select_callback($args) {
 		$class .= ' edd-select-chosen';
 	}
 
+	$nonce = isset( $args['data']['nonce'] )
+		? ' data-nonce="' . sanitize_text_field( $args['data']['nonce'] ) . '" '
+		: '';
+
 	// If the Select Field allows Multiple values, save as an Array
 	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
 	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
 
-	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
+	$html = '<select ' . $nonce . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
 
 	foreach ( $args['options'] as $option => $name ) {
 
@@ -2065,7 +2135,6 @@ function edd_shop_states_callback($args) {
  */
 function edd_tax_rates_callback($args) {
 	$rates = edd_get_tax_rates();
-
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start(); ?>
@@ -2093,7 +2162,10 @@ function edd_tax_rates_callback($args) {
 						'show_option_none' => false,
 						'class'            => 'edd-tax-country',
 						'chosen'           => false,
-						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' )
+						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+						'data'             => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					) );
 					?>
 				</td>
@@ -2138,7 +2210,10 @@ function edd_tax_rates_callback($args) {
 						'show_option_none' => false,
 						'class'            => 'edd-tax-country',
 						'chosen'           => false,
-						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' )
+						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+						'data'             => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">
@@ -2402,7 +2477,7 @@ add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );
 function edd_add_setting_tooltip( $html, $args ) {
 
 	if ( ! empty( $args['tooltip_title'] ) && ! empty( $args['tooltip_desc'] ) ) {
-		$tooltip = '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong>: ' . $args['tooltip_desc'] . '"></span>';
+		$tooltip = '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . $args['tooltip_title'] . '</strong><br />' . $args['tooltip_desc'] . '"></span>';
 		$html .= $tooltip;
 	}
 

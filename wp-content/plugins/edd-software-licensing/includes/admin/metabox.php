@@ -33,16 +33,17 @@ function edd_sl_render_licenses_meta_box() {
 
 		$is_bundle = ( 'bundle' == edd_get_download_type( $post->ID ) );
 
-		$enabled    = get_post_meta( $post->ID, '_edd_sl_enabled', true ) ? true : false;
-		$limit      = get_post_meta( $post->ID, '_edd_sl_limit', true );
-		$version    = get_post_meta( $post->ID, '_edd_sl_version', true );
-		$changelog  = get_post_meta( $post->ID, '_edd_sl_changelog', true );
-		$keys       = get_post_meta( $post->ID, '_edd_sl_keys', true );
-		$file       = get_post_meta( $post->ID, '_edd_sl_upgrade_file_key', true );
-		$exp_unit   = get_post_meta( $post->ID, '_edd_sl_exp_unit', true );
-		$exp_length = get_post_meta( $post->ID, '_edd_sl_exp_length', true );
-		$discount   = get_post_meta( $post->ID, '_edd_sl_renewal_discount', true );
-		$display    = $enabled ? '' : ' style="display:none;"';
+		$enabled          = get_post_meta( $post->ID, '_edd_sl_enabled', true ) ? true : false;
+		$limit            = get_post_meta( $post->ID, '_edd_sl_limit', true );
+		$version          = get_post_meta( $post->ID, '_edd_sl_version', true );
+		$changelog        = get_post_meta( $post->ID, '_edd_sl_changelog', true );
+		$keys             = get_post_meta( $post->ID, '_edd_sl_keys', true );
+		$file             = get_post_meta( $post->ID, '_edd_sl_upgrade_file_key', true );
+		$exp_unit         = get_post_meta( $post->ID, '_edd_sl_exp_unit', true );
+		$exp_length       = get_post_meta( $post->ID, '_edd_sl_exp_length', true );
+		$disable_discount = get_post_meta( $post->ID, '_edd_sl_disable_renewal_discount', true );
+		$discount         = get_post_meta( $post->ID, '_edd_sl_renewal_discount', true );
+		$display          = $enabled ? '' : ' style="display:none;"';
 
 		// Double call for PHP 5.2 compat
 		$is_limited = get_post_meta( $post->ID, 'edd_sl_download_lifetime', true );
@@ -69,11 +70,11 @@ function edd_sl_render_licenses_meta_box() {
 		echo '<tr' . $display . ' class="edd_sl_toggled_row">';
 			echo '<td class="edd_field_type_text" colspan="2">';
 				do_action( 'edd_sl_license_metabox_before_activation_limit', $post->ID );
-				echo '<label for="edd_sl_upgrade_file"><strong>' . __( 'Activation Limit', 'edd_sl' ) . '</strong></label><br/>';
+				echo '<label for="edd_sl_limit"><strong>' . __( 'Activation Limit', 'edd_sl' ) . '</strong></label><br/>';
 				echo '<input type="number" class="medium-text" style="width:50px;" name="edd_sl_limit" id="edd_sl_limit" value="' . esc_attr( $limit ) . '"/>&nbsp;';
 				echo __( 'Limit number of times this license can be activated. Use 0 for unlimited. If using variable prices, set the limit for each price option.', 'edd_sl' );
 				printf(
-					'<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="' . esc_attr__( '%s' ) . '"></span>',
+					'<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="' . esc_attr( '%s' ) . '"></span>',
 					__( '<strong>Activation Limit</strong>: Set the number of activations allowed per license. If individual activation limits are set for variable pricing, they take precedence. If your product is a bundle, the activation limit set here will override the activation limits set on the individual products.', 'edd_sl' )
 				);
 				do_action( 'edd_sl_license_metabox_after_activation_limit', $post->ID );
@@ -83,7 +84,7 @@ function edd_sl_render_licenses_meta_box() {
 		echo '<tr' . $display_no_bundle . ' class="edd_sl_toggled_row edd_sl_nobundle_row">';
 			echo '<td class="edd_field_type_text" colspan="2">';
 				do_action( 'edd_sl_license_metabox_before_version', $post->ID );
-				echo '<label for="edd_sl_upgrade_file"><strong>' . __( 'Version Number', 'edd_sl' ) . '</strong></label><br/>';
+				echo '<label for="edd_sl_version"><strong>' . __( 'Version Number', 'edd_sl' ) . '</strong></label><br/>';
 				echo '<input type="text" class="medium-text" style="width:50px;" name="edd_sl_version" id="edd_sl_version" value="' . esc_attr( $version ) . '"/>&nbsp;';
 				echo __( 'Enter the current version number.', 'edd_sl' );
 				do_action( 'edd_sl_license_metabox_after_version', $post->ID );
@@ -93,7 +94,7 @@ function edd_sl_render_licenses_meta_box() {
 		echo '<tr' . $display . ' class="edd_sl_toggled_row">';
 			echo '<td class="edd_field_type_select">';
 				do_action( 'edd_sl_license_metabox_before_license_length', $post->ID );
-				echo '<label for="edd_sl_upgrade_file"><strong>' . __( 'License Length', 'edd_sl' ) . '</strong></label><br/>';
+				echo '<label for="edd_sl_exp_length"><strong>' . __( 'License Length', 'edd_sl' ) . '</strong></label><br/>';
 				echo '<p>';
 					echo '<input ' . checked( false, $is_limited, false ) . ' type="radio" id="edd_license_is_lifetime" name="edd_sl_is_lifetime" value="1" /><label for="edd_license_is_lifetime">' . __( 'Lifetime', 'edd_sl' ) . '</label>';
 					echo '<br/ >';
@@ -117,13 +118,29 @@ function edd_sl_render_licenses_meta_box() {
 			echo '<tr' . $display . ' class="edd_sl_toggled_row">';
 				echo '<td class="edd_field_type_text" colspan="2">';
 					do_action( 'edd_sl_license_metabox_before_renewal_discount', $post->ID );
-					echo '<label for="edd_sl_upgrade_file"><strong>' . __( 'Renewal Discount', 'edd_sl' ) . '</strong></label><br/>';
-					echo '<input type="number" step="0.01" class="medium-text" style="width:50px;" name="edd_sl_renewal_discount" id="edd_sl_renewal_discount" value="' . esc_attr( $discount ) . '"/>&nbsp;';
+
+					echo '<p>';
+					echo '<label for="edd_sl_disable_renewal_discount"><strong>' . __( 'Disable Renewal Discount', 'edd_sl' ) . '</strong></label><br />';
+					echo EDD()->html->checkbox( array(
+						'name' => 'edd_sl_disable_renewal_discount',
+						'current' => ! empty( $disable_discount ) ? '1' : '0',
+					) );
+					echo __( 'This will disable any renewal discounts for licenses associated with this product.', 'edd_sl' );
+					echo '</p>';
+
+					echo '<br />';
+
+					$disabled_readonly = $disable_discount ? ' disabled="disabled" readonly="readonly" ' : '';
+					echo '<p>';
+					echo '<label for="edd_sl_renewal_discount"><strong>' . __( 'Renewal Discount', 'edd_sl' ) . '</strong></label><br/>';
+					echo '<input ' . $disabled_readonly . ' type="number" step="0.01" class="medium-text" style="width:50px;" name="edd_sl_renewal_discount" id="edd_sl_renewal_discount" value="' . esc_attr( $discount ) . '"/>&nbsp;';
 					echo __( 'Enter a discount amount as a percentage, such as 10, or leave blank to use the global value.', 'edd_sl' );
 					printf(
-						'<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="' . esc_attr__( '%s' ) . '"></span>',
+						'<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="' . esc_attr( '%s' ) . '"></span>',
 						__( '<strong>When is this renewal discount used?</strong>: When the user is on the checkout page renewing their license, this discount will be automatically applied to their renewal purchase.', 'edd_sl' )
 					);
+					echo '</p>';
+
 					do_action( 'edd_sl_license_metabox_after_renewal_discount', $post->ID );
 				echo '</td>';
 			echo '</tr>';
@@ -135,6 +152,9 @@ function edd_sl_render_licenses_meta_box() {
 				echo '<label for="edd_sl_upgrade_file"><strong>' . __( 'Update File', 'edd_sl' ) . '</strong></label><br/>';
 				echo '<select name="edd_sl_upgrade_file" id="edd_sl_upgrade_file">';
 					$files = get_post_meta( $post->ID, 'edd_download_files', true );
+					if ( is_array( $files ) && ! array_key_exists( $file, $files ) ) {
+						echo '<option value="-1" >' . __( 'No update file selected', 'edd_sl' ) . '</option>';
+					}
 					if ( is_array( $files ) ) {
 						foreach( $files as $key => $value ) {
 							$name = isset( $files[$key]['name'] ) ? $files[$key]['name'] : '';
@@ -264,7 +284,7 @@ function edd_sl_render_license_upgrade_paths_meta_box()	{
 							<?php echo EDD()->html->text( array(
 								'name'  => 'edd_sl_upgrade_paths[' . $key . '][discount]',
 								'value' => esc_attr( $value['discount'] ),
-								'placeholder' => __( 'Amount', 'edd' ),
+								'placeholder' => __( 'Amount', 'edd_sl' ),
 								'class' => 'edd-price-field'
 							) ); ?>
 						</td>
@@ -301,7 +321,7 @@ function edd_sl_render_license_upgrade_paths_meta_box()	{
 					<td>
 						<?php echo EDD()->html->text( array(
 							'name'  => 'edd_sl_upgrade_paths[1][discount]',
-							'placeholder' => __( 'Amount', 'edd' ),
+							'placeholder' => __( 'Amount', 'edd_sl' ),
 							'class' => 'edd-price-field'
 						) ); ?>
 					</td>
@@ -312,7 +332,7 @@ function edd_sl_render_license_upgrade_paths_meta_box()	{
 			<?php endif; ?>
 				<tr>
 					<td class="submit" colspan="4" style="float: none; clear:both; background: #fff;">
-						<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New Upgrade Path', 'edd' ); ?></a>
+						<a class="button-secondary edd_add_repeatable" style="margin: 6px 0 10px;"><?php _e( 'Add New Upgrade Path', 'edd_sl' ); ?></a>
 					</td>
 				</tr>
 			</tbody>
@@ -449,7 +469,16 @@ function edd_sl_download_meta_box_save( $post_id ) {
 	}
 
 	if ( isset( $_POST['edd_sl_upgrade_file'] ) && $_POST['edd_sl_upgrade_file'] !== false ) {
-		update_post_meta( $post_id, '_edd_sl_upgrade_file_key', ( int ) $_POST['edd_sl_upgrade_file'] );
+
+		$file_id = intval( $_POST['edd_sl_upgrade_file'] );
+		$files   = edd_get_download_files( $post_id );
+
+		if ( $file_id !== '-1' && array_key_exists( $file_id, $files ) ) {
+			update_post_meta( $post_id, '_edd_sl_upgrade_file_key', $file_id  );
+		} else {
+			delete_post_meta( $post_id, '_edd_sl_upgrade_file_key' );
+		}
+
 	} else {
 		delete_post_meta( $post_id, '_edd_sl_upgrade_file_key' );
 	}
@@ -475,6 +504,12 @@ function edd_sl_download_meta_box_save( $post_id ) {
 		update_post_meta( $post_id, '_edd_sl_exp_length', addslashes( $_POST['edd_sl_exp_length'] ) ) ;
 	} else {
 		delete_post_meta( $post_id, '_edd_sl_exp_length' );
+	}
+
+	if ( isset( $_POST['edd_sl_disable_renewal_discount'] ) ) {
+		update_post_meta( $post_id, '_edd_sl_disable_renewal_discount', 1 );
+	} else {
+		delete_post_meta( $post_id, '_edd_sl_disable_renewal_discount' );
 	}
 
 	if ( isset( $_POST['edd_sl_renewal_discount'] ) ) {
@@ -544,7 +579,7 @@ function edd_sl_download_meta_box_save( $post_id ) {
 	}
 
 }
-add_action( 'save_post', 'edd_sl_download_meta_box_save' );
+add_action( 'save_post', 'edd_sl_download_meta_box_save', 12 ); // Run after default so that we know EDD core has saved.
 
 
 /**
@@ -554,7 +589,7 @@ add_action( 'save_post', 'edd_sl_download_meta_box_save' );
  */
 function edd_sl_payment_details_meta_box( $payment_id = 0 ) {
 
-	if( ! current_user_can( 'edit_shop_payments' ) ) {
+	if( ! current_user_can( 'view_licenses' ) ) {
 		return;
 	}
 
@@ -562,11 +597,10 @@ function edd_sl_payment_details_meta_box( $payment_id = 0 ) {
 	$child_licenses   = array();
 	$licenses         = array();
 
-
 	if ( ! empty( $payment_licenses ) ) {
 		// Split child licenses from the main array
 		foreach( $payment_licenses as $key => $license ) {
-			if( $license->post_parent ) {
+			if( $license->parent ) {
 				$child_licenses[] = $license;
 				unset( $payment_licenses[$key] );
 			}
@@ -603,21 +637,18 @@ function edd_sl_payment_details_meta_box( $payment_id = 0 ) {
 						<?php
 						$i = 0;
 						foreach ( $licenses as $key => $license ) :
-							$key            = get_post_meta( $license->ID, '_edd_sl_key', true );
+							$key            = $license->key;
 							$status         = edd_software_licensing()->get_license_status(  $license->ID );
 							$status_display = '<span class="edd-sl-' . esc_attr( $status ) . '">' . esc_html( $status ) . '</span>';
 							?>
 							<tr class="<?php if ( $i % 2 == 0 ) { echo 'alternate'; } ?>">
 								<td class="name column-name">
 									<?php
-									$download_name = $license->post_title;
-
 									if( $license->post_parent ) {
-										$download_id = get_post_meta( $license->ID, '_edd_sl_download_id', true );
-										echo '&#8212; ' . get_the_title( $download_id );
-									} else {
-										echo $download_name;
+										echo '&#8212; ';
 									}
+
+									echo $license->get_download()->get_name();
 									?>
 								</td>
 								<td class="price column-key">
@@ -626,7 +657,7 @@ function edd_sl_payment_details_meta_box( $payment_id = 0 ) {
 									</a> - <?php echo $status_display; ?>
 								</td>
 								<td class="upgrades column-upgrades">
-									<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-licenses&view=overview&license=' . $license->ID ); ?>"><?php _e( 'View Details', 'edd_sl' ); ?></a>
+									<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-licenses&view=overview&license_id=' . $license->ID ); ?>"><?php _e( 'View Details', 'edd_sl' ); ?></a>
 								</td>
 							</tr>
 							<?php
@@ -636,7 +667,7 @@ function edd_sl_payment_details_meta_box( $payment_id = 0 ) {
 					</tbody>
 				</table>
 			<?php endif; ?>
-			<?php if ( current_user_can( 'edit_shop_payments' ) ) : ?>
+			<?php if ( current_user_can( 'manage_licenses' ) ) : ?>
 			<div class="inside">
 				<p><?php _e( 'Use this to generate missing license keys for this purchase. If you add a product to the purchase, click this after saving the payment.', 'edd_sl' ); ?></p>
 				<a href="<?php echo wp_nonce_url( add_query_arg( array( 'posts' => $payment_id ), admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ) ), 'edd_sl_retroactive', 'edd_sl_retroactive' ); ?>" class="button-secondary">
@@ -702,7 +733,7 @@ add_filter( 'edd_metabox_fields_save', 'edd_sl_save_readme_metabox');
  *
  * @since  2.4
  */
-function edd_sl_readme_meta_box_render()	{
+function edd_sl_readme_meta_box_render() {
 
 	global $post;
 
@@ -885,7 +916,7 @@ function edd_sl_render_beta_version_meta_box() {
 			echo '<div class="edd_repeatable_upload_field_container">';
 			echo '<span><input type="text" class="edd_repeatable_upload_field edd_upload_field large-text" placeholder="' . __( 'Upload or enter the file URL', 'edd_sl' ) . '" name="edd_sl_beta_files[' . $key . '][file]" id="edd_sl_beta_files[' . $key . '][file]" value="' . $file . '" /></span>';
 			echo '<span class="edd_upload_file">';
-			echo '<a href="#" class="edd_upload_file_button" onclick="return false;">'. __( 'Upload a File', 'edd' ) . '</a>';
+			echo '<a href="#" class="edd_upload_file_button" onclick="return false;">'. __( 'Upload a File', 'edd_sl' ) . '</a>';
 			echo '</span>';
 			echo '</div>';
 			echo '</td>';
@@ -900,7 +931,7 @@ function edd_sl_render_beta_version_meta_box() {
 		echo '<div class="edd_repeatable_upload_field_container">';
 		echo '<span><input type="text" class="edd_repeatable_upload_field edd_upload_field large-text" placeholder="' . __( 'Upload or enter the file URL', 'edd_sl' ) . '" name="edd_sl_beta_files[1][file]" id="edd_sl_beta_files[1][file]" value="" /></span>';
 		echo '<span class="edd_upload_file">';
-		echo '<a href="#" class="edd_upload_file_button" onclick="return false;">'. __( 'Upload a File', 'edd' ) . '</a>';
+		echo '<a href="#" class="edd_upload_file_button" onclick="return false;">'. __( 'Upload a File', 'edd_sl' ) . '</a>';
 		echo '</span>';
 		echo '</div>';
 		echo '</td>';
@@ -958,7 +989,7 @@ function edd_sl_sanitize_file_save( $files ) {
 			continue;
 		}
 		$return[ $id ]['name'] = esc_html( $files[ $id ]['name'] );
-		$return[ $id ]['file'] = esc_url_raw( $files[ $id ]['file'] );
+		$return[ $id ]['file'] = sanitize_text_field( $files[ $id ]['file'] );
 	}
 	return $return;
 }

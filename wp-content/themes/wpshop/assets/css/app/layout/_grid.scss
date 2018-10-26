@@ -40,8 +40,8 @@
     max-width: $container-width;
   }
 
-  @include device(700, 'max') {
-    max-width: 95%;
+  @include device(800, 'max') {
+    max-width: 95vw;
   }
 
 }
@@ -54,12 +54,11 @@
     max-width: 680px;
   }
 
-  @include device(1100, 'max') {
-    max-width: 82vw;
+  @include device(900, 'max') {
+    max-width: 95vw;
   }
 
   @include device(700, 'max') {
-    max-width: 95%;
     padding-left: 0;
     padding-right: 0;
   }

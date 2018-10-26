@@ -9,6 +9,8 @@
  * Class WPSEO_OpenGraph_Image
  */
 class WPSEO_OpenGraph_Image {
+	const EXTERNAL_IMAGE_ID = '-1';
+
 	/**
 	 * Holds the images that have been put out as OG image.
 	 *
@@ -45,8 +47,6 @@ class WPSEO_OpenGraph_Image {
 		'max_width'  => 2000,
 		'min_height' => 200,
 		'max_height' => 2000,
-		'min_ratio'  => 0.333,
-		'max_ratio'  => 3,
 	);
 
 	/**
@@ -87,11 +87,15 @@ class WPSEO_OpenGraph_Image {
 			$this->add_image_by_url( $image );
 		}
 
-		$this->set_images();
+		if ( ! post_password_required() ) {
+			$this->set_images();
+		}
 	}
 
 	/**
 	 * Outputs the images.
+	 *
+	 * @return void
 	 */
 	public function show() {
 		foreach ( $this->get_images() as $image => $image_meta ) {
@@ -134,7 +138,7 @@ class WPSEO_OpenGraph_Image {
 	/**
 	 * Return the images array.
 	 *
-	 * @return array
+	 * @return array The images.
 	 */
 	public function get_images() {
 		return $this->images;
@@ -152,14 +156,18 @@ class WPSEO_OpenGraph_Image {
 	/**
 	 * Display an OpenGraph image tag.
 	 *
-	 * @param array $attachment Attachment array.
+	 * @param string|array $attachment Attachment array.
 	 *
 	 * @return void
 	 */
 	public function add_image( $attachment ) {
-		 // In the past `add_image` accepted an image url, so leave this for backwards compatibility.
+		// In the past `add_image` accepted an image url, so leave this for backwards compatibility.
 		if ( is_string( $attachment ) ) {
 			$attachment = array( 'url' => $attachment );
+		}
+
+		if ( ! is_array( $attachment ) || empty( $attachment['url'] ) ) {
+			return;
 		}
 
 		// If the URL ends in `.svg`, we need to return.
@@ -189,15 +197,66 @@ class WPSEO_OpenGraph_Image {
 	}
 
 	/**
+	 * Adds an image by ID if possible and by URL if the ID isn't present.
+	 *
+	 * @param string   $image_id   The image ID as set in the database.
+	 * @param string   $image_url  The saved URL for the image.
+	 * @param callable $on_save_id Function to call to save the ID if it needs to be saved.
+	 *
+	 * @return void
+	 */
+	private function add_image_by_id_or_url( $image_id, $image_url, $on_save_id ) {
+		switch ( $image_id ) {
+			case self::EXTERNAL_IMAGE_ID:
+				// Add image by URL, but skip attachment_to_id call. We already know this is an external image.
+				$this->add_image( array( 'url' => $image_url ) );
+				break;
+
+			case '':
+				// Add image by URL, try to save the ID afterwards. So we can use the ID the next time.
+				$attachment_id = $this->add_image_by_url( $image_url );
+
+				if ( $attachment_id !== null ) {
+					call_user_func( $on_save_id, $attachment_id );
+				}
+				break;
+
+			default:
+				// Add the image by ID. This is our ideal scenario.
+				$this->add_image_by_id( $image_id );
+				break;
+		}
+	}
+
+	/**
+	 * Saves the ID to the frontpage Open Graph image ID.
+	 *
+	 * @param string $attachment_id The ID to save.
+	 *
+	 * @return void
+	 */
+	private function save_frontpage_image_id( $attachment_id ) {
+		WPSEO_Options::set( 'og_frontpage_image_id', $attachment_id );
+	}
+
+	/**
 	 * If the frontpage image exists, call add_image.
+	 *
+	 * @return void
 	 */
 	private function set_front_page_image() {
-		// If no frontpage image is found, don't add anything.
-		if ( WPSEO_Options::get( 'og_frontpage_image', '' ) === '' ) {
+		if ( get_option( 'show_on_front' ) === 'page' ) {
+			$this->set_user_defined_image();
+
+			// Don't fall back to the frontpage image below, as that's not set for this situation, so we should fall back to the default image.
 			return;
 		}
 
-		$this->add_image_by_url( WPSEO_Options::get( 'og_frontpage_image' ) );
+
+		$frontpage_image_url = WPSEO_Options::get( 'og_frontpage_image' );
+		$frontpage_image_id = WPSEO_Options::get( 'og_frontpage_image_id' );
+
+		$this->add_image_by_id_or_url( $frontpage_image_id, $frontpage_image_url, array( $this, 'save_frontpage_image_id' ) );
 	}
 
 	/**
@@ -209,6 +268,7 @@ class WPSEO_OpenGraph_Image {
 		$post_id = get_option( 'page_for_posts' );
 
 		$this->set_image_post_meta( $post_id );
+
 		if ( $this->has_images() ) {
 			return;
 		}
@@ -225,43 +285,101 @@ class WPSEO_OpenGraph_Image {
 	 */
 	private function set_singular_image( $post_id = null ) {
 		if ( $post_id === null ) {
-			$post_id = get_queried_object_id();
+			$post_id = $this->get_queried_object_id();
+		}
+
+		$this->set_user_defined_image( $post_id );
+
+		if ( $this->has_images() ) {
+			return;
+		}
+
+		$this->add_first_usable_content_image( get_post( $post_id ) );
+	}
+
+	/**
+	 * Gets the user-defined image of the post.
+	 *
+	 * @param null|int $post_id The post id to get the images for.
+	 *
+	 * @return void
+	 */
+	private function set_user_defined_image( $post_id = null ) {
+		if ( $post_id === null ) {
+			$post_id = $this->get_queried_object_id();
 		}
 
 		$this->set_image_post_meta( $post_id );
+
 		if ( $this->has_images() ) {
 			return;
 		}
 
 		$this->set_featured_image( $post_id );
-		if ( $this->has_images() ) {
-			return;
-		}
+	}
 
-		$this->add_content_images( get_post( $post_id ) );
+	/**
+	 * Saves the default image ID for Open Graph images to the database.
+	 *
+	 * @param string $attachment_id The ID to save.
+	 *
+	 * @return void
+	 */
+	private function save_default_image_id( $attachment_id ) {
+		WPSEO_Options::set( 'og_default_image_id', $attachment_id );
 	}
 
 	/**
 	 * Get default image and call add_image.
+	 *
+	 * @return void
 	 */
 	private function maybe_set_default_image() {
-		if ( ! $this->has_images() && WPSEO_Options::get( 'og_default_image', '' ) !== '' ) {
-			$this->add_image_by_url( WPSEO_Options::get( 'og_default_image' ) );
+		if ( $this->has_images() ) {
+			return;
 		}
+
+		$default_image_url = WPSEO_Options::get( 'og_default_image', '' );
+		$default_image_id  = WPSEO_Options::get( 'og_default_image_id', '' );
+
+		if ( $default_image_url === '' && $default_image_id === '' ) {
+			return;
+		}
+
+		$this->add_image_by_id_or_url( $default_image_id, $default_image_url, array( $this, 'save_default_image_id' ) );
+	}
+
+	/**
+	 * Saves the Open Graph image meta to the database for the current post.
+	 *
+	 * @param string $attachment_id The ID to save.
+	 *
+	 * @return void
+	 */
+	private function save_opengraph_image_id_meta( $attachment_id ) {
+		$post_id = $this->get_queried_object_id();
+
+		WPSEO_Meta::set_value( 'opengraph-image-id', (string) $attachment_id, $post_id );
 	}
 
 	/**
 	 * If opengraph-image is set, call add_image and return true.
 	 *
 	 * @param int $post_id Optional post ID to use.
+	 *
+	 * @return void
 	 */
 	private function set_image_post_meta( $post_id = 0 ) {
+		$image_id = WPSEO_Meta::get_value( 'opengraph-image-id', $post_id );
 		$image_url = WPSEO_Meta::get_value( 'opengraph-image', $post_id );
-		$this->add_image_by_url( $image_url );
+
+		$this->add_image_by_id_or_url( $image_id, $image_url, array( $this, 'save_opengraph_image_id_meta' ) );
 	}
 
 	/**
 	 * Check if taxonomy has an image and add this image.
+	 *
+	 * @return void
 	 */
 	private function set_taxonomy_image() {
 		$image_url = WPSEO_Taxonomy_Meta::get_meta_without_term( 'opengraph-image' );
@@ -288,35 +406,9 @@ class WPSEO_OpenGraph_Image {
 	 * @return void
 	 */
 	private function set_attachment_page_image() {
-		$post_id = get_queried_object_id();
+		$post_id = $this->get_queried_object_id();
 		if ( wp_attachment_is_image( $post_id ) ) {
 			$this->add_image_by_id( $post_id );
-		}
-	}
-
-	/**
-	 * Retrieve images from the post content.
-	 *
-	 * @param object $post The post object.
-	 *
-	 * @return void
-	 */
-	private function add_content_images( $post ) {
-		$image_finder = new WPSEO_Content_Images();
-		$images       = $image_finder->get_images( $post->ID, $post );
-
-		if ( ! is_array( $images ) || $images === array() ) {
-			return;
-		}
-
-		foreach ( $images as $image_url => $attachment_id ) {
-			if ( $attachment_id !== 0 ) {
-				$this->add_image_by_id( $attachment_id );
-			}
-
-			if ( $attachment_id === 0 ) {
-				$this->add_image_by_url( $image_url );
-			}
 		}
 	}
 
@@ -325,20 +417,23 @@ class WPSEO_OpenGraph_Image {
 	 *
 	 * @param string $url The given URL.
 	 *
-	 * @return void
+	 * @return null|number Returns the found attachment ID if it exists. Otherwise -1. If the URL is empty we return null.
 	 */
-	protected function add_image_by_url( $url ) {
+	public function add_image_by_url( $url ) {
 		if ( empty( $url ) ) {
-			return;
+			return null;
 		}
 
 		$attachment_id = WPSEO_Image_Utils::get_attachment_by_url( $url );
+
 		if ( $attachment_id > 0 ) {
 			$this->add_image_by_id( $attachment_id );
-			return;
+			return $attachment_id;
 		}
 
 		$this->add_image( array( 'url' => $url ) );
+
+		return -1;
 	}
 
 	/**
@@ -396,7 +491,7 @@ class WPSEO_OpenGraph_Image {
 	 *
 	 * @return void
 	 */
-	protected function add_image_by_id( $attachment_id ) {
+	public function add_image_by_id( $attachment_id ) {
 		if ( ! $this->is_valid_attachment( $attachment_id ) ) {
 			return;
 		}
@@ -425,8 +520,10 @@ class WPSEO_OpenGraph_Image {
 
 	/**
 	 * Sets the images based on the page type.
+	 *
+	 * @return void
 	 */
-	private function set_images() {
+	protected function set_images() {
 		/**
 		 * Filter: wpseo_add_opengraph_images - Allow developers to add images to the OpenGraph tags.
 		 *
@@ -516,13 +613,7 @@ class WPSEO_OpenGraph_Image {
 	 * @return string The path of the image URL. Returns an empty string if URL parsing fails.
 	 */
 	protected function get_image_url_path( $url ) {
-		$parsed_url = wp_parse_url( $url );
-
-		if ( $parsed_url === false ) {
-			return '';
-		}
-
-		return $parsed_url['path'];
+		return (string) wp_parse_url( $url, PHP_URL_PATH );
 	}
 
 	/**
@@ -534,7 +625,7 @@ class WPSEO_OpenGraph_Image {
 	 */
 	protected function get_extension_from_url( $url ) {
 		$extension = '';
-		$path = $this->get_image_url_path( $url );
+		$path      = $this->get_image_url_path( $url );
 
 		if ( $path === '' ) {
 			return $extension;
@@ -547,5 +638,37 @@ class WPSEO_OpenGraph_Image {
 		}
 
 		return $extension;
+	}
+
+	/**
+	 * Gets the queried object ID.
+	 *
+	 * @return int The queried object ID.
+	 */
+	protected function get_queried_object_id() {
+		return get_queried_object_id();
+	}
+
+	/**
+	 * Adds the first usable attachment image from the post content.
+	 *
+	 * @param WP_Post $post The post object.
+	 *
+	 * @return void
+	 */
+	private function add_first_usable_content_image( $post ) {
+		$image_finder = new WPSEO_Content_Images();
+		$images       = $image_finder->get_images( $post->ID, $post );
+
+		if ( ! is_array( $images ) || $images === array() ) {
+			return;
+		}
+
+		$image_url = reset( $images );
+		if ( ! $image_url ) {
+			return;
+		}
+
+		$this->add_image( array( 'url' => $image_url ) );
 	}
 }

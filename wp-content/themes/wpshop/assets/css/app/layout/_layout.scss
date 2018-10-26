@@ -6,12 +6,16 @@
     }
   }
 
-  .component-support {
-    .l-contain-narrow {
-      // box-shadow: none;
-      // border: none;
-      // max-width: 1200px;
-    }
+}
+
+.blog {
+
+  .main {
+    margin-bottom: $space-xxl*2;
+  }
+
+  .page-header {
+    margin-bottom: 3em;
   }
 
 }
@@ -270,7 +274,7 @@
         opacity: 1;
         width: 35px;
         height: 35px;
-        background: url('../../imgs/icon-check-white.svg');
+        background: url('imgs/icon-check-white.svg');
       }
     }
 
@@ -303,6 +307,14 @@
       visibility: hidden;
     }
 
+  }
+
+}
+
+.container.l-contain {
+
+  @include device(800, 'max') {
+    max-width: 95vw;
   }
 
 }

@@ -1656,12 +1656,6 @@ class GFFormSettings {
 
 		</div> <!-- / wrap -->
 
-		<script type="text/javascript">
-			jQuery(document).ready(function ($) {
-				$('.gform_tab_container').css('minHeight', jQuery('#gform_tabs').height() + 100);
-			});
-		</script>
-
 	<?php
 	}
 
@@ -2020,7 +2014,7 @@ class GFFormSettings {
 				'name'        => __( 'Save and Continue Confirmation', 'gravityforms' ),
 				'isDefault'   => true,
 				'type'        => 'message',
-				'message'     => __( '<p>Please use the following link to return and complete this form from any computer.</p><p class="resume_form_link_wrapper"> {save_link} </p><p> Note: This link will expire after 30 days.<br />Enter your email address to if you would like to receive the link via email.</p></p> {save_email_input}</p>', 'gravityforms' ),
+				'message'     => __( '<p>Please use the following link to return and complete this form from any computer.</p><p class="resume_form_link_wrapper"> {save_link} </p><p> Note: This link will expire after 30 days.<br />Enter your email address if you would like to receive the link via email.</p></p> {save_email_input}</p>', 'gravityforms' ),
 				'url'         => '',
 				'pageId'      => '',
 				'queryString' => '',

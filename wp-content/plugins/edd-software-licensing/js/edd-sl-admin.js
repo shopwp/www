@@ -45,6 +45,17 @@ jQuery(document).ready(function ($) {
 			$thickboxLog.data( 'log-state', 'loaded' );
 		});
 	});
+
+	$('input#edd_sl_disable_renewal_discount').on( 'change', function() {
+		var checked = $(this).is(':checked');
+		var target  = $('#edd_sl_renewal_discount');
+		if ( checked ) {
+			target.prop('readonly', 'readonly' ).prop('disabled','disabled');
+		} else {
+			target.removeProp('readonly').removeProp('disabled');
+		}
+	});
+
 	$('select#_edd_product_type, input#edd_license_enabled, input#edd_sl_beta_enabled').on( 'change', function() {
 		var product_type = $('#_edd_product_type').val();
 		var license_enabled = $('#edd_license_enabled').is(':checked');
@@ -59,7 +70,7 @@ jQuery(document).ready(function ($) {
 			$('#edd_sl_upgrade_paths input, #edd_sl_upgrade_paths select').prop('disabled', true).trigger('chosen:updated');
 			return;
 		}
-		
+
 		if ( ! beta_enabled ) {
 			$beta_toggled_rows.hide();
 		} else {
@@ -180,7 +191,7 @@ jQuery(document).ready(function ($) {
 		$('.edd-sl-license-exp-date').toggle();
 	});
 
-	$('.edd-sl-license-exp-date').on('change', function() {
+	$('.edd-sl-license-exp-date, #license_price_id').on('change', function() {
 		$('#edd_sl_update_license').fadeIn('fast').css('display', 'inline-block');
 	});
 
@@ -196,6 +207,48 @@ jQuery(document).ready(function ($) {
 			link.text(edd_sl.action_edit);
 		}
 	}
+
+	$('#edd-sl-regenerate-key').on( 'click', function(e) {
+
+		var response = confirm( edd_sl.regenerate_notice );
+		if ( response == false ) {
+			return;
+		}
+
+		var license_key   = $('#license-key');
+		var target        = $(this);
+		target.css('color', '#999').css('pointer-events', 'none');
+
+		var postData = {
+			action : 'edd_sl_regenerate_license',
+			license_id : target.data('license-id'),
+			nonce : target.data('nonce')
+		};
+
+		$.ajax({
+			type: "POST",
+			data: postData,
+			dataType: 'json',
+			url: ajaxurl,
+			success: function (response) {
+				if ( response.success ) {
+					license_key.fadeTo('fast', '.1', function(){
+						license_key.text(response.key).fadeTo('fast', '1', function(){
+							target.css('color', '').css('pointer-events', '');
+						});
+					});
+				} else {
+					target.css('color', '').css('pointer-events', '');
+				}
+			}
+		}).fail(function (data) {
+			if ( window.console && window.console.log ) {
+				console.log( data );
+			}
+		});
+
+		return false;
+	});
 
 	$('#edd_sl_send_renewal_notice').on('click', function(e) {
 		e.preventDefault();

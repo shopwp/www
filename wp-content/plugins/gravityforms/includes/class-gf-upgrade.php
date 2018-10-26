@@ -9,9 +9,6 @@ if ( ! class_exists( 'GFForms' ) ) {
  * look into the post_upgrade_schema() function for a sample and instructions on how to do it.
  */
 
-/** WordPress Upgrade Functions */
-require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
 class GF_Upgrade {
 
 	private $versions = null;
@@ -314,6 +311,9 @@ class GF_Upgrade {
 		$key = sanitize_key( 'gravityforms_upgrading_' . GFForms::$version );
 
 		GFCommon::remove_dismissible_message( $key );
+
+		// Clear all transients to make sure the new version doesn't use cached results.
+		GFCache::flush( true );
 
 		$this->add_post_upgrade_admin_notices();
 
@@ -918,9 +918,7 @@ WHERE NOT EXISTS
 
 		$incomplete_submissions_table = GFFormsModel::get_incomplete_submissions_table_name();
 
-		$table_check_query = $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->esc_like( $incomplete_submissions_table ) );
-
-		if ( $wpdb->get_var( $table_check_query ) != $incomplete_submissions_table ) {
+		if ( ! GFCommon::table_exists( $incomplete_submissions_table ) ) {
 			// The table doesn't exist. Maybe an upgrade from a very early version.
 			return false;
 		}
@@ -1073,7 +1071,10 @@ WHERE ln.id NOT IN
 	}
 
 	/**
-	 * Gets the value of an option from the wp_options table.
+	 * Gets the value of an option directly from the wp_options table. This is useful for double checking the value of
+	 * autoload options returned by get_option().
+	 *
+	 * The result is cached by wpdb so this is only really useful once per request.
 	 *
 	 * @since  Unknown
 	 * @access public
@@ -1081,13 +1082,11 @@ WHERE ln.id NOT IN
 	 *
 	 * @param string $option_name The option to find.
 	 *
-	 * @return string The option value, if found.
+	 * @return string|null The option value, if found.
 	 */
 	public function get_wp_option( $option_name ) {
-
-		wp_cache_delete( 'alloptions', 'options' );
-
-		return get_option( $option_name );
+		global $wpdb;
+		return $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name=%s", $option_name ) );
 	}
 
 
@@ -1581,7 +1580,7 @@ HAVING count(*) > 1;" );
 
 		$this->versions = array(
 			'version'             => GFForms::$version,
-			'current_version'     => $this->get_wp_option( 'rg_form_version' ),
+			'current_version'     => get_option( 'rg_form_version' ),
 			'current_db_version'  => GFFormsModel::get_database_version(),
 			'previous_db_version' => empty( $previous_db_version ) ? '0' : $previous_db_version,
 		);
@@ -1857,10 +1856,10 @@ HAVING count(*) > 1;" );
 
 		if ( $number_outdated == 1 ) {
 			/* translators: %s: the add-on name */
-			$message = sprintf( esc_html__( 'The %s is not compatible with version of this version of Gravity Forms. See the plugins list for further details.', 'gravityforms' ), $outdated[0] );
+			$message = sprintf( esc_html__( 'The %s is not compatible with this version of Gravity Forms. See the plugins list for further details.', 'gravityforms' ), $outdated[0] );
 		} else {
 			/* translators: %d: the number of outdated add-ons */
-			$message = sprintf( esc_html__( 'There are %d add-ons installed that are not compatible with version of this version of Gravity Forms. See the plugins list for further details.', 'gravityforms' ), $number_outdated );
+			$message = sprintf( esc_html__( 'There are %d add-ons installed that are not compatible with this version of Gravity Forms. See the plugins list for further details.', 'gravityforms' ), $number_outdated );
 		}
 
 		GFCommon::add_dismissible_message( $message, $key, 'error', 'gform_full_access', true, 'site-wide' );

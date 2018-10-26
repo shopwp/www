@@ -147,7 +147,35 @@ function edd_stripe_connect_admin_script( $hook ) {
 			'test_mode' => (int) edd_is_test_mode(),
 			'test_key_exists' => ! empty( $test_key ) ? 'true' : 'false',
 			'live_key_exists' => ! empty( $live_key ) ? 'true' : 'false',
+			'ajaxurl' => esc_url( admin_url( 'admin-ajax.php' ) ),
 		)
 	);
 }
 add_action( 'admin_enqueue_scripts', 'edd_stripe_connect_admin_script' );
+
+/**
+ * Saves an option to remember that someone dismissed the Stripe Connect admin notice.
+ *
+ * @since 2.6.16
+ */
+add_action( 'wp_ajax_edds_stripe_connect_dismiss_intro_notice', function() {
+
+	$error_message = __( 'There was an error dismissing the Stripe Connect notice. Please try again.', 'edds' );
+
+	if( ! wp_verify_nonce( $_POST['nonce'], 'edds_stripe_connect_intro_nonce' ) || ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_send_json_error( array(
+			'error' => $error_message,
+		) );
+	}
+
+	$updated = edd_update_option( 'edds_stripe_connect_intro_notice_dismissed', true );
+
+	if( $updated === false ) {
+		wp_send_json_error( array(
+			'error' => $error_message,
+		) );
+	}
+
+	wp_send_json_success();
+} );
+

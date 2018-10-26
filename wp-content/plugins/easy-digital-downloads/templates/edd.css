@@ -174,15 +174,6 @@
 	font-size: 95%;
 	margin: 0 0 5px;
 }
-#edd_checkout_form_wrap label:after {
-	display: block;
-	visibility: hidden;
-	float: none;
-	clear: both;
-	height: 0;
-	text-indent: -9999px;
-	content: ".";
-}
 #edd_checkout_form_wrap span.edd-description {
 	color: #666;
 	font-size: 80%;
@@ -793,7 +784,7 @@ input.edd_submit_plain {
 }
 .edd-submit,
 #edd-purchase-button,
-input[type="submit"].edd-submit {
+[type="submit"].edd-submit {
 	display: inline-block;
 	padding: 6px 12px;
 	margin: 0;
@@ -816,7 +807,7 @@ input[type="submit"].edd-submit {
 	user-select: none;
 }
 .edd-submit.button:focus,
-input[type="submit"].edd-submit:focus {
+[type="submit"].edd-submit:focus {
 	outline: thin dotted #333;
 	outline: 5px auto -webkit-focus-ring-color;
 	outline-offset: -2px;
@@ -1012,9 +1003,6 @@ input[type="submit"].edd-submit:focus {
 }
 .edd_download .edd_price {
 	margin-bottom: 10px;
-}
-#edd_download_pagination {
-	clear: both;
 }
 
 /* =Misc styles

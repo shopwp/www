@@ -30,7 +30,7 @@ class EDD_SL_Emails {
 
 				}
 
-				$keys_output .=  $license->download->get_name() . $price_name . ": " . $license->key . "\n\r";
+				$keys_output .=  $license->get_download()->get_name() . $price_name . ": " . $license->key . "\n\r";
 			}
 		}
 
@@ -52,6 +52,10 @@ class EDD_SL_Emails {
 		}
 
 		if( $this->is_unsubscribed( $license ) ) {
+			$send = false;
+		}
+
+		if( 'disabled' === $license->status ) {
 			$send = false;
 		}
 
@@ -104,19 +108,8 @@ class EDD_SL_Emails {
 
 		if( $sent ) {
 
-			$log_id = wp_insert_post(
-				array(
-					'post_title'   => __( 'LOG - Renewal Notice Sent', 'edd_sl' ),
-					'post_name'    => 'log-notice-sent-' . $license->ID . '-' . md5( current_time( 'timestamp' ) ),
-					'post_type'	   => 'edd_license_log',
-					'post_status'  => 'publish'
-				 )
-			);
-
-			add_post_meta( $log_id, '_edd_sl_log_license_id', $license->ID );
+			$log_id = $license->add_log( __( 'LOG - Renewal Notice Sent', 'edd_sl' ), null, 'renewal_notice' );
 			add_post_meta( $log_id, '_edd_sl_renewal_notice_id', $notice_id );
-
-			wp_set_object_terms( $log_id, 'renewal_notice', 'edd_log_type', false );
 
 			$license->update_meta( sanitize_key( '_edd_sl_renewal_sent_' . $notice['send_period'] ), current_time( 'timestamp' ) ); // Prevent renewal notices from being sent more than once
 
@@ -157,7 +150,7 @@ class EDD_SL_Emails {
 
 		$text = str_replace( '{name}',             $customer_name,  $text );
 		$text = str_replace( '{license_key}',      $license->key,    $text );
-		$text = str_replace( '{product_name}',     $license->download->get_name(),   $text );
+		$text = str_replace( '{product_name}',     $license->get_download()->get_name(),   $text );
 		$text = str_replace( '{expiration}',       $expiration,     $text );
 		$text = str_replace( '{expiration_time}',  $time_diff,      $text );
 		if ( ! empty( $discount ) ) {

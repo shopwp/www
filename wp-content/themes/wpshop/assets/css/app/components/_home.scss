@@ -1,7 +1,7 @@
 body.page-template-template-home {
   background-color: color(white);
   background-repeat: repeat;
-  background-size: 48%;
+  background-size: 35%;
 
   @include device(1100, 'max') {
     background-size: 80%;

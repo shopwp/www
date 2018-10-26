@@ -1,9 +1,19 @@
 {
-  "presets": ["es2015", "es2016", "stage-2"],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "usage"
+      }
+    ]
+    ,
+    "@babel/preset-react"
+  ],
   "plugins": [
-    "syntax-async-functions",
-    "transform-regenerator",
-    "transform-runtime",
-    "lodash"
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-syntax-dynamic-import",
+    "@babel/plugin-syntax-import-meta",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-json-strings"
   ]
 }

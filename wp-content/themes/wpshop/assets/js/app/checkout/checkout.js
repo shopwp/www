@@ -523,14 +523,15 @@ function initCheckout($) {
   saveCheckoutState($);
   onForgotPass($);
   duplicateCartForHeader($);
-  // onForgotPassBack($);
+
   addValidUponLogin($);
 
-  // checkForExistingErrors($);
   insertCheckoutErrors($);
 
   onCountryChange($);
 
+  // onForgotPassBack($);
+  // checkForExistingErrors($);
   // onCheckoutError($);
 
 }

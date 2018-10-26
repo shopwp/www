@@ -13,7 +13,7 @@ class WPMDBPro_CLI_Addon extends WPMDBPro_Addon {
 			return;
 		}
 
-		if ( ! $this->meets_version_requirements( '1.8.1' ) ) {
+		if ( ! $this->meets_version_requirements( '1.8.3' ) ) {
 			return;
 		}
 	}

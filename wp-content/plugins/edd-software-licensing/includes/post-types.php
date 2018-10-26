@@ -57,7 +57,18 @@ function edd_sl_setup_post_type() {
 }
 add_action( 'init', 'edd_sl_setup_post_type', 2 );
 
-
+/**
+ * Registers the thumbnail sizes for the plugins, so they can be used in the updater icons array.
+ * 
+ * @since 3.6.5
+ *
+ * @return void
+ */
+function edd_sl_register_thumbnail_sizes() {
+	add_image_size( 'sl-small', 128, 128, true );
+	add_image_size( 'sl-large', 256, 256, true );
+}
+add_action( 'init', 'edd_sl_register_thumbnail_sizes' );
 
 /**
  * Download Columns
@@ -72,7 +83,7 @@ add_action( 'init', 'edd_sl_setup_post_type', 2 );
 function edd_sl_download_columns( $download_columns ) {
 	unset( $download_columns['date'] );
 	$download_columns['version'] = __( 'Version', 'edd_sl' );
-	$download_columns['date'] = __( 'Date' );
+	$download_columns['date'] = __( 'Date', 'edd_sl' );
 	return apply_filters( 'edd_sl_download_columns', $download_columns );
 }
 add_filter( 'manage_edit-download_columns', 'edd_sl_download_columns' );
@@ -87,13 +98,10 @@ add_filter( 'manage_edit-download_columns', 'edd_sl_download_columns' );
  */
 function edd_sl_render_download_columns( $column_name, $post_id ) {
 	if ( get_post_type( $post_id ) == 'download' ) {
-		global $edd_options;
-
-		$style = isset( $edd_options['button_style'] ) ? $edd_options['button_style'] : 'button';
-
+		$download = new EDD_SL_Download( $post_id );
 		switch ( $column_name ) {
 			case 'version':
-				echo esc_html( get_post_meta( $post_id, '_edd_sl_version', true ) );
+				echo esc_html( $download->get_version() );
 				break;
 		}
 	}

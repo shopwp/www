@@ -120,7 +120,7 @@ Shadow
 
 */
 @mixin shadow() {
-  box-shadow: 0 5px 36px -12px rgba(0, 0, 0, 0.59);
+  box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);
 }
 
 

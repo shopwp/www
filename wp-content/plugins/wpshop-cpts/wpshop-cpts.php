@@ -45,7 +45,8 @@ function wpshop_custom_post_type_docs() {
     'exclude_from_search' => true,
     'publicly_queryable'  => true,
     'query_var'           => true,
-    'capability_type'     => 'post'
+    'capability_type'     => 'post',
+    'rewrite'             => [ 'with_front' => false ]
   );
 
   register_post_type('docs', $args);
@@ -84,7 +85,8 @@ function wpshop_custom_taxonomy_docs() {
     'query_var' => true,
     'rewrite' => array(
       'slug' => 'docs',
-      'hierarchical' => true
+      'hierarchical' => true,
+      'with_front'  => false
     )
   ));
 }
@@ -130,6 +132,7 @@ function custom_post_type_faqs() {
     'exclude_from_search' => false,
     'publicly_queryable'  => true,
     'capability_type'     => 'page',
+    'rewrite'             => [ 'with_front' => false ]
   );
 
   register_post_type('faqs', $args);
@@ -156,7 +159,7 @@ function custom_post_type_faqs() {
 		'show_ui'           => true,
 		'show_admin_column' => true,
 		'query_var'         => true,
-		'rewrite'           => array( 'slug' => 'faq-category' ),
+		'rewrite'           => array( 'slug' => 'faq-category', 'with_front' => false ),
 	);
 
 	register_taxonomy( 'faq-category', array( 'faqs' ), $args );

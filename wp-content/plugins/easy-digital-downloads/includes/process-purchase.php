@@ -39,6 +39,19 @@ function edd_process_purchase_form() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
 
+	if ( $is_ajax ) {
+		if ( ! isset( $_POST['edd-process-checkout-nonce'] ) ) {
+			edd_debug_log( __( 'Missing nonce when processing checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+		}
+
+		$nonce = isset( $_POST['edd-process-checkout-nonce'] ) ? sanitize_text_field( $_POST['edd-process-checkout-nonce'] ) : '';
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-process-checkout' );
+
+		if ( false === $nonce_verified ) {
+			edd_set_error( 'checkout-nonce-error', __( 'Error processing purchase. Please reload the page and try again.', 'easy-digital-downloads' ) );
+		}
+	}
+
 	// Process the login form
 	if ( isset( $_POST['edd_login_submit'] ) ) {
 		edd_process_purchase_login();
@@ -216,6 +229,23 @@ function edd_process_purchase_login() {
 
 	$is_ajax = isset( $_POST['edd_ajax'] );
 
+	if ( ! isset( $_POST['edd_login_nonce'] ) ) {
+		edd_debug_log( __( 'Missing nonce when processing login during checkout. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/09/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
+	}
+
+	$nonce = isset( $_POST['edd_login_nonce'] ) ? sanitize_text_field( $_POST['edd_login_nonce'] ) : '';
+	$nonce_verified = wp_verify_nonce( $nonce, 'edd-login-form' );
+	if ( false === $nonce_verified ) {
+		edd_set_error( 'edd-login-nonce-failed', __( 'Error processing login. Nonce failed.', 'easy-digital-downloads' ) );
+
+		if ( $is_ajax ) {
+			do_action( 'edd_ajax_checkout_errors' );
+			edd_die();
+		} else {
+			wp_redirect( $_SERVER['HTTP_REFERER'] ); exit;
+		}
+	}
+
 	$user_data = edd_purchase_form_validate_user_login();
 
 	if ( edd_get_errors() || $user_data['user_id'] < 1 ) {
@@ -264,12 +294,12 @@ function edd_purchase_form_validate_fields() {
 	);
 
 	// Validate agree to terms
-	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
+	if ( '1' === edd_get_option( 'show_agree_to_terms', false ) ) {
 		edd_purchase_form_validate_agree_to_terms();
 	}
 
 	// Validate agree to privacy policy
-	if ( edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
+	if ( '1' === edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
 		edd_purchase_form_validate_agree_to_privacy_policy();
 	}
 
@@ -565,12 +595,13 @@ function edd_purchase_form_validate_new_user() {
 			edd_set_error( 'username_unavailable', __( 'Username already taken', 'easy-digital-downloads' ) );
 			// Check if it's valid
 		} else if ( ! edd_validate_username( $user_login ) ) {
-				// Invalid username
-				if ( is_multisite() )
-					edd_set_error( 'username_invalid', __( 'Invalid username. Only lowercase letters (a-z) and numbers are allowed', 'easy-digital-downloads' ) );
-				else
-					edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
+			// Invalid username
+			if ( is_multisite() ) {
+				edd_set_error( 'username_invalid', __( 'Invalid username. Only lowercase letters (a-z) and numbers are allowed', 'easy-digital-downloads' ) );
 			} else {
+				edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
+			}
+		} else {
 			// All the checks have run and it's good to go
 			$valid_user_data['user_login'] = $user_login;
 		}
@@ -728,6 +759,7 @@ function edd_purchase_form_validate_guest_user() {
 		} else {
 			// All is good to go
 			$valid_user_data['user_email'] = $guest_email;
+
 		}
 	} else {
 		// No email
@@ -1042,7 +1074,7 @@ function edd_purchase_form_validate_cc_zip( $zip = 0, $country_code = '' ) {
 		"MG" => "\d{3}",
 		"MH" => "969[67]\d([ \-]\d{4})?",
 		"MK" => "\d{4}",
-		"MN" => "\d{6}",
+		"MN" => "\d{5}",
 		"MP" => "9695[012]([ \-]\d{4})?",
 		"MQ" => "9[78]2\d{2}",
 		"MT" => "[A-Z]{3}[ ]?\d{2,4}",

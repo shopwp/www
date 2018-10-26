@@ -125,7 +125,7 @@ EDD
 .component-account-downloads {
   th,
   td {
-    width: 50%;
+    width: 20%;
   }
 
   #edd_download_history_pagination {
@@ -721,7 +721,7 @@ EDD
   &:before {
     content: '';
     display: block;
-    background-image: url('../../imgs/icon-creditcards.svg');
+    background-image: url('imgs/icon-creditcards.svg');
     background-size: 100%;
     background-position: 50% 50%;
     width: 300px;
@@ -791,7 +791,7 @@ EDD
     right: 1em;
     width: 30px;
     height: 30px;
-    background: url('../../imgs/icon-check.svg');
+    background: url('imgs/icon-check.svg');
     background-size: cover;
     background-position: 50% 50%;
     opacity: $opacity-hard;

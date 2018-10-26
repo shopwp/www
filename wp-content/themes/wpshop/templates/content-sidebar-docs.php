@@ -54,6 +54,10 @@ function get_doc_name($templateCat) {
         <i class="fab fa-github"></i>
       </a>
 
+      <a href="https://twitter.com/wpshopify" class="docs-social-link" target="_blank">
+        <i class="fab fa-twitter" aria-hidden="true"></i>
+      </a>
+
       <a href="https://wpshop.io/purchase" class="docs-social-link gtm-link-support" target="_blank">
         <i class="fab fa-slack" aria-hidden="true"></i>
       </a>
