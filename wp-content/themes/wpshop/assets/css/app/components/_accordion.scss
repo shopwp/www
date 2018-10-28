@@ -21,11 +21,11 @@
     position: relative;
     top: 3px;
     margin-right: $space-s;
+    box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);
   }
 
   &:hover {
     cursor: pointer;
-    // color: lighten(color(black), 60%);
   }
 
   @include device(700, 'max') {
@@ -62,7 +62,7 @@
 .accordion-heading {
   margin-bottom: 0;
   margin-left: 3px;
-  
+
   &:hover {
     opacity: $opacity-soft;
   }

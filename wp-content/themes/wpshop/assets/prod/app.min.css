@@ -1752,7 +1752,7 @@ select {
   padding: 1.2em; }
 
 .l-contain {
-  max-width: 1200px;
+  max-width: 1270px;
   width: 100%;
   margin: 0 auto; }
 
@@ -3694,7 +3694,9 @@ pre[class*="language-"] {
     font-size: 1.2em;
     position: relative;
     top: 3px;
-    margin-right: 0.69444em; }
+    margin-right: 0.69444em;
+    -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
+            box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15); }
   .accordion-heading:hover {
     cursor: pointer; }
 
