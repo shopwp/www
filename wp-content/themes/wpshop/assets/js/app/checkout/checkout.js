@@ -512,6 +512,8 @@ Init Checkout
 */
 function initCheckout($) {
 
+  console.log('initCheckout');
+
   onAskExisting($);
   onCheckoutLogin($);
   onCheckoutRegister($);

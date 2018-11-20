@@ -147,7 +147,7 @@ add_action('edd_after_price_option', function(){
 // Replaces the excerpt "Read More" text by a link
 function new_excerpt_more($more) {
   global $post;
-	return '<a class="moretag" href="'. get_permalink($post->ID) . '">Read More</a>';
+	return '<br><a class="moretag" href="'. get_permalink($post->ID) . '">Read More</a>';
 }
 add_filter('excerpt_more', 'new_excerpt_more');
 
@@ -162,3 +162,9 @@ function my_child_theme_edd_auto_register_email_subject( $subject ) {
 
 }
 add_filter( 'edd_auto_register_email_subject', 'my_child_theme_edd_auto_register_email_subject' );
+
+
+function wpshop_custom_excerpt_length($length) {
+  return 20;
+}
+add_filter( 'excerpt_length', 'wpshop_custom_excerpt_length', 999 );

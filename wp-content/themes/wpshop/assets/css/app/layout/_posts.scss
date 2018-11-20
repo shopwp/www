@@ -54,9 +54,22 @@
 }
 
 .entry-summary {
-  a {
-    display: block;
+
+  p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+
+  .moretag {
+    margin-bottom: 2em;
+    margin-top: 16px;
+  }
+
+}
+
+.blog .post {
+  margin-bottom: 3em;
 }
 
 .article-footer {

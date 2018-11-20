@@ -9,6 +9,12 @@ $detect = new Mobile_Detect;
 
 $mobileBodyClass = $detect->isMobile() ? 'l-col is-mobile' : 'l-col';
 
+$notices_enabled = get_field('theme_notice_enable', 'option');
+
+if ($notices_enabled) {
+  $mobileBodyClass .= ' is-showing-notices';
+}
+
 global $post;
 
 ?>
@@ -79,8 +85,12 @@ global $post;
 
     <?php
 
-      do_action('get_header');
-      get_template_part('templates/header');
+    if ($notices_enabled) {
+      get_template_part('components/notices/notices-controller');
+    }
+
+    do_action('get_header');
+    get_template_part('templates/header');
 
     ?>
 

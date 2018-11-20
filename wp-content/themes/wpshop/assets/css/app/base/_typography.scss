@@ -20,7 +20,7 @@ h1 {
 }
 
 h2 {
-  font-size: $heading-2;
+  font-size: 1.85em;
   font-weight: bold;
 
   @include device(700, 'max') {

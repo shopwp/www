@@ -1300,7 +1300,7 @@ h1 {
   font-weight: bold; }
 
 h2 {
-  font-size: 2.0736em;
+  font-size: 1.85em;
   font-weight: bold; }
 
 h3 {
@@ -2480,8 +2480,24 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   display: -ms-flexbox;
   display: flex; }
 
-.entry-summary a {
-  display: block; }
+.entry-summary p {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center; }
+
+.entry-summary .moretag {
+  margin-bottom: 2em;
+  margin-top: 16px; }
+
+.blog .post {
+  margin-bottom: 3em; }
 
 .article-footer {
   text-align: center;
@@ -3953,6 +3969,67 @@ body.page-template-template-home {
 
 .notice-heading {
   font-weight: bold; }
+
+.is-showing-notices.edd-checkout #edd_checkout_cart_form_header {
+  display: none; }
+
+.component-notice {
+  margin: 0;
+  padding: 0;
+  top: 0;
+  width: 100%;
+  background: #fedb85;
+  color: #761901;
+  color: #fff;
+  font-size: 17px;
+  font-weight: bold; }
+  .component-notice p {
+    margin: 0;
+    color: #761901; }
+  .component-notice a {
+    color: #761901; }
+    .component-notice a:hover {
+      opacity: 0.5; }
+  .component-notice code {
+    font-family: monospace !important;
+    background: #761901;
+    padding: 3px 10px 5px 10px;
+    margin: 0 5px;
+    border-radius: 3px;
+    color: #fedb85;
+    font-size: 18px; }
+
+.notice-inner {
+  padding: 0.69444em 0;
+  text-align: center; }
+
+.docs-template-default .component-notice {
+  display: none; }
+
+.edd-success.purchase-confirmation.is-showing-notices .component-notice {
+  display: none; }
+
+.edd_cart_discount .edd_discount {
+  display: block;
+  text-align: center; }
+
+.edd_cart_discount .edd_discount_rate {
+  background: #fedb85;
+  padding: 3px 10px 5px 10px;
+  margin: 0 5px;
+  border-radius: 3px;
+  color: #761901;
+  font-size: 18px; }
+
+#edd_purchase_receipt tr:first-child th {
+  padding-bottom: 1.44em; }
+
+#edd_purchase_form #edd_show_discount {
+  background: #f6f6f6;
+  padding: 1em;
+  border-radius: 10px;
+  text-align: center;
+  display: none; }
 
 .component-screenshots {
   background: #fff;
