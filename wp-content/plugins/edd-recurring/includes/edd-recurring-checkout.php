@@ -454,9 +454,13 @@ class EDD_Recurring_Checkout {
 		$period_single = strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) );
 		$times         = edd_recurring()->get_times( $price_id, $download_id );
 
-		if( edd_recurring()->has_free_trial( $download_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+		if( ! empty( $price['trial-quantity'] ) && ! empty( $price['trial-unit'] ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
 
-			$trial      = edd_recurring()->get_trial_period( $download_id );
+			$free_trial = $price['trial-quantity'] . ' ' . $price['trial-unit'];
+
+		} else if( edd_recurring()->has_free_trial( $download_id, $price_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+
+			$trial      = edd_recurring()->get_trial_period( $download_id, $price_id );
 			$free_trial = $trial['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $trial['unit'] ) );
 
 		}
@@ -602,7 +606,7 @@ class EDD_Recurring_Checkout {
 				<?php else: ?>
 
 					<?php if( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $period, $times ); ?>
+						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) ), $times ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) ), $free_trial ); ?>
 					<?php endif; ?>
@@ -617,7 +621,7 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Remove default total display when cart contains a f ree trial
+	 * Remove default total display when cart contains a free trial
 	 *
 	 * @since  2.6
 	 * @return void
@@ -667,7 +671,7 @@ class EDD_Recurring_Checkout {
 			return;
 		}
 		if( ! wp_verify_nonce( $_POST['edd_retry_failed_subs'], 'edd_retry_failed_subs_nonce' ) ) {
-			wp_die( __( 'Error', 'edd-recurring' ), __( 'Nonce verification failed', 'edd-recurring' ), array( 'response' => 403 ) );
+			wp_die( __( 'Nonce verification failed', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
 		}
 
 		$failed_subs = $_POST['failed-subs'];

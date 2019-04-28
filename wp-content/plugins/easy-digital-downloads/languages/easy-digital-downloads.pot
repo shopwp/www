@@ -1,14 +1,14 @@
-# Copyright (C) 2018 Easy Digital Downloads
+# Copyright (C) 2019 Easy Digital Downloads
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.8\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.12\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-10-01 20:25:04+00:00\n"
+"POT-Creation-Date: 2019-03-26 23:09:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
 "Language: en_US\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: grunt-wp-i18n1.0.2\n"
+"X-Generator: grunt-wp-i18n 1.0.3\n"
 
 #: easy-digital-downloads.php:183 easy-digital-downloads.php:195
 msgid "Cheatin&#8217; huh?"
@@ -663,7 +663,7 @@ msgid "Customer since %s"
 msgstr ""
 
 #: includes/admin/customers/customers.php:313
-#: includes/privacy-functions.php:857
+#: includes/privacy-functions.php:867
 msgid "User ID"
 msgstr ""
 
@@ -751,7 +751,7 @@ msgid "Remove"
 msgstr ""
 
 #: includes/admin/customers/customers.php:416
-#: includes/checkout/template.php:182 includes/privacy-functions.php:754
+#: includes/checkout/template.php:182 includes/privacy-functions.php:759
 msgid "Email Address"
 msgstr ""
 
@@ -802,7 +802,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:41
 #: includes/admin/reporting/export/class-batch-export-payments.php:60
 #: includes/admin/reporting/export/class-batch-export-sales.php:49
-#: includes/admin/tools.php:587 includes/privacy-functions.php:932
+#: includes/admin/tools.php:587 includes/privacy-functions.php:942
 #: templates/history-purchases.php:19 templates/shortcode-receipt.php:59
 msgid "Date"
 msgstr ""
@@ -814,7 +814,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:80
 #: includes/admin/reporting/export/class-batch-export-downloads.php:48
 #: includes/admin/reporting/export/class-batch-export-payments.php:65
-#: includes/admin/tools.php:614 includes/privacy-functions.php:766
+#: includes/admin/tools.php:614 includes/privacy-functions.php:771
 msgid "Status"
 msgstr ""
 
@@ -1765,7 +1765,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:1031
 #: includes/admin/settings/register-settings.php:747
-#: includes/admin/thickbox.php:59 includes/checkout/template.php:984
+#: includes/admin/thickbox.php:59 includes/checkout/template.php:997
 #: includes/shortcodes.php:49 includes/template-functions.php:78
 msgid "Purchase"
 msgstr ""
@@ -1874,7 +1874,7 @@ msgstr ""
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:602
+#: includes/admin/import/class-batch-import-payments.php:611
 msgid "payments"
 msgstr ""
 
@@ -2399,7 +2399,7 @@ msgid "Click \"Save Payment\" to create new customer"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:689
-#: includes/checkout/template.php:347 includes/privacy-functions.php:758
+#: includes/checkout/template.php:347 includes/privacy-functions.php:763
 msgid "Billing Address"
 msgstr ""
 
@@ -2420,24 +2420,24 @@ msgstr ""
 msgid "Type to search all Countries"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:753
+#: includes/admin/payments/view-order-details.php:754
 #: includes/admin/settings/register-settings.php:333
 msgid "Select a state"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:756
+#: includes/admin/payments/view-order-details.php:757
 msgid "Type to search all States/Provinces"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:777
+#: includes/admin/payments/view-order-details.php:778
 msgid "Payment Notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:792
+#: includes/admin/payments/view-order-details.php:793
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:798
+#: includes/admin/payments/view-order-details.php:799
 msgid "Add Note"
 msgstr ""
 
@@ -2572,8 +2572,8 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-api-requests.php:41
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:43
 #: includes/admin/reporting/export/class-batch-export-payments.php:63
-#: includes/admin/tools.php:542 includes/privacy-functions.php:762
-#: includes/privacy-functions.php:861 includes/privacy-functions.php:940
+#: includes/admin/tools.php:542 includes/privacy-functions.php:767
+#: includes/privacy-functions.php:871 includes/privacy-functions.php:950
 msgid "IP Address"
 msgstr ""
 
@@ -2866,7 +2866,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-payments.php:42
 #: includes/admin/reporting/export/class-batch-export-sales.php:41
 #: includes/admin/tools.php:524 includes/privacy-functions.php:581
-#: includes/privacy-functions.php:853
+#: includes/privacy-functions.php:863
 msgid "Customer ID"
 msgstr ""
 
@@ -3998,7 +3998,7 @@ msgid "The button label for completing a free purchase."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:754
-#: includes/checkout/template.php:987
+#: includes/checkout/template.php:1000
 msgid "Free Download"
 msgstr ""
 
@@ -5468,35 +5468,39 @@ msgstr ""
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout/template.php:777 includes/checkout/template.php:845
+#: includes/checkout/template.php:783
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/checkout/template.php:790
+#: includes/checkout/template.php:804
 msgid "Show Terms"
 msgstr ""
 
-#: includes/checkout/template.php:791
+#: includes/checkout/template.php:805
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout/template.php:813 includes/checkout/template.php:870
+#: includes/checkout/template.php:855
+msgid "Agree to Privacy Policy?"
+msgstr ""
+
+#: includes/checkout/template.php:877
 msgid "Show Privacy Policy"
 msgstr ""
 
-#: includes/checkout/template.php:814 includes/checkout/template.php:871
+#: includes/checkout/template.php:879
 msgid "Hide Privacy Policy"
 msgstr ""
 
-#: includes/checkout/template.php:901
+#: includes/checkout/template.php:914
 msgid "Purchase Total:"
 msgstr ""
 
-#: includes/checkout/template.php:927
+#: includes/checkout/template.php:940
 msgid "Go back"
 msgstr ""
 
-#: includes/checkout/template.php:950
+#: includes/checkout/template.php:963
 msgid "Next"
 msgstr ""
 
@@ -6571,8 +6575,8 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:469
 #: includes/gateways/paypal-standard.php:558
 #: includes/gateways/paypal-standard.php:568
-#: includes/gateways/paypal-standard.php:628
-#: includes/gateways/paypal-standard.php:637
+#: includes/gateways/paypal-standard.php:641
+#: includes/gateways/paypal-standard.php:650
 msgid "IPN Error"
 msgstr ""
 
@@ -6751,23 +6755,23 @@ msgstr ""
 msgid "Payment failed due to invalid currency in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:628
+#: includes/gateways/paypal-standard.php:641
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:631
+#: includes/gateways/paypal-standard.php:644
 msgid "Payment failed due to invalid amount in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:637
+#: includes/gateways/paypal-standard.php:650
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:639
+#: includes/gateways/paypal-standard.php:652
 msgid "Payment failed due to invalid purchase key in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:645
+#: includes/gateways/paypal-standard.php:658
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
 #: tests/helpers/class-helper-payment.php:342
@@ -6778,79 +6782,99 @@ msgstr ""
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:659
+#: includes/gateways/paypal-standard.php:672
 msgid "Payment made via eCheck and will clear automatically in 5-8 days"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:666
+#: includes/gateways/paypal-standard.php:679
 msgid ""
 "Payment requires a confirmed customer address and must be accepted manually "
 "through PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:672
+#: includes/gateways/paypal-standard.php:685
 msgid ""
 "Payment must be accepted manually through PayPal due to international "
 "account regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:678
+#: includes/gateways/paypal-standard.php:691
 msgid ""
 "Payment received in non-shop currency and must be accepted manually through "
 "PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:685
+#: includes/gateways/paypal-standard.php:698
 msgid ""
 "Payment is being reviewed by PayPal staff as high-risk or in possible "
 "violation of government regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:691
+#: includes/gateways/paypal-standard.php:704
 msgid "Payment was sent to non-confirmed or non-registered email address."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:697
+#: includes/gateways/paypal-standard.php:710
 msgid "PayPal account must be upgraded before this payment can be accepted"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:703
+#: includes/gateways/paypal-standard.php:716
 msgid ""
 "PayPal account is not verified. Verify account in order to accept this "
 "payment"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:709
+#: includes/gateways/paypal-standard.php:722
 msgid ""
 "Payment is pending for unknown reasons. Contact PayPal support for "
 "assistance"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:762
+#: includes/gateways/paypal-standard.php:775
 msgid "Partial PayPal refund processed: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:767
+#: includes/gateways/paypal-standard.php:780
 msgid "PayPal Payment #%s Refunded for reason: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:768
+#: includes/gateways/paypal-standard.php:781
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1026
+#: includes/gateways/paypal-standard.php:995
+msgid ""
+"Payment could not be verified while validating PayPal PDT. Missing payment "
+"total fields."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:1006
+msgid ""
+"Payment failed while validating PayPal PDT. Amount expected: %f. Amount "
+"Received: %f"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:1036
+msgid "Payment failed while validating PayPal PDT."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:1043
+msgid "PayPal PDT encountered an unexpected result, payment set to pending"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:1128
 msgid "Refund Payment in PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1173
+#: includes/gateways/paypal-standard.php:1275
 msgid "PayPal refund failed for unknown reason."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1183
+#: includes/gateways/paypal-standard.php:1285
 msgid "PayPal refund transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1187
+#: includes/gateways/paypal-standard.php:1289
 msgid "PayPal refund failed: %s"
 msgstr ""
 
@@ -7048,7 +7072,7 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/actions.php:460 includes/payments/actions.php:520
+#: includes/payments/actions.php:460 includes/payments/actions.php:522
 msgid "Error resuming payment."
 msgstr ""
 
@@ -7056,15 +7080,15 @@ msgstr ""
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:542 includes/payments/actions.php:576
+#: includes/payments/actions.php:544 includes/payments/actions.php:578
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:544
+#: includes/payments/actions.php:546
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:545 templates/shortcode-login.php:33
+#: includes/payments/actions.php:547 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
@@ -7466,7 +7490,7 @@ msgid "Payment ID %d successfully anonymized."
 msgstr ""
 
 #: includes/privacy-functions.php:533 includes/privacy-functions.php:577
-#: includes/privacy-functions.php:1126
+#: includes/privacy-functions.php:1136
 msgid "Customer Record"
 msgstr ""
 
@@ -7474,8 +7498,8 @@ msgstr ""
 msgid "Billing Information"
 msgstr ""
 
-#: includes/privacy-functions.php:549 includes/privacy-functions.php:949
-#: includes/privacy-functions.php:1141
+#: includes/privacy-functions.php:549 includes/privacy-functions.php:959
+#: includes/privacy-functions.php:1151
 msgid "API Access Logs"
 msgstr ""
 
@@ -7491,91 +7515,91 @@ msgstr ""
 msgid "Agreed to Privacy Policy"
 msgstr ""
 
-#: includes/privacy-functions.php:732
+#: includes/privacy-functions.php:737
 msgid "Order ID / Number"
 msgstr ""
 
-#: includes/privacy-functions.php:736
+#: includes/privacy-functions.php:741
 msgid "Order Date"
 msgstr ""
 
-#: includes/privacy-functions.php:740
+#: includes/privacy-functions.php:745
 msgid "Order Completed Date"
 msgstr ""
 
-#: includes/privacy-functions.php:746
+#: includes/privacy-functions.php:751
 msgid "Order Total"
 msgstr ""
 
-#: includes/privacy-functions.php:750
+#: includes/privacy-functions.php:755
 msgid "Order Items"
 msgstr ""
 
-#: includes/privacy-functions.php:775
+#: includes/privacy-functions.php:780
 msgid "Customer Orders"
 msgstr ""
 
-#: includes/privacy-functions.php:841
+#: includes/privacy-functions.php:851
 msgid "Date of Download"
 msgstr ""
 
-#: includes/privacy-functions.php:845
+#: includes/privacy-functions.php:855
 msgid "Product Downloaded"
 msgstr ""
 
-#: includes/privacy-functions.php:849
+#: includes/privacy-functions.php:859
 msgid "Order ID"
 msgstr ""
 
-#: includes/privacy-functions.php:870 includes/privacy-functions.php:1136
+#: includes/privacy-functions.php:880 includes/privacy-functions.php:1146
 msgid "File Download Logs"
 msgstr ""
 
-#: includes/privacy-functions.php:936
+#: includes/privacy-functions.php:946
 msgid "Request"
 msgstr ""
 
-#: includes/privacy-functions.php:1012
+#: includes/privacy-functions.php:1022
 msgid "Possibly Delete Customer"
 msgstr ""
 
-#: includes/privacy-functions.php:1078
+#: includes/privacy-functions.php:1088
 msgid "Customer for %s not deleted, due to remaining payments."
 msgstr ""
 
-#: includes/privacy-functions.php:1096
+#: includes/privacy-functions.php:1106
 msgid "Customer for %s successfully deleted."
 msgstr ""
 
-#: includes/privacy-functions.php:1107
+#: includes/privacy-functions.php:1117
 msgid "Customer for %s failed to be deleted."
 msgstr ""
 
-#: includes/privacy-functions.php:1131
+#: includes/privacy-functions.php:1141
 msgid "Payment Record"
 msgstr ""
 
-#: includes/privacy-functions.php:1174
+#: includes/privacy-functions.php:1184
 msgid "Customer for %s has been anonymized."
 msgstr ""
 
-#: includes/privacy-functions.php:1199
+#: includes/privacy-functions.php:1209
 msgid "No payments found for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1200
+#: includes/privacy-functions.php:1210
 msgid "All eligible payments anonymized or deleted for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1273
+#: includes/privacy-functions.php:1283
 msgid "All eligible file download logs anonymized or deleted for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1322
+#: includes/privacy-functions.php:1332
 msgid "No User found for %s, no access logs to remove."
 msgstr ""
 
-#: includes/privacy-functions.php:1347
+#: includes/privacy-functions.php:1357
 msgid "All API access logs deleted for %s."
 msgstr ""
 
@@ -8438,7 +8462,7 @@ msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:741
+#: includes/admin/payments/view-order-details.php:742
 msgctxt "State / province of address"
 msgid "State / Province:"
 msgstr ""

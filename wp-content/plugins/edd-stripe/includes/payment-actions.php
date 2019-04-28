@@ -226,7 +226,26 @@ function edds_process_stripe_payment( $purchase_data ) {
 					}
 
 					$charge_args = apply_filters( 'edds_create_charge_args', $args, $purchase_data );
-					$charge_options = array();
+
+					/**
+					 * We intentionally create the idempotency_key without the filtered values of $args
+					 * so that the edds_create_charge_args filter never accidentally creates an unknown
+					 * idempotency_key, and will only ever prevent identical purchases for 1 minute (default).
+					 **/
+					$idempotency_key = md5( json_encode( $args ) . date( 'Y-m-d H:i', current_time( 'timestamp' ) ) );
+
+					/**
+					 * Filters the idempotency_key value sent with the Stripe charge options.
+					 *
+					 * @param string $idempotency_key Value of the idempotency key.
+					 * @param array  $args            Arguments used to help generate the key.
+					 * @param string $context         Context under which the idempotency key is generated.
+					 */
+					$idempotency_key = apply_filters( 'edds_idempotency_key', $idempotency_key, $args, 'new' );
+
+					$charge_options = array(
+						'idempotency_key' => $idempotency_key
+					);
 
 					$stripe_connect_account_id = edd_get_option( 'stripe_connect_account_id' );
 
@@ -238,7 +257,7 @@ function edds_process_stripe_payment( $purchase_data ) {
 				}
 
 				// record the pending payment
-				$payment = edd_insert_payment( $payment_data );
+				$payment_id = edd_insert_payment( $payment_data );
 
 				$edd_customer = new EDD_Customer( $purchase_data['user_email'] );
 				if ( $edd_customer->id > 0 ) {
@@ -251,9 +270,9 @@ function edds_process_stripe_payment( $purchase_data ) {
 
 			}
 
-			if ( $payment && ( ! empty( $customer_id ) || ! empty( $charge ) ) ) {
+			if ( $payment_id && ( ! empty( $customer_id ) || ! empty( $charge ) ) ) {
 
-				$payment = new EDD_Payment( $payment );
+				$payment = new EDD_Payment( $payment_id );
 
 				if ( $preapprove_only ) {
 					$payment->status = 'preapproval';
@@ -478,7 +497,14 @@ function edds_charge_preapproved( $payment_id = 0 ) {
 			)
 		);
 
-		$charge_options = array();
+		$idempotency_key = md5( json_encode( $charge_args ) . date( 'Y-m-d H:i', current_time( 'timestamp' ) ) );
+
+		/** This filter is documented in includes/payment-actions.php */
+		$idempotency_key = apply_filters( 'edds_idempotency_key', $idempotency_key, $charge_args, 'preapproved' );
+
+		$charge_options = array(
+			'idempotency_key' => $idempotency_key,
+		);
 
 		$stripe_connect_account_id = edd_get_option( 'stripe_connect_account_id' );
 

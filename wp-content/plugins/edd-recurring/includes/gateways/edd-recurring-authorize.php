@@ -26,6 +26,7 @@ class EDD_Recurring_Authorize extends EDD_Recurring_Gateway {
 		$this->friendly_name = __( 'Authorize.net', 'edd-recurring' );
 
 		// Load Authorize SDK and define its contants
+		$this->load_authnetaim_library();
 		$this->load_authnetxml_library();
 		$this->define_authorize_values();
 
@@ -33,9 +34,18 @@ class EDD_Recurring_Authorize extends EDD_Recurring_Gateway {
 	}
 
 	/**
+	 * Loads the Core AuthorizeNet AIM ASK
+	 *
+	 * @return void
+	 */
+	public function load_authnetaim_library() {
+		require_once EDDA_PLUGIN_DIR . '/includes/anet_php_sdk/AuthorizeNet.php';
+	}
+
+	/**
 	 * Loads AuthorizeNet PHP sdk
 	 *
-	 * @return none
+	 * @return void
 	 */
 	public function load_authnetxml_library() {
 		require_once EDD_RECURRING_PLUGIN_DIR . 'includes/gateways/authorize/AuthnetXML/AuthnetXML.class.php';
@@ -128,6 +138,14 @@ class EDD_Recurring_Authorize extends EDD_Recurring_Gateway {
 	 */
 	public function create_authorize_net_subscription( $subscription, $card_info, $user_info ) {
 
+		// Since Authorize.net doesnt' verify the initial charge first, we have to do an authorization
+		// on the initial amount.
+		$is_authorized = $this->authorize_initial_charge( $card_info, $subscription['initial_amount'] );
+		if ( false === $is_authorized['success'] ) {
+			edd_set_error( $is_authorized['msg_id'], $is_authorized['message'] );
+			edd_send_back_to_checkout('?payment-mode=' . $this->id );
+		}
+
 		$args = $this->generate_create_subscription_request_args( $subscription, $card_info, $user_info );
 
 		// Use AuthnetXML library to create a new subscription request
@@ -135,6 +153,86 @@ class EDD_Recurring_Authorize extends EDD_Recurring_Gateway {
 		$authnet_xml->ARBCreateSubscriptionRequest( $args );
 
 		return $authnet_xml;
+	}
+
+	/**
+	 * Autorize the amount we need for the initial charge with Authorize.net before making our subscriptions.
+	 *
+	 * @param  array $card_info The card info supplied at checkout.
+	 * @return array            If the auth was successful, and any error messages that are returned.
+	 */
+	public function authorize_initial_charge( $card_info, $amount ) {
+
+		global $edd_options;
+
+
+		$transaction = new AuthorizeNetAIM( edd_get_option( 'edda_api_login' ), edd_get_option( 'edd_transaction_key' ) );
+		if(edd_is_test_mode()) {
+			$transaction->setSandbox(true);
+		} else {
+			$transaction->setSandbox(false);
+		}
+
+		$transaction->address     = $card_info['card_address'] . ' ' . $card_info['card_address_2'];
+		$transaction->city        = $card_info['card_city'];
+		$transaction->country     = $card_info['card_country'];
+		$transaction->state       = $card_info['card_state'];
+		$transaction->zip         = $card_info['card_zip'];
+
+		$transaction->amount      = $amount;
+		$transaction->card_num    = strip_tags( trim( $card_info['card_number'] ) );
+		$transaction->exp_date    = strip_tags( trim( $card_info['card_exp_month'] ) ) . '/' . strip_tags( trim( $card_info['card_exp_year'] ) );
+		$transaction->recurring_billing = true;
+
+		try {
+
+			$response = $transaction->authorizeOnly();
+
+			if ( $response->approved ) {
+
+				return array( 'success' => true );
+
+			} else {
+
+
+				if( isset( $response->response_reason_text ) ) {
+					$error = $response->response_reason_text;
+				} elseif( isset( $response->error_message ) ) {
+					$error = $response->error_message;
+				} else {
+					$error = '';
+				}
+
+				$msg_id = '';
+
+				if( strpos( strtolower( $error ), 'the credit card number is invalid' ) !== false ) {
+					$msg_id  =  'invalid_card';
+					$message = __( 'Your card number is invalid', 'edda' );
+				} elseif( strpos( strtolower( $error ), 'this transaction has been declined' ) !== false ) {
+					$msg_id  =  'invalid_card';
+					$message = __( 'Your card has been declined', 'edda' );
+				} elseif( isset( $response->response_reason_text ) ) {
+					$msg_id  =  'api_error';
+					$message = $response->response_reason_text;
+				} elseif( isset( $response->error_message ) ) {
+					$msg_id  =  'api_error';
+					$message = $response->error_message;
+				} else {
+					$msg_id  =  'api_error';
+					$message = sprintf( __( 'An error occurred. Error data: %s', 'edda' ), print_r( $response, true ) );
+				}
+
+				return array( 'success' => false, 'msg_id' => $msg_id, 'message' => $message );
+
+			}
+
+		} catch ( AuthorizeNetException $e ) {
+
+			return array( 'success' => false, 'msg_id' => 'request_error', 'message' => $e->getMessage() );
+
+		}
+
+
 	}
 
 	/**
@@ -152,7 +250,7 @@ class EDD_Recurring_Authorize extends EDD_Recurring_Gateway {
 		$today = date( 'Y-m-d' );
 
 		// Calculate totalOccurrences. TODO: confirm if empty or zero
-		$total_occurrences = ( $subscription['bill_times'] == 0 ) ? 9999 : $subscription['bill_times'];
+		$total_occurrences = ( $subscription['bill_times'] == 0 ) ? 9999	 : $subscription['bill_times'];
 		$card_details      = $this->generate_card_info( $card_info );
 
 		$args = array(
@@ -176,6 +274,8 @@ class EDD_Recurring_Authorize extends EDD_Recurring_Gateway {
 				),
 			),
 		);
+
+		$args = apply_filters( 'edd_recurring_create_subscription_args', $args, $this->purchase_data['downloads'], $this->id, $subscription['id'], $subscription['price_id'] );
 
 		return $args;
 	}
@@ -497,8 +597,11 @@ class EDD_Recurring_Authorize extends EDD_Recurring_Gateway {
 			return false;
 		}
 
-		$subscription->add_payment( compact( 'amount', 'transaction_id' ) );
-		$subscription->renew();
+		$payment_id = $subscription->add_payment( compact( 'amount', 'transaction_id' ) );
+
+		if ( ! empty( $payment_id ) ) {
+			$subscription->renew( $payment_id );
+		}
 
 		return $subscription;
 	}

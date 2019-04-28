@@ -170,24 +170,10 @@ class EDD_Recurring_Shortcodes {
 	 * Provides users with an historical overview of their purchased subscriptions
 	 *
 	 * @since      2.4
+	 * @since      2.7.14 Modified to call the EDD_Recurring()->subscriptions_view() function.
 	 */
 	public function edd_subscriptions() {
-
-		ob_start();
-		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : 'list';
-
-		edd_print_errors();
-		switch( $action ) {
-			case 'update':
-				edd_get_template_part( 'shortcode', 'subscription-update' );
-				break;
-			case 'list':
-			default:
-				edd_get_template_part( 'shortcode', 'subscriptions' );
-				break;
-		}
-
-		return ob_get_clean();
+		return EDD_Recurring()->subscriptions_view();
 
 	}
 

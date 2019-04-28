@@ -40,6 +40,8 @@ function edd_recurring_admin_scripts( $hook ) {
 	);
 
 	wp_localize_script( 'edd-admin-recurring', 'EDD_Recurring_Vars', $ajax_vars );
+
+	wp_enqueue_script( 'dashicons' ); // Just to be sure
 }
 
 add_action( 'admin_enqueue_scripts', 'edd_recurring_admin_scripts' );

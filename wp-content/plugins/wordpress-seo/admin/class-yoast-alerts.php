@@ -10,23 +10,58 @@
  */
 class Yoast_Alerts {
 
+	/**
+	 * @var string
+	 */
 	const ADMIN_PAGE = 'wpseo_dashboard';
 
-	/** @var int Total notifications count */
+	/**
+	 * Total notifications count.
+	 *
+	 * @var int
+	 */
 	private static $notification_count = 0;
 
-	/** @var array All error notifications */
+	/**
+	 * All error notifications.
+	 *
+	 * @var array
+	 */
 	private static $errors = array();
-	/** @var array Active errors */
+
+	/**
+	 * Active errors.
+	 *
+	 * @var array
+	 */
 	private static $active_errors = array();
-	/** @var array Dismissed errors */
+
+	/**
+	 * Dismissed errors.
+	 *
+	 * @var array
+	 */
 	private static $dismissed_errors = array();
 
-	/** @var array All warning notifications */
+	/**
+	 * All warning notifications.
+	 *
+	 * @var array
+	 */
 	private static $warnings = array();
-	/** @var array Active warnings */
+
+	/**
+	 * Active warnings.
+	 *
+	 * @var array
+	 */
 	private static $active_warnings = array();
-	/** @var array Dismissed warnings */
+
+	/**
+	 * Dismissed warnings.
+	 *
+	 * @var array
+	 */
 	private static $dismissed_warnings = array();
 
 	/**
@@ -104,7 +139,7 @@ class Yoast_Alerts {
 	private function output_ajax_response( $type ) {
 
 		$html = $this->get_view_html( $type );
-		echo wp_json_encode(
+		echo WPSEO_Utils::format_json_encode(
 			array(
 				'html'  => $html,
 				'total' => self::get_active_alert_count(),

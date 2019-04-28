@@ -261,7 +261,7 @@ function edd_stripe_manage_cards() {
 
 					<span class="card-details">
 						<span class="card-brand"><?php echo $source->brand; ?></span>
-						<span class="card-ending-label"><?php _e( 'Ending in', 'edds' ); ?></span>
+						<span class="card-ending-label"><?php _e( 'ending in', 'edds' ); ?></span>
 						<span class="card-last-4"><?php echo $source->last4; ?></span>
 						<?php if ( $card['default'] ) { ?>
 							<span class="default-card-sep"><?php echo '&mdash; '; ?></span>
@@ -397,7 +397,8 @@ function edd_stripe_zip_and_country() {
 	if( $logged_in ) {
 		$existing_cards = edd_stripe_get_existing_cards( get_current_user_id() );
 		if ( empty( $existing_cards ) ) {
-			$user_address = get_user_meta( get_current_user_id(), '_edd_user_address', true );
+
+			$user_address = edd_get_customer_address( get_current_user() );
 
 			foreach( $customer['address'] as $key => $field ) {
 

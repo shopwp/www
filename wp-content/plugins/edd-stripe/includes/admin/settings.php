@@ -304,7 +304,8 @@ function edds_process_gateway_connect_completion() {
 		wp_die( $message );
 	}
 
-	$data = json_decode( $response['body'], true )['data'];
+	$data = json_decode( $response['body'], true );
+	$data = $data['data'];
 
 	if( edd_is_test_mode() ) {
 		edd_update_option( 'test_publishable_key', sanitize_text_field( $data['publishable_key'] ) );

@@ -24,7 +24,19 @@ class EDD_Recurring_Manual_Payments extends EDD_Recurring_Gateway {
 
 	}
 
-
+	/**
+	 * Determines if the subscription can be cancelled
+	 *
+	 * @access      public
+	 * @since       2.7
+	 * @return      bool
+	 */
+	public function can_cancel( $ret, $subscription ) {
+		if( $subscription->gateway === 'manual' && in_array( $subscription->status, $this->get_cancellable_statuses() ) ) {
+			return true;
+		}
+		return $ret;
+	}
 
 	/**
 	 * Cancels a subscription.

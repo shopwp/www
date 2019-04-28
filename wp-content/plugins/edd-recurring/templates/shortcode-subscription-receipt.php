@@ -2,7 +2,7 @@
 /**
  *  EDD Template File for the Subscriptions section of [edd_receipt]
  *
- * @description: Place this template file within your theme directory under /my-theme/edd_templates/ - For more information see: https://easydigitaldownloads.com/videos/template-files/
+ * @description: Place this template file within your theme directory under /my-theme/edd_templates/
  *
  * @copyright  : http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since      : 2.4
@@ -10,7 +10,7 @@
 
 global $edd_receipt_args;
 
-$payment       = get_post( $edd_receipt_args['id'] );
+$payment       = edd_get_payment( $edd_receipt_args['id'] );
 $db            = new EDD_Subscriptions_DB;
 $args          = array(
 	'parent_payment_id' => $payment->ID,

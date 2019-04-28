@@ -11,12 +11,13 @@ class Error_Action extends Red_Action {
 		add_filter( 'pre_handle_404', array( $this, 'pre_handle_404' ) );
 		add_action( 'wp', array( $this, 'wp' ) );
 
-		return false;
+		return true;
 	}
 
 	public function wp() {
 		status_header( $this->code );
 		nocache_headers();
+		header( 'X-Redirect-Agent: redirection' );
 	}
 
 	public function pre_handle_404() {
@@ -29,5 +30,9 @@ class Error_Action extends Red_Action {
 
 	public function template_include() {
 		return get_404_template();
+	}
+
+	public function needs_target() {
+		return false;
 	}
 }

@@ -29,8 +29,10 @@ class EDD_Recurring_Cron {
 
 		$this->db = new EDD_Subscriptions_DB;
 
-		add_action( 'edd_daily_scheduled_events', array( $this, 'check_for_expired_subscriptions' ) );
-		add_action( 'edd_daily_scheduled_events', array( $this, 'check_for_abandoned_subscriptions' ) );
+		// Renewal reminders are added to cron in edd-recurring-reminders.php
+
+		add_action( 'edd_recurring_daily_scheduled_events', array( $this, 'check_for_expired_subscriptions' ), 20 );
+		add_action( 'edd_recurring_daily_scheduled_events', array( $this, 'check_for_abandoned_subscriptions' ), 20 );
 	}
 
 	/**
@@ -104,4 +106,10 @@ class EDD_Recurring_Cron {
 
 	}
 
+}
+
+
+// This is intentionally outside of the class. EDD_Recurring_Cron is loaded too late to register new scheduled events
+if ( ! wp_next_scheduled( 'edd_recurring_daily_scheduled_events' ) ) {
+	wp_schedule_event( current_time( 'timestamp', true ), 'daily', 'edd_recurring_daily_scheduled_events' );
 }

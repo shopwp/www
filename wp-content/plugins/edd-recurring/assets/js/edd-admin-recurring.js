@@ -15,6 +15,7 @@ jQuery( document ).ready( function ( $ ) {
 			this.recurring_select();
 			this.custom_price_toggle();
 			this.free_trial_toggle();
+			this.variable_price_free_trial_toggle();
 			this.validate_times();
 			this.edit_expiration();
 			this.edit_product_id();
@@ -24,6 +25,12 @@ jQuery( document ).ready( function ( $ ) {
 			this.delete();
 			//Ensure when new rows are added recurring fields respect recurring select option
 			$( '.edd_add_repeatable' ).on( 'click', this.recurring_select() );
+
+			// Toggle display of Billing Cycle details
+			$( '.edd-item-toggle-next-hidden-row' ).on( 'click', function(e) {
+				e.preventDefault();
+				$(this).parents('tr').siblings('.edd-item-hidden-row').slideToggle();
+			});
 
 		},
 
@@ -41,14 +48,19 @@ jQuery( document ).ready( function ( $ ) {
 					return;
 				}
 
+
 				// Is this a variable select? Check parent
 				if ( $this.parents( '.edd_variable_prices_wrapper' ).length > 0 ) {
 
-					fields = $this.parent().parent().find( '.times input, .edd-recurring-period select, .signup_fee input' );
+					fields = $this.parents('.edd_repeatable_row').find( '.times input, .edd-recurring-period select, .edd-recurring-free-trial input, .edd-recurring-free-trial select, .signup_fee input' );
 
 				} else if( 'edd_custom_recurring' == $(this).attr('id') ) {
+
 					fields = $('.edd_recurring_custom_wrap').find( '.times input, #edd_custom_period, .signup_fee input' );
 
+					if( $('#edd_recurring_free_trial').is(':checked') ) {
+						$('.signup_fee input, #edd_signup_fee').val(0).attr('disabled', true );
+					}
 				}
 
 				// Enable/disable fields based on user selection
@@ -56,10 +68,6 @@ jQuery( document ).ready( function ( $ ) {
 					fields.attr( 'disabled', true );
 				} else {
 					fields.attr( 'disabled', false );
-				}
-
-				if( $('#edd_recurring_free_trial').is(':checked') ) {
-					$('.signup_fee input, #edd_signup_fee').val(0).attr('disabled', true );
 				}
 
 				$this.attr( 'disabled', false );
@@ -98,6 +106,33 @@ jQuery( document ).ready( function ( $ ) {
 					$('#edd-sl-free-trial-length-notice,#edd_recurring_free_trial_options').hide();
 				}
 			});
+
+			$('body').on( 'change', '#edd_variable_pricing', function() {
+				var checked   = $(this).is(':checked');
+				var single    = $( '#edd_recurring_free_trial_options_wrap' );
+				if ( checked ) {
+					single.hide();
+				} else {
+					single.show();
+				}
+			});
+		},
+
+		variable_price_free_trial_toggle: function () {
+			$( 'body' ).on( 'load change', '.trial-quantity', function () {
+				var $this  = $( this ),
+					fields = $this.parents().siblings( '.signup_fee' ).find( ':input' ),
+					val    = $this.val();
+
+				// Enable/disable fields based on user selection
+				if ( val > 0 ) {
+					fields.attr( 'disabled', true );
+				} else {
+					fields.attr( 'disabled', false );
+				}
+
+				$this.attr( 'disabled', false );
+			});
 		},
 
 		/**
@@ -109,7 +144,7 @@ jQuery( document ).ready( function ( $ ) {
 			var recurring_times = $( '.times' ).find( 'input[type="number"]' );
 
 			//Validate times on times input blur (client side then server side)
-			recurring_times.on( 'blur', function () {
+			recurring_times.on( 'change', function () {
 
 				var time_val = $( this ).val();
 				var is_variable = $( 'input#edd_variable_pricing' ).prop( 'checked' );
@@ -224,7 +259,13 @@ jQuery( document ).ready( function ( $ ) {
 			$('.edd-recurring-new-customer,.edd-recurring-select-customer').on('click', function(e) {
 
 				e.preventDefault();
-				$('.edd-recurring-customer-wrap').toggle();
+				if($(this).hasClass('edd-recurring-new-customer')) {
+					$('.edd-recurring-customer-wrap-new').show();
+					$('.edd-recurring-customer-wrap-existing').hide();
+				} else {
+					$('.edd-recurring-customer-wrap-existing').show();
+					$('.edd-recurring-customer-wrap-new').hide();
+				}
 				$('.edd-recurring-customer-wrap:visible').find('select,input').focus();
 
 			});

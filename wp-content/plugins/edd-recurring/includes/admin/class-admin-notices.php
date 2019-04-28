@@ -48,6 +48,18 @@ class EDD_Recurring_Admin_Notices {
 
 				break;
 
+			case 'subscription-note-added' :
+
+				$message = __( 'Subscription note added successfully', 'edd-recurring' );
+
+				break;
+
+			case 'subscription-note-not-added' :
+
+				$message = __( 'Subscription note could not be added', 'edd-recurring' );
+				$type    = 'error';
+				break;
+
 			case 'renewal-added' :
 
 				$message = __( 'Renewal payment recorded successfully', 'edd-recurring' );
@@ -57,6 +69,19 @@ class EDD_Recurring_Admin_Notices {
 			case 'renewal-not-added' :
 
 				$message = __( 'Renewal payment could not be recorded', 'edd-recurring' );
+				$type    = 'error';
+
+				break;
+
+			case 'retry-success' :
+
+				$message = __( 'Retry succeeded! The subscription has been renewed successfully.', 'edd-recurring' );
+
+				break;
+
+			case 'retry-failed' :
+
+				$message = sprintf( __( 'Retry failed. %s', 'edd-recurring' ), sanitize_text_field( urldecode( $_GET['error-message'] ) ) );
 				$type    = 'error';
 
 				break;

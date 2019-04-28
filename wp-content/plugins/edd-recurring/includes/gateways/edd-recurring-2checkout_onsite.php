@@ -25,7 +25,7 @@ class EDD_Recurring_2Checkout_Onsite extends EDD_Recurring_2Checkout {
 		$this->credentials = $this->get_api_credentials();
 		$this->offsite     = false;
 
-		if( ! class_exists( 'Twocheckout' ) ) {
+		if( ! class_exists( 'Twocheckout' ) && file_exists( WP_PLUGIN_DIR . '/edd-2checkout/sdk/lib/Twocheckout.php' ) ) {
 			require_once WP_PLUGIN_DIR . '/edd-2checkout/sdk/lib/Twocheckout.php';
 		}
 

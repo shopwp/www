@@ -186,7 +186,7 @@ class EDD_Recurring_Subscriber extends EDD_Customer {
 	 */
 	public function get_subscription( $subscription_id = 0 ) {
 
-		$sub = new EDD_Recurring( $subscription_id );
+		$sub = new EDD_Subscription( $subscription_id );
 
 		if( (int) $sub->customer_id !== (int) $this->id ) {
 			return false;

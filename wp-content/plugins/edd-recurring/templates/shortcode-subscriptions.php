@@ -1,8 +1,8 @@
 <?php
 /**
- *  EDD Template File for [edd_recurring_history] shortcode
+ *  EDD Template File for [edd_subscriptions] shortcode
  *
- * @description: Place this template file within your theme directory under /my-theme/edd_templates/ - For more information see: https://easydigitaldownloads.com/videos/template-files/
+ * @description: Place this template file within your theme directory under /my-theme/edd_templates/
  *
  * @copyright  : http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since      : 2.4
@@ -79,6 +79,10 @@ if ( is_user_logged_in() ):
 						<?php if( $subscription->can_cancel() ) : ?>
 							&nbsp;|&nbsp;
 							<a href="<?php echo esc_url( $subscription->get_cancel_url() ); ?>" class="edd_subscription_cancel"><?php _e( 'Cancel', 'edd-recurring' ); ?></a>
+						<?php endif; ?>
+						<?php if( $subscription->can_reactivate() ) : ?>
+							&nbsp;|&nbsp;
+							<a href="<?php echo esc_url( $subscription->get_reactivation_url() ); ?>" class="edd-subscription-reactivate"><?php _e( 'Reactivate', 'edd-recurring' ); ?></a>
 						<?php endif; ?>
 					</td>
 					<?php do_action( 'edd_recurring_history_row_end', $subscription ); ?>

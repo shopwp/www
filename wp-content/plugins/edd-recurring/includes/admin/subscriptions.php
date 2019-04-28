@@ -117,11 +117,11 @@ function edd_recurring_new_subscription_details() {
 											<label for="tablecell"><?php _e( 'Customer Email:', 'edd-recurring' ); ?></label>
 										</td>
 										<td>
-											<p class="edd-recurring-customer-wrap">
+											<p class="edd-recurring-customer-wrap-existing">
 												<?php echo EDD()->html->customer_dropdown( array( 'name' => 'customer_id', 'class' => 'edd-recurring-customer' ) ); ?>
 												<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'Required. Select the customer this subscription belongs to.', 'edd-recurring' ); ?>"></span>
 											</p>
-											<p class="edd-recurring-customer-wrap hidden">
+											<p class="edd-recurring-customer-wrap-new hidden">
 												<input type="text" name="customer_email" value="" class="edd-recurring-customer" placeholder="<?php _e( 'Enter customer email', 'edd-recurring' ); ?>"/>
 												<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'Required. Enter the email address of the customer to create a new record.', 'edd-recurring' ); ?>"></span>
 											</p>
@@ -272,6 +272,19 @@ function edd_recurring_subscription_details() {
 		$render = false;
 	}
 
+	$tax_rate   = false;
+	$tax_amount = false;
+
+	if ( ! empty( $sub->initial_tax_rate ) || ! empty( $sub->recurring_tax_rate ) ) {
+		$tax_rate = true;
+	}
+
+	if ( ! empty( $sub->initial_tax ) || ! empty( $sub->recurring_tax ) ) {
+		$tax_amount = true;
+	}
+
+	$currency_code = edd_get_payment_currency_code( $sub->parent_payment_id );
+
 	?>
 	<div class="wrap">
 		<h2><?php _e( 'Subscription Details', 'edd-recurring' ); ?></h2>
@@ -302,12 +315,52 @@ function edd_recurring_subscription_details() {
 										<td>
 											<?php
 											$frequency = EDD_Recurring()->get_pretty_subscription_frequency( $sub->period );
-											$billing   = edd_currency_filter( edd_format_amount( $sub->recurring_amount ), edd_get_payment_currency_code( $sub->parent_payment_id ) ) . ' / ' . $frequency;
-											$initial   = edd_currency_filter( edd_format_amount( $sub->initial_amount ), edd_get_payment_currency_code( $sub->parent_payment_id ) );
+											$billing   = edd_currency_filter( edd_format_amount( $sub->recurring_amount ), $currency_code ) . ' / ' . $frequency;
+											$initial   = edd_currency_filter( edd_format_amount( $sub->initial_amount ), $currency_code );
 											printf( _x( '%s then %s', 'Inital subscription amount then billing cycle and amount', 'edd-recurring' ), $initial, $billing );
 											?>
+											<?php if ( $tax_rate || $tax_amount ) { ?>
+												<span>&nbsp;&ndash;&nbsp;</span>
+												<a class="edd-item-toggle-next-hidden-row" href="#"><?php _ex( 'View Details', 'view billing cycle details on single subscription admin page','edd-recurring' ) ?></a>
+											<?php } ?>
 										</td>
 									</tr>
+									<?php if ( $tax_rate || $tax_amount ) { ?>
+										<tr><?php // needed in order to maintain alternate row background colors ?></tr>
+										<tr class="edd-item-hidden-row" style="display: none;">
+											<td colspan="2" style="background: #fff;">
+												<?php if ( $tax_rate ) { ?>
+
+													<div style="padding-left: 10px; border-left: 1px solid #e5e5e5;">
+														<span><strong><?php _e( 'Tax Rate:', 'edd-recurring' ); ?></strong></span>
+														<?php
+														printf(
+															 _x( '%s then %s', 'Inital subscription tax rate then billing cycle and tax rate', 'edd-recurring' ),
+															$sub->initial_tax_rate*100 . '%',
+															$sub->recurring_tax_rate*100 . '% / ' . $frequency
+														);
+														?>
+													</div>
+
+												<?php }
+												if ( $tax_amount ) { ?>
+
+													<div style="padding-left: 10px; border-left: 1px solid #e5e5e5;">
+														<span><strong><?php _e( 'Tax Amount:', 'edd-recurring' ); ?></strong></span>
+														<?php
+														printf(
+															_x( '%s then %s',
+															'Inital subscription tax rate then billing cycle and tax rate', 'edd-recurring' ),
+															edd_currency_filter( edd_format_amount( $sub->initial_tax ), $currency_code ),
+															edd_currency_filter( edd_format_amount( $sub->recurring_tax ), $currency_code ) . ' / ' . $frequency
+														);
+														?>
+													</div>
+
+												<?php } ?>
+											</td>
+										</tr>
+									<?php } ?>
 									<tr>
 										<td class="row-title">
 											<label for="tablecell"><?php _e( 'Times Billed:', 'edd-recurring' ); ?></label>
@@ -408,6 +461,12 @@ function edd_recurring_subscription_details() {
 												<option value="failing"<?php selected( 'failing', $sub->status ); ?>><?php _e( 'Failing', 'edd-recurring' ); ?></option>
 												<option value="completed"<?php selected( 'completed', $sub->status ); ?>><?php _e( 'Completed', 'edd-recurring' ); ?></option>
 											</select>
+											<?php if( $sub->can_reactivate() ) : ?>
+												<a class="button" href="<?php echo $sub->get_reactivation_url(); ?>" ><?php _e( 'Reactivate Subscription', 'edd-recurring' ); ?></a>
+											<?php endif; ?>
+											<?php if( $sub->can_retry() ) : ?>
+												<a class="button" href="<?php echo $sub->get_retry_url(); ?>" ><?php _e( 'Retry Renewal', 'edd-recurring' ); ?></a>
+											<?php endif; ?>
 										</td>
 									</tr>
 								</tbody>
@@ -437,7 +496,7 @@ function edd_recurring_subscription_details() {
 					<ul>
 						<li>
 							<span class="dashicons dashicons-chart-area"></span>
-							<?php echo edd_currency_filter( edd_format_amount( $sub->get_lifetime_value() ), edd_get_payment_currency_code( $sub->parent_payment_id ) ); ?>
+							<?php echo edd_currency_filter( edd_format_amount( $sub->get_lifetime_value() ), $currency_code ); ?>
 						</li>
 						<?php do_action( 'edd_subscription_stats_list', $sub ); ?>
 					</ul>
@@ -469,9 +528,9 @@ function edd_recurring_subscription_details() {
 							<?php foreach ( $payments as $payment ) : ?>
 								<tr>
 									<td><?php echo $payment->ID; ?></td>
-									<td><?php echo edd_payment_amount( $payment->ID ); ?></td>
-									<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ); ?></td>
-									<td><?php echo edd_get_payment_status( $payment, true ); ?></td>
+									<td><?php echo edd_currency_filter( edd_format_amount( $payment->total ), $payment->currency ) ?></td>
+									<td><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) ); ?></td>
+									<td><?php echo $payment->status_nicename; ?></td>
 									<td>
 										<a title="<?php _e( 'View Details for Payment', 'edd-recurring' );
 										echo ' ' . $payment->ID; ?>" href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ); ?>">
@@ -491,10 +550,18 @@ function edd_recurring_subscription_details() {
 							<tr class="alternate">
 								<td colspan="5">
 									<form id="edd-sub-add-renewal" method="POST">
-										<p><?php _e( 'Use this form to manually record a renewal payment.', 'edd-recurring' ); ?></p>
+										<p><?php _e( 'Use this form to manually record a renewal payment.', 'edd-recurring' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'Note: this does not initiate a charge in your merchant processor. This should only be used for recording a missed payment or one that was manually collected.', 'edd-recurring' ); ?>"></span></p>
+										<?php if( edd_use_taxes() ) : ?>
 										<p>
 											<label>
-												<span style="display: inline-block; width: 150px; padding: 3px;"><?php _e( 'Amount:', 'edd-recurring' ); ?></span>
+												<span style="display: inline-block; width: 150px; padding: 3px;"><?php _e( 'Tax:', 'edd-recurring' ); ?></span>
+												<input type="text" class="regular-text" style="width: 100px; padding: 3px;" name="tax" value="" placeholder="0.00"/>
+											</label>
+										</p>
+										<?php endif; ?>
+										<p>
+											<label>
+												<span style="display: inline-block; width: 150px; padding: 3px;"><?php _e( 'Total:', 'edd-recurring' ); ?></span>
 												<input type="text" class="regular-text" style="width: 100px; padding: 3px;" name="amount" value="" placeholder="0.00"/>
 											</label>
 										</p>
@@ -516,6 +583,33 @@ function edd_recurring_subscription_details() {
 					</table>
 
 					<?php do_action( 'edd_subscription_after_tables', $sub ); ?>
+
+				</div>
+
+				<div id="item-tables-wrapper" class="item-section">
+
+					<?php do_action( 'edd_subscription_before_notes', $sub ); ?>
+
+					<h3><?php _e( 'Notes:', 'edd-recurring' ); ?></h3>
+					<?php
+					$notes = $sub->get_notes( 1000 );
+					if( $notes ) {
+						foreach( $notes as $key => $note ) {
+							$class = edd_is_odd( $key ) ? ' class="alternate"' : '';
+							echo '<p' . $class . ' style="padding: 7px 0 7px 7px">' . stripslashes( $note ) .'</p>';
+						}
+					}
+					?>
+					<form id="edd-sub-add-note" method="POST">
+						<textarea name="note" class="edd-subscription-note-input" style="width:100%;" rows="8"></textarea>
+						<?php wp_nonce_field( 'edd-recurring-add-note', '_wpnonce', false, true ); ?>
+						<input type="hidden" name="sub_id" value="<?php echo absint( $sub->id ); ?>" />
+						<input type="hidden" name="edd_action" value="add_subscription_note" />
+						<p class="submit">
+							<input type="submit" name="add_note" class="button alignright" value="<?php esc_attr_e( 'Add Note', 'edd-recurring' ); ?>"/>
+						</p>
+					</form>
+					<?php do_action( 'edd_subscription_after_notes', $sub ); ?>
 
 				</div>
 
@@ -558,15 +652,21 @@ function edd_recurring_process_subscription_update() {
 	$transaction_id  = sanitize_text_field( $_POST['transaction_id'] );
 	$product_id      = absint( $_POST['product_id'] );
 	$subscription    = new EDD_Subscription( absint( $_POST['sub_id'] ) );
-	$subscription->update( array(
-		'status'         => sanitize_text_field( $_POST['status'] ),
+	$status          = sanitize_text_field( $_POST['status'] );
+	$args            = array(
+		'status'         => $status,
 		'expiration'     => $expiration,
 		'profile_id'     => $profile_id,
 		'product_id'     => $product_id,
 		'transaction_id' => $transaction_id,
-	) );
+	);
 
-	$status = sanitize_text_field( $_POST['status'] );
+	if( 'pending' !== $status && 'active' !== $status ) {
+		unset( $args['status'] );
+	}
+
+	$subscription->update( $args  );
+
 
 	switch( $status ) {
 
@@ -583,6 +683,11 @@ function edd_recurring_process_subscription_update() {
 		case 'completed' :
 
 			$subscription->complete();
+			break;
+
+		case 'failing' :
+
+			$subscription->failing();
 			break;
 
 	}
@@ -614,10 +719,6 @@ function edd_recurring_process_subscription_creation() {
 		wp_die( __( 'Nonce verification failed', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
 	}
 
-	if( empty( $_POST['created'] ) ) {
-		wp_die( __( 'Please enter a creation date', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
-	}
-
 	if( empty( $_POST['expiration'] ) ) {
 		wp_die( __( 'Please enter an expiration date', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
 	}
@@ -634,19 +735,29 @@ function edd_recurring_process_subscription_creation() {
 		wp_die( __( 'Please enter a recurring amount', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
 	}
 
-	$created_date = date( 'Y-m-d ' . date( 'H:i:s', current_time( 'timestamp' ) ), strtotime( $_POST['created'], current_time( 'timestamp' ) ) );
+	if( ! empty( $_POST['created'] ) ) {
+		$created_date = date( 'Y-m-d ' . date( 'H:i:s', current_time( 'timestamp' ) ), strtotime( $_POST['created'], current_time( 'timestamp' ) ) );
+	} else {
+		$created_date = date( 'Y-m-d H:i:s',current_time( 'timestamp' ) );
+	}
 
 	if( ! empty( $_POST['customer_id'] ) ) {
 
 		$customer    = new EDD_Recurring_Subscriber( absint( $_POST['customer_id'] ) );
 		$customer_id = $customer->id;
+		$email       = $customer->email;
 
 	} else {
 
+		$email       = sanitize_email( $_POST['customer_email'] );
+		$user        = get_user_by( 'email', $email );
+		$user_id     = $user ? $user->ID : 0;
 		$customer    = new EDD_Recurring_Subscriber;
-		$customer_id = $customer->create( array( 'email' => sanitize_text_field( $_POST['customer_email'] ) ) );
+		$customer_id = $customer->create( array( 'email' => $email, 'user_id' => $user_id ) );
 
 	}
+
+	$customer_id = absint( $customer_id );
 
 	if( ! empty( $_POST['parent_payment_id'] ) ) {
 
@@ -662,7 +773,9 @@ function edd_recurring_process_subscription_creation() {
 
 		$payment = new EDD_Payment;
 		$payment->add_download( absint( $_POST['product_id'] ), $options );
-		$payment->customer_id = $customer->id;
+		$payment->customer_id = $customer_id;
+		$payment->email       = $email;
+		$payment->user_id     = $customer->user_id;
 		$payment->gateway     = sanitize_text_field( $_POST['gateway'] );
 		$payment->total       = edd_sanitize_amount( sanitize_text_field( $_POST['initial_amount'] ) );
 		$payment->date        = $created_date;
@@ -685,7 +798,7 @@ function edd_recurring_process_subscription_creation() {
 		'period'            => sanitize_text_field( $_POST['period'] ),
 		'parent_payment_id' => $payment->ID,
 		'product_id'        => absint( $_POST['product_id'] ),
-		'customer_id'       => $customer->id
+		'customer_id'       => $customer_id
 
 	);
 	$subscription = new EDD_Subscription;
@@ -760,18 +873,21 @@ function edd_recurring_process_add_renewal_payment() {
 	}
 
 	$amount  = isset( $_POST['amount'] ) ? edd_sanitize_amount( $_POST['amount'] ) : '0.00';
+	$tax     = isset( $_POST['tax'] ) ? edd_sanitize_amount( $_POST['tax'] ) : 0;
 	$txn_id  = isset( $_POST['txn_id'] ) ? sanitize_text_field( $_POST['txn_id'] ) : md5( strtotime( 'NOW' ) );
 	$sub     = new EDD_Subscription( absint( $_POST['sub_id'] ) );
-	$payment = $sub->add_payment( array(
+
+	$payment_id = $sub->add_payment( array(
 		'amount'         => $amount,
-		'transaction_id' => $txn_id
+		'transaction_id' => $txn_id,
+		'tax'            => $tax
 	) );
 
 	if( ! empty( $_POST['renew_and_add_payment'] ) ) {
-		$sub->renew();
+		$sub->renew( $payment_id );
 	}
 
-	if( $payment ) {
+	if( $payment_id ) {
 		$message = 'renewal-added';
 	} else {
 		$message = 'renewal-not-added';
@@ -782,6 +898,85 @@ function edd_recurring_process_add_renewal_payment() {
 
 }
 add_action( 'edd_add_renewal_payment', 'edd_recurring_process_add_renewal_payment', 1 );
+
+
+/**
+ * Handles retrying a renewal payment for a failing subscription
+ *
+ * @access      public
+ * @since       2.8
+ * @return      void
+ */
+function edd_recurring_process_renewal_charge_retry() {
+
+	if( empty( $_GET['sub_id'] ) ) {
+		return;
+	}
+
+	if( ! current_user_can( 'edit_shop_payments') ) {
+		return;
+	}
+
+	if( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd-recurring-retry' ) ) {
+		wp_die( __( 'Nonce verification failed', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+	}
+
+	$sub = new EDD_Subscription( absint( $_GET['sub_id'] ) );
+
+	if( ! $sub->can_retry() ) {
+		wp_die( __( 'This subscription does not support being retried.', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+	}
+
+	$result = $sub->retry();
+
+	if( $result && ! is_wp_error( $result ) ) {
+		$message = 'retry-success';
+	} else {
+		$message = 'retry-failed&error-message=' . urlencode( $result->get_error_message() );
+	}
+
+	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-subscriptions&edd-message=' . $message . '&id=' . $sub->id ) );
+	exit;
+
+}
+add_action( 'edd_retry_subscription', 'edd_recurring_process_renewal_charge_retry', 1 );
+
+/**
+ * Handles adding a subscription note
+ *
+ * @access      public
+ * @since       2.7
+ * @return      void
+ */
+function edd_recurring_process_add_subscription_note() {
+
+	if( empty( $_POST['sub_id'] ) ) {
+		return;
+	}
+
+	if( ! current_user_can( 'edit_shop_payments') ) {
+		return;
+	}
+
+	if( ! wp_verify_nonce( $_POST['_wpnonce'], 'edd-recurring-add-note' ) ) {
+		wp_die( __( 'Nonce verification failed', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+	}
+
+	$note    = trim( sanitize_text_field( $_POST['note'] ) );
+	$sub     = new EDD_Subscription( absint( $_POST['sub_id'] ) );
+	$added   = $sub->add_note( $note );
+
+	if( $added ) {
+		$message = 'subscription-note-added';
+	} else {
+		$message = 'subscription-note-not-added';
+	}
+
+	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-subscriptions&edd-message=' . $message . '&id=' . $sub->id ) );
+	exit;
+
+}
+add_action( 'edd_add_subscription_note', 'edd_recurring_process_add_subscription_note', 1 );
 
 /**
  * Handles subscription deletion

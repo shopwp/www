@@ -3,10 +3,10 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze
 Donate link: https://easydigitaldownloads.com/donate/
-Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
+Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
-Tested up to: 4.9.8
-Stable Tag: 2.9.8
+Tested up to: 5.1.1
+Stable Tag: 2.9.12
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -25,7 +25,7 @@ Easy Digital Downloads has been translated into more than two dozen languages an
 
 = Payment gateways for everyone =
 
-The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can work for you. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
+The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can be your eCommerce solution. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
 
 Payment gateways supported in the core, free plugin:
 
@@ -188,6 +188,32 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.12, March 26, 2019 =
+* Fix: Limit PayPal PDT verification to purchase sessions.
+* Fix: Discount start times were not accounting for GMT offsets.
+* Fix: Improved reliability of the State field when selecting different countries.
+* Fix: GDPR Data Exporter now skips any requests for customer data when no customer is found for a user.
+* Fix: WordPress 5.x : apiFetch call was resulting in invalid JSON response.
+* Fix: Corrected a conditional check typo when determining if settings page is EDD related.
+
+= 2.9.11, January 6, 2019 =
+* Fix: PayPal PDT amount validation fails for some accounts due to missing payment_gross field.
+* Tweak: PayPal email address now registered to EDD_Customer during IPN processing if the email is not already registered.
+
+= 2.9.10, January 4, 2019 =
+* Security Fix: Avoid a possible PayPal Standard price manipulation when using PDT (Payment Data Transfer)
+
+= 2.9.9, December 3, 2018 =
+* Fix: State/province cannot be updated on order details screen when country is changed.
+* Fix: "Show Privacy Policy" text link is positioned incorrectly.
+* Fix: "Agree to Terms?" text shows twice on checkout with some configurations.
+* Fix: Nonce verification failure when state/province field is not visible.
+* Fix: Fees / Discounts can be duplicated when payment recovery link is clicked.
+* Fix: Incorrect DocBlock for edd_currency_filter.
+* Fix: Slashes not removed when saving profile name field.
+* Fix: Item amount set to 0.00 improperly during CSV import if the "Products (Raw)" column is used but does not include a {}.
+* Fix: Privacy policy text not shown if terms of use checkbox is disabled.
+* Fix: Log messages not saved to debug log file if they contain non UTF-8 characters.
 
 = 2.9.8, October 1, 2018 =
 * Fix: Updated Amazon Payments onboarding URL.

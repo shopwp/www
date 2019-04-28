@@ -46,6 +46,12 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 
 		}
 
+		if( count( edd_get_cart_contents() ) > 1 && ! $this->can_purchase_multiple_subs() ) {
+
+			edd_set_error( 'subscription_invalid', __( 'Only one subscription may be purchased at a time through 2Checkout.', 'edd-recurring') );
+
+		}
+
 	}
 
 	/**
@@ -164,6 +170,14 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 			return;
 		}
 
+		$this->log( 'EDD Recurring 2Checkout INS - processing started. Input data: ' . var_export( $_POST, true ) );
+
+		if( empty( $_POST['sale_id'] ) || empty( $_POST['sale_id'] ) || empty( $_POST['sale_id'] ) ) {
+
+			$this->log( 'EDD Recurring 2Checkout INS - processing stopped due to missing required parameters. Input data: ' . var_export( $_POST, true ) );
+			die( '0' );
+		}
+
 		if ( empty( $_POST['message_type'] ) ) {
 			die( '-2' );
 		}
@@ -172,16 +186,26 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 			die( '-3' );
 		}
 
+
 		$purchase_key = sanitize_text_field( $_POST['vendor_order_id'] );
 		$payment      = edd_get_payment_by( 'key', $purchase_key );
 
 		if( ! $payment || $payment->ID < 1 ) {
+
+			$this->log( 'EDD Recurring 2Checkout INS - Payment not found, processing stopped' );
 			return;
 		}
 
+		$this->log( 'EDD Recurring 2Checkout INS - Payment ' . $payment->ID . ' found' );
+
 		$hash  = strtoupper( md5( $_POST['sale_id'] . $this->credentials['tco_account_number'] . $_POST['invoice_id'] . $this->credentials['tco_secret_word'] ) );
 
+		$this->log( 'EDD Recurring 2Checkout INS - Calculated hash: ' . $hash );
+
 		if ( ! hash_equals( $hash, $_POST['md5_hash'] ) ) {
+
+			$this->log( 'EDD Recurring 2Checkout INS - Invalid hash. Expected: ' . $hash . '. Provided: ' . $_POST['md5_hash'] );
+
 			die('-1');
 		}
 
@@ -194,14 +218,18 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 			$sub     = $db->get_subscriptions( array( 'parent_payment_id' => $payment->ID, 'product_id' => $item_id, 'number' => 1 ) );
 
 			if( empty( $item_id ) ) {
+				$this->log( 'EDD Recurring 2Checkout INS - Processing stopped due to missing item ID' );
 				continue;
 			}
 
 			if( ! $sub ) {
+				$this->log( 'EDD Recurring 2Checkout INS - Processing stopped due to subscription not being found' );
 				continue;
 			}
 
 			$sub = reset( $sub );
+
+			$this->log( 'EDD Recurring 2Checkout INS - Preparing to process INS type ' . $_POST['message_type'] );
 
 			switch( strtoupper( $_POST['message_type'] ) ) {
 
@@ -223,16 +251,20 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 						Twocheckout::username( TWOCHECKOUT_ADMIN_USER );
 						Twocheckout::password( TWOCHECKOUT_ADMIN_PASSWORD );
 
-						// Attempt to retrieve the lineitem_id from 2Checkout
+						// Attempt to retrieve the line item_id from 2Checkout
 						$sale = Twocheckout_Sale::retrieve( array( 'sale_id' => sanitize_text_field( $_POST['sale_id'] ) ) );
 
 						if( $sale && ! empty( $sale['sale']['invoices'][0]['lineitems'] ) ) {
+
+							$this->log( 'EDD Recurring 2Checkout INS - ORDER_CREATED sale ' . sanitize_text_field( $_POST['sale_id'] ) . ' retrieved' );
 
 							foreach( $sale['sale']['invoices'][0]['lineitems'] as $line_item ) {
 
 								if( (int) $item_id !== (int) $line_item['vendor_product_id'] ) {
 									continue;
 								}
+
+								$this->log( 'EDD Recurring 2Checkout INS - ORDER_CREATED profile ID found: ' . $line_item['lineitem_id'] );
 
 								// This is the real ID needed to cancel this particular subscription
 								$profile_id = $line_item['lineitem_id'];
@@ -245,9 +277,11 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 
 					$sub->update( array(
 						'profile_id'     => $profile_id,
-						'transaction_id' => sanitize_text_field( $_POST[ 'sale_id' ] ),
+						'transaction_id' => sanitize_text_field( $_POST[ 'invoice_id' ] ),
 						'status'         => 'active'
 					) );
+
+					$this->log( 'EDD Recurring 2Checkout INS - ORDER_CREATED subscription ' . $sub->id . ' updated' );
 
 					die( '1' );
 
@@ -255,19 +289,104 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 
 				case 'RECURRING_INSTALLMENT_SUCCESS' :
 
-					$sub->add_payment( array(
+					$payment_id = $sub->add_payment( array(
 						'amount'         => sanitize_text_field( $_POST[ 'item_list_amount_' . $i ] ),
-						'transaction_id' => sanitize_text_field( $_POST[ 'sale_id' ] ),
+						'transaction_id' => sanitize_text_field( $_POST[ 'invoice_id' ] ),
 					) );
-					$sub->renew();
+
+					if ( ! empty( $payment_id ) ) {
+						$sub->renew( $payment_id );
+						$this->log( 'EDD Recurring 2Checkout INS - RECURRING_INSTALLMENT_SUCCESS subscription' . $sub->id . ' renewed' );
+					}
 
 					die( '1' );
 
 					break;
 
+				case 'FRAUD_STATUS_CHANGED':
+
+					$fraud_status = sanitize_text_field( $_POST['fraud_status'] );
+
+					$this->log( 'EDD Recurring 2Checkout INS - FRAUD_STATUS_CHANGED processing status of ' . $fraud_status );
+
+					switch( $fraud_status ) {
+
+						case 'fail':
+							$sub->cancel();
+
+							$payment_id      = $sub->parent_payment_id;
+							$initial_payment = new EDD_Payment( $payment_id );
+
+							$initial_payment->update_status( 'revoked' );
+							$initial_payment->add_note( __( '2Checkout fraud review failed.', 'edd-recurring' ) );
+
+							break;
+
+						case 'wait':
+							$args = array(
+								'status' => 'pending'
+							);
+
+							$sub->update( $args );
+
+							$payment_id      = $sub->parent_payment_id;
+							$initial_payment = new EDD_Payment( $payment_id );
+
+							$initial_payment->update_status( 'pending' );
+							$initial_payment->add_note( __( '2Checkout fraud review in progress.', 'edd-recurring' ) );
+							break;
+
+						case 'pass':
+							$args = array(
+								'status' => 'active'
+							);
+
+							$sub->update( $args );
+
+							$payment_id      = $sub->parent_payment_id;
+							$initial_payment = new EDD_Payment( $payment_id );
+
+							$initial_payment->update_status( 'complete' );
+							$initial_payment->add_note( __( '2Checkout fraud review passed.', 'edd-recurring' ) );
+							break;
+
+					}
+
+					die( '1' );
+					break;
+
+				case 'INVOICE_STATUS_CHANGED' :
+
+					$status = strtolower( sanitize_text_field( $_POST['invoice_status'] ) );
+
+					$this->log( 'EDD Recurring 2Checkout INS - INVOICE_STATUS_CHANGED processing status of ' . $status );
+
+					switch( $status ) {
+
+						case 'deposited' :
+							$args = array(
+								'status' => 'active',
+							);
+
+							$sub->update( $args );
+
+							$payment_id      = $sub->parent_payment_id;
+							$initial_payment = new EDD_Payment( $payment_id );
+
+							$initial_payment->update_status( 'complete' );
+							$initial_payment->add_note( __( '2Checkout Invoice status set to deposited.', 'edd-recurring' ) );
+							break;
+
+					}
+
+					die( '2' );
+					break;
+
 				case 'RECURRING_INSTALLMENT_FAILED' :
 
 					$sub->failing();
+
+					$this->log( 'EDD Recurring 2Checkout INS - RECURRING_INSTALLMENT_FAILED for ' . $sub->id );
 
 					do_action( 'edd_recurring_payment_failed', $sub );
 
@@ -277,6 +396,8 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 
 					$sub->cancel();
 
+					$this->log( 'EDD Recurring 2Checkout INS - RECURRING_STOPPED for ' . $sub->id );
+
 					die( '1' );
 
 					break;
@@ -284,6 +405,8 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 				case 'RECURRING_COMPLETE' :
 
 					$sub->complete();
+
+					$this->log( 'EDD Recurring 2Checkout INS - RECURRING_COMPLETE for ' . $sub->id );
 
 					die( '1' );
 
@@ -294,6 +417,35 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 					$date = date( 'Y-n-d H:i:s', strtotime( $_POST[ 'item_rec_date_next_' . $i ] ) );
 
 					$sub->update( array( 'status' => 'active', 'expiration' => $date ) );
+
+					$this->log( 'EDD Recurring 2Checkout INS - RECURRING_RESTARTED for ' . $sub->id );
+
+					die( '1' );
+
+					break;
+
+				case 'REFUND_ISSUED' :
+
+					$payment_id      = $sub->parent_payment_id;
+					$initial_payment = new EDD_Payment( $payment_id );
+					$cart_count      = count( $initial_payment->cart_details );
+
+					// Look for the new refund line item
+					if( isset( $_POST['item_list_amount_' . $cart_count + 1 ] ) && $_POST['item_list_amount_' . $cart_count + 1 ] < $payment->total ) {
+
+						$refunded = edd_sanitize_amount( $_POST['item_list_amount_' . $cart_count + 1 ] );
+						$payment->add_note( sprintf( __( 'Partial refund for %s processed in 2Checkout' ), edd_currency_filter( $refunded ) ) );
+
+					} else {
+
+						$sub->cancel();
+
+						$initial_payment->update_status( 'refunded' );
+						$initial_payment->add_note( __( 'Payment refunded in 2Checkout.', 'edd-recurring' ) );
+
+					}
+
+					$this->log( 'EDD Recurring 2Checkout INS - REFUND_ISSUED for ' . $sub->id );
 
 					die( '1' );
 
@@ -376,6 +528,18 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 	}
 
 	/**
+	 * Determines if 2Checkout allows multiple subscriptions to be purchased at once.
+	 *
+	 * 2Checkout does not allow multiple subscriptions to be purchased at the same time.
+	 *
+	 * @since 2.8.5
+	 * @return bool
+	 */
+	public function can_purchase_multiple_subs() {
+		return false;
+	}
+
+	/**
 	 * Link the recurring profile in 2Checkout.
 	 *
 	 * @since  2.4.4
@@ -398,6 +562,20 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 
 		return $profile_id;
 
+	}
+
+	/**
+	 * Logs a message to EDD's debug log
+	 *
+	 * @since 2.7.22
+	 * @param string $message The message to log
+	 *
+	 * @return void
+	 */
+	private function log( $message ) {
+		if( function_exists( 'edd_debug_log' ) ) {
+			edd_debug_log( $message );
+		}
 	}
 
 }

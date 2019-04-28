@@ -13,21 +13,29 @@
 class WPSEO_Twitter {
 
 	/**
-	 * @var    object    Instance of this class
+	 * Instance of this class.
+	 *
+	 * @var object
 	 */
 	public static $instance;
 
 	/**
-	 * @var array Images
+	 * Images.
+	 *
+	 * @var array
 	 */
 	private $images = array();
 
 	/**
-	 * @var array Images
+	 * Images.
+	 *
+	 * @var array
 	 */
 	public $shown_images = array();
 
-	/** @var WPSEO_Frontend_Page_Type */
+	/**
+	 * @var WPSEO_Frontend_Page_Type
+	 */
 	protected $frontend_page_type;
 
 	/**
@@ -36,6 +44,20 @@ class WPSEO_Twitter {
 	 * @var string
 	 */
 	private $type;
+
+	/**
+	 * Card types currently allowed by Twitter.
+	 *
+	 * @link https://dev.twitter.com/cards/types
+	 *
+	 * @var array
+	 */
+	private $valid_types = array(
+		'summary',
+		'summary_large_image',
+		'app',
+		'player',
+	);
 
 	/**
 	 * Class constructor
@@ -126,13 +148,7 @@ class WPSEO_Twitter {
 	 * @link https://dev.twitter.com/cards/types
 	 */
 	private function sanitize_card_type() {
-		if ( ! in_array( $this->type, array(
-			'summary',
-			'summary_large_image',
-			'app',
-			'player',
-		), true )
-		) {
+		if ( ! in_array( $this->type, $this->valid_types, true ) ) {
 			$this->type = 'summary';
 		}
 	}
@@ -225,7 +241,7 @@ class WPSEO_Twitter {
 			$meta_desc = $this->fallback_description();
 		}
 
-		if ( is_string( $meta_desc ) || $meta_desc !== '' ) {
+		if ( is_string( $meta_desc ) && $meta_desc !== '' ) {
 			return $meta_desc;
 		}
 
@@ -314,12 +330,27 @@ class WPSEO_Twitter {
 	 * Displays the Twitter account for the site.
 	 */
 	protected function site_twitter() {
+		switch ( WPSEO_Options::get( 'company_or_person', '' ) ) {
+			case 'person':
+				$user_id = (int) WPSEO_Options::get( 'company_or_person_user_id', false );
+				$twitter = get_the_author_meta( 'twitter', $user_id );
+				// For backwards compat reasons, if there is no twitter ID for person, we fall back to site.
+				if ( empty( $twitter ) ) {
+					$twitter = WPSEO_Options::get( 'twitter_site' );
+				}
+				break;
+			case 'company':
+			default:
+				$twitter = WPSEO_Options::get( 'twitter_site' );
+				break;
+		}
+
 		/**
 		 * Filter: 'wpseo_twitter_site' - Allow changing the Twitter site account as output in the Twitter card by Yoast SEO
 		 *
 		 * @api string $unsigned Twitter site account string
 		 */
-		$site = apply_filters( 'wpseo_twitter_site', WPSEO_Options::get( 'twitter_site' ) );
+		$site = apply_filters( 'wpseo_twitter_site', $twitter );
 		$site = $this->get_twitter_id( $site );
 
 		if ( is_string( $site ) && $site !== '' ) {
@@ -333,7 +364,7 @@ class WPSEO_Twitter {
 	 * Solves issues with filters returning urls and theme's/other plugins also adding a user meta
 	 * twitter field which expects url rather than an id (which is what we expect).
 	 *
-	 * @param  string $id Twitter ID or url.
+	 * @param string $id Twitter ID or url.
 	 *
 	 * @return string|bool Twitter ID or false if it failed to get a valid Twitter ID.
 	 */
@@ -421,8 +452,6 @@ class WPSEO_Twitter {
 				return;
 			}
 
-			$post_id = get_the_ID();
-
 			if ( $this->image_of_attachment_page_output( $post_id ) ) {
 				return;
 			}
@@ -486,16 +515,11 @@ class WPSEO_Twitter {
 	/**
 	 * Outputs a Twitter image tag for a given image
 	 *
-	 * @param string  $img The source URL to the image.
-	 * @param boolean $tag Deprecated argument, previously used for gallery images.
+	 * @param string $img The source URL to the image.
 	 *
 	 * @return bool
 	 */
-	protected function image_output( $img, $tag = false ) {
-
-		if ( $tag ) {
-			_deprecated_argument( __METHOD__, 'WPSEO 2.4' );
-		}
+	protected function image_output( $img ) {
 
 		/**
 		 * Filter: 'wpseo_twitter_image' - Allow changing the Twitter Card image

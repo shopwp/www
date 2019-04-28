@@ -23,7 +23,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 		$this->table_name  = $wpdb->prefix . 'edd_subscriptions';
 		$this->primary_key = 'id';
-		$this->version     = '1.2';
+		$this->version     = '1.3';
 
 	}
 
@@ -35,20 +35,25 @@ class EDD_Subscriptions_DB extends EDD_DB {
 	 */
 	public function get_columns() {
 		return array(
-			'id'                => '%d',
-			'customer_id'       => '%d',
-			'period'            => '%s',
-			'initial_amount'    => '%s',
-			'recurring_amount'  => '%s',
-			'bill_times'        => '%d',
-			'transaction_id'    => '%s',
-			'parent_payment_id' => '%d',
-			'product_id'        => '%d',
-			'created'           => '%s',
-			'expiration'        => '%s',
-			'trial_period'      => '%s',
-			'status'            => '%s',
-			'profile_id'        => '%s',
+			'id'                    => '%d',
+			'customer_id'           => '%d',
+			'period'                => '%s',
+			'initial_amount'        => '%s',
+			'initial_tax_rate'      => '%s',
+			'initial_tax'           => '%s',
+			'recurring_amount'      => '%s',
+			'recurring_tax_rate'    => '%s',
+			'recurring_tax'         => '%s',
+			'bill_times'            => '%d',
+			'transaction_id'        => '%s',
+			'parent_payment_id'     => '%d',
+			'product_id'            => '%d',
+			'created'               => '%s',
+			'expiration'            => '%s',
+			'trial_period'          => '%s',
+			'status'                => '%s',
+			'notes'                 => '%s',
+			'profile_id'            => '%s',
 		);
 	}
 
@@ -60,19 +65,24 @@ class EDD_Subscriptions_DB extends EDD_DB {
 	 */
 	public function get_column_defaults() {
 		return array(
-			'customer_id'       => 0,
-			'period'            => '',
-			'initial_amount'    => '',
-			'recurring_amount'  => '',
-			'bill_times'        => 0,
-			'transaction_id'    => '',
-			'parent_payment_id' => 0,
-			'product_id'        => 0,
-			'created'           => date( 'Y-m-d H:i:s' ),
-			'expiration'        => date( 'Y-m-d H:i:s' ),
-			'trial_period'      => '',
-			'status'            => '',
-			'profile_id'        => '',
+			'customer_id'               => 0,
+			'period'                    => '',
+			'initial_amount'            => '',
+			'initial_tax_rate'          => '',
+			'initial_tax'               => '',
+			'recurring_amount'          => '',
+			'recurring_tax_rate'        => '',
+			'recurring_tax'             => '',
+			'bill_times'                => 0,
+			'transaction_id'            => '',
+			'parent_payment_id'         => 0,
+			'product_id'                => 0,
+			'created'                   => date( 'Y-m-d H:i:s' ),
+			'expiration'                => date( 'Y-m-d H:i:s' ),
+			'trial_period'              => '',
+			'status'                    => '',
+			'notes'                     => '',
+			'profile_id'                => '',
 		);
 	}
 
@@ -86,12 +96,14 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		global $wpdb;
 
 		$defaults = array(
-			'number'       => 20,
-			'offset'       => 0,
-			'search'       => '',
-			'customer_id'  => 0,
-			'orderby'      => 'id',
-			'order'        => 'DESC'
+			'number'              => 20,
+			'offset'              => 0,
+			'search'              => '',
+			'customer_id'         => 0,
+			'orderby'             => 'id',
+			'order'               => 'DESC',
+			'bill_times'          => null,
+			'bill_times_operator' => '='
 		);
 
 		$args  = wp_parse_args( $args, $defaults );
@@ -101,6 +113,17 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		}
 
 		$where = ' WHERE 1=1 ';
+		$join  = '';
+
+		if( isset( $args['bill_times'] ) ) {
+
+			if ( ! is_numeric( $args['bill_times'] ) ) {
+				trigger_error( __( 'The bill_times argument should be a number but was not.', 'edd-recurring' ) );
+			} else {
+				$where .= " AND t1.bill_times {$args['bill_times_operator']} '{$args['bill_times']}'";
+			}
+
+		}
 
 		// specific customers
 		if( ! empty( $args['id'] ) ) {
@@ -111,7 +134,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$ids = intval( $args['id'] );
 			}
 
-			$where .= " AND `id` IN( {$ids} ) ";
+			$where .= " AND t1.id IN( {$ids} ) ";
 
 		}
 
@@ -124,7 +147,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$product_ids = intval( $args['product_id'] );
 			}
 
-			$where .= " AND `product_id` IN( {$product_ids} ) ";
+			$where .= " AND t1.product_id IN( {$product_ids} ) ";
 
 		}
 
@@ -137,7 +160,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$parent_payment_ids = intval( $args['parent_payment_id'] );
 			}
 
-			$where .= " AND `parent_payment_id` IN( {$parent_payment_ids} ) ";
+			$where .= " AND t1.parent_payment_id IN( {$parent_payment_ids} ) ";
 
 		}
 
@@ -150,11 +173,11 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$transaction_ids = sanitize_text_field( $args['transaction_id'] );
 			}
 
-			$where .= " AND `transaction_id` IN ( '{$transaction_ids}' ) ";
+			$where .= " AND t1.transaction_id IN ( '{$transaction_ids}' ) ";
 
 		}
 
-		// Subscriptoins for specific customers
+		// Subscriptions for specific customers
 		if( ! empty( $args['customer_id'] ) ) {
 
 			if( is_array( $args['customer_id'] ) ) {
@@ -163,7 +186,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$customer_ids = intval( $args['customer_id'] );
 			}
 
-			$where .= " AND `customer_id` IN( {$customer_ids} ) ";
+			$where .= " AND t1.customer_id IN( {$customer_ids} ) ";
 
 		}
 
@@ -176,7 +199,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$profile_ids = sanitize_text_field( $args['profile_id'] );
 			}
 
-			$where .= " AND `profile_id` IN( '{$profile_ids}' ) ";
+			$where .= " AND t1.profile_id IN( '{$profile_ids}' ) ";
 
 		}
 
@@ -189,7 +212,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$statuses = sanitize_text_field( $args['status'] );
 			}
 
-			$where .= " AND `status` IN( '{$statuses}' ) ";
+			$where .= " AND t1.status IN( '{$statuses}' ) ";
 
 		}
 
@@ -202,7 +225,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
 
-					$where .= " AND `created` >= '{$start}'";
+					$where .= " AND t1.created >= '{$start}'";
 
 				}
 
@@ -210,7 +233,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
 
-					$where .= " AND `created` <= '{$end}'";
+					$where .= " AND t1.created <= '{$end}'";
 
 				}
 
@@ -220,7 +243,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$month = date( 'm', strtotime( $args['date'] ) );
 				$day   = date( 'd', strtotime( $args['date'] ) );
 
-				$where .= " AND $year = YEAR ( created ) AND $month = MONTH ( created ) AND $day = DAY ( created )";
+				$where .= " AND $year = YEAR ( t1.created ) AND $month = MONTH ( t1.created ) AND $day = DAY ( t1.created )";
 			}
 
 		}
@@ -234,7 +257,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['expiration']['start'] ) );
 
-					$where .= " AND `expiration` >= '{$start}'";
+					$where .= " AND t1.expiration >= '{$start}'";
 
 				}
 
@@ -242,7 +265,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['expiration']['end'] ) );
 
-					$where .= " AND `expiration` <= '{$end}'";
+					$where .= " AND t1.expiration <= '{$end}'";
 
 				}
 
@@ -252,41 +275,80 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$month = date( 'm', strtotime( $args['expiration'] ) );
 				$day   = date( 'd', strtotime( $args['expiration'] ) );
 
-				$where .= " AND $year = YEAR ( expiration ) AND $month = MONTH ( expiration ) AND $day = DAY ( expiration )";
+				$where .= " AND $year = YEAR ( t1.expiration ) AND $month = MONTH ( t1.expiration ) AND $day = DAY ( t1.expiration )";
 			}
 
 		}
 
 		if ( ! empty( $args['search'] ) ) {
 
-			if( false !== strpos( 'id:', $args['search'] ) ) {
+			if( is_email( $args['search'] ) ) {
 
-				$args['search'] = trim( str_replace( 'id:', '', $args['search'] ) );
-				$where .= " AND `id` = '" . esc_sql( $args['search'] ) . "'";
+				$customer = new EDD_Customer( $args['search'] );
+				if( $customer && $customer->id > 0 ) {
+					$where .= " AND t1.customer_id = '" . esc_sql( $customer->id ) . "'";
+				}
 
 			} else if( false !== strpos( $args['search'], 'txn:' ) ) {
 
 				$args['search'] = trim( str_replace( 'txn:', '', $args['search'] ) );
-				$where .= " AND `transaction_id` = '" . esc_sql( $args['search'] ) . "'";
+				$where .= " AND t1.transaction_id = '" . esc_sql( $args['search'] ) . "'";
 
-			} else if( false !== strpos( $args['search'], 'profile_id:' ) ) {
+			} else if ( false !== strpos( $args['search'], 'profile_id:' ) ) {
 
 				$args['search'] = trim( str_replace( 'profile_id:', '', $args['search'] ) );
-				$where .= " AND `profile_id` = '" . esc_sql( $args['search'] ) . "'";
+				$where .= " AND t1.profile_id = '" . esc_sql( $args['search'] ) . "'";
 
-			} else if( false !== strpos( $args['search'], 'product_id:' ) ) {
+			} else if ( false !== strpos( $args['search'], 'product_id:' ) ) {
 
 				$args['search'] = trim( str_replace( 'product_id:', '', $args['search'] ) );
-				$where .= " AND `product_id` = '" . esc_sql( $args['search'] ) . "'";
+				$where .= " AND t1.product_id = '" . esc_sql( $args['search'] ) . "'";
 
-			} else if( false !== strpos( $args['search'], 'customer_id:' ) ) {
+			} else if ( false !== strpos( $args['search'], 'customer_id:' ) ) {
 
-				$args['search'] = trim( str_replace( 'customer_id:', '', $args['search'] ) );
-				$where .= " AND `customer_id` = '" . esc_sql( $args['search'] ) . "'";
+				$args[ 'search' ] = trim( str_replace( 'customer_id:', '', $args[ 'search' ] ) );
+				$where            .= " AND t1.customer_id = '" . esc_sql( $args[ 'search' ] ) . "'";
+
+			} else if ( false !== strpos( $args['search'], 'id:' ) ) {
+
+				$args['search'] = trim( str_replace( 'id:', '', $args['search'] ) );
+				$where .= " AND t1.id = '" . esc_sql( $args['search'] ) . "'";
 
 			} else {
 
-				$where .= " AND ( `parent_payment_id` LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR `profile_id` LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR `transaction_id` LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR `product_id` LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR `id` = '" . esc_sql( $args['search'] ) . "' )";
+				// See if search matches a product name
+				$download = get_page_by_title( trim( $args['search'] ), OBJECT, 'download' );
+
+				if( $download ) {
+
+					$args['search'] = $download->ID;
+					$where .= " AND t1.product_id = '" . esc_sql( $args['search'] ) . "'";
+
+				} else {
+
+					$where .= " AND ( t1.parent_payment_id LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR t1.profile_id LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR t1.transaction_id LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR t1.product_id LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR t1.id = '" . esc_sql( $args['search'] ) . "' )";
+
+				}
+
+			}
+
+		}
+
+		// Search by gateway
+		if ( ! empty( $args['gateway'] ) ) {
+			$gateway = sanitize_text_field( $args['gateway'] );
+
+			if ( version_compare(EDD_VERSION, '3.0.0-beta1', '<') ) {
+
+				// Pre EDD 3.0 join
+				$join  .= " LEFT JOIN {$wpdb->prefix}postmeta m1 ON t1.parent_payment_id = m1.post_id ";
+				$where .= $wpdb->prepare( " AND m1.meta_key = '_edd_payment_gateway' AND m1.meta_value = '%s'", $gateway );
+
+			} else {
+
+				// Post EDD 3.0 join
+				$join  .= " LEFT JOIN {$wpdb->prefix}edd_orders o1 on t1.parent_payment_id = o1.id ";
+				$where .= $wpdb->prepare( " AND o1.gateway = '%s' ", $gateway );
 
 			}
 
@@ -295,26 +357,41 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		$args['orderby'] = ! array_key_exists( $args['orderby'], $this->get_columns() ) ? 'id' : $args['orderby'];
 
 		if( 'amount' == $args['orderby'] ) {
-			$args['orderby'] = 'amount+0';
+			$args['orderby'] = 't1.amount+0';
 		}
 
 		$cache_key = md5( 'edd_subscriptions_' . serialize( $args ) );
 
-		$subscriptions = wp_cache_get( $cache_key, 'subscriptions' );
+		$subscriptions = wp_cache_get( $cache_key, 'edd_subscriptions' );
 
 		$args['orderby'] = esc_sql( $args['orderby'] );
 		$args['order']   = esc_sql( $args['order'] );
 
 		if( $subscriptions === false ) {
-			$subscriptions = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM  $this->table_name $where ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) ), OBJECT );
+			$query = $wpdb->prepare( "SELECT t1.* FROM  $this->table_name t1 $join $where ORDER BY {$args['orderby']} {$args['order']} LIMIT %d,%d;", absint( $args['offset'] ), absint( $args['number'] ) );
+			$subscriptions = $wpdb->get_results( $query, OBJECT );
 
 			if( ! empty( $subscriptions ) ) {
 
 				foreach( $subscriptions as $key => $subscription ) {
-					$subscriptions[ $key ] = new EDD_Subscription( $subscription );
+
+					$subscription_object = wp_cache_get( $subscription->id, 'edd_subscription_objects' );
+
+					// If we didn't find the subscription in cache, get it.
+					if ( false === $subscription_object ) {
+
+						$subscription_object = new EDD_Subscription( $subscription );
+
+						// If we got a valid subscription object, save it in cache for 1 hour.
+						if ( ! empty( $subscription->id ) ) {
+							wp_cache_set( $subscription->id, $subscription_object, 'edd_subscription_objects', 3600 );
+						}
+					}
+
+					$subscriptions[ $key ] = $subscription_object;
 				}
 
-				wp_cache_set( $cache_key, $subscriptions, 'subscriptions', 3600 );
+				wp_cache_set( $cache_key, $subscriptions, 'edd_subscriptions', 3600 );
 
 			}
 
@@ -333,7 +410,25 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 		global $wpdb;
 
+		$defaults = array(
+			'bill_times'          => null,
+			'bill_times_operator' => '='
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
 		$where = ' WHERE 1=1 ';
+		$join  = '';
+
+		if( isset( $args['bill_times'] ) ) {
+
+			if ( ! is_numeric( $args['bill_times'] ) ) {
+				trigger_error( __( 'The bill_times argument should be a number but was not.', 'edd-recurring' ) );
+			} else {
+				$where .= " AND t1.bill_times {$args['bill_times_operator']} '{$args['bill_times']}'";
+			}
+
+		}
 
 		// specific customers
 		if( ! empty( $args['id'] ) ) {
@@ -344,7 +439,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$ids = intval( $args['id'] );
 			}
 
-			$where .= " AND `id` IN( {$ids} ) ";
+			$where .= " AND t1.id IN( {$ids} ) ";
 
 		}
 
@@ -357,7 +452,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$product_ids = intval( $args['product_id'] );
 			}
 
-			$where .= " AND `product_id` IN( {$product_ids} ) ";
+			$where .= " AND t1.product_id IN( {$product_ids} ) ";
 
 		}
 
@@ -370,7 +465,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$parent_payment_ids = intval( $args['parent_payment_id'] );
 			}
 
-			$where .= " AND `parent_payment_id` IN( {$parent_payment_ids} ) ";
+			$where .= " AND t1.parent_payment_id IN( {$parent_payment_ids} ) ";
 
 		}
 
@@ -383,7 +478,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$customer_ids = intval( $args['customer_id'] );
 			}
 
-			$where .= " AND `customer_id` IN( {$customer_ids} ) ";
+			$where .= " AND t1.customer_id IN( {$customer_ids} ) ";
 
 		}
 
@@ -396,7 +491,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$profile_ids = intval( $args['profile_id'] );
 			}
 
-			$where .= " AND `profile_id` IN( {$profile_ids} ) ";
+			$where .= " AND t1.profile_id IN( {$profile_ids} ) ";
 
 		}
 
@@ -404,12 +499,12 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		if( ! empty( $args['transaction_id'] ) ) {
 
 			if( is_array( $args['transaction_id'] ) ) {
-				$transaction_ids = implode( ',', array_map('sanitize_text_field', $args['transaction_id'] ) );
+				$transaction_ids = "'" . implode( "','", array_map('sanitize_text_field', $args['transaction_id'] ) ) . "'";
+				$where .= " AND t1.transaction_id IN( {$transaction_ids} ) ";
 			} else {
-				$transaction_ids = sanitize_text_field( $args['transaction_id'] );
+				$transaction_id = sanitize_text_field( $args['transaction_id'] );
+				$where  .= " AND t1.transaction_id = '{$transaction_id}' ";
 			}
-
-			$where .= " AND `transaction_id` IN( {$transaction_ids} ) ";
 
 		}
 
@@ -417,11 +512,11 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		if( ! empty( $args['status'] ) ) {
 
 			if( is_array( $args['status'] ) ) {
-				$statuses = implode( ',', $args['status'] );
-				$where  .= " AND `status` IN( {$statuses} ) ";
+				$statuses = "'" . implode( "','", $args['status'] ) . "'";
+				$where  .= " AND t1.status IN( {$statuses} ) ";
 			} else {
 				$statuses = $args['status'];
-				$where  .= " AND `status` = '{$statuses}' ";
+				$where  .= " AND t1.status = '{$statuses}' ";
 			}
 
 
@@ -437,7 +532,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['date']['start'] ) );
 
-					$where .= " AND `created` >= '{$start}'";
+					$where .= " AND t1.created >= '{$start}'";
 
 				}
 
@@ -445,7 +540,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['date']['end'] ) );
 
-					$where .= " AND `created` <= '{$end}'";
+					$where .= " AND t1.created <= '{$end}'";
 
 				}
 
@@ -455,7 +550,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$month = date( 'm', strtotime( $args['date'] ) );
 				$day   = date( 'd', strtotime( $args['date'] ) );
 
-				$where .= " AND $year = YEAR ( created ) AND $month = MONTH ( created ) AND $day = DAY ( created )";
+				$where .= " AND $year = YEAR ( t1.created ) AND $month = MONTH ( t1.created ) AND $day = DAY ( t1.created )";
 			}
 
 		}
@@ -469,7 +564,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 					$start = date( 'Y-m-d H:i:s', strtotime( $args['expiration']['start'] ) );
 
-					$where .= " AND `expiration` >= '{$start}'";
+					$where .= " AND t1.expiration >= '{$start}'";
 
 				}
 
@@ -477,7 +572,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 					$end = date( 'Y-m-d H:i:s', strtotime( $args['expiration']['end'] ) );
 
-					$where .= " AND `expiration` <= '{$end}'";
+					$where .= " AND t1.expiration <= '{$end}'";
 
 				}
 
@@ -487,41 +582,80 @@ class EDD_Subscriptions_DB extends EDD_DB {
 				$month = date( 'm', strtotime( $args['expiration'] ) );
 				$day   = date( 'd', strtotime( $args['expiration'] ) );
 
-				$where .= " AND $year = YEAR ( expiration ) AND $month = MONTH ( expiration ) AND $day = DAY ( expiration )";
+				$where .= " AND $year = YEAR ( t1.expiration ) AND $month = MONTH ( t1.expiration ) AND $day = DAY ( t1.expiration )";
 			}
 
 		}
 
 		if ( ! empty( $args['search'] ) ) {
 
-			if( false !== strpos( 'id:', $args['search'] ) ) {
+			if( is_email( $args['search'] ) ) {
 
-				$args['search'] = trim( str_replace( 'id:', '', $args['search'] ) );
-				$where .= " AND `id` = '" . esc_sql( $args['search'] ) . "'";
+				$customer = new EDD_Customer( $args['search'] );
+				if( $customer && $customer->id > 0 ) {
+					$where .= " AND t1.customer_id = '" . esc_sql( $customer->id ) . "'";
+				}
 
-			} else if( false !== strpos( $args['search'], 'txn:' ) ) {
+			} else if ( false !== strpos( $args['search'], 'txn:' ) ) {
 
 				$args['search'] = trim( str_replace( 'txn:', '', $args['search'] ) );
-				$where .= " AND `transaction_id` = '" . esc_sql( $args['search'] ) . "'";
+				$where .= " AND t1.transaction_id = '" . esc_sql( $args['search'] ) . "'";
 
-			} else if( false !== strpos( $args['search'], 'profile_id:' ) ) {
+			} else if ( false !== strpos( $args['search'], 'profile_id:' ) ) {
 
 				$args['search'] = trim( str_replace( 'profile_id:', '', $args['search'] ) );
-				$where .= " AND `profile_id` = '" . esc_sql( $args['search'] ) . "'";
+				$where .= " AND t1.profile_id = '" . esc_sql( $args['search'] ) . "'";
 
-			} else if( false !== strpos( $args['search'], 'product_id:' ) ) {
+			} else if ( false !== strpos( $args['search'], 'product_id:' ) ) {
 
 				$args['search'] = trim( str_replace( 'product_id:', '', $args['search'] ) );
-				$where .= " AND `product_id` = '" . esc_sql( $args['search'] ) . "'";
+				$where .= " AND t1.product_id = '" . esc_sql( $args['search'] ) . "'";
 
-			} else if( false !== strpos( $args['search'], 'customer_id:' ) ) {
+			} else if ( false !== strpos( $args['search'], 'customer_id:' ) ) {
 
-				$args['search'] = trim( str_replace( 'customer_id:', '', $args['search'] ) );
-				$where .= " AND `customer_id` = '" . esc_sql( $args['search'] ) . "'";
+				$args[ 'search' ] = trim( str_replace( 'customer_id:', '', $args[ 'search' ] ) );
+				$where .= " AND t1.customer_id = '" . esc_sql( $args[ 'search' ] ) . "'";
+
+			} else if ( false !== strpos( $args['search'], 'id:' ) ) {
+
+				$args['search'] = trim( str_replace( 'id:', '', $args['search'] ) );
+				$where .= " AND t1.id = '" . esc_sql( $args['search'] ) . "'";
 
 			} else {
 
-				$where .= " AND ( `parent_payment_id` LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR `profile_id` LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR `transaction_id` LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR `product_id` LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR `id` = '" . esc_sql( $args['search'] ) . "' )";
+				// See if search matches a product name
+				$download = get_page_by_title( trim( $args['search'] ), OBJECT, 'download' );
+
+				if( $download ) {
+
+					$args['search'] = $download->ID;
+					$where .= " AND t1.product_id = '" . esc_sql( $args['search'] ) . "'";
+
+				} else {
+
+					$where .= " AND ( t1.parent_payment_id LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR t1.profile_id LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR t1.transaction_id LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR t1.product_id LIKE '%%" . esc_sql( $args['search'] ) . "%%' OR t1.id = '" . esc_sql( $args['search'] ) . "' )";
+
+				}
+
+			}
+
+		}
+
+		// Search by gateway
+		if ( ! empty( $args['gateway'] ) ) {
+			$gateway = sanitize_text_field( $args['gateway'] );
+
+			if ( version_compare(EDD_VERSION, '3.0.0-beta1', '<') ) {
+
+				// Pre EDD 3.0 join
+				$join  .= " LEFT JOIN {$wpdb->prefix}postmeta m1 ON t1.parent_payment_id = m1.post_id ";
+				$where .= $wpdb->prepare( " AND m1.meta_key = '_edd_payment_gateway' AND m1.meta_value = '%s'", $gateway );
+
+			} else {
+
+				// Post EDD 3.0 join
+				$join  .= " LEFT JOIN {$wpdb->prefix}edd_orders o1 on t1.parent_payment_id = o1.id ";
+				$where .= $wpdb->prepare( " AND o1.gateway = '%s' ", $gateway );
 
 			}
 
@@ -529,14 +663,14 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 		$cache_key = md5( 'edd_subscriptions_count' . serialize( $args ) );
 
-		$count = wp_cache_get( $cache_key, 'subscriptions' );
+		$count = wp_cache_get( $cache_key, 'edd_subscriptions' );
 
 		if( $count === false ) {
 
-			$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . "{$where};";
+			$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . " t1" . "{$join}" . "{$where}";
 			$count = $wpdb->get_var( $sql );
 
-			wp_cache_set( $cache_key, $count, 'subscriptions', 3600 );
+			wp_cache_set( $cache_key, $count, 'edd_subscriptions', 3600 );
 
 		}
 
@@ -561,7 +695,11 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		customer_id bigint(20) NOT NULL,
 		period varchar(20) NOT NULL,
 		initial_amount mediumtext NOT NULL,
+		initial_tax_rate mediumtext NOT NULL,
+		initial_tax mediumtext NOT NULL,
 		recurring_amount mediumtext NOT NULL,
+		recurring_tax_rate mediumtext NOT NULL,
+		recurring_tax mediumtext NOT NULL,
 		bill_times bigint(20) NOT NULL,
 		transaction_id varchar(60) NOT NULL,
 		parent_payment_id bigint(20) NOT NULL,
@@ -571,6 +709,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		trial_period varchar(20) NOT NULL,
 		status varchar(20) NOT NULL,
 		profile_id varchar(60) NOT NULL,
+		notes longtext NOT NULL,
 		PRIMARY KEY  (id),
 		KEY profile_id (profile_id),
 		KEY customer (customer_id),
@@ -583,4 +722,19 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
 
+	/**
+	 * Convert object to array
+	 *
+	 * @since 2.7.4
+	 *
+	 * @return array
+	 */
+	public function to_array(){
+		$array = array();
+		foreach( get_object_vars( $this )as $prop => $var ){
+			$array[ $prop ] = $var;
+		}
+
+		return $array;
+	}
 }

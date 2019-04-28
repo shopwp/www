@@ -160,7 +160,10 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 
 			if( ! $free_trial && 'failure' === strtolower( $payment_body['ACK'] ) ) {
 
-				edd_record_gateway_error( __( 'PayPal Express Error', 'edd-recurring' ), sprintf( __( 'Error processing payment: %s', 'edd-recurring' ), json_encode( $payment_body ) . json_encode( $payment_args ) ) );
+				$payment_args['ACCT'] = str_pad( substr( $payment_args['ACCT'], -4 ), strlen( $payment_args['ACCT'] ), '*', STR_PAD_LEFT );
+				$payment_args['CVV2'] = preg_replace( '/[0-9]+/', '*', $payment_args['CVV2'] );
+
+				edd_record_gateway_error( __( 'PayPal Pro Error', 'edd-recurring' ), sprintf( __( 'Error processing payment: %s', 'edd-recurring' ), json_encode( $payment_body ) . json_encode( $payment_args ) ) );
 
 				edd_set_error( $payment_body['L_ERRORCODE0'], $payment_body['L_LONGMESSAGE0'] );
 
@@ -192,6 +195,18 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 							break;
 					}
 
+					if( $free_trial ) {
+
+						// Set start date to the end of the free trial
+						$profile_start = date( 'Y-m-d\Tg:i:s', strtotime( '+' . $subscription['trial_quantity'] . ' ' . ucwords( $subscription['trial_unit'] ), current_time( 'timestamp' ) ) );
+
+					} else {
+
+						// Set start date to the first renewal date. Initial period is covered by the initial payment processed above
+						$profile_start = date( 'Y-m-d\Tg:i:s', strtotime( '+' . $frequency . ' ' . $period, current_time( 'timestamp' ) ) );
+
+					}
+
 					$args = array(
 						'USER'                => $this->username,
 						'PWD'                 => $this->password,
@@ -204,7 +219,7 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 						'CVV2'                => sanitize_text_field( $this->purchase_data['card_info']['card_cvc'] ),
 						'ZIP'                 => sanitize_text_field( $this->purchase_data['card_info']['card_zip'] ),
 						'METHOD'              => 'CreateRecurringPaymentsProfile',
-						'PROFILESTARTDATE'    => date( 'Y-m-d\Tg:i:s', strtotime( '+' . $frequency . ' ' . $period, current_time( 'timestamp' ) ) ),
+						'PROFILESTARTDATE'    => $profile_start,
 						'BILLINGPERIOD'       => $period,
 						'BILLINGFREQUENCY'    => $frequency,
 						'AMT'                 => round( $subscription['recurring_amount'], 2 ),
@@ -218,12 +233,7 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 						'LASTNAME'            => sanitize_text_field( $this->purchase_data['user_info']['last_name'] ),
 					);
 
-					if( $free_trial ) {
-						$args['TRIALBILLINGPERIOD']    = ucwords( $subscription['trial_unit'] );
-						$args['TRIALBILLINGFREQUENCY'] = $subscription['trial_quantity'];
-						$args['TRIALTOTALBILLINGCYCLES'] = 1;
-						$args['TRIALAMT'] = 0;
-					}
+					$args = apply_filters( 'edd_recurring_create_subscription_args', $args, $this->purchase_data['downloads'], $this->id, $subscription['id'], $subscription['price_id'] );
 
 					$request = wp_remote_post( $this->api_endpoint, array(
 						'timeout'     => 45,
@@ -435,6 +445,11 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 			status_header( 200 );
 
 			$posted          = apply_filters( 'edd_recurring_ipn_post', $_POST ); // allow $_POST to be modified
+			
+			if( ! isset( $posted['recurring_payment_id'] ) ) {
+				return; // This is not related to Recurring Payments
+			}
+			
 			$amount          = number_format( (float) $posted['mc_gross'], 2 );
 			$payment_status  = $posted['payment_status'];
 			$currency_code   = $posted['mc_currency'];
@@ -463,7 +478,10 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 
 				case "recurring_payment" :
 
-					if ( strtolower( $currency_code ) != strtolower( edd_get_currency() ) ) {
+					$sub_currency = edd_get_payment_currency_code( $subscription->parent_payment_id );
+
+					// verify details
+					if( ! empty( $sub_currency ) && strtolower( $currency_code ) !== strtolower( $sub_currency ) ) {
 
 						// the currency code is invalid
 						// @TODO: Does this need a parent_id for better error organization?
@@ -482,11 +500,14 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 					}
 
 					// when a user makes a recurring payment
-					$subscription->add_payment( array(
+					$payment_id = $subscription->add_payment( array(
 						'amount'         => $amount,
 						'transaction_id' => $posted['txn_id']
 					) );
-					$subscription->renew();
+
+					if ( ! empty( $payment_id ) ) {
+						$subscription->renew( $payment_id );
+					}
 
 					die( 'Subscription payment successful' );
 
@@ -723,6 +744,15 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 				}
 			}
 
+			/*
+			 * Sometimes a subscription has already been cancelled in PayPal and PayPal returns an error indicating it's not active
+			 * Let's catch those cases and consider the cancellation successful
+			 */
+			$cancelled_codes = array( 11556, 11557, 11531 );
+			if( in_array( $body['L_ERRORCODE0'], $cancelled_codes ) ) {
+				$success = true;
+			}
+
 		}
 
 		if( empty( $success ) ) {
@@ -731,6 +761,91 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 
 		return true;
 
+	}
+
+	/**
+	 * Determines if the subscription can be retried when failing
+	 *
+	 * @access      public
+	 * @since       2.8
+	 * @return      bool
+	 */
+	public function can_retry( $ret, $subscription ) {
+		if( $subscription->gateway === 'paypalpro' && ! empty( $subscription->profile_id ) && 'failing' === $subscription->status ) {
+			return true;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Retries a failing subscription
+	 *
+	 * This method is connected to a filter instead of an action so we can return a nice error message.
+	 *
+	 * @access      public
+	 * @since       2.8
+	 * @return      bool|WP_Error
+	 */
+	public function retry( $result, $subscription ) {
+
+		if( ! $this->can_retry( false, $subscription ) ) {
+			return $result;
+		}
+
+		$args = array(
+			'USER'      => $this->username,
+			'PWD'       => $this->password,
+			'SIGNATURE' => $this->signature,
+			'VERSION'   => '124',
+			'METHOD'    => 'BillOutstandingAmount',
+			'PROFILEID' => $subscription->profile_id,
+			'NOTE'      => __( 'Retry initiated from EDD Recurring', 'edd-recurring' )
+		);
+
+		$error_msg = '';
+		$request   = wp_remote_post( $this->api_endpoint, array( 'body' => $args, 'timeout' => 30, 'httpversion' => '1.1' ) );
+		$body      = wp_remote_retrieve_body( $request );
+		$code      = wp_remote_retrieve_response_code( $request );
+		$message   = wp_remote_retrieve_response_message( $request );
+
+
+		if ( is_wp_error( $request ) ) {
+
+			$success   = false;
+			$error_msg = $request->get_error_message();
+
+		} else {
+
+			if( is_string( $body ) ) {
+				wp_parse_str( $body, $body );
+			}
+
+			if( empty( $code ) || 200 !== (int) $code ) {
+				$success = false;
+			}
+
+			if( empty( $message ) || 'OK' !== $message ) {
+				$success = false;
+			}
+
+			if( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
+				$success = true;
+			} else {
+				$success = false;
+				if( isset( $body['L_LONGMESSAGE0'] ) ) {
+					$error_msg = $body['L_LONGMESSAGE0'];
+				}
+			}
+
+		}
+
+		if( empty( $success ) ) {
+			$result = new WP_Error( 'edd_recurring_paypalpro_error', $error_msg );
+		} else {
+			$result = true;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -926,6 +1041,9 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 					}
 
 				}
+
+				// Reattempt unpaid charges if this subscription is failing
+				$subscription->retry();
 
 			} else {
 

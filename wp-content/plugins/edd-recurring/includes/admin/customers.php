@@ -30,7 +30,7 @@ function edd_recurring_customer_subscriptions_list( $customer ) {
 			<?php foreach( $subscriptions as $subscription ) : ?>
 				<tr>
 					<td><a href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . $subscription->product_id ) ); ?>"><?php echo get_the_title( $subscription->product_id ); ?></a></td>
-					<td><?php printf( _x( '%s every %s', 'Example: $10 every month', 'edd-recurring' ), edd_currency_filter( edd_sanitize_amount( $subscription->recurring_amount ) ), $subscription->period ); ?></td>
+					<td><?php printf( _x( '%s every %s', 'Example: $10 every month', 'edd-recurring' ), edd_currency_filter( edd_sanitize_amount( $subscription->recurring_amount ), edd_get_payment_currency_code( $subscription->parent_payment_id ) ), $subscription->period ); ?></td>
 					<td><?php echo $subscription->get_status_label(); ?></td>
 					<td><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-subscriptions&id=' . $subscription->id ) ); ?>"><?php _e( 'View Details', 'edd-recurring' ); ?></a>
 				</tr>

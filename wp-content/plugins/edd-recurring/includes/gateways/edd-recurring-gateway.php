@@ -17,6 +17,7 @@ class EDD_Recurring_Gateway {
 	public $user_id = 0;
 	public $payment_id = 0;
 	public $failed_subscriptions = array();
+	public $custom_meta = array();
 
 	/**
 	 * Get things started
@@ -35,9 +36,14 @@ class EDD_Recurring_Gateway {
 		add_action( 'init', array( $this, 'process_webhooks' ), 9 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ), 10 );
 		add_action( 'edd_cancel_subscription', array( $this, 'process_cancellation' ) );
+		add_action( 'edd_reactivate_subscription', array( $this, 'process_reactivation' ) );
 		add_filter( 'edd_subscription_can_cancel', array( $this, 'can_cancel' ), 10, 2 );
 		add_filter( 'edd_subscription_can_update', array( $this, 'can_update' ), 10, 2 );
+		add_filter( 'edd_subscription_can_reactivate', array( $this, 'can_reactivate' ), 10, 2 );
+		add_filter( 'edd_subscription_can_retry', array( $this, 'can_retry' ), 10, 2 );
+		add_filter( 'edd_recurring_retry_subscription_' . $this->id, array( $this, 'retry' ), 10, 2 );
 		add_action( 'edd_recurring_cancel_' . $this->id . '_subscription', array( $this, 'cancel' ), 10, 2 );
+		add_action( 'edd_recurring_reactivate_' . $this->id . '_subscription', array( $this, 'reactivate' ), 10, 2 );
 		add_action( 'edd_recurring_update_payment_form', array( $this, 'update_payment_method_form' ), 10, 1 );
 		add_action( 'edd_recurring_update_subscription_payment_method', array( $this, 'process_payment_method_update' ), 10, 3 );
 		add_action( 'edd_recurring_update_' . $this->id . '_subscription', array( $this, 'update_payment_method' ), 10, 2 );
@@ -170,6 +176,50 @@ class EDD_Recurring_Gateway {
 	public function cancel( $subscription, $valid ) { }
 
 	/**
+	 * Determines if a subscription can be reactivated through the gateway
+	 *
+	 * @access      public
+	 * @since       2.7.10
+	 * @return      bool
+	 */
+	public function can_reactivate( $ret, $subscription ) {
+		return $ret;
+	}
+
+	/**
+	 * Reactivates a cancelled subscription
+	 *
+	 * @access      public
+	 * @since       2.7.10
+	 * @return      bool
+	 */
+	public function reactivate( $subscription, $valid ) {}
+
+	/**
+	 * Determines if a subscription can be retried through the gateway
+	 *
+	 * @access      public
+	 * @since       2.7.10
+	 * @return      bool
+	 */
+	public function can_retry( $ret, $subscription ) {
+		return $ret;
+	}
+
+	/**
+	 * Retries a failing subscription
+	 *
+	 * This method is connected to a filter instead of an action so we can return a nice error message.
+	 *
+	 * @access      public
+	 * @since       2.7.10
+	 * @return      bool|WP_Error
+	 */
+	public function retry( $result, $subscription ) {
+		return $result;
+	}
+
+	/**
 	 * Determines if a subscription can be cancelled through a gateway
 	 *
 	 * @since  2.4
@@ -230,6 +280,16 @@ class EDD_Recurring_Gateway {
 	 * @return void
 	 */
 	public function after_cc_fields() {}
+
+	/**
+	 * Determines if the gateway allows multiple subscriptions to be purchased at once.
+
+	 * @since 2.8.5
+	 * @return bool
+	 */
+	public function can_purchase_multiple_subs() {
+		return true;
+	}
 
 
 	/****************************************************************
@@ -313,18 +373,57 @@ class EDD_Recurring_Gateway {
 				continue;
 			}
 
-			if( edd_get_option( 'recurring_one_time_discounts' ) ) {
-				$recurring_tax    = edd_calculate_tax( $item['subtotal'] );
-				$recurring_amount = $item['subtotal'] + $recurring_tax;
+			// Check if one time discounts are enabled in the admin settings, which prevent discounts from being used on renewals
+			$recurring_one_time_discounts = edd_get_option( 'recurring_one_time_discounts' ) ? true : false;
+
+			// If there is a trial in the cart for this item, One-Time Discounts have no relevance, and discounts are used no matter what.
+			if( ! empty( $item['item_number']['options']['recurring']['trial_period']['unit'] ) && ! empty( $item['item_number']['options']['recurring']['trial_period']['quantity'] ) ) {
+				$recurring_one_time_discounts = false;
+			}
+
+			$prices_include_tax = edd_prices_include_tax();
+
+			// If we should NOT apply the discount to the renewal
+			if( $recurring_one_time_discounts ) {
+
+				// If entered prices do not include tax
+				if ( ! $prices_include_tax ) {
+
+					// When prices don't include tax, the $item['subtotal'] is the cost of the item, including quantities, but NOT including discounts or taxes
+					// Set the recurring amount to be the full amount, with no discounts
+					$recurring_amount = $item['subtotal'] + edd_calculate_tax( $item['subtotal'] );
+
+					// Set the tax to be the full amount as well for recurs. Recalculate it using the amount without discounts, which is the subtotal
+					$recurring_tax = edd_calculate_tax( $item['subtotal'] );
+
+				} else {
+
+					// If prices include tax, we can't use the $item['subtotal'] like we do above, because it does not include taxes, and we need it to include taxes.
+					// So instead, we use the item_price, which is the entered price of the product, without any discounts, and with taxes included.
+					$recurring_amount = $item['item_price'];
+					$recurring_tax = edd_calculate_tax( $item['item_price'] );
+
+				}
+
 			} else {
-				$recurring_tax    = edd_calculate_tax( $item['price'] - $item['tax'] );
+
+				// The $item['price'] includes all discounts and taxes.
+				// Since discounts are allowed on renewals, we don't need to make any changes at all to the price or the tax.
 				$recurring_amount = $item['price'];
+				$recurring_tax = $item['tax'];
+
 			}
 
 			$fees = $item['item_number']['options']['recurring']['signup_fee'];
 
 			if( ! empty( $item['fees'] ) ) {
 				foreach( $item['fees'] as $fee ) {
+
+					// Negative fees are already accounted for on $item['price']
+					if( $fee['amount'] <= 0 ) {
+						continue;
+					}
+
 					$fees += $fee['amount'];
 				}
 
@@ -333,25 +432,29 @@ class EDD_Recurring_Gateway {
 			// Determine tax amount for any fees if it's more than $0
 			$fee_tax = $fees > 0 ? edd_calculate_tax( $fees ) : 0;
 
-			$args = apply_filters( 'edd_recurring_subscription_pre_gateway_args', array(
-				'id'               => $item['id'],
-				'name'             => $item['name'],
-				'price_id'         => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : false,
-				'initial_amount'   => edd_sanitize_amount( $item['price'] + $fees + $fee_tax ),
-				'recurring_amount' => edd_sanitize_amount( $recurring_amount ),
-				'initial_tax'      => edd_sanitize_amount( $item['tax'] + $fee_tax ),
-				'recurring_tax'    => edd_sanitize_amount( $recurring_tax ),
-				'signup_fee'       => edd_sanitize_amount( $fees ),
-				'period'           => $item['item_number']['options']['recurring']['period'],
-				'frequency'        => 1, // Hard-coded to 1 for now but here in case we offer it later. Example: charge every 3 weeks
-				'bill_times'       => $item['item_number']['options']['recurring']['times'],
-				'profile_id'       => '', // Profile ID for this subscription - This is set by the payment gateway
-				'transaction_id'   => '', // Transaction ID for this subscription - This is set by the payment gateway
-			), $item );
+			$args = array(
+				'id'                 => $item['id'],
+				'name'               => $item['name'],
+				'price_id'           => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : false,
+				'initial_amount'     => edd_sanitize_amount( $item['price'] + $fees + $fee_tax ),
+				'recurring_amount'   => edd_sanitize_amount( $recurring_amount ),
+				'initial_tax'        => edd_use_taxes() ? edd_sanitize_amount( $item['tax'] + $fee_tax ) : 0,
+				'initial_tax_rate'   => edd_sanitize_amount( $this->purchase_data['tax_rate'] ),
+				'recurring_tax'      => edd_use_taxes() ? edd_sanitize_amount( $recurring_tax ) : 0,
+				'recurring_tax_rate' => edd_sanitize_amount( $this->purchase_data['tax_rate'] ),
+				'signup_fee'         => edd_sanitize_amount( $fees ),
+				'period'             => $item['item_number']['options']['recurring']['period'],
+				'frequency'          => 1, // Hard-coded to 1 for now but here in case we offer it later. Example: charge every 3 weeks
+				'bill_times'         => $item['item_number']['options']['recurring']['times'],
+				'profile_id'         => '', // Profile ID for this subscription - This is set by the payment gateway
+				'transaction_id'     => '', // Transaction ID for this subscription - This is set by the payment gateway
+			);
 
+			$args = apply_filters( 'edd_recurring_subscription_pre_gateway_args', $args, $item );
 
 			if( ! edd_get_option( 'recurring_one_time_trials' ) || ! $subscriber->has_trialed( $item['id'] ) ) {
 
+				// If the item in the cart has a free trial period
 				if( ! empty( $item['item_number']['options']['recurring']['trial_period']['unit'] ) && ! empty( $item['item_number']['options']['recurring']['trial_period']['quantity'] ) ) {
 
 					$args['has_trial']         = true;
@@ -359,12 +462,8 @@ class EDD_Recurring_Gateway {
 					$args['trial_quantity']    = $item['item_number']['options']['recurring']['trial_period']['quantity'];
 					$args['status']            = 'trialling';
 					$args['initial_amount']    = 0;
+					$args['initial_tax_rate']  = 0;
 					$args['initial_tax']       = 0;
-
-					if( edd_get_option( 'recurring_one_time_discounts' ) ) {
-						// One-time discount codes are not supported with free trials, so we need to discount the on-going recurring amount in order to give the discount
-						$args['recurring_amount'] -= $item['discount'];
-					}
 				}
 
 			}
@@ -405,7 +504,11 @@ class EDD_Recurring_Gateway {
 
 			// Since we allow subscriptions to be marked as failed, make sure that we at least have one valid subscription
 			if ( count( $this->failed_subscriptions ) === $initial_subscription_count ) {
-				edd_set_error( 'recurring-all-subscriptions-failed', __( 'There was an error processing your order. Please contact support.', 'edd-recurring' ) );
+				if ( ! empty( $failed_sub['error'] ) ) {
+					edd_set_error( 'recurring-failed-sub-error-' . $item_key, $failed_sub['error'] );
+				} else {
+					edd_set_error( 'recurring-all-subscriptions-failed', __( 'There was an error processing your order. Please contact support.', 'edd-recurring' ) );
+				}
 			}
 
 		}
@@ -486,6 +589,15 @@ class EDD_Recurring_Gateway {
 		// Set subscription_payment
 		$payment->update_meta( '_edd_subscription_payment', true );
 
+
+		/*
+		 * We need to delete pending subscription records to prevent duplicates. This ensures no duplicate subscription records are created when a purchase is being recovered. See:
+		 * https://github.com/easydigitaldownloads/edd-recurring/issues/707
+		 * https://github.com/easydigitaldownloads/edd-recurring/issues/762
+		 */
+		global $wpdb;
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}edd_subscriptions WHERE parent_payment_id = %d AND status = 'pending';", $this->payment_id ) );
+
 		$subscriber = new EDD_Recurring_Subscriber( $this->customer_id );
 
 		// Now create the subscription record(s)
@@ -500,23 +612,28 @@ class EDD_Recurring_Gateway {
 			$trial_period = ! empty( $subscription['has_trial'] ) ? $subscription['trial_quantity'] . ' ' . $subscription['trial_unit'] : '';
 
 			$args = array(
-				'product_id'        => $subscription['id'],
-				'user_id'           => $this->purchase_data['user_info']['id'],
-				'parent_payment_id' => $this->payment_id,
-				'status'            => $status,
-				'period'            => $subscription['period'],
-				'initial_amount'    => $subscription['initial_amount'],
-				'recurring_amount'  => $subscription['recurring_amount'],
-				'bill_times'        => $subscription['bill_times'],
-				'expiration'        => $subscriber->get_new_expiration( $subscription['id'], $subscription['price_id'], $trial_period ),
-				'trial_period'      => $trial_period,
-				'profile_id'        => $subscription['profile_id'],
-				'transaction_id'    => $subscription['transaction_id'],
+				'product_id'            => $subscription['id'],
+				'user_id'               => $this->purchase_data['user_info']['id'],
+				'parent_payment_id'     => $this->payment_id,
+				'status'                => $status,
+				'period'                => $subscription['period'],
+				'initial_amount'        => $subscription['initial_amount'],
+				'initial_tax_rate'      => $subscription['initial_tax_rate'],
+				'initial_tax'           => $subscription['initial_tax'],
+				'recurring_amount'      => $subscription['recurring_amount'],
+				'recurring_tax_rate'    => $subscription['recurring_tax_rate'],
+				'recurring_tax'         => $subscription['recurring_tax'],
+				'bill_times'            => $subscription['bill_times'],
+				'expiration'            => $subscriber->get_new_expiration( $subscription['id'], $subscription['price_id'], $trial_period ),
+				'trial_period'          => $trial_period,
+				'profile_id'            => $subscription['profile_id'],
+				'transaction_id'        => $subscription['transaction_id'],
 			);
 
+			$args = apply_filters( 'edd_recurring_pre_record_signup_args', $args, $this );
 			$sub = $subscriber->add_subscription( $args );
 
-			if( $trial_period ) {
+			if( ! $this->offsite && $trial_period ) {
 				$subscriber->add_meta( 'edd_recurring_trials', $subscription['id'] );
 			}
 
@@ -531,6 +648,12 @@ class EDD_Recurring_Gateway {
 			}
 
 			$payment->update_meta( '_edd_recurring_failed_subscriptions', $this->failed_subscriptions );
+		}
+
+		if ( ! empty( $this->custom_meta ) ) {
+			foreach ( $this->custom_meta as $key => $value ) {
+				$payment->update_meta( $key, $value );
+			}
 		}
 
 	}
@@ -635,7 +758,6 @@ class EDD_Recurring_Gateway {
 	 */
 	public function process_cancellation( $data ) {
 
-
 		if( empty( $data['sub_id'] ) ) {
 			return;
 		}
@@ -645,19 +767,13 @@ class EDD_Recurring_Gateway {
 		}
 
 		if( ! wp_verify_nonce( $data['_wpnonce'], 'edd-recurring-cancel' ) ) {
-			wp_die( __( 'Error', 'edd-recurring' ), __( 'Nonce verification failed', 'edd-recurring' ), array( 'response' => 403 ) );
+			wp_die( __( 'Nonce verification failed', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
 		}
 
 		$data['sub_id'] = absint( $data['sub_id'] );
 		$subscription   = new EDD_Subscription( $data['sub_id'] );
 
-		if( ! $subscription->can_cancel() ) {
-			wp_die( __( 'Error', 'edd-recurring' ), __( 'This subscription cannot be cancelled', 'edd-recurring' ), array( 'response' => 403 ) );
-		}
-
 		try {
-
-			do_action( 'edd_recurring_cancel_' . $subscription->gateway . '_subscription', $subscription, true );
 
 			$subscription->cancel();
 
@@ -668,13 +784,72 @@ class EDD_Recurring_Gateway {
 
 			} else {
 
-				wp_redirect( remove_query_arg( array( '_wpnonce', 'edd_action', 'sub_id' ), add_query_arg( array( 'edd-message' => 'cancelled' ) ) ) );
+				$redirect = remove_query_arg( array( '_wpnonce', 'edd_action', 'sub_id' ), add_query_arg( array( 'edd-message' => 'cancelled' ) ) );
+				$redirect = apply_filters( 'edd_recurring_cancellation_redirect', $redirect, $subscription );
+				wp_safe_redirect( $redirect );
 				exit;
 
 			}
 
 		} catch ( Exception $e ) {
-			wp_die( __( 'Error', 'edd-recurring' ), $e->getMessage(), array( 'response' => 403 ) );
+			wp_die( $e->getMessage(), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+		}
+
+	}
+
+	/**
+	 * Process subscription reactivation
+	 *
+	 * @access      public
+	 * @since       2.6
+	 * @return      void
+	 */
+	public function process_reactivation( $data ) {
+
+		if( empty( $data['sub_id'] ) ) {
+			return;
+		}
+
+		if( ! is_user_logged_in() ) {
+			return;
+		}
+
+		if( ! wp_verify_nonce( $data['_wpnonce'], 'edd-recurring-reactivate' ) ) {
+			wp_die( __( 'Nonce verification failed', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+		}
+
+
+		$data['sub_id'] = absint( $data['sub_id'] );
+		$subscription   = new EDD_Subscription( $data['sub_id'] );
+
+		if( ! $subscription->can_reactivate() ) {
+			wp_die( __( 'This subscription cannot be reactivated', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+		}
+
+		try {
+
+			do_action( 'edd_recurring_reactivate_' . $subscription->gateway . '_subscription', $subscription, true );
+
+			$user = is_user_logged_in() ? wp_get_current_user()->user_login : 'gateway';
+			$note = sprintf( __( 'Subscription reactivated by %s', 'edd-recurring' ), $user );
+			$subscription->add_note( $note );
+
+			if( is_admin() ) {
+
+				wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-subscriptions&edd-message=reactivated&id=' . $subscription->id ) );
+				exit;
+
+			} else {
+
+				$redirect = remove_query_arg( array( '_wpnonce', 'edd_action', 'sub_id' ), add_query_arg( array( 'edd-message' => 'reactivated' ) ) );
+				$redirect = apply_filters( 'edd_recurring_reactivation_redirect', $redirect, $subscription );
+				wp_safe_redirect( $redirect );
+				exit;
+
+			}
+
+		} catch ( Exception $e ) {
+			wp_die( $e->getMessage(), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
 		}
 
 	}

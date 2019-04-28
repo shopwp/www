@@ -3692,6 +3692,17 @@ pre[class*="language-"] {
   text-align: center;
   font-style: normal; }
 
+.edd_price_options li[itemprop='offers'] .eddr-notice.variable-prices {
+  display: none; }
+
+.purchase-confirmation #edd_subscription_receipt {
+  width: 100%;
+  margin-bottom: 3em; }
+
+#edd_sl_renewal_form {
+  margin-bottom: 1em;
+  text-align: center; }
+
 .component.component-faq {
   margin-bottom: 2.48832em; }
 
@@ -4025,11 +4036,14 @@ body.page-template-template-home {
   padding-bottom: 1.44em; }
 
 #edd_purchase_form #edd_show_discount {
-  background: #f6f6f6;
+  background: #fafafa;
   padding: 1em;
   border-radius: 10px;
   text-align: center;
   display: none; }
+
+#edd_checkout_form_wrap fieldset#edd_sl_renewal_fields {
+  padding: 1em; }
 
 .component-screenshots {
   background: #fff;

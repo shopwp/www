@@ -24,19 +24,23 @@ class EDD_Recurring_Software_Licensing {
 		$this->db = new EDD_Subscriptions_DB;
 
 		add_filter( 'edd_recurring_subscription_pre_gateway_args', array( $this, 'set_recurring_amount' ), 10, 2 );
-		add_filter( 'edd_sl_license_exp_length', array( $this, 'set_license_length_for_trials' ), 10, 4);
+		add_filter( 'edd_sl_license_exp_length', array( $this, 'set_license_length_for_trials' ), 10, 4 );
 		add_filter( 'edd_sl_can_extend_license', array( $this, 'disable_license_extension' ), 10, 2 );
+		add_filter( 'edd_sl_can_renew_license', array( $this, 'disable_license_extension' ), 10, 2 );
 		add_filter( 'edd_recurring_subscription_pre_gateway_args', array( $this, 'add_upgrade_and_renewal_flag' ), 10, 2 );
 		add_filter( 'edd_sl_send_scheduled_reminder_for_license', array( $this, 'maybe_suppress_scheduled_reminder_for_license' ), 10, 3 );
 		add_filter( 'edd_get_renewals_by_date', array( $this, 'renewals_by_date' ), 10, 4 );
 		add_filter( 'edd_subscription_can_renew', array( $this, 'can_renew_subscription' ), 10, 2 );
 		add_filter( 'edd_subscription_renew_url', array( $this, 'get_renew_url' ), 10, 2 );
 		add_filter( 'edd_recurring_show_stripe_update_payment_method_notice', array( $this, 'maybe_suppress_update_payment_method_notice' ), 10, 2 );
+		add_filter( 'edd_recurring_create_subscription_args', array( $this, 'handle_subscription_upgrade_billing' ), 10, 5 );
+		add_filter( 'edd_recurring_pre_record_signup_args', array( $this, 'handle_subscription_upgrade_expiration' ), 10, 2 );
+		add_filter( 'edd_cart_contents', array( $this, 'remove_trial_flags_on_renewals_and_upgrades' ) );
 
 		add_action( 'edd_recurring_post_create_payment_profiles', array( $this, 'handle_subscription_upgrade' ) );
 		add_action( 'edd_recurring_post_create_payment_profiles', array( $this, 'handle_manual_license_renewal' ) );
 		add_action( 'edd_complete_download_purchase', array( $this, 'handle_non_subscription_upgrade' ), -1, 5 );
-		add_action( 'edd_subscription_post_renew', array( $this, 'renew_license_keys' ), 10, 3 );
+		add_action( 'edd_subscription_post_renew', array( $this, 'renew_license_keys' ), 10, 4 );
 		add_action( 'edd_recurring_add_subscription_payment', array( $this, 'set_renewal_flag' ), 10, 2 );
 		add_action( 'edd_sl_column_purchased', array( $this, 'licenses_table' ), 10 );
 		add_action( 'edd_subscription_after_tables', array( $this, 'subscription_details' ), 10 );
@@ -45,6 +49,8 @@ class EDD_Recurring_Software_Licensing {
 		add_action( 'edd_purchase_form_before_submit', array( $this, 'checkout_license_renewal_details' ), 9 );
 		add_action( 'edd_sl_license_metabox_after_license_length', array( $this, 'free_trial_settings_notice' ) );
 		add_action( 'edd_recurring_check_expiration', array( $this, 'maybe_sync_license_expiration_on_check_expiration' ), 10, 2 );
+		add_action( 'edd_post_refund_payment', array( $this, 'rollback_expiration_on_renewal_refund' ) );
+
 	}
 
 	/**
@@ -55,12 +61,15 @@ class EDD_Recurring_Software_Licensing {
 	 */
 	public function set_recurring_amount( $args = array(), $item = array() ) {
 
+		$adjust   = false;
 		$enabled  = get_post_meta( $args['id'], '_edd_sl_enabled', true );
 		$discount = edd_sl_get_renewal_discount_percentage( 0, $item['id'] );
 
 		if ( $enabled ) {
 
 			if ( ! empty( $item['item_number']['options']['is_upgrade'] ) || ! empty( $item['item_number']['options']['is_renewal'] ) ) {
+
+				$adjust = true;
 
 				if( edd_has_variable_prices( $item['id'] ) && 0 !== (int) $item['item_number']['options']['price_id'] ) {
 
@@ -87,6 +96,7 @@ class EDD_Recurring_Software_Licensing {
 
 				if( $discount > 0 ) {
 
+					$adjust = true;
 					$renewal_discount = ( $args['recurring_amount'] * ( $discount / 100 ) );
 
 					$args['recurring_amount'] -= $renewal_discount;
@@ -96,10 +106,17 @@ class EDD_Recurring_Software_Licensing {
 
 			}
 
-			if( edd_get_option( 'recurring_one_time_discounts' ) ) {
-				$args['recurring_tax'] = edd_sanitize_amount( edd_calculate_tax( $args['recurring_amount'] ) );
-			} else {
-				$args['recurring_tax'] = edd_sanitize_amount( edd_calculate_tax( $args['recurring_amount'] - $item['tax'] ) );
+			if( $adjust ) {
+
+				/*
+				 * The recurring amount has been adjusted so we now need to re-calculate taxes.
+				 * The recurring amount has taxes included in it already, so we work backwards, just like calculated taxes when prices are inclusive of tax
+				 *
+				 * See https://github.com/easydigitaldownloads/edd-recurring/issues/939
+				 */
+				$pre_tax = ( $args['recurring_amount'] / ( 1 + edd_get_tax_rate() ) );
+				$args['recurring_tax'] = $args['recurring_amount'] - $pre_tax;
+
 			}
 
 		}
@@ -116,19 +133,37 @@ class EDD_Recurring_Software_Licensing {
 	 */
 	public function set_license_length_for_trials( $expiration, $payment_id, $download_id, $license_id ) {
 
-		$payments = get_post_meta( $license_id, '_edd_sl_payment_id', false );
+		if( ! defined( 'EDD_SL_VERSION' ) || version_compare( EDD_SL_VERSION, '3.5', '<' ) ) {
+			return $expiration; // We need version 3.5 or later
+		}
 
-		if( count( $payments ) <= 1 && edd_recurring()->has_free_trial( $download_id ) ) {
-			// set expiration to trial length
-			$trial_period = edd_recurring()->get_trial_period( $download_id );
-			$expiration = '+' . $trial_period['quantity'] . ' ' . $trial_period['unit'];
+		$license  = edd_software_licensing()->get_license( $license_id );
+		$payments = $license->payment_ids;
+
+		if( count( $payments ) <= 1 && edd_recurring()->has_free_trial( $download_id, $license->price_id ) ) {
+
+			// If our customer record exists, use that email, otherwise set it to false so it defaults to the currently logged in customer's email
+			$email = ! empty( $license->customer ) && ! empty( $license->customer->email ) ? $license->customer->email : '';
+
+			// Only modify the expiration during initial papyments, not renewals
+			if( ! did_action( 'edd_subscription_pre_renew' ) ) {
+				
+				if( ( edd_get_option( 'recurring_one_time_trials' ) && ! edd_recurring()->has_trialed( $download_id, $email ) ) || ! edd_get_option( 'recurring_one_time_trials' ) ) {
+
+					// set expiration to trial length
+					$trial_period = edd_recurring()->get_trial_period( $download_id, $license->price_id );
+					$expiration = '+' . $trial_period['quantity'] . ' ' . $trial_period['unit'];
+
+				}
+
+			}
 		}
 
 		return $expiration;
 	}
 
 	/**
-	 * Disables the Extend link in [edd_license_keys] for licenses that are tied to a subscription
+	 * Disables the Renew/Extend link in [edd_license_keys] for licenses that are tied to an active, trialling, or failing subscription
 	 *
 	 * @since  2.4
 	 * @return bool
@@ -138,7 +173,12 @@ class EDD_Recurring_Software_Licensing {
 		$sub = $this->get_subscription_of_license( $license_id );
 
 		if( ! empty( $sub ) && $sub->id > 0 ) {
-			$can_extend = false;
+
+			if( 'failing' == $sub->status || 'active' == $sub->status || 'trialling' == $sub->status ) {
+
+				$can_extend = false;
+			}
+
 		}
 
 		return $can_extend;
@@ -177,7 +217,7 @@ class EDD_Recurring_Software_Licensing {
 	}
 
 	/**
-	 * Determines if a subscription with a license key can be renewed=
+	 * Determines if a subscription with a license key can be renewed
 	 *
 	 * @since  2.5
 	 * @return bool
@@ -191,7 +231,6 @@ class EDD_Recurring_Software_Licensing {
 		}
 
 		return $can_renew;
-
 	}
 
 	/**
@@ -233,6 +272,32 @@ class EDD_Recurring_Software_Licensing {
 	}
 
 	/**
+	 * Removes the trial flags from cart items when purchasing a renewal or upgrade
+	 *
+	 * @since  2.7
+	 * @return bool
+	 */
+	public function remove_trial_flags_on_renewals_and_upgrades( $cart_contents ) {
+
+		if( $cart_contents ) {
+
+			foreach( $cart_contents as $key => $item ) {
+
+				if( empty( $item['options']['is_renewal'] ) && empty( $item['options']['is_upgrade'] ) ) {
+					continue;
+				}
+
+				if( ( isset( $item['options']['recurring'] ) && isset( $item['options']['recurring']['trial_period'] ) ) || isset( $item['options']['is_upgrade'] ) ) {
+					unset( $cart_contents[ $key ]['options']['recurring']['trial_period'] );
+				}
+			}
+		}
+
+		return $cart_contents;
+
+	}
+
+	/**
 	 * Adds upgrade flag to subscription details during checkout
 	 *
 	 * Replaced by add_upgrade_and_renewal_flag()
@@ -257,7 +322,11 @@ class EDD_Recurring_Software_Licensing {
 			$license_id = $item['item_number']['options']['license_id'];
 
 			$subscription['is_upgrade']          = true;
-			$subscription['old_subscription_id'] = $this->get_subscription_of_license( $license_id )->id;
+
+			$sub = $this->get_subscription_of_license( $license_id );
+			if ( $sub ) {
+				$subscription['old_subscription_id'] = $sub->id;
+			}
 
 		} elseif( isset( $item['item_number']['options']['is_renewal'] ) && isset( $item['item_number']['options']['license_id'] ) ) {
 
@@ -276,6 +345,250 @@ class EDD_Recurring_Software_Licensing {
 	}
 
 	/**
+	 * When upgrading a license, set a trial period so that we avoid having a license that expires prior to the subscription,
+	 * and renew the subscription at the next expiration.
+	 *
+	 * @since 2.7.1
+	 * @param $args
+	 * @param $purchase_data
+	 * @param $gateway
+	 * @param $download_id
+	 * @param $price_id
+	 *
+	 * @return array
+	 */
+	public function handle_subscription_upgrade_billing( $args, $downloads, $gateway, $download_id, $price_id ) {
+		$downloads = ! is_array( $downloads ) ? array() : $downloads;
+
+		foreach ( $downloads as $download ) {
+
+			// Account for the fact that PayPal Express deals with post-payment creation, which means we have item_number in play.
+			$options = isset( $download['item_number'] ) ? : $download['options'];
+
+			if ( ! isset( $options['is_upgrade'] ) ) {
+				continue;
+			}
+
+			if ( (int) $download['id'] !== (int) $download_id ) {
+				continue;
+			}
+
+			if ( isset( $options['price_id'] ) && $price_id != $options['price_id'] ) {
+				continue;
+			}
+
+			$license_id = isset( $options['license_id'] ) ? $options['license_id'] : false;
+			if ( empty( $license_id ) ) {
+				continue;
+			}
+
+			$license = edd_software_licensing()->get_license( $license_id );
+			if ( false === $license ) {
+				continue;
+			}
+
+			// Due to the order of payment -> subscriptions -> license modification, we need to get all the data for the new expiration
+			// directly from the upgrade paths and new download, instead of the existing license, as it has not changed yet.
+			$upgrade_paths = edd_sl_get_license_upgrades( $license->ID );
+
+			edd_debug_log( sprintf( 'Recurring - License Upgrade paths: %s', print_r( $upgrade_paths, true ) ) );
+
+			$upgrade_path  = ! empty( $upgrade_paths[ $options['upgrade_id'] ] ) ? $upgrade_paths[ $options['upgrade_id'] ] : false;
+			if ( empty( $upgrade_path ) ) {
+				continue;
+			}
+
+			edd_debug_log( sprintf( 'Recurring - Found upgrade path: %s', print_r( $upgrade_path, true ) ) );
+			$upgraded_download = new EDD_SL_Download( $upgrade_path['download_id'] );
+
+			if ( $upgraded_download->has_variable_prices() ) {
+				$download_is_lifetime = $upgraded_download->is_price_lifetime( $upgrade_path['price_id'] );
+			} else {
+				$download_is_lifetime = $upgraded_download->is_lifetime();
+			}
+
+			if ( $download_is_lifetime ) {
+				continue;
+			}
+
+			$exp_unit   = $upgraded_download->get_expiration_unit();
+			$exp_length = $upgraded_download->get_expiration_length();
+
+			if( empty( $exp_unit ) ) {
+				$exp_unit = 'years';
+			}
+
+			if( empty( $exp_length ) ) {
+				$exp_length = '1';
+			}
+
+			// Get the start time of the current period
+			$previous_start_time = strtotime( '-' . $license->license_length(), $license->expiration );
+
+			// Sync the trial expiration to when the license expires, using the current period's start date plus the length of the upgrade.
+			$license_expiration = strtotime( '+' . $exp_length . ' ' . $exp_unit, $previous_start_time );
+
+			edd_debug_log( sprintf( 'Recurring - License Expiration after Upgrade: %s', print_r( $license_expiration, true ) ) );
+
+			if ( ! empty( $license_expiration ) ) {
+
+				switch( $gateway ) {
+
+					case 'stripe':
+						$args['trial_end']      = $license_expiration;
+						$args['needs_one_time'] = true;
+						$args['license_id']     = $license_id;
+						break;
+
+					case 'paypalpro':
+					case 'paypalexpress':
+						$args['PROFILESTARTDATE'] = date( 'Y-m-d\Tg:i:s', $license_expiration );
+						break;
+
+					case 'paypal':
+						$current_date = new DateTime( 'now' );
+						$expiration   = new DateTime( date( 'Y-m-d' , $license_expiration ) );
+						$date_diff    = $current_date->diff( $expiration );
+
+						$args['t1'] = 'D';
+						$args['p1'] = $date_diff->days;
+
+						/*
+						 * PayPal has a maximum of 90 days for trial periods.
+						 * If the trial period, likely due to a Software Licensing upgrade, is greater than 90 days,
+						 * we need to split it into two trial periods.
+						 *
+						 * See https://github.com/easydigitaldownloads/edd-recurring/issues/769
+						 */
+						if( $date_diff->days > 90 && 'D' === $args['t1'] ) {
+
+							// Setup the default period times
+							$first_period  = $date_diff->days;
+							$second_period = 0;
+							$unit          = 'D';
+
+							if ( ( $date_diff->days - 90 ) <= 90 ) {
+
+								// t1 = D, t2 = D
+								$unit = 'D';
+
+								$second_period = $date_diff->days - 90;
+								$first_period  = 90;
+
+							} elseif ( $date_diff->days / 7 <= 52 ) {
+
+								// t1 = D, t2 = W
+								$unit = 'W';
+
+								$total_weeks   = $date_diff->days / 7;
+								$second_period = (int) floor( $total_weeks );
+								$first_period  = (int) absint( round( ( 7 * ( $total_weeks - $second_period ) ) ) );
+
+							} elseif ( $date_diff->days / 7 > 52 ) {
+
+								// t1 = D, tw = M
+								$unit = 'M';
+
+								$first_period    = $date_diff->d;
+								$second_period   = $date_diff->m;
+
+							}
+
+							// Let's reduce things to be a bit more 'human readable
+							switch( $unit ) {
+								case 'W':
+
+									if ( 52 === $second_period ) {
+										$unit          = 'Y';
+										$second_period = 1;
+									} elseif ( 4 === $second_period ) {
+										$unit          = 'M';
+										$second_period = 1;
+									}
+
+									break;
+
+								case 'M':
+									if ( 12 === $second_period ) {
+										$unit          = 'Y';
+										$second_period = 1;
+									}
+									break;
+							}
+
+
+							/**
+							 * If we have left over days after doing the math to determine if we're over limits,
+							 * we create 2 trials, if they have no left over days, we simply set the initial trial.
+							 *
+							 * This covers upgrading a subscription on the same day.
+							 */
+							if ( ! empty( $first_period ) ) {
+								$args['p1'] = $first_period;
+								$args['t1'] = 'D';
+								$args['a2'] = 0;
+								$args['p2'] = absint( $second_period );
+								$args['t2'] = $unit;
+							} else {
+								$args['p1'] = absint( $second_period );
+								$args['t1'] = $unit;
+							}
+						}
+
+						break;
+
+					case 'authorize':
+						$args['subscription']['paymentSchedule']['startDate'] = date( 'Y-m-d', $license_expiration );
+						break;
+
+				}
+
+				break;
+			}
+		}
+
+		return $args;
+
+	}
+
+	/**
+	 * When upgrading a license, set the subscription renewal to the license expiration.
+	 *
+	 * @since 2.7.1
+	 * @param $args
+	 * @param $recurring_gateway_data
+	 *
+	 * @return array
+	 */
+	public function handle_subscription_upgrade_expiration( $args, $recurring_gateway_data ) {
+		$download_id = $args['product_id'];
+
+		foreach ( $recurring_gateway_data->purchase_data['downloads'] as $download ) {
+			if ( (int) $download['id'] !== (int) $download_id ) {
+				continue;
+			}
+
+			if ( ! isset( $download['options']['is_upgrade'] ) ) {
+				continue;
+			}
+
+			$license_id = isset( $download['options']['license_id'] ) ? $download['options']['license_id'] : false;
+			if ( empty( $license_id ) ) {
+				continue;
+			}
+
+			$license_expiration = edd_software_licensing()->get_license_expiration( $license_id );
+			if ( 'lifetime' === $license_expiration ) {
+				continue;
+			}
+
+			$args['expiration'] = date( 'Y-m-d H:i:s', $license_expiration );
+		}
+
+		return $args;
+	}
+
+	/**
 	 * Handles the upgrade process for a license key with a subscription
 	 *
 	 * When upgrading a license key that has a subscription, the original subscription is cancelled
@@ -290,13 +603,13 @@ class EDD_Recurring_Software_Licensing {
 
 			if( ! empty( $subscription['is_upgrade'] ) && ! empty( $subscription['old_subscription_id'] ) ) {
 
-				$sub = new EDD_Subscription( $subscription['old_subscription_id'] );
+				$old_sub = new EDD_Subscription( $subscription['old_subscription_id'] );
 
-				if( ! $sub->can_cancel() && 'manual' !== $sub->gateway ) {
+				if( ! $old_sub->can_cancel() && 'manual' !== $old_sub->gateway ) {
 					continue;
 				}
 
-				$gateway = edd_recurring()->get_gateway_class( $sub->gateway );
+				$gateway = edd_recurring()->get_gateway_class( $old_sub->gateway );
 
 				if( empty( $gateway ) || ! class_exists( $gateway ) ) {
 					continue;
@@ -308,12 +621,13 @@ class EDD_Recurring_Software_Licensing {
 
 				remove_action( 'edd_subscription_cancelled', array( $recurring::$emails, 'send_subscription_cancelled' ), 10 );
 
-				if( $gateway->cancel( $sub, true ) ) {
+				if( $gateway->cancel( $old_sub, true ) ) {
 
-					$note = sprintf( __( 'Subscription #%d cancelled for license upgrade', 'edd-recurring' ), $sub->id );
-					edd_insert_payment_note( $sub->parent_payment_id, $note );
+					$note = sprintf( __( 'Subscription #%d cancelled for license upgrade', 'edd-recurring' ), $old_sub->id );
+					edd_insert_payment_note( $old_sub->parent_payment_id, $note );
+					$old_sub->add_note( __( 'Subscription cancelled for license upgrade', 'edd-recurring' ) );
 
-					$sub->cancel();
+					$old_sub->cancel();
 				}
 			}
 
@@ -429,16 +743,20 @@ class EDD_Recurring_Software_Licensing {
 	 * @since  2.4
 	 * @return void
 	 */
-	public function renew_license_keys( $sub_id, $expiration, $subscription ) {
+	public function renew_license_keys( $sub_id, $expiration, $subscription, $payment_id ) {
 
 		// Update the expiration date of the associated license key, if EDD Software Licensing is active
 
-		$license = edd_software_licensing()->get_license_by_purchase( $subscription->parent_payment_id, $subscription->product_id );
+		$license = apply_filters( 'edd_recurring_sl_renewing_license',
+			edd_software_licensing()->get_license_by_purchase( $subscription->parent_payment_id, $subscription->product_id ),
+			$subscription
+		);
 
 		if ( $license ) {
 
 			// Update the expiration dates of the license key
-			edd_software_licensing()->renew_license( $license->ID, $subscription->parent_payment_id, $subscription->product_id );
+			$payment_id = ! empty( $payment_id ) ? (int) $payment_id : $subscription->parent_payment_id;
+			edd_software_licensing()->renew_license( $license->ID, $payment_id, $subscription->product_id );
 
 			$log_id = wp_insert_post(
 				array(
@@ -468,11 +786,7 @@ class EDD_Recurring_Software_Licensing {
 		if ( $license ) {
 
 			$payment->update_meta( '_edd_sl_is_renewal', 1 );
-
-			$key = edd_software_licensing()->get_license_key( $license->ID );
-
-			add_post_meta( $payment->ID, '_edd_sl_renewal_key', $key );
-			add_post_meta( $license->ID, '_edd_sl_payment_id', $payment->ID );
+			$payment->add_meta( '_edd_sl_renewal_key', $license->key );
 
 		}
 	}
@@ -484,11 +798,9 @@ class EDD_Recurring_Software_Licensing {
 	 * @return void
 	 */
 	public function licenses_table( $license ) {
+		$edd_license = edd_software_licensing()->get_license( $license['ID'] );
 
-		$payment_id  = get_post_meta( $license['ID'], '_edd_sl_payment_id', true );
-		$download_id = edd_software_licensing()->get_download_id( $license['ID'] );
-
-		$subs = $this->db->get_subscriptions( array( 'product_id' => $download_id, 'parent_payment_id' => $payment_id ) );
+		$subs = $this->db->get_subscriptions( array( 'product_id' => $edd_license->download_id, 'parent_payment_id' => $edd_license->payment_id ) );
 		if( $subs ) {
 			foreach( $subs as $sub ) {
 
@@ -683,37 +995,51 @@ class EDD_Recurring_Software_Licensing {
 	 * the most recently subscription is returned
 	 *
 	 * @since  2.4
-	 * @return void
+	 * @return EDD_Subscription|boolean
 	 */
 	private function get_subscription_of_license( $license_id = 0 ) {
 
-		$payment_ids = get_post_meta( $license_id, '_edd_sl_payment_id' );
+		$license     = edd_software_licensing()->get_license( $license_id );
+		$payment_ids = $license->payment_ids;
 
 		if( ! is_array( $payment_ids ) ) {
 			return false;
 		}
 
-		$payment_id  = array_pop( $payment_ids );
-		$download_id = edd_software_licensing()->get_download_id( $license_id );
+		// Sort the payment IDs so we're starting with the oldest, and working towards the newest.
+		sort( $payment_ids );
 
-		if( $payment_id && $download_id )  {
+		if( $license->download_id )  {
 
-			$subs = $this->db->get_subscriptions( array(
-				'product_id'        => $download_id,
-				'parent_payment_id' => $payment_id,
-				'status'            => 'active',
-				'number'            => 1,
-				'order'             => 'DESC'
-			) );
+			/**
+			 * Loop through payment IDs until we find one with a subscription for this download ID.
+			 *
+			 * This accounts for stores who enable Recurring Payments after they already sold licenses, as the initial
+			 * payment ID for the license will not have a subscription, but it's possible a manual renewal would initiate
+			 * the subscription creation.
+			 */
+			foreach ( $payment_ids as $payment_id ) {
 
-			if( $subs ) {
+				$subs = $this->db->get_subscriptions( array(
+					'product_id'        => $license->download_id,
+					'parent_payment_id' => $payment_id,
+					'status'            => array( 'active', 'trialling' ),
+					'number'            => 1,
+					'order'             => 'DESC'
+				) );
 
-				return array_pop( $subs );
+				if( $subs ) {
+
+					// If we found a subscription, return it.
+					return array_pop( $subs );
+
+				}
 
 			}
 
 		}
 
+		// If no subscriptions are found for the combination of payment IDs and download ID, return false.
 		return false;
 
 	}
@@ -785,8 +1111,41 @@ class EDD_Recurring_Software_Licensing {
 				$expiration_date = strtotime( $expiration_date, current_time( 'timestamp' ) );
 
 				$license->expiration = $expiration_date;
-			
+
+
 			}
+
+		}
+
+	}
+
+	/**
+	 * Rolls a license expiration date back when refunding a renewal payment
+	 *
+	 * See https://github.com/easydigitaldownloads/edd-recurring/issues/559
+	 *
+	 * @since  2.7
+	 * @return void
+	 */
+	public function rollback_expiration_on_renewal_refund( EDD_Payment $payment ) {
+
+		if( 'edd_subscription' != $payment->old_status ) {
+			return;
+		}
+
+		$licenses = edd_software_licensing()->get_licenses_of_purchase( $payment->ID );
+
+		if( ! $licenses ) {
+			return;
+		}
+
+		foreach( $licenses as $license ) {
+
+			if( ! is_a( $license, 'EDD_SL_License' ) ) {
+				continue;
+			}
+
+			$license->expiration = strtotime( '-' . $license->license_length() , $license->expiration );
 
 		}
 

@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_Recurring_Reminders {
 
 	public function __construct() {
-		add_action( 'edd_daily_scheduled_events', array( $this, 'scheduled_reminders' ) );
+		add_action( 'edd_recurring_daily_scheduled_events', array( $this, 'scheduled_reminders' ) );
 	}
 
 	/**
 	* Returns if renewals are enabled
 	*
-	* @return bool True if enabled, false if not
+	* @return array Array of defined reminders.
 	*/
 	public function reminders_enabled() {
 		$types = $this->get_notice_types();
@@ -190,11 +190,11 @@ class EDD_Recurring_Reminders {
 	*/
 	public function scheduled_reminders() {
 
-		global $edd_options;
-
 		$edd_recurring_emails = new EDD_Recurring_Emails;
 
 		$reminders_enabled = $this->reminders_enabled();
+
+		edd_debug_log( 'Running EDD_Recurring_Reminders::scheduled_reminders.', true );
 
 		foreach ( $reminders_enabled as $type => $enabled ) {
 
@@ -204,46 +204,62 @@ class EDD_Recurring_Reminders {
 
 			$notices = $this->get_notices( $type );
 
+			edd_debug_log( 'Beginning reminder processing. Found ' . count( $notices ) . ' reminder templates.', true );
+
 			foreach( $notices as $notice_id => $notice ) {
 
+				edd_debug_log( 'Processing ' . $notice['send_period'] . ' reminder template.', true );
+
 				$subscriptions = $this->get_reminder_subscriptions( $notice['send_period'], $type );
+
+				edd_debug_log( 'Found ' . count( $subscriptions ) . ' subscriptions to send reminders for.', true );
 
 				if( ! $subscriptions ) {
 					continue;
 				}
 
-				foreach( $subscriptions as $subscription ) {
+				$processed_subscriptions = 0;
 
-					// Translate each subscription into a user_id and utilize the usermeta to store last renewal sent.
-					$edd_subscription = new EDD_Subscription( $subscription->id );
+				foreach( $subscriptions as $subscription ) {
 
 					// Ensure the subscription should renew based on payments made and bill times
 					if ( $type == 'renewal' && $subscription->bill_times != 0 && $subscription->get_total_payments() >= $subscription->bill_times ) {
+						edd_debug_log( 'Ignored renewal notice for subscription ID ' . $subscription->id . ' due being billing times being complete.', true );
 						continue;
 					}
 
 					// Ensure an expiration notice isn't sent to an auto-renew subscription
 					if ( $type == 'expiration' && $subscription->get_status() == 'active' && ( $subscription->get_total_payments() < $subscription->bill_times || $subscription->bill_times == 0 ) ) {
+						edd_debug_log( 'Ignored expiration notice for subscription ID ' . $subscription->id . ' due to subscription being active.', true );
 						continue;
 					}
 
 					// Ensure an expiration notice isn't sent to a still-trialling subscription
 					if ( $type == 'expiration' && $subscription->get_status() == 'trialling' ) {
+						edd_debug_log( 'Ignored expiration notice for subscription ID ' . $subscription->id . ' due subscription still trialling.', true );
 						continue;
 					}
 
-					$sent_time = get_user_meta( $edd_subscription->customer->user_id, sanitize_key( '_edd_recurring_reminder_sent_' . $subscription->id . '_' . $notice_id ), true );
+					$sent_time = get_user_meta( $subscription->customer->user_id, sanitize_key( '_edd_recurring_reminder_sent_' . $subscription->id . '_' . $notice_id . '_' . $subscription->get_total_payments() ), true );
 
-					if( $sent_time ) {
+					if ( $sent_time ) {
+						edd_debug_log( 'Skipping renewal reminder for subscription ID ' . $subscription->id . ' and reminder ' . $notice['send_period'] . '. Previously sent on ' . date_i18n( get_option( 'date_format' ), $sent_time ), true );
 						continue;
 					}
+
+					edd_debug_log( 'Renewal reminder not previously sent for subscription ID ' . $subscription->id . ' for reminder ' . $notice['send_period'], true );
 
 					$edd_recurring_emails->send_reminder( $subscription->id, $notice_id );
+					$processed_subscriptions++;
 
 				}
 
+				edd_debug_log( 'Finished processing ' . $processed_subscriptions . ' for ' . $notice['send_period'] . ' reminder template.', true );
+
 			}
 		}
+
+		edd_debug_log( 'Finished EDD_Recurring_Reminders::scheduled_reminders.', true );
 
 	}
 
@@ -268,12 +284,12 @@ class EDD_Recurring_Reminders {
 					return false;
 				}
 
-				$args[ 'renewal' ] = array(
-					'number'        => 99999,
-					'status'		=> 'active',
-					'expiration'	=>	array(
-						'start'		=>	$period . ' midnight',
-						'end'		=>	date( 'Y-m-d H:i:s', strtotime( $period . ' midnight' ) + ( DAY_IN_SECONDS - 1 ) )
+				$args['renewal'] = array(
+					'number'     => 99999,
+					'status'     => 'active',
+					'expiration' => array(
+						'start' => $period . ' midnight',
+						'end'   => date( 'Y-m-d H:i:s', strtotime( $period . ' midnight' ) + ( DAY_IN_SECONDS - 1 ) ),
 					),
 				);
 				break;
@@ -294,9 +310,9 @@ class EDD_Recurring_Reminders {
 
 				$args[ 'expiration' ] = array(
 					'number'        => 99999,
-					'expiration'	=> array(
-						'start'		=> $start,
-						'end'		=> $end
+					'expiration'    => array(
+						'start'     => $start,
+						'end'       => $end
 					),
 				);
 				break;

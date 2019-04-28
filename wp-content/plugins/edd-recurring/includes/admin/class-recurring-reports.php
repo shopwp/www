@@ -56,10 +56,10 @@ class EDD_Recurring_Reports {
 		$args = apply_filters( 'edd_get_subscriptions_by_date', array(
 			'nopaging'    => true,
 			'post_type'   => 'edd_payment',
-			'post_status' => array( 'edd_subscription' ),
+			'post_status' => array( 'edd_subscription', 'refunded' ),
 			'year'        => $year,
 			'monthnum'    => $month,
-			'fields'      => 'ids'
+			'meta_key'    => 'subscription_id'
 		), $day, $month, $year );
 
 		if ( ! empty( $day ) ) {
@@ -73,18 +73,40 @@ class EDD_Recurring_Reports {
 		$subscriptions = get_posts( $args );
 
 		$return             = array();
-		$return['earnings'] = 0;
-		$return['count']    = count( $subscriptions );
+		$return['earnings']       = 0;
+		$return['refunded']       = 0;
+		$return['count']          = 0;
+		$return['refunded_count'] = 0;
 		if ( $subscriptions ) {
 			foreach ( $subscriptions as $renewal ) {
-				
-				$amount    = edd_get_payment_amount( $renewal );
-				$total_tax = 0;
-				if ( ! $include_taxes ) {
-					$total_tax = $wpdb->get_var( "SELECT SUM(meta_value) FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_tax' AND post_id IN ({$sales})" );
+
+				$amount = edd_get_payment_amount( $renewal->ID );
+
+				switch( $renewal->post_status ) {
+
+					case 'edd_subscription' :
+
+						$tax    = 0;
+
+						if( ! $include_taxes ) {
+							$tax = edd_get_payment_tax( $renewal->ID );
+						}
+
+						$return['count']    += 1;
+						$return['earnings'] += ( $amount - $tax );
+
+						break;
+
+					case 'refunded' :
+
+						$return['refunded_count'] += 1;
+						$return['refunded']       += $amount;
+
+						break;
+
+
 				}
 
-				$return['earnings'] += ( $amount - $total_tax );
 
 			}
 		}
@@ -113,6 +135,7 @@ class EDD_Recurring_Reports {
 		switch ( $dates['range'] ) :
 			case 'today' :
 			case 'yesterday' :
+			case 'last_30_days' :
 				$day_by_day = true;
 				break;
 			case 'last_year' :
@@ -134,13 +157,17 @@ class EDD_Recurring_Reports {
 		endswitch;
 
 		$earnings_totals      = 0.00; // Total earnings for time period shown
+		$refunded_amount      = 0.00; // Total earnings refunded
 		$subscriptions_totals = 0;    // Total sales for time period shown
+		$refunded_count       = 0;    // Total renewals refunded
 
 		//@TODO: Should taxes ever be included?
 
 		$include_taxes      = empty( $_GET['exclude_taxes'] ) ? true : false;
 		$earnings_data      = array();
+		$refunds_data       = array();
 		$subscription_count = array();
+		$refunded_counter   = array();
 
 		if ( $dates['range'] == 'today' || $dates['range'] == 'yesterday' ) {
 			// Hour by hour
@@ -151,11 +178,15 @@ class EDD_Recurring_Reports {
 				$subscriptions = $this->get_subscriptions_by_date( $dates['day'], $month, $dates['year'], $hour, $include_taxes );
 
 				$earnings_totals += $subscriptions['earnings'];
+				$refunded_amount += $subscriptions['refunded'];
 				$subscriptions_totals += $subscriptions['count'];
+				$refunded_count += $subscriptions['refunded_count'];
 
 				$date                 = mktime( $hour, 0, 0, $month, $dates['day'], $dates['year'] ) * 1000;
 				$subscription_count[] = array( $date, $subscriptions['count'] );
+				$refunded_counter[]   = array( $date, $subscriptions['refunded_count'] );
 				$earnings_data[]      = array( $date, $subscriptions['earnings'] );
+				$refunds_data[]       = array( $date, $subscriptions['refunded'] );
 
 				$hour ++;
 			endwhile;
@@ -171,11 +202,15 @@ class EDD_Recurring_Reports {
 				$subscriptions = $this->get_subscriptions_by_date( $day, $month, $dates['year'], null, $include_taxes );
 
 				$earnings_totals += $subscriptions['earnings'];
+				$refunded_amount += $subscriptions['refunded'];
 				$subscriptions_totals += $subscriptions['count'];
+				$refunded_count += $subscriptions['refunded_count'];
 
 				$date                 = mktime( 0, 0, 0, $month, $day, $dates['year'] ) * 1000;
 				$subscription_count[] = array( $date, $subscriptions['count'] );
+				$refunded_counter[]   = array( $date, $subscriptions['refunded_count'] );
 				$earnings_data[]      = array( $date, $subscriptions['earnings'] );
+				$refunds_data[]       = array( $date, $subscriptions['refunded'] );
 				$day ++;
 			endwhile;
 
@@ -204,12 +239,16 @@ class EDD_Recurring_Reports {
 
 				$i = $month_start;
 				while ( $i <= $month_end ) :
+					$d = $dates['day'];
 
 					if ( $day_by_day ) :
 
 						if ( $i == $month_end ) {
 
 							$num_of_days = $dates['day_end'];
+							if ( $month_start < $month_end ) {
+								$d = 1;
+							}
 
 						} else {
 
@@ -217,18 +256,20 @@ class EDD_Recurring_Reports {
 
 						}
 
-						$d = $dates['day'];
-
 						while ( $d <= $num_of_days ) :
 
 							$subscriptions = $this->get_subscriptions_by_date( $d, $i, $y, null, $include_taxes );
 
 							$earnings_totals += $subscriptions['earnings'];
+							$refunded_amount += $subscriptions['refunded'];
 							$subscriptions_totals += $subscriptions['count'];
+							$refunded_count += $subscriptions['refunded_count'];
 
 							$date                 = mktime( 0, 0, 0, $i, $d, $y ) * 1000;
 							$subscription_count[] = array( $date, $subscriptions['count'] );
+							$refunded_counter[]   = array( $date, $subscriptions['refunded_count'] );
 							$earnings_data[]      = array( $date, $subscriptions['earnings'] );
+							$refunds_data[]       = array( $date, $subscriptions['refunded'] );
 							$d ++;
 
 						endwhile;
@@ -238,7 +279,9 @@ class EDD_Recurring_Reports {
 						$subscriptions = $this->get_subscriptions_by_date( null, $i, $y, null, $include_taxes );
 
 						$earnings_totals += $subscriptions['earnings'];
+						$refunded_amount += $subscriptions['refunded'];
 						$subscriptions_totals += $subscriptions['count'];
+						$refunded_count += $subscriptions['refunded_count'];
 
 						if ( $i == $month_end && $last_year ) {
 
@@ -252,7 +295,9 @@ class EDD_Recurring_Reports {
 
 						$date                 = mktime( 0, 0, 0, $i, $num_of_days, $y ) * 1000;
 						$subscription_count[] = array( $date, $subscriptions['count'] );
+						$refunded_counter[]   = array( $date, $subscriptions['refunded_count'] );
 						$earnings_data[]      = array( $date, $subscriptions['earnings'] );
+						$refunds_data[]       = array( $date, $subscriptions['refunded'] );
 
 					endif;
 
@@ -266,9 +311,19 @@ class EDD_Recurring_Reports {
 		}
 
 		$data = array(
-			__( 'Renewals', 'edd-recurring' ) => $subscription_count,
-			__( 'Earnings', 'edd-recurring' )      => $earnings_data
+			__( 'Renewals', 'edd-recurring' )          => $subscription_count,
+			__( 'Refunds', 'edd-recurring' )           => $refunded_counter,
+			__( 'Earnings', 'edd-recurring' )          => $earnings_data,
+			__( 'Refunded Earnings', 'edd-recurring' ) => $refunds_data,
 		);
+
+		$renewals_earnings_max = max( wp_list_pluck( $earnings_data, 1 ) );
+		$refunds_earnings_max  = max( wp_list_pluck( $refunds_data, 1 ) );
+		$earnings_max          = max( $renewals_earnings_max, $refunds_earnings_max );
+
+		$renewals_max = max( wp_list_pluck( $subscription_count, 1 ) );
+		$refunds_max  = max( wp_list_pluck( $refunded_counter, 1 ) );
+		$sales_max    = max( $renewals_max, $refunds_max ) + 1;
 
 		ob_start();
 		?>
@@ -286,24 +341,65 @@ class EDD_Recurring_Reports {
 					$graph = new EDD_Graph( $data );
 					$graph->set( 'x_mode', 'time' );
 					$graph->set( 'multiple_y_axes', true );
+					$additional_options = array(
+						0 => array(
+							'max' => $sales_max,
+						),
+						1 => array(
+							'max' => $sales_max,
+							'show' => false,
+						),
+						2 => array(
+							'max' => $earnings_max,
+						),
+						3 => array(
+							'max' => $earnings_max,
+							'show' => false,
+						),
+					);
+					$graph->set( 'additional_options', 'yaxes: ' . json_encode( $additional_options ) );
 					$graph->display();
 					?>
 
 					<p class="edd_graph_totals">
 						<strong>
 							<?php
-							_e( 'Total earnings for period shown: ', 'easy-digital-downloads' );
-							echo edd_currency_filter( edd_format_amount( $earnings_totals ) );
+							_e( 'Gross earnings for period shown: ', 'easy-digital-downloads' );
+							echo edd_currency_filter( edd_format_amount( $earnings_totals  + $refunded_amount) );
 							?>
 						</strong>
-						<?php if ( ! $include_taxes ) : ?>
-							<sup>&dagger;</sup>
-						<?php endif; ?>
 					</p>
 
 					<p class="edd_graph_totals">
-						<strong><?php _e( 'Total subscription renewals for period shown: ', 'edd-recurring' );
-							echo edd_format_amount( $subscriptions_totals, false ); ?></strong></p>
+						<strong>
+							<?php
+							_e( 'Refunded earnings for period shown: ', 'easy-digital-downloads' );
+							echo edd_currency_filter( edd_format_amount( $refunded_amount ) );
+							?>
+						</strong>
+					</p>
+
+					<p class="edd_graph_totals">
+						<strong>
+							<?php
+							_e( 'NET earnings for period shown: ', 'easy-digital-downloads' );
+							echo edd_currency_filter( edd_format_amount( $earnings_totals ) );
+							?>
+						</strong>
+					</p>
+
+					<p class="edd_graph_totals">
+						<strong><?php _e( 'Total renewals for period shown: ', 'edd-recurring' ); echo edd_format_amount( $subscriptions_totals, false ); ?></strong>
+					</p>
+
+					<p class="edd_graph_totals">
+						<strong>
+							<?php
+							_e( 'Total renewals refunded for period shown: ', 'easy-digital-downloads' );
+							echo edd_format_amount( $refunded_count, false );
+							?>
+						</strong>
+					</p>
 
 					<?php do_action( 'edd_subscription_reports_graph_additional_stats' ); ?>
 

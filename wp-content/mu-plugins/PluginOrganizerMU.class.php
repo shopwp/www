@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Plugin Organizer MU
-Plugin URI: http://www.jsterup.com
+Plugin URI: http://www.sterupdesign.com
 Description: A plugin for specifying the load order of your plugins.
-Version: 9.5.1
+Version: 9.6.4
 Author: Jeff Sterup
-Author URI: http://www.jsterup.com
+Author URI: http://www.sterupdesign.com
 License: GPL2
 */
 
@@ -68,7 +68,7 @@ class PluginOrganizerMU {
 			}
 			
 			$this->set_requested_permalink();
-			if (get_option('PO_updating_plugin') != '1' && get_option("PO_version_num") != "9.5.1" && !is_admin()) {
+			if (get_option('PO_updating_plugin') != '1' && get_option("PO_version_num") != "9.6.4" && !is_admin()) {
 				$newPluginList = $pluginList;
 				update_option("PO_disable_plugins_frontend", "0");
 				update_option("PO_disable_plugins_admin", "0");
@@ -370,6 +370,14 @@ class PluginOrganizerMU {
 				} else {
 					$newPluginList = $pluginList;
 				}
+			}
+
+			if ($displayDebugMsg == 1) {
+				$this->debugMsg[] = "-------  Enabled Plugins  -------";
+				foreach($newPluginList as $enabledPlugin) {
+					$this->debugMsg[] = $enabledPlugin;
+				}
+				$this->debugMsg[] = "---------------------------------";
 			}
 
 			if (is_multisite() && $displayDebugMsg == 1) {

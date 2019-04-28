@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Easy Digital Downloads - Recurring Payments
- * Plugin URI: http://easydigitaldownloads.com/downloads/edd-recurring
+ * Plugin URI: http://easydigitaldownloads.com/downloads/edd-recurring/
  * Description: Sell subscriptions with Easy Digital Downloads
  * Author: Easy Digital Downloads
- * Author URI: https://easydigitaldownloads.com
- * Version: 2.6.9
+ * Author URI: https://easydigitaldownloads.com/
+ * Version: 2.8.6
  * Text Domain: edd-recurring
  * Domain Path: languages
  */
@@ -31,7 +31,7 @@ if ( ! defined( 'EDD_RECURRING_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_RECURRING_VERSION' ) ) {
-	define( 'EDD_RECURRING_VERSION', '2.6.9' );
+	define( 'EDD_RECURRING_VERSION', '2.8.6' );
 }
 
 final class EDD_Recurring {
@@ -74,6 +74,11 @@ final class EDD_Recurring {
 	 * @var EDD_Recurring_Invoices
 	 */
 	public static $invoices;
+
+	/**
+	 * @var EDD_Recurring_Fraud_Monitor
+	 */
+	public static $fraud_monitor;
 
 	/**
 	 * @var EDD_Recurring_Reminders
@@ -165,6 +170,7 @@ final class EDD_Recurring {
 		self::$software_licensing  = new EDD_Recurring_Software_Licensing();
 		self::$auto_register       = new EDD_Recurring_Auto_Register();
 		self::$invoices            = new EDD_Recurring_Invoices();
+		self::$fraud_monitor       = new EDD_Recurring_Fraud_Monitor();
 		self::$api                 = new EDD_Subscriptions_API();
 		self::$reminders           = new EDD_Recurring_Reminders();
 		self::$emails              = new EDD_Recurring_Emails();
@@ -207,6 +213,7 @@ final class EDD_Recurring {
 			'plugin-software-licensing.php',
 			'plugin-auto-register.php',
 			'plugin-invoices.php',
+			'plugin-fraud-monitor.php',
 			'deprecated/edd-recurring-customer.php'
 		);
 
@@ -248,11 +255,12 @@ final class EDD_Recurring {
 			'subscriptions.php',
 			'metabox.php',
 			'settings.php',
-			'scripts.php'
+			'scripts.php',
+			'class-reports-filters.php',
 		);
 
 		foreach ( $files as $file ) {
-			require( sprintf( '%s/includes/admin/%s', self::$plugin_path, $file ) );
+			require_once( sprintf( '%s/includes/admin/%s', self::$plugin_path, $file ) );
 		}
 	}
 
@@ -307,13 +315,13 @@ final class EDD_Recurring {
 	private function actions() {
 
 		if ( class_exists( 'EDD_License' ) && is_admin() ) {
-			$recurring_license = new EDD_License( __FILE__, EDD_RECURRING_PRODUCT_NAME, EDD_RECURRING_VERSION, 'Easy Digital Downloads', 'recurring_license_key' );
+			$recurring_license = new EDD_License( __FILE__, EDD_RECURRING_PRODUCT_NAME, EDD_RECURRING_VERSION, 'Easy Digital Downloads', 'recurring_license_key', null, 28530 );
 		}
 
-		add_action( 'admin_menu', array( $this, 'subscriptions_list' ), 10 );
+		// Register our custom post status
+		$this->register_post_statuses();
 
-		// Register our "canclled" post status
-		add_action( 'init', array( $this, 'register_post_statuses' ) );
+		add_action( 'admin_menu', array( $this, 'subscriptions_list' ), 10 );
 
 		// Maybe remove the Signup fee from the cart
 		add_action( 'init', array( $this, 'maybe_add_remove_fees' ) );
@@ -329,6 +337,8 @@ final class EDD_Recurring {
 
 		// Register scripts
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		add_action( 'init', array( $this, 'add_non_persistent_cache' ) );
 
 	}
 
@@ -376,6 +386,8 @@ final class EDD_Recurring {
 		// Don't count renewals towards a customer purchase count when using recount
 		add_filter( 'edd_customer_recount_sholud_increase_count', array( $this, 'maybe_increase_customer_sales' ), 10, 2 );
 
+		// Add edd_subscription to payment stats in EDD Core
+		add_filter( 'edd_payment_stats_post_statuses', array( $this, 'edd_payment_stats_post_status' ) );
 	}
 
 	/**
@@ -690,7 +702,7 @@ final class EDD_Recurring {
 					'period'       => self::get_period( $price_id, $download_id ),
 					'times'        => self::get_times( $price_id, $download_id ),
 					'signup_fee'   => self::get_signup_fee( $price_id, $download_id ),
-					'trial_period' => self::get_trial_period( $download_id )
+					'trial_period' => self::get_trial_period( $download_id, $price_id )
 				);
 
 			}
@@ -1034,7 +1046,7 @@ final class EDD_Recurring {
 	}
 
 	/**
-	 * Check if a product is has a free trial
+	 * Check if a product has a free trial
 	 *
 	 * @since  2.6
 	 *
@@ -1042,7 +1054,7 @@ final class EDD_Recurring {
 	 *
 	 * @return bool
 	 */
-	public static function has_free_trial( $download_id = 0 ) {
+	public static function has_free_trial( $download_id = 0, $price_id = null ) {
 
 		global $post;
 
@@ -1050,10 +1062,19 @@ final class EDD_Recurring {
 			$download_id = $post->ID;
 		}
 
-		$has_trial = get_post_meta( $download_id, 'edd_trial_period', true );
+		$prices = edd_get_variable_prices( $download_id );
+		if ( ( ! empty( $price_id ) || 0 === (int) $price_id ) && is_array( $prices ) && ! empty( $prices[ $price_id ]['trial-quantity'] ) ) {
+			$trial = array();
+			$trial['quantity'] = $prices[ $price_id ]['trial-quantity'];
+			$has_trial = ( $trial > 0 ? true : false );
 
-		return apply_filters( 'edd_recurring_download_has_free_trial', (bool) $has_trial, $download_id );
+			return apply_filters( 'edd_recurring_download_has_free_trial', (bool) $has_trial, $download_id, $price_id );
 
+		} else {
+			$has_trial = get_post_meta( $download_id, 'edd_trial_period', true );
+
+			return apply_filters( 'edd_recurring_download_has_free_trial', (bool) $has_trial, $download_id );
+		}
 	}
 
 	/**
@@ -1091,28 +1112,33 @@ final class EDD_Recurring {
 	}
 
 	/**
-	 * Get the time period for a single-price product
+	 * Get the time period for a product
 	 *
 	 * @since  2.6
 	 * @return array
 	 */
-	static function get_trial_period( $post_id ) {
+	static function get_trial_period( $post_id, $price_id = null ) {
 		global $post;
 
 		$period = false;
 
-		if( self::has_free_trial( $post_id ) ) {
+		if( self::has_free_trial( $post_id, $price_id ) ) {
 
 			$default = array(
 				'quantity' => 1,
 				'unit'     => 'month',
 			);
 
-			$period = (array) get_post_meta( $post_id, 'edd_trial_period', true );
-			$period = wp_parse_args( $period, $default );
-			$period['quantity'] = absint( $period['quantity'] );
-			$period['quantity'] = $period['quantity'] < 1 ? 1 : $period['quantity'];
-
+			$prices = edd_get_variable_prices( $post_id );
+			if ( ( ! empty( $price_id ) || 0 === (int) $price_id ) && is_array( $prices ) && ! empty( $prices[ $price_id ]['trial-quantity'] ) && ! empty( $prices[ $price_id ]['trial-unit'] ) ) {
+				$period['quantity'] = $prices[ $price_id ]['trial-quantity'];
+				$period['unit'] = $prices[ $price_id ]['trial-unit'];
+			} else {
+				$period = (array) get_post_meta( $post_id, 'edd_trial_period', true );
+				$period = wp_parse_args( $period, $default );
+				$period['quantity'] = absint( $period['quantity'] );
+				$period['quantity'] = $period['quantity'] < 1 ? 1 : $period['quantity'];
+			}
 		}
 
 		return $period;
@@ -1144,7 +1170,7 @@ final class EDD_Recurring {
 			}
 		}
 
-		// setup the payment daya
+		// setup the payment data
 		$payment_data = array(
 			'parent'       => $parent_id,
 			'price'        => $amount,
@@ -1181,7 +1207,7 @@ final class EDD_Recurring {
 				foreach ( $licenses as $license ) {
 					// Update the expiration dates of the license key
 
-					edd_software_licensing()->renew_license( $license->ID, $parent_id );
+					edd_software_licensing()->renew_license( $license->ID, $payment->ID );
 
 				}
 			}
@@ -1324,7 +1350,19 @@ final class EDD_Recurring {
 
 			foreach ( $cart_contents as $cart_item ) {
 
-				if ( self::has_free_trial( $cart_item['id'] ) ) {
+				if ( edd_has_variable_prices( $cart_item['id'] ) && isset( $cart_item['options']['price_id'] ) ) {
+
+					if( self::has_free_trial( $cart_item['id'], $cart_item['options']['price_id'] ) ) {
+
+						$has_trial = true;
+
+					} else {
+
+						$has_non_trial = true;
+
+					}
+
+				} else if ( self::has_free_trial( $cart_item['id'] ) ) {
 
 					$has_trial = true;
 
@@ -1356,7 +1394,7 @@ final class EDD_Recurring {
 	 * @since  2.6
 	 * @return string
 	 */
-	static function maybe_set_cart_total( $total ) {
+	public static function maybe_set_cart_total( $total ) {
 
 		if( self::cart_has_free_trial() ) {
 
@@ -1365,7 +1403,7 @@ final class EDD_Recurring {
 
 			foreach ( $cart_contents as $cart_item ) {
 
-				if ( self::has_free_trial( $cart_item['id'] ) ) {
+				if ( self::has_free_trial( $cart_item['id'] ) && isset( $cart_item['options']['recurring']['trial_period'] ) ) {
 
 					$total -= edd_get_cart_item_price( $cart_item['id'], $cart_item['options'] );
 
@@ -1396,9 +1434,12 @@ final class EDD_Recurring {
 		$has_trial       = false;
 		$one_time_trials = edd_get_option( 'recurring_one_time_trials', false );
 		$cart_contents   = edd_get_cart_contents();
+
 		foreach ( $cart_contents as $cart_item ) {
 
-			if ( self::has_free_trial( $cart_item['id'] ) ) {
+			$price_id = isset( $cart_item['options']['price_id'] ) ? $cart_item['options']['price_id'] : null;
+
+			if ( self::has_free_trial( $cart_item['id'], $price_id ) && isset( $cart_item['options']['recurring']['trial_period'] ) ) {
 
 				if( ! $one_time_trials || ! self::has_trialed( $cart_item['id'] ) ) {
 
@@ -1422,7 +1463,14 @@ final class EDD_Recurring {
 	 * @return array
 	 */
 	public function earnings_query( $args ) {
-		$args['post_status'] = array( 'publish', 'revoked', 'cancelled', 'edd_subscription' );
+
+		$statuses_to_include = array( 'publish', 'revoked', 'cancelled', 'edd_subscription' );
+
+		// Include post_status in case we are filtering to direct database queries like in the edd_stats_earnings_args filter
+		$args['post_status'] = $statuses_to_include;
+
+		// Include status in case we are filtering to queries done through edd_get_payments like in the edd_get_total_earnings_args filter
+		$args['status'] = $statuses_to_include;
 
 		return $args;
 	}
@@ -1452,6 +1500,16 @@ final class EDD_Recurring {
 		return $args;
 	}
 
+	/**
+	 * Add edd_subscription post type to EDD Payment Stats
+	 *
+	 * @since  2.6.10
+	 * @param  array $statuses Post statuses.
+	 */
+	public function edd_payment_stats_post_status( $statuses ) {
+		$statuses[] = 'edd_subscription';
+		return $statuses;
+	}
 
 	/**
 	 * Tells EDD to include child payments in queries
@@ -1460,7 +1518,34 @@ final class EDD_Recurring {
 	 * @return void
 	 */
 	public function enable_child_payments( $query ) {
-		$query->__set( 'post_parent', null );
+
+		$query_has_recurring = true;
+
+		if( ! empty( $query->initial_args['download'] ) ) {
+			$query_has_recurring = false;
+			$download            = $query->initial_args['download'];
+
+			if ( ! is_array( $download ) && strpos( $download, ',' ) ) {
+				$download = explode( ',', $download );
+			}
+
+			if ( is_array( $download ) ) {
+				foreach( $download as $download_id ) {
+					$item_has_recurring = edd_recurring()->is_recurring( $download_id );
+					if ( $item_has_recurring ) {
+						$query_has_recurring = true;
+						break;
+					}
+				}
+			} else {
+				$query_has_recurring = edd_recurring()->is_recurring( $download );
+			}
+		}
+
+		if ( $query_has_recurring ) {
+			$query->__set( 'post_parent', null );
+		}
+
 	}
 
 
@@ -1482,15 +1567,35 @@ final class EDD_Recurring {
 	 * @return bool
 	 */
 	public function enqueue_scripts() {
+		global $post;
+
+		$load_js = false;
 
 		wp_register_script( 'edd-frontend-recurring', EDD_RECURRING_PLUGIN_URL . 'assets/js/edd-frontend-recurring.js', array( 'jquery' ), EDD_RECURRING_VERSION );
-		wp_enqueue_script( 'edd-frontend-recurring' );
+
 		wp_localize_script( 'edd-frontend-recurring', 'edd_recurring_vars', array(
 			'confirm_cancel' => __( 'Are you sure you want to cancel your subscription?', 'edd-recurring' ),
+			'has_trial'      => $this->cart_has_free_trial(),
+			'total'          => $this->cart_has_free_trial() ? edd_currency_filter( '0.00' ) : edd_cart_total( false ),
+			'total_plain'    => $this->cart_has_free_trial() ? '0.00' : edd_get_cart_total()
 		) );
 
-		if( is_ssl() ) {
-			wp_enqueue_style( 'dashicons' );
+		// The page checks could be broken out, but this is a far more readable format for troubleshooting.
+		if ( edd_is_checkout() ||
+		   ( is_object( $post ) && (
+		     ( 'page' === $post->post_type && has_shortcode( $post->post_content, 'purchase_link' ) ) ||
+		     ( 'page' === $post->post_type && has_shortcode( $post->post_content, 'edd_downloads' ) ) ||
+		     ( 'page' === $post->post_type && has_shortcode( $post->post_content, 'downloads' ) ) ||
+		     ( 'page' === $post->post_type && has_shortcode( $post->post_content, 'edd_subscriptions' ) ) ||
+		       'download' === $post->post_type )
+		   ) ) {
+			$load_js = true;
+		}
+
+		$load_js = apply_filters( 'edd_recurring_load_js', $load_js );
+
+		if ( $load_js ) {
+			wp_enqueue_script( 'edd-frontend-recurring' );
 		}
 	}
 
@@ -1714,7 +1819,7 @@ final class EDD_Recurring {
 	}
 
 	/**
-	 * Show the signup fees by vraible prices
+	 * Show the signup fees by variable prices
 	 *
 	 * @since  2.4
 	 * @param  int    $price_id    The price ID key
@@ -1787,6 +1892,50 @@ final class EDD_Recurring {
 	public function show_terms_on_cart_item( $item ) {
 		self::$checkout->show_terms_on_cart_item( $item );
 	}
+
+	/**
+	 * Show the subscriptions management UI
+	 *
+	 * @since 2.7.14
+	 *
+	 * @param string $action Optional. Which view to show. Options: update|list. If not set, $_GET[ 'action ] or "list" is used.
+	 *
+	 * @return string
+	 */
+	public function subscriptions_view( $action = '' ) {
+
+		if( empty( $action ) ) {
+			$action = ! empty( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : 'list';
+		}
+
+		ob_start();
+		edd_print_errors();
+		switch( $action ) {
+			case 'update':
+				edd_get_template_part( 'shortcode', 'subscription-update' );
+				break;
+			case 'list':
+			default:
+				edd_get_template_part( 'shortcode', 'subscriptions' );
+				break;
+		}
+
+		return ob_get_clean();
+
+	}
+
+	/**
+	 * Since we cannot invalidate the wp_cache by group, we need to avoid allowing the 'subscriptions' group
+	 * from being added to the persistent caching solutions. While this might hurt page speed overall, it will still
+	 * help with single page lads times when we are doing complex queries for subscriptions.
+	 *
+	 * @since 2.8.5
+	 * @return void
+	 */
+	public function add_non_persistent_cache() {
+		wp_cache_add_non_persistent_groups( 'edd_subscriptions' );
+	}
+
 }
 
 /**
@@ -1833,6 +1982,15 @@ function edd_recurring_install() {
 
 		$version = get_option( 'edd_recurring_version' );
 
+		if( ! is_admin() ) {
+			// Make sure our admin files with edd_recurring_needs_24_stripe_fix() definition are loaded
+			EDD_Recurring()->includes_admin();
+		}
+
+		if ( ! function_exists( 'edd_set_upgrade_complete' ) ) {
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+		}
+
 		if( empty( $version ) ) {
 
 			// This is a new install or an update from pre 2.4, look to see if we have recurring products
@@ -1844,13 +2002,12 @@ function edd_recurring_install() {
 				edd_set_upgrade_complete( 'upgrade_24_subscriptions' );
 			}
 
-		}
+			$total_sql = "SELECT COUNT(ID) as total_error_logs FROM $wpdb->posts WHERE post_title = 'PayPal Express Error' AND post_type = 'edd_log'";
+			$results   = $wpdb->get_row( $total_sql, 0 );
+			$total     = $results->total_error_logs;
 
-		if( ! is_admin() ) {
-
-			// Make sure our admin files with edd_recurring_needs_24_stripe_fix() definition are loaded
-			EDD_Recurring()->includes_admin();
-			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+			// Set any other upgrades as completed on a fresh install.
+			edd_set_upgrade_complete( 'recurring_paypalproexpress_logs' );
 
 		}
 

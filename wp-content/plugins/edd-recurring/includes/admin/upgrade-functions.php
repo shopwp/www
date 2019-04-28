@@ -11,6 +11,37 @@
 
 
 /**
+ * Perform automatic database upgrades when necessary
+ *
+ * @since 2.7
+ * @return void
+*/
+function edd_recurring_do_automatic_upgrades() {
+
+	$did_upgrade = false;
+	$version = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_recurring_version' ) );
+
+	if( $version <> EDD_RECURRING_VERSION ) {
+
+		// Trigger DB upgrades
+		edd_recurring_install();
+
+		// Let us know that an upgrade has happened
+		$did_upgrade = true;
+
+	}
+
+	if( $did_upgrade ) {
+
+		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+
+	}
+
+}
+add_action( 'admin_init', 'edd_recurring_do_automatic_upgrades' );
+
+
+/**
  * Recurring Payments Upgrade Notices
  *
  * @since 2.4
@@ -57,6 +88,42 @@ function edd_show_recurring_upgrade_notices() {
 
 	}
 
+	if ( ! edd_has_upgrade_completed( 'recurring_27_subscription_meta' ) ) {
+
+		printf(
+			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the subscription payments database, click <a href="%s">here</a> to start the upgrade.', 'edd-recurring' ) . '</p></div>',
+			esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=recurring_27_subscription_meta' ) )
+		);
+
+	}
+
+	if ( ! edd_has_upgrade_completed( 'recurring_paypalproexpress_logs' ) ) {
+
+		printf(
+			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade the payment gateway error logs, click <a href="%s">here</a> to start the upgrade.', 'edd-recurring' ) . '</p></div>',
+			esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=recurring_paypalproexpress_logs' ) )
+		);
+
+	}
+
+	if ( ! edd_has_upgrade_completed( 'recurring_add_tax_columns_to_subs_table' ) ) {
+
+		printf(
+			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade subscriptions table, click <a href="%s">here</a> to start the upgrade.', 'edd-recurring' ) . '</p></div>',
+			esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=recurring_add_tax_columns_to_subs_table' ) )
+		);
+
+	}
+
+	if ( ! edd_has_upgrade_completed( 'recurring_cancel_subs_if_times_met' ) ) {
+
+		printf(
+			'<div class="updated"><p>' . __( 'Easy Digital Downloads wants to check to see if any subscriptions need to be set to complete. Click <a href="%s">here</a> to start.', 'edd-recurring' ) . '</p></div>',
+			esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=recurring_cancel_subs_if_times_met' ) )
+		);
+
+	}
+
 }
 add_action( 'admin_notices', 'edd_show_recurring_upgrade_notices' );
 
@@ -74,7 +141,7 @@ function edd_recurring_v24_migrate_subscriptions() {
 	}
 
 	ignore_user_abort( true );
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit( 0 );
 	}
 
@@ -434,7 +501,7 @@ function edd_recurring_fix_24_stripe_customers() {
 	}
 
 	ignore_user_abort( true );
-	if ( ! edd_is_func_disabled( 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 		@set_time_limit( 0 );
 	}
 
@@ -879,3 +946,327 @@ function edd_recurring_needs_24_stripe_fix() {
 
 	return $needs_stripe_fix;
 }
+
+/**
+ * Adds subscription_id meta data to renewal payments (including refunded renewals) so they can be queried for reports
+ *
+ * See https://github.com/easydigitaldownloads/edd-recurring/issues/626
+ *
+ * @since  2.7
+ * @return void
+ */
+function edd_recurring_27_add_subscription_id_meta() {
+
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
+		@set_time_limit( 0 );
+	}
+
+	$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 5;
+	$offset = $step == 1 ? 0 : ( $step - 1 ) * $number;
+	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if ( empty( $total ) || $total <= 1 ) {
+		$total_sql = "SELECT COUNT(ID) as total_payments FROM $wpdb->posts WHERE post_type = 'edd_payment' AND post_status IN ('edd_subscription','refunded') AND post_parent > 0;";
+		$results   = $wpdb->get_row( $total_sql, 0 );
+		$total     = $results->total_payments;
+	}
+
+	$payments = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT ID,post_parent FROM $wpdb->posts WHERE post_type = 'edd_payment' AND post_status IN ('edd_subscription','refunded') AND post_parent > 0 ORDER BY post_date ASC LIMIT %d,%d;",
+			$offset,
+			$number
+		)
+	);
+
+	if( $payments ) {
+
+		foreach( $payments as $payment ) {
+
+			$subscription_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM " . $wpdb->prefix . "edd_subscriptions WHERE parent_payment_id = %d LIMIT 0,1", $payment->post_parent ) );
+
+			if( $subscription_id ) {
+
+				update_post_meta( $payment->ID, 'subscription_id', $subscription_id );
+
+			}
+
+		}
+
+		$step ++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'recurring_27_subscription_meta',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+
+		wp_redirect( $redirect );
+		exit;
+
+	} else {
+
+		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+		edd_set_upgrade_complete( 'recurring_27_subscription_meta' );
+
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() );
+		exit;
+
+	}
+
+}
+add_action( 'edd_recurring_27_subscription_meta', 'edd_recurring_27_add_subscription_id_meta' );
+
+/**
+ * Removes pre-existing logs for the PayPal Pro & Express payment gateway error logs
+ *
+ * @since  2.7.14
+ * @return void
+ */
+function edd_recurring_paypalproexpress_logs() {
+
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
+		@set_time_limit( 0 );
+	}
+
+	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] ) : 1;
+	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 25;
+	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+
+	if ( empty( $total ) || $total <= 1 ) {
+		$total_sql = "SELECT COUNT(ID) as total_error_logs FROM $wpdb->posts WHERE post_title = 'PayPal Express Error' AND post_type = 'edd_log'";
+		$results   = $wpdb->get_row( $total_sql, 0 );
+		$total     = $results->total_error_logs;
+
+		// We had no errors, so just mark the upgrade as complete.
+		if ( empty( $total ) ) {
+			update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+			edd_set_upgrade_complete( 'recurring_paypalproexpress_logs' );
+
+			delete_option( 'edd_doing_upgrade' );
+
+			wp_redirect( admin_url() );
+			exit;
+		}
+	}
+
+	$logs = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT ID FROM $wpdb->posts WHERE post_title = 'PayPal Express Error' AND post_type = 'edd_log' ORDER BY post_date ASC LIMIT %d;",
+			$number
+		)
+	);
+
+	if( $logs ) {
+
+		foreach( $logs as $log_id ) {
+			wp_delete_post( (int)$log_id->ID, true );
+		}
+
+		$step ++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'recurring_paypalproexpress_logs',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+
+		wp_redirect( $redirect );
+		exit;
+
+	} else {
+
+		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+		edd_set_upgrade_complete( 'recurring_paypalproexpress_logs' );
+
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() );
+		exit;
+
+	}
+
+}
+add_action( 'edd_recurring_paypalproexpress_logs', 'edd_recurring_paypalproexpress_logs' );
+
+/**
+ * Adds columns to the EDD_Subscriptions table for initial_tax and recurring_tax
+ *
+ * @since  2.7.17
+ * @return void
+ */
+function edd_recurring_add_tax_columns_to_subs_table() {
+
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
+		@set_time_limit( 0 );
+	}
+
+	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] ) : 1;
+	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
+	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+	$db    = new EDD_Subscriptions_DB;
+
+	if( ! edd_use_taxes() ) {
+		$total = 1; // Little hack to skip upgrading subscription records for stores that do not use taxes.
+	}
+
+	if ( empty( $total ) || $total <= 1 ) {
+
+		@$db->create_table();
+		$total = $db->count();
+
+		// We had no errors, so just mark the upgrade as complete.
+		if ( empty( $total ) ) {
+			update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+			edd_set_upgrade_complete( 'recurring_add_tax_columns_to_subs_table' );
+
+			delete_option( 'edd_doing_upgrade' );
+
+			wp_redirect( admin_url() );
+			exit;
+		}
+	}
+
+	$subs = $db->get_subscriptions( array(
+		'number' => $number,
+		'offset' => 10 * ( $step - 1 ),
+	) );
+
+	if( $subs ) {
+
+		foreach( $subs as $subscription ) {
+			$payment = new EDD_Payment( $subscription->parent_payment_id );
+			$args    = array();
+			$subscription->update( array(
+				'initial_tax'        => $payment->tax,
+				'recurring_tax'      => ( (float) $subscription->recurring_amount - (float) $payment->tax ) * (float) $payment->tax_rate,
+				'initial_tax_rate'   => $payment->tax_rate,
+				'recurring_tax_rate' => $payment->tax_rate,
+			) );
+		}
+
+		$step ++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'recurring_add_tax_columns_to_subs_table',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+
+		wp_redirect( $redirect );
+		exit;
+
+	} else {
+
+		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+		edd_set_upgrade_complete( 'recurring_add_tax_columns_to_subs_table' );
+
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() );
+		exit;
+
+	}
+
+}
+add_action( 'edd_recurring_add_tax_columns_to_subs_table', 'edd_recurring_add_tax_columns_to_subs_table' );
+
+
+/**
+ * Adds columns to the EDD_Subscriptions table for initial_tax and recurring_tax
+ *
+ * @since  2.7.17
+ * @return void
+ */
+function edd_recurring_cancel_subs_if_times_met() {
+
+	global $wpdb;
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_die( __( 'You do not have permission to do shop upgrades', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+	}
+
+	ignore_user_abort( true );
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
+		@set_time_limit( 0 );
+	}
+
+	$step   = isset( $_GET['step'] )   ? absint( $_GET['step'] ) : 1;
+	$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 10;
+	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+	$db    = new EDD_Subscriptions_DB;
+
+	$subs = $db->get_subscriptions( array(
+		'number'              => $number,
+		'offset'              => 10 * ( $step - 1 ),
+		'bill_times'          => 0,
+		'bill_times_operator' => '>'
+	) );
+
+	if( $subs ) {
+
+		foreach( $subs as $subscription ) {
+
+			$times_billed = $subscription->get_times_billed();
+
+			// Complete subscription if applicable
+			if ( $subscription->bill_times > 0 && $times_billed >= $subscription->bill_times ) {
+				$subscription->complete();
+				$subscription->status = 'completed';
+			}
+
+		}
+
+		$step ++;
+		$redirect = add_query_arg( array(
+			'page'        => 'edd-upgrades',
+			'edd-upgrade' => 'recurring_cancel_subs_if_times_met',
+			'step'        => $step,
+			'number'      => $number,
+			'total'       => $total
+		), admin_url( 'index.php' ) );
+
+		wp_redirect( $redirect );
+		exit;
+
+	} else {
+
+		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+		edd_set_upgrade_complete( 'recurring_cancel_subs_if_times_met' );
+
+		delete_option( 'edd_doing_upgrade' );
+
+		wp_redirect( admin_url() );
+		exit;
+
+	}
+
+}
+add_action( 'edd_recurring_cancel_subs_if_times_met', 'edd_recurring_cancel_subs_if_times_met' );

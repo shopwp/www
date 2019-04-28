@@ -182,17 +182,6 @@ class EDD_Subscription_Reports_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Billing Times column
-	 *
-	 * @access      private
-	 * @since       2.4
-	 * @return      string
-	 */
-	function column_bill_times( $item ) {
-		return $item->get_times_billed() . ' / ' . ( ( $item->bill_times == 0 ) ? 'Until Cancelled' : $item->bill_times );
-	}
-
-	/**
 	 * Initial Amount column
 	 *
 	 * @access      private
@@ -262,7 +251,6 @@ class EDD_Subscription_Reports_Table extends WP_List_Table {
 			'status'            => __( 'Status', 'edd-recurring' ),
 			'period'            => __( 'Billing Cycle', 'edd-recurring' ),
 			'initial_amount'    => __( 'Initial Amount', 'edd-recurring' ),
-			'bill_times'        => __( 'Times Billed', 'edd-recurring' ),
 			'renewal_date'      => __( 'Renewal Date', 'edd-recurring' ),
 			'parent_payment_id' => __( 'Payment', 'edd-recurring' ),
 			'product_id'        => edd_get_label_singular(),
@@ -298,7 +286,7 @@ class EDD_Subscription_Reports_Table extends WP_List_Table {
 
 		$search = ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 
-		$this->total_count     = $db->count();
+		$this->total_count     = $db->count( array( 'search' => $search ) );
 		$this->active_count    = $db->count( array( 'status' => 'active', 'search' => $search ) );
 		$this->pending_count   = $db->count( array( 'status' => 'pending', 'search' => $search ) );
 		$this->expired_count   = $db->count( array( 'status' => 'expired', 'search' => $search ) );

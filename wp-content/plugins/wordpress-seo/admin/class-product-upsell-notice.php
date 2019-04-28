@@ -10,11 +10,19 @@
  */
 class WPSEO_Product_Upsell_Notice {
 
+	/**
+	 * @var string
+	 */
 	const USER_META_DISMISSED = 'wpseo-remove-upsell-notice';
 
+	/**
+	 * @var string
+	 */
 	const OPTION_NAME = 'wpseo';
 
-	/** @var array */
+	/**
+	 * @var array
+	 */
 	protected $options;
 
 	/**
@@ -100,7 +108,7 @@ class WPSEO_Product_Upsell_Notice {
 	}
 
 	/**
-	 * Adds a notification to the notification center.
+	 * Removes a notification to the notification center.
 	 */
 	protected function remove_notification() {
 		$notification_center = Yoast_Notification_Center::get();

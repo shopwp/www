@@ -42,6 +42,12 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 		}
 
+		if ( defined( 'EDD_STRIPE_API_VER' ) ) {
+			\Stripe\Stripe::setApiVersion( EDD_STRIPE_API_VER );
+		} else {
+			\Stripe\Stripe::setApiVersion( '2018-02-28' );
+		}
+
 		add_action( 'edd_pre_refund_payment', array( $this, 'process_refund' ) );
 		add_action( 'edd_recurring_stripe_check_txn', array( $this, 'check_transaction_id' ) );
 		add_action( 'edd_recurring_setup_subscription', array( $this, 'maybe_check_subscription' ) );
@@ -87,12 +93,18 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 	 */
 	public function create_payment_profiles() {
 
-		if( empty( $_POST['edd_stripe_token'] ) ) {
+		if ( ! isset( $_POST['edd_stripe_token'] ) && ! isset( $_POST['edd_stripe_existing_card'] ) ) {
 
 			edd_set_error( 'edd_recurring_stripe_token_missing', __( 'Missing secure Stripe token, please try again.', 'edd-recurring' ) );
 			return;
 
 		}
+
+		/**
+		 * @var string $stripe_connect_account_id The Stripe account ID received from Stripe Connect.
+		 * Used when creating charges and subscriptions.
+		 */
+		$stripe_connect_account_id = edd_get_option( 'stripe_connect_account_id' );
 
 		$customer = $this->get_customer();
 
@@ -103,9 +115,75 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 		}
 
-		try {
+		$setup_currency = false;
+		$currency = edd_get_currency();
 
-			$customer->source = $_POST['edd_stripe_token'];
+		if ( empty( $customer->currency ) || $customer->currency != strtolower( $currency ) ) {
+
+			try {
+
+				\Stripe\InvoiceItem::create(array(
+					'customer'    => $customer->id,
+					'amount'      => 0,
+					'currency'    => $currency,
+					'description' => 'Setting Customer Currency',
+					'metadata'    => array(
+						'caller' => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+					)
+				));
+
+
+				$temp_invoice = \Stripe\Invoice::create(array(
+					'customer' => $customer->id,
+					'metadata'    => array(
+						'caller' => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+					)
+				));
+
+				$setup_currency = true;
+
+			} catch ( Exception $e ) {
+
+				/*
+				 * Currency code already set on customer. $customer->currency is the only one that may be used for this customer.
+				 *
+				 * Currency code was already set on the customer. Let's see if the customer has any invoices.
+				 * If there are no invoices, we can delete the customer and make a new one.
+				 */
+
+				$invoices = \Stripe\Invoice::all( array( 'limit' => 1, 'customer' => $customer->id ) );
+
+				if( empty( $invoices->data ) ) {
+
+					// Delete the customer
+					$customer->delete();
+
+					// Get / create a new customer
+					$customer = $this->get_customer();
+
+				} else {
+
+					edd_set_error(
+						'recurring_stripe_currency_mismatch',
+						sprintf( __( 'Your order must be completed in %s. Please select %s and retry your purchase.', 'edd-recurring' ), strtoupper( $customer->currency ), strtoupper( $customer->currency ) )
+					);
+					return;
+				}
+
+			}
+		}
+
+		$existing_card = false;
+
+		try {
+			if ( isset( $_POST['edd_stripe_token'] ) ) {
+				$card = $customer->sources->create( array( "source" => $_POST['edd_stripe_token'] ) );
+				$customer->default_source = $card->id;
+			} elseif ( isset( $_POST['edd_stripe_existing_card'] ) ) {
+				$customer->default_source = $_POST['edd_stripe_existing_card'];
+				$existing_card = true;
+			}
+
 			$customer->save();
 
 		} catch ( Exception $e ) {
@@ -113,25 +191,6 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 			edd_set_error( 'edd_recurring_stripe_error', $e->getMessage() );
 			return;
 
-		}
-
-		$setup_currency = false;
-
-		if ( empty( $customer->source ) ) {
-
-			\Stripe\InvoiceItem::create(array(
-				'customer'    => $customer->id,
-				'amount'      => 0,
-				'currency'    => edd_get_currency(),
-				'description' => 'Setting Customer Currency',
-			));
-
-
-			$temp_invoice = \Stripe\Invoice::create(array(
-				'customer' => $customer->id,
-			));
-
-			$setup_currency = true;
 		}
 
 		foreach( $this->subscriptions as $key => $subscription ) {
@@ -153,42 +212,60 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 			 * Example: if the subscription is $10 per month and the signup fee is $5, this will add $5 to the account balance.
 			 *
 			 * When account balances are negative, Stripe discounts that amount on the next invoice.
-			 * When account balancces are positve, Stripe adds that amount to the next invoice.
+			 * When account balances are positive, Stripe adds that amount to the next invoice.
 			 */
 
 			$save_balance = false;
-
-			// Set the tax rate on the subscription
-			$tax_percentage = 0;
-
-			if ( ! empty( $subscription['tax'] ) && ! edd_prices_include_tax() ) {
-
-				$tax_percentage = edd_get_tax_rate();
-				if( $tax_percentage < 1 ) {
-					$tax_percentage *= 100;
-				}
-
-				// These amounts include tax. We need to remove the tax since Stripe adds tax to the invoice automatically when we pass tax_percent
-				$subscription['initial_amount']   -= $subscription['initial_tax'];
-				$subscription['recurring_amount'] -= $subscription['recurring_tax'];
-
-			}
+			$balance_adjustment = 0;
 
 			if( $subscription['initial_amount'] > $subscription['recurring_amount'] ) {
-				$save_balance   = true;
-				$amount         = $subscription['initial_amount'] - $subscription['recurring_amount'];
-				$balance_amount = round( $customer->account_balance + ( $amount * 100 ), 0 ); // Add additional amount to initial payment (in cents)
-				$customer->account_balance = $balance_amount;
+				$save_balance        = true;
+				$amount              = $subscription['initial_amount'] - $subscription['recurring_amount'];
+				$balance_adjustment += round( ( $amount * 100 ), 0 ); // Add additional amount to initial payment (in cents)
 			}
 
 			if( $subscription['initial_amount'] < $subscription['recurring_amount'] ) {
-				$save_balance   = true;
-				$amount         = $subscription['recurring_amount'] - $subscription['initial_amount'];
-				$balance_amount = round( $customer->account_balance - ( $amount * 100 ), 0 ); // Add a discount to initial payment (in cents)
-				$customer->account_balance = $balance_amount;
+				$save_balance        = true;
+				$amount              = $subscription['recurring_amount'] - $subscription['initial_amount'];
+				$balance_adjustment -= round( ( $amount * 100 ), 0 ); // Add a discount to initial payment (in cents)
+			}
+
+			$args = array(
+				'plan'        => $plan_id,
+				'metadata'    => array(
+					'payment_key' => $this->purchase_data['purchase_key'],
+					'download'    => $subscription['name'],
+					'download_id' => $subscription['id'],
+					'price_id'    => $subscription['price_id'],
+					'caller'      => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+				)
+			);
+
+			if( ! empty( $subscription['has_trial'] ) ) {
+				$args['trial_end'] = strtotime( $subscription['trial_quantity'] . ' ' . $subscription['trial_unit'], current_time( 'timestamp' ) );
+			}
+
+			$args = apply_filters( 'edd_recurring_create_subscription_args', $args, $this->purchase_data['downloads'], $this->id, $subscription['id'], $subscription['price_id'] );
+
+			$args = apply_filters( 'edd_recurring_create_stripe_subscription_args', $args, $this->purchase_data, $customer );
+
+			if( ! empty( $args['needs_one_time'] ) ) {
+
+				$create_one_time = true;
+				$license_id      = $args['license_id'];
+				unset( $args['needs_one_time'] );
+				unset( $args['license_id'] );
+
+			}
+
+			if ( ! empty( $create_one_time ) ) {
+				$save_balance = false;
 			}
 
 			if( ! empty( $save_balance ) ) {
+
+				// Do not modify the customer account balance until we know we should.
+				$customer->account_balance = round( $customer->account_balance + $balance_adjustment );
 
 				$balance_changed = true;
 
@@ -199,30 +276,21 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 					$invoice = \Stripe\Invoice::retrieve( $temp_invoice->id );
 					$invoice->closed = true;
 					$invoice->save();
-					unset( $temp_invoice, $invoice, $currency_setup );
+					unset( $temp_invoice, $invoice, $setup_currency );
 
 				}
 
 			}
 
 			try {
-				$args = array(
-					'plan'        => $plan_id,
-					'tax_percent' => $tax_percentage,
-					'metadata'    => array(
-						'payment_key' => $this->purchase_data['purchase_key'],
-						'download'    => $subscription['name'],
-						'download_id' => $subscription['id'],
-						'price_id'    => $subscription['price_id']
-					)
-				);
 
-				if( ! empty( $subscription['has_trial'] ) ) {
-					$args['trial_end'] = strtotime( $subscription['trial_quantity'] . ' ' . $subscription['trial_unit'], current_time( 'timestamp' ) );
+				$sub_options = array();
+
+				if( ! empty( $stripe_connect_account_id ) ) {
+					$sub_options['stripe_account'] = $stripe_connect_account_id;
 				}
 
-				$args = apply_filters( 'edd_recurring_create_stripe_subscription_args', $args, $this->purchase_data, $customer );
-				$stripe_sub = $customer->subscriptions->create( $args );
+				$stripe_sub = $customer->subscriptions->create( $args, $sub_options );
 
 				$this->subscriptions[ $key ]['profile_id'] = $stripe_sub->id;
 
@@ -230,9 +298,47 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 				$customer->save();
 
+				if( ! empty( $create_one_time ) ) {
+
+					/*
+					 * This is a one-time charge created only when upgrading a license key in Software Licensing
+					 *
+					 * The needs_one_time flag is set via the edd_recurring_create_subscription_args through the handle_subscription_upgrade_billing() method
+					 * in includes/plugin-software-licensing.php
+					 *
+					 * See https://github.com/easydigitaldownloads/edd-recurring/issues/497
+					 */
+
+					$charge_args = array(
+						'amount'   => edds_is_zero_decimal_currency() ? $subscription['initial_amount'] : round( $subscription['initial_amount'] * 100, 0 ),
+						'customer' => $customer,
+						'currency' => edd_get_currency(),
+						'metadata' => array(
+							'subscription_id' => $stripe_sub->id,
+							'license_id'      => $license_id,
+							'caller'          => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+						)
+					);
+
+					$charge_options = array();
+
+					if( ! empty( $stripe_connect_account_id ) ) {
+						$charge_options['stripe_account'] = $stripe_connect_account_id;
+					}
+
+					$charge = \Stripe\Charge::create( $charge_args, $charge_options );
+
+					$stripe_sub->metadata['upgrade_charge_id'] = $charge->id; // Store the charge ID for easier reference
+
+					$stripe_sub->save();
+
+					$this->subscriptions[ $key ]['transaction_id'] = $charge->id;
+
+				}
+
 				if ( ! empty( $save_balance ) ) {
 					// Now reset the balance
-					$customer->account_balance -= $balance_amount;
+					$customer->account_balance -= $balance_adjustment;
 					$customer->save();
 				}
 
@@ -240,7 +346,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 				// Charging the customer failed so we need to undo the balance adjustment
 				if( ! empty( $balance_changed ) ) {
-					$customer->account_balance -= $balance_amount;
+					$customer->account_balance -= $balance_adjustment;
 					$customer->save();
 				}
 
@@ -253,6 +359,10 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 			}
 
 		} // End Subscription loop
+
+		if ( $existing_card ) {
+			$this->custom_meta['_edds_used_existing_card'] = true;
+		}
 
 	}
 
@@ -335,21 +445,47 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 					$args = array();
 					$args['amount']         = $data->total / 100;
+					if ( ! empty( $data->tax ) ) {
+						$args['tax'] = $data->tax / 100;
+					}
 					$args['transaction_id'] = $data->charge;
-					$signup_date            = strtotime( $subscription->created );
-					$today                  = date( 'Y-n-d', $signup_date ) == date( 'Y-n-d', $data->date );
+					$subscription_id        = ! empty( $event->data->object->subscription ) ? $event->data->object->subscription : false;
+					$invoices               = \Stripe\Invoice::all( array( 'limit' => 2, 'subscription' => $subscription_id ) );
 
-					// Look to see if payment is same day as signup and we have set the transaction ID on the parent payment yet
-					if( $today && $subscription->get_total_payments() <= 1 ) {
+					// Look to see how many invoices we have for the subscription associated with this invoice, if 1, it's the first invoice.
+					if( count( $invoices->data ) === 1 && $subscription->get_total_payments() <= 1 ) {
 
 						// This is the first signup payment
 						$subscription->set_transaction_id( $args['transaction_id'] );
 
 					} else {
 
+						// See if the trial is still in place before allowing a 0 transaction.
+						// https://github.com/easydigitaldownloads/edd-recurring/issues/611
+						$stripe_sub = ! empty( $event->data->object->subscription ) ? \Stripe\Subscription::retrieve( $event->data->object->subscription ) : false;
+
+						if ( 0 === (int) $data->total && $stripe_sub && current_time( 'timestamp' ) < $stripe_sub->trial_end ) {
+							die( 'EDD Recurring: Initial Trial Invoice' );
+						}
+
 						// This is a renewal charge
-						$subscription->add_payment( $args );
-						$subscription->renew();
+						$payment_id = $subscription->add_payment( $args );
+
+						if( empty( $stripe_sub->metadata->reactivated ) || empty( $stripe_sub->metadata->reactivation_processed ) ) {
+
+							if ( ! empty( $payment_id ) ) {
+
+								// Renew the subscription but only if this is not a reactivation and we got a renewal payment ID.
+								$subscription->renew( $payment_id );
+
+							}
+
+						} elseif( ! empty( $stripe_sub->metadata->reactivated ) ) {
+
+							// Set a flag so we know that this reactivation has been processed.
+							$stripe_sub->metadata->reactivation_processed = true;
+							$stripe_sub->save();
+						}
 
 					}
 
@@ -369,6 +505,27 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 				case 'customer.subscription.updated' :
 
+					if( ! empty( $data->subscription->cancel_at_period_end ) ) {
+						// This is a subscription that has been cancelled but not deleted until period end
+						$subscription->cancel();
+					}
+
+					$old_amount = $subscription->recurring_amount;
+					$new_amount = $data->plan->amount;
+
+					if( ! edds_is_zero_decimal_currency() ) {
+						$new_amount /= 100;
+					}
+
+					$old_amount = edd_sanitize_amount( $old_amount );
+					$new_amount = edd_sanitize_amount( $new_amount );
+
+					if( $new_amount !== $old_amount ) {
+						$subscription->update( array( 'recurring_amount' => $new_amount ) );
+						$subscription->add_note( sprintf( __( 'Recurring amount changed from %s to %s in Stripe.', ' edd-recurring' ), $old_amount, $new_amount ) );
+
+					}
+
 					do_action( 'edd_recurring_stripe_event_' . $event->type, $event );
 
 					die( 'EDD Recurring: ' . $event->type );
@@ -378,9 +535,13 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 				case 'customer.subscription.deleted' :
 
-					$subscription->cancel();
+					if( 'completed' !== $subscription->status ) {
 
-					do_action( 'edd_recurring_stripe_event_' . $event->type, $event );
+						$subscription->cancel();
+
+						do_action( 'edd_recurring_stripe_event_' . $event->type, $event );
+
+					}
 
 					die( 'EDD Recurring: ' . $event->type );
 
@@ -388,33 +549,59 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 				case 'charge.refunded' :
 
-					$db 	       = new EDD_Subscriptions_DB();
-					$subscriptions = $db->get_subscriptions( array( 'number' => 1, 'transaction_id' => $data->id ) );
+					$payment_id = edd_get_purchase_id_by_transaction_id( $data->id );
 
-					if ( ! empty( $subscriptions ) ) {
+					if( $payment_id ) {
 
-						foreach ( $subscriptions as $subscription ) {
+						// If we have a payment that matches this charge ID, it should be a renewal payment
+						$payment = new EDD_Payment( $payment_id );
 
-							$payment_id     = $subscription->get_original_payment_id();
+						if( 'edd_subscription' !== $payment->status ) {
 
-							if ( $payment_id ) {
-								$payment_amount = edd_get_payment_amount( $payment_id );
-								$refund_amount  = edds_is_zero_decimal_currency() ? $data->amount : $data->amount / 100;
-
-								if( $refund_amount >= $payment_amount ) {
-									edd_update_payment_status( $payment_id, 'refunded' );
-								}
-
-								edd_insert_payment_note( $payment_id, sprintf( __( 'Charge %s refunded in Stripe.', ' edd-recurring' ), $data->id ) );
-							}
-
+							/*
+							 * This is a one-time charge and not associated with a subscription.
+							 * Bail and allow the main Stripe gateway to take over
+							 */
+							return;
 						}
 
-						do_action( 'edd_recurring_stripe_event_' . $event->type, $event );
 
-						die( 'EDD Recurring: ' . $event->type );
+					} else {
+
+						$db            = new EDD_Subscriptions_DB();
+						$subscriptions = $db->get_subscriptions( array( 'number' => 1, 'transaction_id' => $data->id ) );
+						if( $subscriptions ) {
+							$subscription = reset( $subscriptions );
+							$payment_id   = $subscription->get_original_payment_id();
+							$payment      = new EDD_Payment( $payment_id );
+						}
+
 					}
 
+
+					if ( ! empty( $payment->ID ) ) {
+
+						echo "Payment ID found: $payment->ID\n";
+
+						$refund_amount = edds_is_zero_decimal_currency() ? $data->amount_refunded : $data->amount_refunded / 100;
+
+						if( $refund_amount >= $payment->total ) {
+							$payment->status = 'refunded';
+							$payment->save();
+							$payment->add_note( sprintf( __( 'Charge %s refunded in Stripe.', ' edd-recurring' ), $data->id ) );
+						} else {
+							$payment->add_note( sprintf( __( 'Charge %s partially refunded in Stripe.', ' edd-recurring' ), $data->id ) );
+						}
+
+					} else {
+
+						echo "No payment ID found\n";
+
+					}
+
+					do_action( 'edd_recurring_stripe_event_' . $event->type, $event );
+
+					die( 'EDD Recurring: ' . $event->type );
 
 					break;
 
@@ -436,10 +623,10 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 		$subscriber  = new EDD_Recurring_Subscriber( $this->customer_id );
 		$customer_id = $subscriber->get_recurring_customer_id( $this->id );
 
-		if( empty( $customer_id ) && function_exists( 'edd_stripe_get_customer_key' ) ) {
+		if( empty( $customer_id ) && function_exists( 'edds_get_stripe_customer_id' ) ) {
 
 			// Look for a customer ID from the stand alone Stripe gateway
-			$customer_id = get_user_meta( $this->user_id, edd_stripe_get_customer_key(), true );
+			$customer_id = edds_get_stripe_customer_id( $subscriber->email );
 		}
 
 		if ( empty( $customer_id ) ) {
@@ -488,6 +675,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 			// Ensure that one-time purchases through Stripe use the same customer ID
 			if( function_exists( 'edd_stripe_get_customer_key' ) ) {
 				update_user_meta( $this->user_id, edd_stripe_get_customer_key(), $customer->id );
+				$subscriber->update_meta( edd_stripe_get_customer_key(), $customer->id );
 			}
 
 		}
@@ -512,7 +700,8 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 					'description' => $this->purchase_data['user_email'],
 					'email'       => $this->purchase_data['user_email'],
 					'metadata'    => array(
-						'edd_customer_id' => $this->customer_id
+						'edd_customer_id' => $this->customer_id,
+						'caller'          => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
 					)
 				)
 			);
@@ -548,7 +737,12 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 			// Update the customer to ensure their card data is up to date
 			$customer     = \Stripe\Customer::retrieve( $customer_id );
 			$stripe_sub   = $customer->subscriptions->retrieve( $subscription_id );
-			$plan_name    = $stripe_sub->plan->name;
+			if ( ! empty( $stripe_sub->plan->product ) ) {
+				$product   = \Stripe\Product::retrieve( $stripe_sub->plan->product );
+				$plan_name = $product->name;
+			} else {
+				$plan_name = $stripe_sub->plan->name;
+			}
 
 			// Look up payment by email
 			$payments = edd_get_payments( array(
@@ -634,6 +828,51 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 		$plan_id = $name . '_' . $subscription['recurring_amount'] . '_' . $subscription['period'];
 		$plan_id = sanitize_key( $plan_id );
 
+		try {
+
+			$plan     = \Stripe\Plan::retrieve( $plan_id );
+			$currency = strtolower( edd_get_currency() );
+
+			if( $plan->currency != $currency ) {
+
+				$plan_id = $plan_id . '_' . $currency;
+				$args    = $this->get_plan_args( $subscription, $name, $plan_id );
+
+				try {
+
+					$plan    = \Stripe\Plan::retrieve( $plan_id );
+					$plan_id = is_array( $plan ) ? $plan['id'] : $plan->id;
+
+				} catch ( Exception $e ) {
+
+					$plan_id = $this->create_stripe_plan( $args );
+
+				}
+
+			}
+
+		} catch ( Exception $e ) {
+
+			$args = $this->get_plan_args( $subscription, $name, $plan_id );
+			$plan_id = $this->create_stripe_plan( $args );
+
+		}
+
+		return $plan_id;
+
+	}
+
+	/**
+	 * Build the argument array for creating a plan in Stripe
+	 *
+	 * @since 2.7
+	 * @param array  $subscription
+	 * @param string $name
+	 * @param string $plan_id
+	 *
+	 * @return array
+	 */
+	public function get_plan_args( $subscription = array(), $name = '', $plan_id = '' ) {
 		$statement_descriptor   = $name;
 		$unsupported_characters = array( '<', '>', '"', '\'' );
 		$statement_descriptor   = apply_filters( 'edd_recurring_stripe_statement_descriptor', substr( $statement_descriptor, 0, 22 ), $subscription );
@@ -658,30 +897,56 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 				$frequency = 1;
 				$period    = $subscription['period'];
 				break;
-		}
-
-		try {
-
-			$plan = \Stripe\Plan::retrieve( $plan_id );
-
-		} catch ( Exception $e ) {
-
-			$args = array(
-				'amount'               => round( $subscription['recurring_amount'], edd_currency_decimal_filter() ) * 100,
-				'interval'             => $period,
-				'interval_count'       => $frequency,
-				'name'                 => $name,
-				'currency'             => edd_get_currency(),
-				'id'                   => $plan_id,
-				'statement_descriptor' => $statement_descriptor
-			);
-			$args = apply_filters( 'edd_recurring_create_stripe_plan_args', $args, $subscription );
-			$plan_id = $this->create_stripe_plan( $args );
 
 		}
 
-		return $plan_id;
+		$amount = round( $subscription['recurring_amount'], edd_currency_decimal_filter() );
 
+		/**
+		 * Stripe requires the amount to be in a number of 'cents' in the currency, so we have to pad
+		 * the amount by multiplying it by a power of 10 that's equal to the number of decimal places.
+		 *
+		 * For Example
+		 * 200 = 2.00 * 100
+		 * 31  = 3.1 * 10
+		 * 41234 = 4.1234 * 1000
+		 */
+		if ( edd_currency_decimal_filter() > 0 ) {
+			$amount = $amount * ( pow( 10, edd_currency_decimal_filter() ) );
+		}
+
+		$args = array(
+			'amount'               => $amount,
+			'interval'             => $period,
+			'interval_count'       => $frequency,
+			'currency'             => edd_get_currency(),
+			'name'                 => $name,
+			'id'                   => $plan_id,
+			'statement_descriptor' => $statement_descriptor,
+			'metadata' => array (
+				'caller' => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+			)
+		);
+
+		/**
+		 * Stripe plan arguments.
+		 * Allows filtering of the arguments that are sent to Stripe when creating the plan.
+		 *
+		 * @since 2.4
+		 *
+		 * @param array $args {
+		 *     The plan arguments that will be sent to Stripe.
+		 *     int    $amount         The amount that will be charged for the plan.
+		 *     string $interval       The period at which the plan will renew at.
+		 *     int    $interval_count The frequency at which the plan will renew.
+		 *     string $name           The human readable name for the plan.
+		 *     string $currency       The currency for the plan.
+		 *     string $id             The string identifier for the plan in Stripe.
+		 *     string $statement_descriptor The value that will show on a customer's financial institution for charges of this plan.
+		 * }
+		 * @param array $subscription
+		 */
+		return apply_filters( 'edd_recurring_create_stripe_plan_args', $args, $subscription );
 	}
 
 	/**
@@ -693,7 +958,57 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 	 */
 	private function create_stripe_plan( $args = array() ) {
 
+		if( ! defined( 'EDD_STRIPE_API_VER' ) || ( defined( 'EDD_STRIPE_API_VER' ) && strtotime( EDD_STRIPE_API_VER ) >= 1517788800 ) ) {
+
+			/*
+			 * If we're using API version 2018-02-05 or greater, create a product
+			 *
+			 * See https://github.com/easydigitaldownloads/edd-recurring/issues/925
+			 */
+
+			try {
+
+				$id = md5( serialize( $args ) );
+
+				$product = \Stripe\Product::retrieve( $id );
+
+			} catch ( Exception $e ) {
+
+				// No product found, create one
+
+				$product = \Stripe\Product::create( array(
+					'id'   => $id,
+					'name' => $args['name'],
+					'type' => 'service',
+					'statement_descriptor' => $args['statement_descriptor'],
+					'metadata' => array(
+						'caller'      => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+					)
+				) );
+
+			}
+
+		}
+
 		try {
+
+			if( ! empty( $product ) ) {
+
+				$args['product'] = $product;
+
+				if( isset( $args['name'] ) ) {
+
+					unset( $args['name'] );
+
+				}
+
+				if( isset( $args['statement_descriptor'] ) ) {
+
+					unset( $args['statement_descriptor'] );
+
+				}
+
+			}
 
 			$plan    = \Stripe\Plan::create( $args );
 			$plan_id = is_array( $plan ) ? $plan['id'] : $plan->id;
@@ -736,17 +1051,219 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 			return false;
 		}
 
-		$customer = new EDD_Recurring_Subscriber( $subscription->customer_id );
-
 		try {
-			$customer = \Stripe\Customer::retrieve( $customer->get_recurring_customer_id( $this->id ) );
-			$customer->subscriptions->retrieve( $subscription->profile_id )->cancel();
+
+			$at_period_end = $subscription->status == 'failing' ? false : true;
+
+			$sub = \Stripe\Subscription::retrieve( $subscription->profile_id );
+			$sub->cancel( array( 'at_period_end' => $at_period_end ) );
+
+			// We must now loop through and cancel all unpaid invoice to ensure that additional payment attempts are not made
+			$invoices = \Stripe\Invoice::all( array( 'subscription' => $subscription->profile_id ) );
+
+			if( $invoices ) {
+
+				foreach( $invoices->data as $invoice ) {
+
+					// Skip paid and closed invoices
+					if( $invoice->paid || $invoice->closed ) {
+						continue;
+					}
+
+					$invoice->closed = true;
+					$invoice->save();
+
+				}
+
+			}
+
 		} catch( Exception $e ) {
 			return false;
 		}
 
 		return true;
 
+	}
+
+	/**
+	 * Determines if a subscription can be reactivated through the gateway
+	 *
+	 * @access      public
+	 * @since       2.6
+	 * @return      bool
+	 */
+	public function can_reactivate( $ret, $subscription ) {
+		if( $subscription->gateway === 'stripe' && ! empty( $subscription->profile_id ) && 'cancelled' == $subscription->status ) {
+
+			$payment = edd_get_payment( $subscription->get_original_payment_id() );
+			$status  = $payment->status;
+
+			if( 'publish' !== $status && 'revoked' !== $status ) {
+				return false;
+			}
+
+			$was_upgraded = $payment->get_meta( '_edd_sl_upgraded_to_payment_id' );
+			if ( ! empty( $was_upgraded ) ) {
+				return false;
+			}
+
+			return true;
+
+		}
+
+		return $ret;
+
+	}
+
+	/**
+	 * Determines if the subscription can be retried when failing
+	 *
+	 * @access      public
+	 * @since       2.8
+	 * @return      bool
+	 */
+	public function can_retry( $ret, $subscription ) {
+		if( $subscription->gateway === 'stripe' && ! empty( $subscription->profile_id ) && 'failing' === $subscription->status ) {
+			return true;
+		}
+		return $ret;
+	}
+
+	/**
+	 * Reactivates a subscription
+	 *
+	 * @access      public
+	 * @since       2.6
+	 * @return      string
+	 */
+	public function reactivate( $subscription, $valid ) {
+
+		if( empty( $valid ) ) {
+			return false;
+		}
+
+		try {
+
+			$sub = \Stripe\Subscription::retrieve( $subscription->profile_id );
+
+			if( empty( $sub->cancel_at_period_end ) || 'canceled' === $sub->status ) {
+
+				$subscriber = new EDD_Recurring_Subscriber( $subscription->customer->id );
+
+				$c = \Stripe\Customer::retrieve( $subscriber->get_recurring_customer_id( $this->id ) );
+
+				// This sub was 100% cancelled so we have to create a new subscription instead
+
+				$args = array(
+					'plan'        => $sub->plan->id,
+					'tax_percent' => $sub->tax_percent,
+					'metadata'    => array(
+						'reactivated' => true,
+						'payment_key' => $sub->metadata->payment_key,
+						'download'    => $sub->metadata->download,
+						'download_id' => $sub->metadata->download_id,
+						'price_id'    => $sub->metadata->download_id,
+						'old_sub_id'  => $subscription->profile_id,
+						'caller'      => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+					)
+				);
+
+				// If the expiration date is in the future, we need to reactivate without charge
+
+				if( current_time( 'timestamp' ) < $subscription->get_expiration_time() ) {
+
+					if( ! empty( $sub->current_period_end ) ) {
+
+						$args['trial_end'] = $sub->current_period_end;
+
+					} else {
+
+						$args['trial_end'] = strtotime( $subscription->get_expiration() );
+
+					}
+
+				}
+
+				$stripe_sub = $c->subscriptions->create( $args );
+
+				$subscription->update( array(
+					'status'     => 'active',
+					'profile_id' => $stripe_sub->id,
+					'expiration' => date( 'Y-n-d H:i:s', $stripe_sub->current_period_end )
+				) );
+
+			} else {
+
+				$sub->plan = $sub->plan->id;
+				$sub->cancel_at_period_end = false;
+				$sub->save();
+
+				$subscription->update( array(
+					'status'     => 'active',
+					'expiration' => date( 'Y-n-d H:i:s', $sub->current_period_end )
+				) );
+
+			}
+
+		} catch( Exception $e ) {
+			wp_die( $e->getMessage(), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Retries a failing subscription
+	 *
+	 * This method is connected to a filter instead of an action so we can return a nice error message.
+	 *
+	 * @access      public
+	 * @since       2.8
+	 * @return      bool|WP_Error
+	 */
+	public function retry( $result, $subscription ) {
+
+		if( ! $this->can_retry( false, $subscription ) ) {
+			return $result;
+		}
+
+		try {
+
+			$invoices = \Stripe\Invoice::all( array( 'limit' => 3, 'subscription' => $subscription->profile_id ) );
+
+			if( $invoices ) {
+
+				foreach( $invoices->data as $invoice ) {
+
+					if( $invoice->paid ) {
+						continue;
+					}
+
+					$payment = $invoice->pay();
+
+					if( $payment && $payment->paid ) {
+						$payment_id = $subscription->add_payment( array(
+							'transaction_id' => $payment->charge,
+							'amount'         => $payment->total / 100,
+							'gateway'        => 'stripe'
+						) );
+
+						$subscription->renew( $payment_id );
+					}
+
+					$result = true;
+
+				}
+
+			}
+
+		} catch( Exception $e ) {
+
+			$result = new WP_Error( 'edd_recurring_stripe_error', $e->getMessage() );
+
+		}
+
+		return $result;
 	}
 
 	/**
@@ -919,7 +1436,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 	}
 
 	/**
-	 * Outputs any informatin after the Credit Card Fields
+	 * Outputs any information after the Credit Card Fields
 	 *
 	 * @since  2.4
 	 * @return void
@@ -1005,10 +1522,8 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 	 */
 	public function update_payment_method( $subscriber, $subscription ) {
 
-		if ( empty( $_POST['edd_stripe_token'] ) ) {
+		if ( ! isset( $_POST['edd_stripe_token'] ) && ! isset( $_POST['edd_stripe_existing_card'] ) ) {
 			edd_set_error( 'edd_recurring_missing_stripe_token', __( 'Please complete all required fields.', 'edd-recurring' ) );
-		} else {
-			$card_data = $_POST['edd_stripe_token'];
 		}
 
 		if ( isset( $_POST['edds_has_other_subs'] ) && empty( $_POST['edds_confirm_update_source'] ) ) {
@@ -1019,13 +1534,46 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 		if ( empty( $errors ) ) {
 
-			$cu = \Stripe\Customer::retrieve( $subscriber->get_recurring_customer_id( $this->id ) );
+			$customer_id = $subscriber->get_recurring_customer_id( $this->id );
+
+			if( empty( $customer_id ) ) {
+
+				// We were unable to retrieve the customer ID from meta so let's pull it from the API
+				try {
+
+					$sub = \Stripe\Subscription::retrieve( $subscription->profile_id );
+					$customer_id = $sub->customer;
+					$subscriber->set_recurring_customer_id( $customer_id, 'stripe' );
+
+				} catch( Exception $e ) {
+
+					edd_set_error( 'edd_recurring_stripe_error', $e->getMessage() );
+					return;
+				}
+			}
+
+			$cu = \Stripe\Customer::retrieve( $customer_id );
+
 			// No errors in stripe, continue on through processing
 			try {
 
-				$sub               = $cu->subscriptions->retrieve( $subscription->profile_id );
-				$sub->source       = $card_data;
-				$customer_response = $sub->save();
+				if ( isset( $_POST['edd_stripe_token'] ) ) {
+					$card = $cu->sources->create( array(
+						'source'   => $_POST['edd_stripe_token'],
+						'metadata' => array(
+							'caller' => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+						)
+					) );
+					$cu->default_source = $card->id;
+				} elseif ( isset( $_POST['edd_stripe_existing_card'] ) ) {
+					$cu->default_source = $_POST[ 'edd_stripe_existing_card' ];
+				}
+
+				$cu->save();
+
+
+				// Reattempt unpaid charges if this subscription is failing
+				$subscription->retry();
 
 			} catch ( \Stripe\Error\Card $e ) {
 
@@ -1118,10 +1666,6 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 			return;
 		}
 
-		if( ! $this->can_cancel( $subscription ) ) {
-			return false;
-		}
-
 		return $this->cancel( $subscription, true );
 
 	}
@@ -1139,7 +1683,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 		if( ! empty( $profile_id ) ) {
 			$payment    = new EDD_Payment( $subscription->parent_payment_id );
 			$html       = '<a href="%s" target="_blank">' . $profile_id . '</a>';
-			$base_url   = 'live' === $payment->mode ? 'https://dashboard.stripe.com/' : 'https://dashboard.stripe.com/test/';
+			$base_url   = 'test' === $payment->mode ? 'https://dashboard.stripe.com/test/' : 'https://dashboard.stripe.com/';
 			$link       = esc_url( $base_url . 'subscriptions/' . $profile_id );
 			$profile_id = sprintf( $html, $link );
 		}

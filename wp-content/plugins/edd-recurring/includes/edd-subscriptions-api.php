@@ -168,23 +168,33 @@ class EDD_Subscriptions_API extends EDD_API {
 
 		$count         = 0;
 		$response_data = array();
-		$paged         = $this->get_paged();
-		$per_page      = $this->per_page();
-		$offset        = $per_page * ( $paged - 1 );
-		$db            = new EDD_Subscriptions_DB;
-		$subscriptions = $db->get_subscriptions( array(
-			'number'      => $per_page,
-			'offset'      => $offset,
-			'customer_id' => $customer->id,
-			'status'      => $status,
-		) );
+		if ( isset( $wp_query->query_vars['id'] ) &&  is_numeric( $wp_query->query_vars['id'] ) ) {
+
+			$subscriptions = array(
+				new EDD_Subscription( $wp_query->query_vars['id'] )
+			);
+
+		} else {
+			$paged         = $this->get_paged();
+			$per_page      = $this->per_page();
+			$offset        = $per_page * ( $paged - 1 );
+			$db            = new EDD_Subscriptions_DB;
+			$subscriptions = $db->get_subscriptions( array(
+				'number'      => $per_page,
+				'offset'      => $offset,
+				'customer_id' => $customer->id,
+				'status'      => $status,
+			) );
+		}
 
 		if ( $subscriptions ) {
 
+			/** @var EDD_Subscription $subscription */
 			foreach ( $subscriptions as $subscription ) {
 
 				// Subscription object to array.
-				$response_data['subscriptions'][ $count ]['info'] = (array) $subscription;
+				$response_data['subscriptions'][ $count ]['info'] =  $subscription->to_array();
+
 
 				// Subscription Payments.
 				$subscription_payments = $subscription->get_child_payments();
@@ -196,9 +206,9 @@ class EDD_Subscriptions_API extends EDD_API {
 
 						array_push( $response_data['subscriptions'][ $count ]['payments'], array(
 							'id'     => $payment->ID,
-							'amount' => edd_get_payment_amount( $payment->ID ),
-							'date'   => date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ),
-							'status' => edd_get_payment_status( $payment, true ),
+							'amount' => $payment->total,
+							'date'   => date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) ),
+							'status' => $payment->status_nicename,
 						) );
 
 					}

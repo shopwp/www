@@ -26,7 +26,7 @@ class EDD_Recurring_Content_Restriction {
 		add_filter( 'edd_cr_is_restricted', array( $this, 'restrict' ), 10, 5 );
 
 		// 2.0+ filter
-		add_filter( 'edd_cr_user_can_access', array( $this, 'can_access_content' ), 10, 3 );
+		add_filter( 'edd_cr_user_can_access_status_and_message', array( $this, 'can_access_content' ), 10, 4 );
 
 		add_filter( 'shortcode_atts_edd_restrict', array( $this, 'restrict_shortcode_atts' ), 10, 3 );
 		add_filter( 'edd_cr_restrict_shortcode_content', array( $this, 'restrict_shortcode_content' ), 10, 3 );
@@ -46,7 +46,8 @@ class EDD_Recurring_Content_Restriction {
 			return; // Content Restriction extension not active
 		}
 
-		add_action( 'edd_cr_metabox', array( $this, 'metabox' ), 10, 3 );
+		add_action( 'edd_cr_restricted_table_before', array( $this, 'metabox' ), 10, 1 );
+		add_action( 'edd_cr_metabox', array( $this, 'deprecated_metabox' ), 10, 3 );
 		add_action( 'edd_cr_save_meta_data', array( $this, 'save_data' ), 10, 2 );
 	}
 
@@ -58,7 +59,35 @@ class EDD_Recurring_Content_Restriction {
 	 * @return void
 	 */
 
-	public function metabox( $post_id, $restricted_to, $restricted_variable ) {
+	public function metabox( $post_id ) {
+
+			$active_only = get_post_meta( $post_id, '_edd_cr_active_only', true );
+
+			echo '<p>';
+				echo '<label for="edd_cr_active_only" title="' . __( 'Only customers with an active recurring subscription will be able to view the content.', 'edd-recurring' ) . '">';
+					echo '<input type="checkbox" name="edd_cr_active_only" id="edd_cr_active_only" value="1"' . checked( '1', $active_only, false ) . '/>&nbsp;';
+					echo __( 'Active Subscribers Only?', 'edd-recurring' );
+				echo '</label>';
+			echo '</p>';
+
+	}
+
+	/**
+	 * For backwards compatibility only, this function remains, and is renamed to deprecated_metabox instead of just metabox.
+	 * For the correct/current usage, see the metabox method in this EDD_Recurring_Content_Restriction class,
+	 * and the edd_cr_restricted_table_before hook added in Content Restriction version 2.3
+	 * Attach our extra meta box field
+	 *
+	 * @since  2.8
+	 * @return void
+	 */
+
+	public function deprecated_metabox( $post_id, $restricted_to, $restricted_variable ) {
+
+		// If the newer hook has been run, don't run this deprecated function
+		if ( did_action( 'edd_cr_restricted_table_before' ) ) {
+			return;
+		}
 
 		static $cr_active_only;
 
@@ -107,18 +136,34 @@ class EDD_Recurring_Content_Restriction {
 	 */
 	public function restrict( $is_restricted = false, $post_id = 0, $download_id = 0, $user_id = 0, $price_id = null ) {
 
-		if( ! edd_cr_is_restricted( $post_id ) ) {
+		if ( ! edd_cr_is_restricted( $post_id ) ) {
 			return $is_restricted;
 		}
 
-		if( ! get_post_meta( $post_id, '_edd_cr_active_only', true ) ) {
+		if ( ! get_post_meta( $post_id, '_edd_cr_active_only', true ) ) {
 			return $is_restricted; // Leave untouched
+		}
+
+		// Check if the product is a variably-priced product
+		if ( $price_id ) {
+			// Check if the variably-riced product is Recurring-enabled or not
+			$is_recurring = EDD_Recurring()->is_price_recurring( $download_id, $price_id );
+		} else {
+			// Check if the product is Recurring-enabled or not
+			$is_recurring = EDD_Recurring()->is_recurring( $download_id );
+		}
+
+		if ( ! $is_recurring ) {
+
+			// If this product is not Recurring-enabled, return the boolean untouched
+			return $is_restricted;
+
 		}
 
 
 		$subscriber = new EDD_Recurring_Subscriber( $user_id, true );
 
-		if( ! $subscriber->has_active_product_subscription( $post_id ) ) {
+		if ( ! $subscriber->has_active_product_subscription( $post_id ) ) {
 			return true;
 		}
 
@@ -131,42 +176,72 @@ class EDD_Recurring_Content_Restriction {
 	 * @since  2.2.7
 	 * @return bool
 	 */
-	public function can_access_content( $has_access, $user_id, $restricted_to ) {
+	public function can_access_content( $return, $user_id, $restricted_to, $post_id ) {
 
-		if( $has_access && is_array( $restricted_to ) ) {
+		$has_access = $return['status'];
 
-			$active_only  = get_post_meta( get_the_ID(), '_edd_cr_active_only', true );
-			$subscriber   = new EDD_Recurring_Subscriber( $user_id, true );
-			$download_ids = wp_list_pluck( $restricted_to, 'download' );
+		if ( ! is_array( $restricted_to ) ) {
+			return $return;
+		}
 
-			if( $active_only ) {
+		$active_only  = get_post_meta( get_the_ID(), '_edd_cr_active_only', true );
+		$subscriber   = new EDD_Recurring_Subscriber( $user_id, true );
 
-				if ( in_array( 'any', $download_ids ) ) {
+		if ( $active_only ) {
 
-					if ( $active_only && ! $subscriber->has_active_subscription() ) {
-						$has_access = false;
+			$has_access = false;
+
+			foreach( $restricted_to as $item ) {
+
+				// Check if the product is a variably-priced product
+				if ( isset( $item['price_id'] ) ) {
+
+					// Check if the variably-riced product is Recurring-enabled or not
+					$recurring_enabled = EDD_Recurring()->is_price_recurring( $item['download'], $item['price_id'] );
+
+				} else {
+
+					// Check if the product is Recurring-enabled or not
+					$recurring_enabled = EDD_Recurring()->is_recurring( $item['download'] );
+
+				}
+
+				if ( $recurring_enabled ) {
+
+					// If this subscriber has an active subscription to the variably-product in question
+					if ( $subscriber->has_active_product_subscription( $item['download'] ) ) {
+						$has_access = true;
+						break;
 					}
 
 				} else {
 
-					$has_access = false;
+					// The edd_cr_user_can_access_with_purchase was introduced in version 2.3 of Content Restriction, so add a check for it.
+					if ( function_exists( 'edd_cr_user_can_access_with_purchase' ) ) {
 
-					foreach( $restricted_to as $item ) {
+						// If this is a non-recurring product, re-check it to see if they have access because of it
+						$has_access_because_of_non_recurring = edd_cr_user_can_access_with_purchase( $user_id, array( $item ), $post_id );
 
-						if( $subscriber->has_active_product_subscription( $item['download'] ) ) {
+						if ( $has_access_because_of_non_recurring['status'] ) {
 							$has_access = true;
 							break;
 						}
 
+					} else {
+
+						// If the edd_cr_user_can_access_with_purchase function does not exist (because Content Restriction is older than 2.3)
+						$has_access = false;
+						break;
+
 					}
 
 				}
-
 			}
-
 		}
 
-		return $has_access;
+		$return['status'] = $has_access;
+
+		return $return;
 	}
 
 	/**

@@ -1,9 +1,9 @@
-import find from 'ramda/src/find';
-import propEq from 'ramda/src/propEq';
-import unionWith from 'ramda/src/unionWith';
-import eqProps from 'ramda/src/eqProps';
-import { getUrlParams, insertMessage, hideLoader } from '../utils/utils';
-import { saveAuthData, getStoredAuthData } from '../ws/ws';
+import find from 'ramda/src/find'
+import propEq from 'ramda/src/propEq'
+import unionWith from 'ramda/src/unionWith'
+import eqProps from 'ramda/src/eqProps'
+import { getUrlParams, insertMessage, hideLoader } from '../utils/utils'
+import { saveAuthData, getStoredAuthData } from '../ws/ws'
 
 /*
 
@@ -11,43 +11,35 @@ Checks if HMAC is valid
 
 */
 function isValidHMAC($) {
+   return new Promise(function(resolve, reject) {
+      var result = getUrlParams(location.search)
+      var origHMAC = result.hmac
 
-  return new Promise(function (resolve, reject) {
+      var dataToVerify = {
+         code: result.code,
+         shop: result.shop,
+         state: result.state,
+         timestamp: result.timestamp
+      }
 
-    var result = getUrlParams(location.search);
-    var origHMAC = result.hmac;
+      var message = $.param(dataToVerify)
 
-    var dataToVerify = {
-      code: result.code,
-      shop: result.shop,
-      state: result.state,
-      timestamp: result.timestamp
-    };
+      var secret = 'd73e5e7fa67a54ac25a9af8ff8df3814'
+      var finalDigest = crypto
+         .createHmac('sha256', secret)
+         .update(message)
+         .digest('hex')
 
-    console.log("dataToVerify: ", dataToVerify);
-
-    var message = $.param(dataToVerify);
-
-    console.log("message: ", message);
-
-    var secret = 'd73e5e7fa67a54ac25a9af8ff8df3814';
-    var finalDigest = crypto.createHmac('sha256', secret).update(message).digest('hex');
-
-    console.log("finalDigest: ", finalDigest);
-    console.log("origHMAC: ", origHMAC);
-
-    if (finalDigest === origHMAC) {
-      resolve("Valid HMAC");
-
-    } else {
-      reject('Error: Invalid HMAC. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
-      // resolve();
-    }
-
-  });
-
-};
-
+      if (finalDigest === origHMAC) {
+         resolve('Valid HMAC')
+      } else {
+         reject(
+            'Error: Invalid HMAC. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.'
+         )
+         // resolve();
+      }
+   })
+}
 
 /*
 
@@ -55,23 +47,19 @@ Check if hostname is valid
 
 */
 function isValidHostname($) {
+   return new Promise(function(resolve, reject) {
+      var result = getUrlParams(location.search)
+      var shopifyDomainSuffix = '.myshopify.com'
 
-  return new Promise(function (resolve, reject) {
-
-    var result = getUrlParams(location.search);
-    var shopifyDomainSuffix = '.myshopify.com';
-
-    if (validator.isURL(result.shop) && result.shop.endsWith(shopifyDomainSuffix)) {
-      resolve("Valid hostname");
-
-    } else {
-      reject('Error: Invalid Hostname. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
-    }
-
-  });
-
-};
-
+      if (validator.isURL(result.shop) && result.shop.endsWith(shopifyDomainSuffix)) {
+         resolve('Valid hostname')
+      } else {
+         reject(
+            'Error: Invalid Hostname. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.'
+         )
+      }
+   })
+}
 
 /*
 
@@ -80,53 +68,38 @@ against the stored nonce values in the database.
 
 */
 function isValidNonce($) {
+   return new Promise(function(resolve, reject) {
+      var url = getUrlParams(location.search)
 
-  return new Promise(function (resolve, reject) {
+      if (!url.hasOwnProperty('state')) {
+         reject(
+            'Error: Nonce not available. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.'
+         )
+      } else {
+         var nonce = url.state
 
-    var url = getUrlParams(location.search);
-
-    if (!url.hasOwnProperty('state')) {
-
-      reject('Error: Nonce not available. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
-
-    } else {
-
-      var nonce = url.state;
-      console.log('nonce: ', nonce);
-
-
-      /*
+         /*
 
       Here is where we need to compare nonces
 
       */
 
+         getStoredAuthData().then(function(response) {
+            response = JSON.parse(response)
 
+            var nonceMatches = find(propEq('nonce', nonce))(response)
 
-      getStoredAuthData().then(function(response) {
-
-        response = JSON.parse(response);
-
-        console.log("response: ", response);
-
-        var nonceMatches = find(propEq('nonce', nonce))(response);
-        console.log("nonceMatches: ", nonceMatches);
-
-        if (nonceMatches) {
-          resolve(response);
-
-        } else {
-          reject('Error: Nonce invalid or not found. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
-        }
-
-      });
-
-    }
-
-  });
-
-};
-
+            if (nonceMatches) {
+               resolve(response)
+            } else {
+               reject(
+                  'Error: Nonce invalid or not found. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.'
+               )
+            }
+         })
+      }
+   })
+}
 
 /*
 
@@ -134,54 +107,47 @@ Update the stored consumer entry with 'code'
 
 */
 function updateAuthDataWithCode($, authData) {
+   return new Promise(function(resolve, reject) {
+      var url = getUrlParams(location.search)
 
-  return new Promise(function (resolve, reject) {
-
-    var url = getUrlParams(location.search);
-
-    if (!url.hasOwnProperty('state')) {
-      reject('Error: Nonce not available. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
-
-    } else {
-
-      var nonce = url.state;
-
-      // Turn the JSON into JS object
-      // var authData = JSON.parse(authData);
-
-      // Finds the client which matches the nonce in the URL
-      var nonceMatch = find(propEq('nonce', nonce))(authData);
-
-      if (nonceMatch.nonce === url.state) {
-
-        // Verified
-        nonceMatch.code = url.code;
-
-        var finalRedirectURL = nonceMatch.url + "&shop=" + encodeURIComponent(url.shop) + "&auth=true";
-
-        // Conver to array so we can operate
-        nonceMatch = [nonceMatch];
-
-        // Merging updated client with everything else
-        var updatedAuthenticatedSites = unionWith(eqProps('domain'), nonceMatch, authData);
-
-        // Saving client records to database
-        resolve({
-          finalRedirectURL: finalRedirectURL,
-          updatedAuthenticatedSites: updatedAuthenticatedSites
-        });
-
+      if (!url.hasOwnProperty('state')) {
+         reject(
+            'Error: Nonce not available. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.'
+         )
       } else {
-        reject('Error: Nonce does not match. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.');
+         var nonce = url.state
 
+         // Turn the JSON into JS object
+         // var authData = JSON.parse(authData);
+
+         // Finds the client which matches the nonce in the URL
+         var nonceMatch = find(propEq('nonce', nonce))(authData)
+
+         if (nonceMatch.nonce === url.state) {
+            // Verified
+            nonceMatch.code = url.code
+
+            var finalRedirectURL = nonceMatch.url + '&shop=' + encodeURIComponent(url.shop) + '&auth=true'
+
+            // Conver to array so we can operate
+            nonceMatch = [nonceMatch]
+
+            // Merging updated client with everything else
+            var updatedAuthenticatedSites = unionWith(eqProps('domain'), nonceMatch, authData)
+
+            // Saving client records to database
+            resolve({
+               finalRedirectURL: finalRedirectURL,
+               updatedAuthenticatedSites: updatedAuthenticatedSites
+            })
+         } else {
+            reject(
+               'Error: Nonce does not match. Please try reconnecting your WordPress site to Shopify. If you\'re still experiencing the issue send an email to <a href="mailto:hello@wpshop.io">hello@wpshop.io</a> for immediate support.'
+            )
+         }
       }
-
-    }
-
-  });
-
-};
-
+   })
+}
 
 /*
 
@@ -189,108 +155,84 @@ Control center
 
 */
 async function onShopifyAuth($) {
-console.log('HI');
-  /*
+   /*
 
   Step 1. Check if HMAC is valid
 
   */
-  try {
-    var validHMAC = await isValidHMAC($);
-    console.log('Valid HMAC: ', validHMAC);
-  } catch(error) {
-    console.log('INVALID HMAC');
-    insertMessage(error, 'error', true);
-    hideLoader($('body'));
+   try {
+      var validHMAC = await isValidHMAC($)
+   } catch (error) {
+      insertMessage(error, 'error', true)
+      hideLoader($('body'))
 
-    return error;
+      return error
+   }
 
-  }
-
-
-  /*
+   /*
 
   Step 2. Check if hostname is valid
 
   */
-  try {
-    await isValidHostname($);
-    console.log('Valid Hostname');
-  } catch(error) {
-    console.log('INVALID Hostname');
-    insertMessage(error, 'error', true);
-    hideLoader($('body'));
+   try {
+      await isValidHostname($)
+   } catch (error) {
+      insertMessage(error, 'error', true)
+      hideLoader($('body'))
 
-    return error;
+      return error
+   }
 
-  }
-
-
-  /*
+   /*
 
   Step 3. Check if Nonce is valid
 
   */
-  try {
-    var authData = await isValidNonce($);
-    console.log('Valid Nonce');
-  } catch(error) {
-    console.log('INVALID Nonce');
-    insertMessage(error, 'error', true);
-    hideLoader($('body'));
+   try {
+      var authData = await isValidNonce($)
+   } catch (error) {
+      insertMessage(error, 'error', true)
+      hideLoader($('body'))
 
-    return error;
+      return error
+   }
 
-  }
-
-
-  /*
+   /*
 
   Step 4. Updating list of authenticated sites
 
   */
-  try {
-    var authDataResponse = await updateAuthDataWithCode($, authData);
+   try {
+      var authDataResponse = await updateAuthDataWithCode($, authData)
+   } catch (error) {
+      insertMessage(error, 'error', true)
+      hideLoader($('body'))
 
-  } catch(error) {
+      return error
+   }
 
-    insertMessage(error, 'error', true);
-    hideLoader($('body'));
-
-    return error;
-
-  }
-
-
-  /*
+   /*
 
   Step 5. Saving newly authenticated site
 
   */
-  try {
-    await saveAuthData(JSON.stringify(authDataResponse.updatedAuthenticatedSites));
+   try {
+      await saveAuthData(JSON.stringify(authDataResponse.updatedAuthenticatedSites))
+   } catch (error) {
+      insertMessage(error, 'error', true)
+      hideLoader($('body'))
 
-  } catch(error) {
+      return error
+   }
 
-    insertMessage(error, 'error', true);
-    hideLoader($('body'));
-
-    return error;
-
-  }
-
-
-  /*
+   /*
 
   At this point we've updated the authenticated consumer with the code
   value sent from Shopify. We can now query for this value from the
   consumer side.
 
   */
-  window.location = authDataResponse.finalRedirectURL;
-
+   window.location = authDataResponse.finalRedirectURL
 }
 
-export {
-  onShopifyAuth
-}
+export { onShopifyAuth }

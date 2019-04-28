@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function edd_recurring_metabox_head( $download_id ) {
 	?>
 	<th><?php _e( 'Recurring', 'edd-recurring' ); ?></th>
+	<th><?php _e( 'Free Trial', 'edd-recurring' ); ?></th>
 	<th><?php _e( 'Period', 'edd-recurring' ); ?></th>
 	<th><?php echo _x( 'Times', 'Referring to billing period', 'edd-recurring' ); ?></th>
 	<th><?php echo _x( 'Signup Fee', 'Referring to subscription signup fee', 'edd-recurring' ); ?></th>
@@ -63,6 +64,37 @@ function edd_recurring_metabox_recurring( $download_id, $price_id, $args ) {
 	<?php
 }
 add_action( 'edd_recurring_download_price_row', 'edd_recurring_metabox_recurring', 999, 3 );
+
+
+/**
+ * Meta box free trial field
+ *
+ * @access      public
+ * @since       1.0
+ * @return      void
+ */
+function edd_recurring_metabox_free_trial( $download_id, $price_id, $args ) {
+
+	$recurring = EDD_Recurring()->is_price_recurring( $download_id, $price_id );
+	$periods   = EDD_Recurring()->singular_periods();
+	$trial     = EDD_Recurring()->get_trial_period( $download_id, $price_id );
+	$disabled  = $recurring ? '' : 'disabled="disabled" ';
+	// Remove non-valid trial periods
+	unset( $periods['quarter'] );
+	unset( $periods['semi-year'] );
+
+	?>
+	<td class="edd-recurring-free-trial">
+		<input <?php echo $disabled; ?> name="edd_variable_prices[<?php echo $price_id; ?>][trial-quantity]" class="trial-quantity" id="edd_variable_prices[<?php echo $price_id; ?>][trial-quantity]" type="number" min="0" step="1" style="width: 60px;" value="<?php echo esc_attr( $trial['quantity'] ); ?>" placeholder="0"/>
+		<select <?php echo $disabled; ?> name="edd_variable_prices[<?php echo $price_id; ?>][trial-unit]" id="edd_variable_prices[<?php echo $price_id; ?>][trial-unit]">
+			<?php foreach ( $periods as $key => $value ) : ?>
+				<option value="<?php echo $key; ?>" <?php selected( $trial['unit'], $key ); ?>><?php echo esc_attr( $value ); ?></option>
+			<?php endforeach; ?>
+		</select>
+	</td>
+	<?php
+}
+add_action( 'edd_recurring_download_price_row', 'edd_recurring_metabox_free_trial', 999, 3 );
 
 
 /**
@@ -127,7 +159,7 @@ add_action( 'edd_recurring_download_price_row', 'edd_recurring_metabox_times', 9
 function edd_recurring_metabox_signup_fee( $download_id, $price_id, $args ) {
 
 	$recurring  = EDD_Recurring()->is_price_recurring( $download_id, $price_id );
-	$has_trial  = EDD_Recurring()->has_free_trial( $download_id );
+	$has_trial  = EDD_Recurring()->has_free_trial( $download_id, $price_id );
 	$signup_fee = EDD_Recurring()->get_signup_fee( $price_id, $download_id );
 
 	$disabled = $recurring && ! $has_trial ? '' : 'disabled="disabled" ';
@@ -346,8 +378,11 @@ function edd_recurring_metabox_trial_options( $download_id ) {
 		$one_one_discount_help = ' ' . __( '<strong>Additional note</strong>: with free trials, one time discounts are not supported and discount codes for this product will apply to all payments after the trial period.', 'edd-recurring' );
 	}
 
+	$variable_pricing   = edd_has_variable_prices( $download_id );
+	$variable_display   = $variable_pricing ? ' style="display:none;"' : '';
+
 	?>
-	<div id="edd_recurring_free_trial_options_wrap">
+	<div id="edd_recurring_free_trial_options_wrap"<?php echo $variable_display; ?>>
 
 		<?php if( edd_is_gateway_active( '2checkout' ) || edd_is_gateway_active( '2checkout_onsite' ) ) : ?>
 			<p><strong><?php _e( '2Checkout does not support free trial periods. Subscriptions purchased through 2Checkout cannot include free trials.', 'edd-recurring' ); ?></strong></p>
@@ -453,19 +488,20 @@ function edd_display_subscription_payment_meta( $payment_id ) {
 					</p>
 					<?php $payments = $sub->get_child_payments(); ?>
 					<?php if( $payments ) : ?>
-						<p><strong><?php _e( 'Renewal Payments:', 'edd-recurring' ); ?></strong></p>
+						<p><strong><?php _e( 'Associated Payments', 'edd-recurring' ); ?>:</strong></p>
 						<ul id="edd-recurring-sub-payments">
 						<?php foreach( $payments as $payment ) : ?>
 							<li>
+								<span class="howto"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->date ) ); ?></span>
 								<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->ID ) ); ?>">
 									<?php if( function_exists( 'edd_get_payment_number' ) ) : ?>
-										<?php echo '#' . edd_get_payment_number( $payment->ID ); ?>
+										<?php echo '#' . $payment->number ?>
 									<?php else : ?>
 										<?php echo '#' . $payment->ID; ?>
-									<?php endif; ?>&nbsp;&ndash;&nbsp;
-								</a>
-								<span><?php echo date_i18n( get_option( 'date_format' ), strtotime( $payment->post_date ) ); ?>&nbsp;&ndash;&nbsp;</span>
-								<span><?php echo edd_payment_amount( $payment->ID ); ?></span>
+									<?php endif; ?>
+								</a>&nbsp;&ndash;&nbsp;
+								<span><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?>&nbsp;&ndash;&nbsp;</span>
+								<span><?php echo $payment->status_nicename; ?></span>
 							</li>
 						<?php endforeach; ?>
 						</ul>
@@ -492,6 +528,14 @@ function edd_recurring_display_parent_payment( $payment_id = 0 ) {
 
 	if( $payment->parent_payment ) :
 
+		$parent_payment = new EDD_Payment( $payment->parent_payment );
+		$sub_id = $payment->get_meta( 'subscription_id', true );
+		if( ! $sub_id ) {
+			$subs_db = new EDD_Subscriptions_DB;
+			$subs    = $subs_db->get_subscriptions( array( 'parent_payment_id' => $payment->parent_payment, 'order' => 'ASC' ) );
+			$sub     = reset( $subs );
+			$sub_id  = $sub->id;
+		}
 		$parent_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->parent_payment );
 ?>
 		<div id="edd-order-subscription-payments" class="postbox">
@@ -499,7 +543,11 @@ function edd_recurring_display_parent_payment( $payment_id = 0 ) {
 				<span><?php _e( 'Subscription', 'edd-recurring' ); ?></span>
 			</h3>
 			<div class="inside">
-				<p><?php printf( __( 'Parent Payment: <a href="%s">%s</a>' ), $parent_url, $payment->number ); ?></p>
+				<?php $sub_url = admin_url( 'edit.php?post_type=download&page=edd-subscriptions&id=' . $sub_id ); ?>
+				<p>
+					<span class="label"><span class="dashicons dashicons-update"></span> <?php printf( __( 'Subscription ID: <a href="%s">#%d</a>', 'edd_recurring' ), $sub_url, $sub_id ); ?></span>&nbsp;
+				</p>
+				<p><?php printf( __( 'Parent Payment: <a href="%s">%s</a>' ), $parent_url, $parent_payment->number ); ?></p>
 			</div><!-- /.inside -->
 		</div><!-- /#edd-order-subscription-payments -->
 <?php

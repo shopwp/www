@@ -15,21 +15,25 @@ class EDD_Subscription {
 
 	private $subs_db;
 
-	public $id                = 0;
-	public $customer_id       = 0;
-	public $period            = '';
-	public $initial_amount    = '';
-	public $recurring_amount  = '';
-	public $bill_times        = 0;
-	public $transaction_id    = '';
-	public $parent_payment_id = 0;
-	public $product_id        = 0;
-	public $created           = '0000-00-00 00:00:00';
-	public $expiration        = '0000-00-00 00:00:00';
-	public $trial_period      = '';
-	public $status            = 'pending';
-	public $profile_id        = '';
-	public $gateway           = '';
+	public $id                    = 0;
+	public $customer_id           = 0;
+	public $period                = '';
+	public $initial_amount        = '';
+	public $initial_tax_rate      = '';
+	public $initial_tax           = '';
+	public $recurring_amount      = '';
+	public $recurring_tax_rate    = '';
+	public $recurring_tax         = '';
+	public $bill_times            = 0;
+	public $transaction_id        = '';
+	public $parent_payment_id     = 0;
+	public $product_id            = 0;
+	public $created               = '0000-00-00 00:00:00';
+	public $expiration            = '0000-00-00 00:00:00';
+	public $trial_period          = '';
+	public $status                = 'pending';
+	public $profile_id            = '';
+	public $gateway               = '';
 	public $customer;
 
 	/**
@@ -128,17 +132,21 @@ class EDD_Subscription {
 		}
 
 		$defaults = array(
-			'customer_id'       => 0,
-			'period'            => '',
-			'initial_amount'    => '',
-			'recurring_amount'  => '',
-			'bill_times'        => 0,
-			'parent_payment_id' => 0,
-			'product_id'        => 0,
-			'created'           => '',
-			'expiration'        => '',
-			'status'            => '',
-			'profile_id'        => '',
+			'customer_id'           => 0,
+			'period'                => '',
+			'initial_amount'        => '',
+			'initial_tax_rate'      => '',
+			'initial_tax'           => '',
+			'recurring_amount'      => '',
+			'recurring_tax_rate'    => '',
+			'recurring_tax'         => '',
+			'bill_times'            => 0,
+			'parent_payment_id'     => 0,
+			'product_id'            => 0,
+			'created'               => '',
+			'expiration'            => '',
+			'status'                => '',
+			'profile_id'            => '',
 		);
 
 		$args = wp_parse_args( $data, $defaults );
@@ -159,6 +167,8 @@ class EDD_Subscription {
 
 		do_action( 'edd_subscription_post_create', $id, $args );
 
+		$this->set_status( $args['status'] );
+
 		return $this->setup_subscription( $id );
 
 	}
@@ -174,8 +184,15 @@ class EDD_Subscription {
 
 		$ret = $this->subs_db->update( $this->id, $args );
 
+		if ( isset( $args['status'] ) ) {
+			$this->set_status( $args['status'] );
+		}
+
+		// Clear the object cache for this subscription.
+		wp_cache_delete( $this->id, 'edd_subscription_objects' );
+
 		do_action( 'edd_recurring_update_subscription', $this->id, $args, $this );
-	
+
 		return $ret;
 
 	}
@@ -187,7 +204,13 @@ class EDD_Subscription {
 	 * @return bool
 	 */
 	public function delete() {
-		return $this->subs_db->delete( $this->id );
+		do_action( 'edd_recurring_before_delete_subscription', $this );
+		$deleted = $this->subs_db->delete( $this->id );
+		do_action( 'edd_recurring_after_delete_subscription', $deleted, $this );
+
+		wp_cache_delete( $this->id, 'edd_subscription_objects' );
+
+		return $deleted;
 	}
 
 	/**
@@ -210,14 +233,17 @@ class EDD_Subscription {
 	 */
 	public function get_child_payments() {
 
-		$payments = get_posts( array(
+		$payments = edd_get_payments( array(
 			'post_parent'    => (int) $this->parent_payment_id,
 			'posts_per_page' => '999',
 			'post_status'    => 'any',
-			'post_type'      => 'edd_payment'
+			'post_type'      => 'edd_payment',
+			'meta_key'       => 'subscription_id',
+			'meta_value'     => $this->id,
+			'output'         => 'payments',
 		) );
 
-		return $payments;
+		return (array) $payments;
 
 	}
 
@@ -229,7 +255,18 @@ class EDD_Subscription {
 	 */
 	public function get_total_payments() {
 
-		return count( $this->get_child_payments() ) + 1;
+		$args = array(
+			'post_parent'    => (int) $this->parent_payment_id,
+			'number'         => '999',
+			'status'         => 'any',
+			'meta_key'       => 'subscription_id',
+			'meta_value'     => $this->id,
+			'output'         => 'payments',
+		);
+
+		$payments = new EDD_Payments_Query( $args );
+
+		return count( $payments->get_payments() ) + 1;
 
 	}
 
@@ -241,7 +278,19 @@ class EDD_Subscription {
 	 */
 	public function get_times_billed() {
 
-		$times_billed = $this->get_total_payments();
+		// Times billed should not include refunds or revoked payments. Therefore we don't use $this->get_total_payments
+		$args = array(
+			'post_parent'    => (int) $this->parent_payment_id,
+			'number'         => '999',
+			'status'         => array( 'complete', 'publish', 'edd_subscription' ),
+			'meta_key'       => 'subscription_id',
+			'meta_value'     => $this->id,
+			'output'         => 'payments',
+		);
+
+		$payments = new EDD_Payments_Query( $args );
+
+		$times_billed = count( $payments->get_payments() ) + 1;
 
 		if( ! empty( $this->trial_period ) ) {
 			$times_billed -= 1;
@@ -296,14 +345,15 @@ class EDD_Subscription {
 	 *
 	 * @since  2.4
 	 * @param  array $args Array of values for the payment, including amount and transaction ID
-	 * @return bool
+	 * @return bool|integer False if no payment is crated, or the payment ID if successful.
 	 */
 	public function add_payment( $args = array() ) {
 
 		$args = wp_parse_args( $args, array(
 			'amount'         => '',
+			'tax'            => '',
 			'transaction_id' => '',
-			'gateway'        => ''
+			'gateway'        => '',
 		) );
 
 		if ( $this->payment_exists( $args['transaction_id'] ) ) {
@@ -314,7 +364,12 @@ class EDD_Subscription {
 		$parent                  = new EDD_Payment( $this->parent_payment_id );
 		$payment->parent_payment = $this->parent_payment_id;
 		$payment->customer_id    = $parent->customer_id;
-		$payment->user_info      = $parent->user_info;
+
+		// Force the renewal to have no discount codes.
+		$user_info               = $parent->user_info;
+		$user_info['discount']   = 'none';
+		$payment->user_info      = $user_info;
+
 		$payment->address        = $parent->address;
 		$payment->user_id        = $parent->user_id;
 		$payment->email          = $parent->email;
@@ -322,6 +377,8 @@ class EDD_Subscription {
 		$payment->status         = 'edd_subscription';
 		$payment->transaction_id = $args['transaction_id'];
 		$payment->key            = $parent->key;
+		$payment->total          = edd_sanitize_amount( sanitize_text_field( $args['amount'] ) );
+		$payment->mode           = $parent->mode;
 
 		if( empty( $args['gateway'] ) ) {
 
@@ -330,6 +387,21 @@ class EDD_Subscription {
 		} else {
 
 			$payment->gateway    = $args['gateway'];
+
+		}
+
+		$tax = 0;
+		if( ! empty( $args['tax'] ) ) {
+
+			$tax = $args['tax'];
+
+		} elseif( ! empty( $this->recurring_tax_rate ) ) {
+
+			$tax = $args['amount'] * $this->recurring_tax_rate;
+
+		} elseif( ! empty( $this->recurring_tax ) ) {
+
+			$tax = $this->recurring_tax;
 
 		}
 
@@ -343,8 +415,21 @@ class EDD_Subscription {
 					continue;
 				}
 
-				$price_id = isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
-				$payment->add_download( $download['id'], array( 'item_price' => $args['amount'], 'price_id' => $price_id ) );
+				$price_id    = isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
+				$args['tax'] = is_numeric( $args['tax'] ) ? edd_format_amount( $args['tax'] ) : 0;
+
+				// Set the amount for the EDD Payment based on the inclusive/exclusive of tax setting
+				if ( edd_prices_include_tax() ) {
+					$amount = $args['amount'];
+				} else {
+					$amount = $args['amount'] - $tax;
+				}
+
+				$payment->add_download( $download['id'], array(
+					'item_price' => $amount,
+					'tax'        => $tax,
+					'price_id'   => $price_id
+				) );
 
 				edd_increase_earnings( $download['id'], $args['amount'] );
 				$customer->increase_value( $args['amount'] );
@@ -354,11 +439,17 @@ class EDD_Subscription {
 		}
 
 		$payment->save();
+		$payment->update_meta( 'subscription_id', $this->id );
+
+		if ( function_exists( 'edd_schedule_after_payment_action' ) ) {
+			// Schedule the after payments actions for the payment
+			edd_schedule_after_payment_action( $payment->ID );
+		}
 
 		do_action( 'edd_recurring_add_subscription_payment', $payment, $this );
 		do_action( 'edd_recurring_record_payment', $payment->ID, $this->parent_payment_id, $args['amount'], $args['transaction_id'] );
 
-		return true;
+		return $payment->ID;
 	}
 
 	/**
@@ -400,7 +491,7 @@ class EDD_Subscription {
 	 * @since  2.4
 	 * @return bool
 	 */
-	public function renew() {
+	public function renew( $payment_id = 0 ) {
 
 		$expires = $this->get_expiration_time();
 
@@ -416,7 +507,7 @@ class EDD_Subscription {
 		}
 
 		$last_day = cal_days_in_month( CAL_GREGORIAN, date( 'n', $base_date ), date( 'Y', $base_date ) );
-		
+
 		if( 'quarter' == $this->period ) {
 
 			$expiration = date( 'Y-m-d H:i:s', strtotime( '+3 months 23:59:59', $base_date ) );
@@ -428,7 +519,7 @@ class EDD_Subscription {
 		} else {
 
 			$expiration = date( 'Y-m-d H:i:s', strtotime( '+1 ' . $this->period . ' 23:59:59', $base_date ) );
-	
+
 		}
 
 		if( date( 'j', $base_date ) == $last_day && 'day' != $this->period ) {
@@ -439,8 +530,14 @@ class EDD_Subscription {
 
 		do_action( 'edd_subscription_pre_renew', $this->id, $expiration, $this );
 
-		$this->status = 'active';
 		$times_billed = $this->get_times_billed();
+
+		$args = array(
+			'expiration' => $expiration,
+			'status'     => 'active',
+		);
+
+		$this->update( $args );
 
 		// Complete subscription if applicable
 		if ( $this->bill_times > 0 && $times_billed >= $this->bill_times ) {
@@ -448,19 +545,8 @@ class EDD_Subscription {
 			$this->status = 'completed';
 		}
 
-		$args = array(
-			'expiration' => $expiration,
-			'status'     => $this->status,
-		);
 
-		if( $this->subs_db->update( $this->id, $args ) ) {
-
-			$note = sprintf( __( 'Subscription #%1$s %2$s', 'edd-recurring' ), $this->id, $this->status );
-			$this->customer->add_note( $note );
-
-		}
-
-		do_action( 'edd_subscription_post_renew', $this->id, $expiration, $this );
+		do_action( 'edd_subscription_post_renew', $this->id, $expiration, $this, $payment_id );
 		do_action( 'edd_recurring_set_subscription_status', $this->id, $this->status, $this );
 
 	}
@@ -475,18 +561,18 @@ class EDD_Subscription {
 	 */
 	public function complete() {
 
+		// Prevent setting a subscription as complete if it was previously set as cancelled, except if the sub is being manually updated by the site owner.
+		if ( 'cancelled' === $this->status && ! isset( $_POST['edd_update_subscription'] ) && empty( $_POST['edd_update_subscription'] ) ) {
+			return;
+		}
+
 		$args = array(
 			'status' => 'completed'
 		);
 
-		if( $this->subs_db->update( $this->id, $args ) ) {
-
-			$this->status = 'completed';
-
+		if ( $this->update( $args ) ) {
 			do_action( 'edd_subscription_completed', $this->id, $this );
-
 		}
-
 	}
 
 	/**
@@ -517,12 +603,8 @@ class EDD_Subscription {
 			'status' => 'expired'
 		);
 
-		if( $this->subs_db->update( $this->id, $args ) ) {
-
-			$this->status = 'expired';
-
+		if( $this->update( $args ) ) {
 			do_action( 'edd_subscription_expired', $this->id, $this );
-
 		}
 
 	}
@@ -539,13 +621,8 @@ class EDD_Subscription {
 			'status' => 'failing'
 		);
 
-		if( $this->subs_db->update( $this->id, $args ) ) {
-
-			$this->status = 'failing';
-
+		if( $this->update( $args ) ) {
 			do_action( 'edd_subscription_failing', $this->id, $this );
-
-
 		}
 
 	}
@@ -566,7 +643,7 @@ class EDD_Subscription {
 			'status' => 'cancelled'
 		);
 
-		if( $this->subs_db->update( $this->id, $args ) ) {
+		if( $this->update( $args ) ) {
 
 			if( is_user_logged_in() ) {
 
@@ -579,12 +656,12 @@ class EDD_Subscription {
 
 			}
 
+			do_action( 'edd_recurring_cancel_' . $this->gateway . '_subscription', $this, true );
+
 			$note = sprintf( __( 'Subscription #%d cancelled by %s', 'edd-recurring' ), $this->id, $user );
-			$this->customer->add_note( $note );
-			$this->status = 'cancelled';
+			$this->add_note( $note );
 
 			do_action( 'edd_subscription_cancelled', $this->id, $this );
-
 
 		}
 
@@ -658,13 +735,104 @@ class EDD_Subscription {
 	 * Retrieves the URL to update subscription
 	 *
 	 * @since  2.4
-	 * @return void
+	 * @return string
 	 */
 	public function get_update_url() {
 
 		$url = add_query_arg( array( 'action' => 'update', 'subscription_id' => $this->id ) );
 
 		return apply_filters( 'edd_subscription_update_url', $url, $this );
+	}
+
+	/**
+	 * Determines if subscription can be reactivated
+	 *
+	 * This method is filtered by payment gateways in order to return true on subscriptions
+	 * that can be reactivated with a profile ID through the merchant processor
+	 *
+	 * @since  2.7.10
+	 * @return bool
+	 */
+	public function can_reactivate() {
+
+		return apply_filters( 'edd_subscription_can_reactivate', false, $this );
+	}
+
+	/**
+	 * Retrieves the URL to reactivate subscription
+	 *
+	 * @since  2.7.10
+	 * @return string
+	 */
+	public function get_reactivation_url() {
+
+		$url = wp_nonce_url( add_query_arg( array( 'edd_action' => 'reactivate_subscription', 'sub_id' => $this->id ) ), 'edd-recurring-reactivate' );
+
+		return apply_filters( 'edd_subscription_reactivation_url', $url, $this );
+
+	}
+
+
+	/**
+	 * Determines if subscription can be retried when failing.
+	 *
+	 * This method is filtered by payment gateways in order to return true on subscriptions
+	 * that can be retried with a profile ID through the merchant processor
+	 *
+	 * @since  2.7.10
+	 * @return bool
+	 */
+	public function can_retry() {
+
+		return apply_filters( 'edd_subscription_can_retry', false, $this );
+	}
+
+	/**
+	 * Retries a failing subscription
+	 *
+	 * @since  2.7.10
+	 * @return bool|WP_Error
+	 */
+	public function retry() {
+
+		// Only mark a subscription as complete if it's not already cancelled.
+		if ( ! $this->can_retry() ) {
+			return new WP_Error( 'edd_recurring_not_failing', __( 'This subscription is not failing so cannot be retried.', 'edd-recurring' ) );
+		}
+
+		$result = false;
+
+		/**
+		 * Filter the response and allow gateways to hook in to handle the retry.
+		 *
+		 * This result is expected to be true or an instance of WP_Error on failure.
+		 *
+		 * @since  2.8
+		 */
+		$result = apply_filters( 'edd_recurring_retry_subscription_' . $this->gateway, $result, $this );
+
+		do_action( 'edd_subscription_retry', $this->id, $this );
+
+		if( ! $result ) {
+			// Set up a generic error response
+			$result = new WP_Error( 'edd_recurring_retry_failed', __( 'An error was encountered. Please check your merchant account logs.', 'edd-recurring' ) );
+		}
+
+		return $result;
+
+	}
+
+	/**
+	 * Retrieves the URL to retry a failing subscription
+	 *
+	 * @since  2.7.10
+	 * @return string
+	 */
+	public function get_retry_url() {
+
+		$url = wp_nonce_url( add_query_arg( array( 'edd_action' => 'retry_subscription', 'sub_id' => $this->id ) ), 'edd-recurring-retry' );
+
+		return apply_filters( 'edd_subscription_retry_url', $url, $this );
 	}
 
 	/**
@@ -755,6 +923,8 @@ class EDD_Subscription {
 					$this->update( array( 'expiration' => $expiration ) );
 					$this->expiration = $expiration;
 					$ret = true;
+
+					$this->add_note( sprintf( __( 'Expiration synced with gateway and updated to %s', 'edd-recurring' ), $expiration ) );
 
 					do_action( 'edd_recurring_check_expiration', $this, $expiration );
 
@@ -860,4 +1030,150 @@ class EDD_Subscription {
 		return false;
 	}
 
+	/**
+	 * Get the parsed notes for a subscription as an array
+	 *
+	 * @since  2.7
+	 * @param  integer $length The number of notes to get
+	 * @param  integer $paged What note to start at
+	 * @return array           The notes requested
+	 */
+	public function get_notes( $length = 20, $paged = 1 ) {
+
+		$length = is_numeric( $length ) ? $length : 20;
+		$offset = is_numeric( $paged ) && $paged != 1 ? ( ( absint( $paged ) - 1 ) * $length ) : 0;
+
+		$all_notes   = $this->get_raw_notes();
+		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
+
+		$desired_notes = array_slice( $notes_array, $offset, $length );
+
+		return $desired_notes;
+
+	}
+
+	/**
+	 * Get the total number of notes we have after parsing
+	 *
+	 * @since  2.7
+	 * @return int The number of notes for the subscription
+	 */
+	public function get_notes_count() {
+
+		$all_notes = $this->get_raw_notes();
+		$notes_array = array_reverse( array_filter( explode( "\n\n", $all_notes ) ) );
+
+		return count( $notes_array );
+
+	}
+
+	/**
+	 * Add a note for the subscription
+	 *
+	 * @since  2.7
+	 * @param string $note The note to add
+	 * @return string|boolean The new note if added successfully, false otherwise
+	 */
+	public function add_note( $note = '' ) {
+
+		$note = trim( $note );
+		if ( empty( $note ) ) {
+			return false;
+		}
+
+		$notes = $this->get_raw_notes();
+
+		if( empty( $notes ) ) {
+			$notes = '';
+		}
+
+		$note_string = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
+		$new_note    = apply_filters( 'edd_subscription_add_note_string', $note_string );
+		$notes      .= "\n\n" . $new_note;
+
+		do_action( 'edd_subscription_pre_add_note', $new_note, $this->id );
+
+		$updated = $this->update( array( 'notes' => $notes ) );
+
+		if ( $updated ) {
+			$this->notes = $this->get_notes();
+		}
+
+		do_action( 'edd_subscription_post_add_note', $this->notes, $new_note, $this->id );
+
+		// Return the formatted note, so we can test, as well as update any displays
+		return $new_note;
+
+	}
+
+	/**
+	 * Get the notes column for the subscription
+	 *
+	 * @since  2.7
+	 * @return string The Notes for the subscription, non-parsed
+	 */
+	private function get_raw_notes() {
+
+		$all_notes = $this->subs_db->get_column( 'notes', $this->id );
+
+		return (string) $all_notes;
+
+	}
+
+	/**
+	 * Convert object to array
+	 *
+	 * @since 2.7.4
+	 *
+	 * @return array
+	 */
+	public function to_array() {
+
+		$array = array();
+		foreach( get_object_vars( $this ) as $prop => $var ){
+
+			if( is_object( $var ) && is_callable( array( $var, 'to_array' ) ) ) {
+
+				$array[ get_class( $var ) ] = $var->to_array();
+
+			} else {
+
+				$array[ $prop ] = $var;
+
+			}
+
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Set the status property internally.  All places where the status of the subscription gets changed end up going
+	 * going through here so the action here is reliable for hooking in on any status change.
+	 *
+	 * Method should only be called when the status for the subscription has actually been changed in the db.
+	 *
+	 * @since 2.7.14
+	 * @param string  $new_status
+	 */
+	protected function set_status( $new_status ) {
+		$old_status   = $this->status;
+		$this->status = $new_status;
+
+		if( is_user_logged_in() ) {
+
+			$userdata = get_userdata( get_current_user_id() );
+			$user     = $userdata->user_login;
+
+		} else {
+
+			$user = __( 'gateway', 'edd-recurring' );
+
+		}
+
+		if( strtolower( $this->status ) !== strtolower( $old_status ) ) {
+			$this->add_note( sprintf( __( 'Status changed from %s to %s by %s', 'edd-recurring' ), $old_status, $this->status, $user ) );
+		}
+		do_action( 'edd_subscription_status_change', $old_status, $new_status, $this );
+	}
 }

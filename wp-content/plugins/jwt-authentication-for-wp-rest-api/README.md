@@ -16,11 +16,11 @@ So, to use the **wp-api-jwt-auth** you need to install and activate [WP REST API
 
 **Minimum PHP version: 5.3.0**
 
-### Eable PHP HTTP Authorization Header 
+### Enable PHP HTTP Authorization Header
 
 #### Shared Hosts
 
-Most of the shared hosts have disabled the **HTTP Authorization Header** by default.
+Most shared hosts have disabled the **HTTP Authorization Header** by default.
 
 To enable this option you'll need to edit your **.htaccess** file by adding the following:
 
@@ -52,7 +52,7 @@ To add the **secret key**, edit your wp-config.php file and add a new constant c
 
 
 ```php
-define('JWT_AUTH_SECRET_KEY', 'your-top-secrect-key');
+define('JWT_AUTH_SECRET_KEY', 'your-top-secret-key');
 ```
 
 You can use a string from here https://api.wordpress.org/secret-key/1.1/salt/
@@ -84,19 +84,19 @@ When the plugin is activated, a new namespace is added.
 Also, two new endpoints are added to this namespace.
 
 
-Endpoint | HTTP Verb
---- | ---
-*/wp-json/jwt-auth/v1/token* | POST
-*/wp-json/jwt-auth/v1/token/validate* | POST
+| Endpoint                              | HTTP Verb |
+| ------------------------------------- | --------- |
+| */wp-json/jwt-auth/v1/token*          | POST      |
+| */wp-json/jwt-auth/v1/token/validate* | POST      |
 
-##Usage
+## Usage
 ### /wp-json/jwt-auth/v1/token
 
 This is the entry point for the JWT Authentication.
 
 Validates the user credentials, *username* and *password*, and returns a token to use in a future request to the API if the authentication is correct or error if the authentication fails.
 
-####Sample request using AngularJS
+#### Sample request using AngularJS
 
 ```javascript
 
@@ -188,7 +188,7 @@ Host: server.example.com
 Authorization: Bearer mF_s9.B5f-4.1JqM
 ```
 
-###Errors
+### Errors
 
 If the token is invalid an error will be returned. Here are some samples of errors:
 
@@ -249,11 +249,11 @@ Valid Token Response:
 }
 ```
 
-##Available Hooks
+## Available Hooks
 
 The **wp-api-jwt-auth** is dev friendly and has five filters available to override the default settings.
 
-####jwt_auth_cors_allow_headers
+#### jwt_auth_cors_allow_headers
 
 The **jwt_auth_cors_allow_headers** allows you to modify the available headers when the CORs support is enabled.
 
@@ -263,7 +263,7 @@ Default Value:
 'Access-Control-Allow-Headers, Content-Type, Authorization'
 ```
 
-###jwt_auth_not_before
+### jwt_auth_not_before
 
 The **jwt_auth_not_before** allows you to change the [**nbf**](https://tools.ietf.org/html/rfc7519#section-4.1.5) value before the token is created.
 
@@ -273,7 +273,7 @@ Default Value:
 Creation time - time()
 ```
 
-###jwt_auth_expire
+### jwt_auth_expire
 
 The **jwt_auth_expire** allows you to change the value [**exp**](https://tools.ietf.org/html/rfc7519#section-4.1.4) before the token is created.
 
@@ -283,7 +283,7 @@ Default Value:
 time() + (DAY_IN_SECONDS * 7)
 ```
 
-###jwt_auth_token_before_sign
+### jwt_auth_token_before_sign
 
 The **jwt_auth_token_before_sign** allows you to modify all the token data before to be encoded and signed.
 
@@ -304,7 +304,7 @@ $token = array(
 );
 ```
 
-###jwt_auth_token_before_dispatch
+### jwt_auth_token_before_dispatch
 The **jwt_auth_token_before_dispatch** allows you to modify all the response array before to dispatch it to the client.
 
 Default value:

@@ -11,7 +11,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 class EDD_Recurring_Emails {
 
 	public $subscription;
-	
+
 	public function __construct() {
 		$this->init();
 	}
@@ -19,7 +19,7 @@ class EDD_Recurring_Emails {
 	public function init() {
 
 		if( edd_get_option( 'enable_payment_received_email' ) ) {
-			add_action( 'edd_recurring_add_subscription_payment', array( $this, 'send_payment_received' ), 10, 2 );
+			add_action( 'edd_subscription_post_renew', array( $this, 'send_payment_received' ), 10, 4 );
 		}
 
 		if( edd_get_option( 'enable_payment_failed_email' ) ) {
@@ -31,11 +31,17 @@ class EDD_Recurring_Emails {
 		}
 	}
 
-	public function send_payment_received( EDD_Payment $payment, EDD_Subscription $subscription ) {
+	public function send_payment_received( $subscription_id= 0, $expiration = '0000-00-00 00:00:00', EDD_Subscription $subscription, $payment_id = 0 ) {
 
-		$this->subscription = $subscription;
+		// Since it's possible to renew a subscription without a payment, we should not send an email if none is specified.
+		if ( empty( $payment_id ) ) {
+			return;
+		}
 
-		$email_to = $subscription->customer->email;
+		$this->subscription = new EDD_Subscription( $subscription_id );
+		$payment            = edd_get_payment( $payment_id );
+
+		$email_to = $this->subscription->customer->email;
 		$subject  = apply_filters( 'edd_recurring_payment_received_subject', edd_get_option( 'payment_received_subject' ) );
 		$message  = apply_filters( 'edd_recurring_payment_received_message', edd_get_option( 'payment_received_message' ) );
 		$message  = $this->payment_received_template_tags( $message, $payment->total );
@@ -46,7 +52,7 @@ class EDD_Recurring_Emails {
 
 	public function send_payment_failed( EDD_Subscription $subscription ) {
 
-		$this->subscription = $subscription;
+		$this->subscription = new EDD_Subscription( $subscription->id );
 
 		$email_to = $subscription->customer->email;
 		$subject  = apply_filters( 'edd_recurring_payment_failed_subject', edd_get_option( 'payment_failed_subject' ) );
@@ -59,7 +65,7 @@ class EDD_Recurring_Emails {
 
 	public function send_subscription_cancelled( $subscription_id = 0, EDD_Subscription $subscription ) {
 
-		$this->subscription = $subscription;
+		$this->subscription = new EDD_Subscription( $subscription_id );
 
 		$email_to = $subscription->customer->email;
 		$subject  = apply_filters( 'edd_recurring_subscription_cancelled_subject', edd_get_option( 'subscription_cancelled_subject' ) );
@@ -75,13 +81,13 @@ class EDD_Recurring_Emails {
 		if( empty( $subscription_id ) ) {
 			return;
 		}
-		
+
 		$this->subscription = new EDD_Subscription( $subscription_id );
-		
+
 		if( empty( $this->subscription ) ) {
 			return;
 		}
-		
+
 		$notices = new EDD_Recurring_Reminders();
 		$send    = true;
 		$user    = get_user_by( 'id', $this->subscription->customer->user_id );
@@ -117,40 +123,40 @@ class EDD_Recurring_Emails {
 		if ( isset( $notice[ 'type' ] ) ) {
 			add_post_meta( $log_id, '_edd_recurring_reminder_notice_type', $notice[ 'type' ] );
 		}
-		
+
 		wp_set_object_terms( $log_id, 'subscription_reminder_notice', 'edd_log_type', false );
 
 		// Prevents reminder notices from being sent more than once
-		add_user_meta( $this->subscription->customer->user_id, sanitize_key( '_edd_recurring_reminder_sent_' . $subscription_id . '_' . $notice_id ), time() );
+		add_user_meta( $this->subscription->customer->user_id, sanitize_key( '_edd_recurring_reminder_sent_' . $subscription_id . '_' . $notice_id . '_' . $this->subscription->get_total_payments() ), time() );
 
 	}
 
 	public function filter_reminder_template_tags( $text = '', $subscription_id = 0 ) {
 
-		$download      = get_post( $this->subscription->product_id );
+		$download      = edd_get_download( $this->subscription->product_id );
 		$customer_name = $this->subscription->customer->name;
 		$expiration    = strtotime( $this->subscription->expiration );
 
 		$text = str_replace( '{name}', $customer_name,  $text );
-		$text = str_replace( '{subscription_name}', $download->post_title,   $text );
+		$text = str_replace( '{subscription_name}', $download->get_name(),   $text );
 		$text = str_replace( '{expiration}', date_i18n( 'F j, Y', $expiration ), $text );
 		$text = str_replace( '{amount}', edd_currency_filter( edd_format_amount( $this->subscription->recurring_amount ) ), $text );
 
-		return $text;
+		return apply_filters( 'edd_recurring_filter_reminder_template_tags', $text, $subscription_id );
 	}
 
 	public function payment_received_template_tags( $text = '', $amount = '' ) {
 
+		$download      = edd_get_download( $this->subscription->product_id );
 		$customer_name = $this->subscription->customer->name;
-		$download      = get_post( $this->subscription->product_id );
 		$expiration    = strtotime( $this->subscription->expiration );
 
 		$text = str_replace( '{name}', $customer_name, $text );
-		$text = str_replace( '{subscription_name}', $download->post_title, $text );
+		$text = str_replace( '{subscription_name}', $download->get_name(), $text );
 		$text = str_replace( '{expiration}', date_i18n( 'F j, Y', $expiration ), $text );
 		$text = str_replace( '{amount}', edd_currency_filter( edd_format_amount( $amount ) ), $text );
 
-		return $text;
+		return apply_filters( 'edd_recurring_payment_received_template_tags', $text, $amount, $this->subscription->id );
 	}
 
 

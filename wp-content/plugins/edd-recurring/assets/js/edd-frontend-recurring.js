@@ -32,6 +32,10 @@ jQuery(document).ready(function($) {
 
 	});
 
+	if( edd_recurring_vars.has_trial ) {
+		$('.edd_cart_amount').html( edd_recurring_vars.total );
+	}
+
 	// Look to see if the customer has purchased a free trial after email is entered on checkout
 	$('#edd_purchase_form').on( 'focusout', '#edd-email', function() {
 

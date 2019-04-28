@@ -94,6 +94,27 @@ function edds_admin_messages() {
 	$stripe_connect_account_id = edd_get_option( 'stripe_connect_account_id' );
 
 	if( array_key_exists( 'stripe', $enabled_gateways ) && empty( $stripe_connect_account_id ) && empty( $dismissed ) ) {
+		?>
+		<script type="text/javascript">
+			jQuery( document ).ready( function() {
+				jQuery('#edds-stripe-connect-intro').on('click', '.notice-dismiss', function (event) {
+
+					event.preventDefault();
+
+					jQuery.ajax({
+						type   : 'post',
+						url    : ajaxurl,
+						data   : {
+							action: 'edds_stripe_connect_dismiss_intro_notice',
+							nonce : jQuery(this).parent().data('nonce'),
+						},
+						success: function (response) {
+						}
+					});
+				});
+			} );
+		</script>
+		<?php
 		echo '<div id="edds-stripe-connect-intro" data-nonce="'.wp_create_nonce( 'edds_stripe_connect_intro_nonce' ) .'" class="notice notice-info is-dismissible"><p>' . sprintf( __( 'The Stripe extension for Easy Digital Downloads now supports Stripe Connect for easier setup and improved security. <a href="%s">Click here</a> to learn more about connecting your Stripe account.', 'edds' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) ) . '</p></div>';
 	}
 
