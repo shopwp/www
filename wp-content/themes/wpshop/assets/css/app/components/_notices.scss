@@ -100,13 +100,19 @@
 }
 
 #edd_purchase_form #edd_show_discount {
-   background: #fafafa;
+   // background: #fafafa;
    padding: 1em;
    border-radius: 10px;
+   border: 1px solid #cbcbcb;
    text-align: center;
    display: none;
 }
 
 #edd_checkout_form_wrap fieldset#edd_sl_renewal_fields {
    padding: 1em;
+   border-radius: 10px;
+   border: 1px solid #cbcbcb;
+   text-align: center;
+
+   background: none;
 }

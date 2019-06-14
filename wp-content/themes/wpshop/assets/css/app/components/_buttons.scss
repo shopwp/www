@@ -6,214 +6,206 @@ a.button.edd-slg-social-unlink-profile,
 .edd-submit,
 .search-submit,
 .menu-item-back a,
-.entry-summary a {
-  padding: calc(#{$space-m} - 3px) calc(#{$space-xl} - 3px);
-  color: color(white);
-  background-color: color(primary);
-  position: relative;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 1em;
-  font-family: $font-primary;
-  display: inline-block;
-  line-height: 1;
-  // font-weight: bold;
-  border: none;
-  border-radius: 0.4em;
-  outline: none;
-  z-index: 2;
-  text-align: center;
-  margin: 0;
-  margin-top: $space-s;
-  letter-spacing: 0.04em;
+.entry-summary a,
+#edd-purchase-button {
+   padding: calc(#{$space-m} - 8px) calc(#{$space-xxl} - 3px) calc(#{$space-m} - 6px);
+   color: color(white);
+   background-color: color(primary);
 
-  @include shadow();
-  // @include shrink();
-  // @include grow();
+   // background: #6e2eff;
 
-  @include device(500, 'max') {
-    font-size: 1em;
-  }
+   position: relative;
+   text-decoration: none;
+   // text-transform: uppercase;
+   font-weight: 500;
+   font-size: 17px;
+   font-family: $font-primary;
+   display: inline-block;
+   line-height: 1;
+   // border: none;
+   // border: 2px solid #f0f0f0;
+   border-radius: 0.4em;
+   outline: none;
+   z-index: 2;
+   text-align: center;
+   margin: 0;
+   margin-top: $space-s;
 
-  &:hover {
-    // @include dim($opacity-soft);
-    // box-shadow: none;
-    opacity: 1;
-    background-color: darken(color(primary), 12);
-  }
+   transition: all 0.08s ease;
 
-  &:focus {
-    border: none;
-    outline: none;
-  }
+   // @include shadow();
+   // @include shrink();
+   // @include grow();
 
-  &.is-disabled {
-    background-color: color(medium-grey);
+   @include device(500, 'max') {
+      font-size: 1em;
+   }
 
-    &:hover {
-      opacity: 0.4;
+   &:hover {
+      opacity: 1;
+      // @include dim($opacity-soft);
+      // box-shadow: none;
+      // background-color: darken(color(primary), 62);
+      background-color: #2d4be2;
+   }
+
+   &:focus {
+      border: none;
+      outline: none;
+   }
+
+   &.is-disabled {
       background-color: color(medium-grey);
-      transform: scale(1);
-    }
 
-  }
+      &:hover {
+         opacity: 0.4;
+         background-color: color(medium-grey);
+         transform: scale(1);
+      }
+   }
 
-  &.is-loading {
-    position: relative;
-    padding: $space-m $space-xl $space-m $space-xl*2;
+   &.is-loading {
+      position: relative;
+      padding: $space-m $space-xl $space-m $space-xl * 2;
 
-    &:before {
-      display: block;
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      width: 1.3em;
-      height: 1.3em;
-      left: 1.5em;
-      top: 1.1em;
-      border: .15em solid color(white);
-      border-top-color: transparent;
-      animation: spin $speed-slow infinite linear;
-    }
+      &:before {
+         display: block;
+         content: '';
+         position: absolute;
+         border-radius: 50%;
+         width: 1.3em;
+         height: 1.3em;
+         left: 1.5em;
+         top: 1.1em;
+         border: 0.15em solid color(white);
+         border-top-color: transparent;
+         animation: spin $speed-slow infinite linear;
+      }
+   }
 
-  }
+   .fa {
+      margin-right: $space-xxxs;
+      // opacity: $opacity-soft;
+   }
 
-  .fa {
-    margin-right: $space-xxxs;
-    // opacity: $opacity-soft;
-  }
-
-  .svg-inline--fa {
-    box-sizing: border-box;
-    font-variant-caps: normal;
-    font-variant-ligatures: normal;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    margin-right: 8px;
-  }
-
+   .svg-inline--fa {
+      box-sizing: border-box;
+      font-variant-caps: normal;
+      font-variant-ligatures: normal;
+      text-rendering: auto;
+      margin-right: 8px;
+   }
 }
 
 .edd-submit,
 .menu-item-back a,
 .edd_download_file_link,
 .btn-secondary {
-  font-size: 1.2em;
-  background-color: color(secondary);
+   font-size: 1.2em;
+   background-color: color(secondary);
+   // // background: rgb(14, 161, 195);
+   // background: rgb(9, 175, 184);
+   // background: linear-gradient(180deg, rgba(9, 175, 184, 1) 0%, rgba(18, 186, 195, 1) 100%);
 
-  &:hover {
-    background-color: darken(color(secondary), 12);
-  }
+   &:hover {
+      background-color: darken(color(secondary), 6);
+   }
 }
 
 .btn-group {
-  position: relative;
+   position: relative;
 
-  .btn {
-    margin-right: $space-m;
-  }
+   .btn {
+      margin-right: $space-m;
+   }
 
-  @include device(600, 'max') {
-    flex-direction: column;
+   @include device(600, 'max') {
+      flex-direction: column;
 
-    .btn {
-      margin-right: 0;
-    }
-
-  }
-
+      .btn {
+         margin-right: 0;
+      }
+   }
 }
 
 .btn-l,
 #edd-purchase-button {
-  font-size: $font-xl;
+   font-size: $font-xl;
 }
 
 .edd-add-to-cart-label {
-  font-size: $font-m;
+   font-size: $font-m;
 }
 
-
-.menu-item-back a,
-.btn-s,
-a.button.edd-slg-social-unlink-profile {
-  font-size: $font-m;
+.btn-s {
+   font-size: $font-m;
 }
-
 
 .btn-wrap {
-  position: relative;
+   position: relative;
 
-  .spinner {
-    top: 5px;
-  }
+   .spinner {
+      top: 5px;
+   }
 }
 
 .btn-wrap-center {
-  text-align: center;
+   text-align: center;
 }
 
-
 .edd_download_file_link {
-  &:before {
-    content: '\f019';
-    font-family: 'FontAwesome';
-    font-size: 20px;
-    display: inline-block;
-    margin-right: 10px;
-  }
+   &:before {
+      content: '\f019';
+      font-family: 'FontAwesome';
+      font-size: 20px;
+      display: inline-block;
+      margin-right: 10px;
+   }
 }
 
 .edd-add-to-cart {
+   &:hover {
+      opacity: 1;
+   }
 
-  &:hover {
-    opacity: 1;
-  }
-
-  + input.edd-add-to-cart {
-    display: none;
-  }
-
-  span.edd-add-to-cart-label {
-
-    &:after {
-      font-family: 'FontAwesome';
-      content: '\f217';
-      display: inline-block;
-      margin-left: $space-s;
+   + input.edd-add-to-cart {
       display: none;
-    }
+   }
 
-  }
-
+   span.edd-add-to-cart-label {
+      &:after {
+         font-family: 'FontAwesome';
+         content: '\f217';
+         display: inline-block;
+         margin-left: $space-s;
+         display: none;
+      }
+   }
 }
-
 
 .receipt-account-wrapper .btn {
-  &:after {
-    content: '\f178';
-    font-family: 'FontAwesome';
-    display: inline-block;
-    margin-left: $space-s;
-  }
+   &:after {
+      content: '\f178';
+      font-family: 'FontAwesome';
+      display: inline-block;
+      margin-left: $space-s;
+   }
 }
 
-
 .purchase-confirmation .edd_purchase_receipt_files .edd_download_file_link {
-  background-color: color(primary);
+   background-color: color(primary);
 
-  &:hover {
-    opacity: 1;
-    background-color: darken(color(primary), 12);
-  }
-
+   &:hover {
+      opacity: 1;
+      background-color: darken(color(primary), 12);
+   }
 }
 
 .btn-copy {
-  background: color(base);
-  color: #fff;
-  display: inline;
-  padding: 5px 10px;
-  font-size: 14px;
-  border-radius: 5px;
+   background: color(base);
+   color: #fff;
+   display: inline;
+   padding: 5px 10px;
+   font-size: 14px;
+   border-radius: 5px;
 }

@@ -43,6 +43,11 @@ jQuery(document).ready(function($) {
 			return;
 		}
 
+		// We don't need to make this AJAX call, if there isn't a trial in the cart.
+		if ( ! edd_recurring_vars.has_trial ) {
+			return;
+		}
+
 		var email = $(this).val();
 		var product_ids = [];
 

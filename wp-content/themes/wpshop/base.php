@@ -24,12 +24,12 @@ global $post;
 
   <?php
 
-  if (is_front_page()) {
-    $stuff = "background-image: url('" . get_template_directory_uri() . "/assets/prod/imgs/bg-stuff-2.png')";
+//   if (is_front_page()) {
+//     $stuff = "background-image: url('" . get_template_directory_uri() . "/assets/prod/imgs/bg-stuff-2.png')";
 
-  } else {
-    $stuff = '';
-  }
+//   } else {
+//     $stuff = '';
+//   }
 
   if( is_page('purchase-confirmation') ) {
 
@@ -75,7 +75,7 @@ global $post;
 
   <?php get_template_part('templates/head'); ?>
 
-  <body <?php body_class($mobileBodyClass); ?> style="<?php echo $stuff; ?>">
+  <body <?php body_class($mobileBodyClass); ?>">
 
     <!--[if IE]>
       <div class="alert alert-warning">
@@ -120,6 +120,7 @@ global $post;
         </aside>
       <?php endif; ?>
 
+      <?php if (!is_front_page()) { ?>
       <main class="main l-fill <?php echo is_home() || is_singular('post') ? 'l-contain-narrow' : ''; ?>">
 
         <?php include Wrapper\template_path(); ?>
@@ -133,6 +134,7 @@ global $post;
       </main>
 
       <?php
+      }
 
       if (get_post_type( get_the_ID() ) === 'docs' ) : ?>
         <div class="docs-content-loader"><i class="fal fa-cog fa-spin"></i></div>

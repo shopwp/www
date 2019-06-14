@@ -57,68 +57,82 @@ class EDD_Recurring_Software_Licensing {
 	 * Modifies the recurring amounts in respect to renewal discounts and license upgrades
 	 *
 	 * @since  2.4
-	 * @return array
+	 * @param array $args This array contains information about the product. The the edd_recurring_subscription_pre_gateway_args filter in edd-recurring-gateway for a list of keys.
+	 * @param array $item The information about this item, as found in the edd_gateway_[ gateway name ] hook.
+	 * @return array The modified args for the edd_recurring_subscription_pre_gateway_args filter.
 	 */
 	public function set_recurring_amount( $args = array(), $item = array() ) {
 
-		$adjust   = false;
-		$enabled  = get_post_meta( $args['id'], '_edd_sl_enabled', true );
-		$discount = edd_sl_get_renewal_discount_percentage( 0, $item['id'] );
+		$adjust  = false;
+		$enabled = get_post_meta( $args['id'], '_edd_sl_enabled', true );
 
+		// Only set up a discount if software licensing is enabled for the product.
 		if ( $enabled ) {
+			$discount = edd_sl_get_renewal_discount_percentage( 0, $item['id'] );
+		} else {
+			$discount = 0;
+		}
 
-			if ( ! empty( $item['item_number']['options']['is_upgrade'] ) || ! empty( $item['item_number']['options']['is_renewal'] ) ) {
+		// This is an upgrade.
+		if ( ! empty( $item['item_number']['options']['is_upgrade'] ) || ! empty( $item['item_number']['options']['is_renewal'] ) ) {
 
-				$adjust = true;
+			if ( edd_has_variable_prices( $item['id'] ) && 0 !== (int) $item['item_number']['options']['price_id'] ) {
 
-				if( edd_has_variable_prices( $item['id'] ) && 0 !== (int) $item['item_number']['options']['price_id'] ) {
-
-					$price = edd_get_price_option_amount( $args['id'], $args['price_id'] );
-
-				} else {
-
-					$price = edd_get_download_price( $item['id'] );
-
-				}
-
-				if( $discount > 0 ) {
-
-					$args['recurring_amount'] = edd_sanitize_amount( $price - ( $price * ( $discount / 100 ) ) );
-
-				} else {
-
-					$args['recurring_amount'] = edd_sanitize_amount( $price );
-
-				}
-
+				$price = edd_get_price_option_amount( $args['id'], $args['price_id'] );
 
 			} else {
 
-				if( $discount > 0 ) {
-
-					$adjust = true;
-					$renewal_discount = ( $args['recurring_amount'] * ( $discount / 100 ) );
-
-					$args['recurring_amount'] -= $renewal_discount;
-					$args['recurring_amount'] = edd_sanitize_amount( $args['recurring_amount'] );
-
-				}
+				$price = edd_get_download_price( $item['id'] );
 
 			}
 
-			if( $adjust ) {
+			if ( $discount > 0 ) {
 
-				/*
+				$args['recurring_amount'] = (float) edd_sanitize_amount( $price - ( $price * ( $discount / 100 ) ) );
+
+			} else {
+
+				$args['recurring_amount'] = (float) edd_sanitize_amount( $price );
+
+			}
+
+			// Set the tax amount according to whether taxes are inclusive or exclusive.
+			if ( edd_use_taxes() ) {
+
+				if ( edd_prices_include_tax() ) {
+
+					// If the store is set to bake taxes into the price, bake the taxes into the price.
+					$pre_tax               = $args['recurring_amount'] / ( 1 + edd_get_tax_rate() );
+					$args['recurring_tax'] = $args['recurring_amount'] - $pre_tax;
+
+				} else {
+
+					// If the store is set to add tax on-top-of the price, add the taxes to the price.
+					$args['recurring_tax']    = $args['recurring_amount'] * ( edd_get_tax_rate() );
+					$args['recurring_amount'] = $args['recurring_amount'] + $args['recurring_tax'];
+				}
+			}
+
+			// This is not an upgrade, but rather is a manual renewal, or an original purchase.
+		} else {
+
+			if ( $discount > 0 ) {
+
+				$renewal_discount = ( $args['recurring_amount'] * ( $discount / 100 ) );
+
+				$args['recurring_amount'] -= $renewal_discount;
+				$args['recurring_amount']  = (float) edd_sanitize_amount( $args['recurring_amount'] );
+
+				/**
 				 * The recurring amount has been adjusted so we now need to re-calculate taxes.
-				 * The recurring amount has taxes included in it already, so we work backwards, just like calculated taxes when prices are inclusive of tax
 				 *
-				 * See https://github.com/easydigitaldownloads/edd-recurring/issues/939
+				 * The recurring amount has taxes included in it already, so we work backwards,
+				 * just like calculated taxes when prices are inclusive of tax.
 				 */
-				$pre_tax = ( $args['recurring_amount'] / ( 1 + edd_get_tax_rate() ) );
+				$pre_tax               = $args['recurring_amount'] / ( 1 + edd_get_tax_rate() );
 				$args['recurring_tax'] = $args['recurring_amount'] - $pre_tax;
 
 			}
-
 		}
 
 		return $args;
@@ -147,7 +161,7 @@ class EDD_Recurring_Software_Licensing {
 
 			// Only modify the expiration during initial papyments, not renewals
 			if( ! did_action( 'edd_subscription_pre_renew' ) ) {
-				
+
 				if( ( edd_get_option( 'recurring_one_time_trials' ) && ! edd_recurring()->has_trialed( $download_id, $email ) ) || ! edd_get_option( 'recurring_one_time_trials' ) ) {
 
 					// set expiration to trial length
@@ -911,9 +925,25 @@ class EDD_Recurring_Software_Licensing {
 				$price = edd_get_download_price( $item['id'] );
 			}
 
-			$discount = edd_sl_get_renewal_discount_percentage();
-			$cost     = edd_currency_filter( edd_sanitize_amount( $price - ( $price * ( $discount / 100 ) ) ) );
+			$enabled = get_post_meta( $item['id'], '_edd_sl_enabled', true );
+
+			// Only set up a discount if software licensing is enabled for the product.
+			if ( $enabled ) {
+				$discount = edd_sl_get_renewal_discount_percentage();
+			} else {
+				$discount = 0;
+			}
+
+			$cost     = (float) edd_sanitize_amount( $price - ( $price * ( $discount / 100 ) ) );
 			$period   = EDD_Recurring()->get_pretty_subscription_frequency( $item['options']['recurring']['period'] );
+
+			// If the store is set to add tax on-top-of the price, add the taxes to the price.
+			if ( edd_use_taxes() && ! edd_prices_include_tax() ) {
+				$tax = $cost * ( edd_get_tax_rate() );
+				$cost = $cost + $tax;
+			}
+
+			$cost = edd_currency_filter( edd_sanitize_amount( $cost ) );
 
 			$message  = sprintf(
 				__( '%s will now automatically renew %s for %s', 'edd-recurring' ),
@@ -971,9 +1001,25 @@ class EDD_Recurring_Software_Licensing {
 				$price = edd_get_download_price( $item['id'] );
 			}
 
-			$discount = edd_sl_get_renewal_discount_percentage();
-			$cost     = edd_currency_filter( edd_sanitize_amount( $price - ( $price * ( $discount / 100 ) ) ) );
+			$enabled = get_post_meta( $item['id'], '_edd_sl_enabled', true );
+
+			// Only set up a discount if software licensing is enabled for the product.
+			if ( $enabled ) {
+				$discount = edd_sl_get_renewal_discount_percentage();
+			} else {
+				$discount = 0;
+			}
+
+			$cost     = (float) edd_sanitize_amount( $price - ( $price * ( $discount / 100 ) ) );
 			$period   = EDD_Recurring()->get_pretty_subscription_frequency( $item['options']['recurring']['period'] );
+
+			// If the store is set to add tax on-top-of the price, add the taxes to the price.
+			if ( edd_use_taxes() && ! edd_prices_include_tax() ) {
+				$tax = $cost * ( edd_get_tax_rate() );
+				$cost = $cost + $tax;
+			}
+
+			$cost = edd_currency_filter( edd_sanitize_amount( $cost ) );
 
 			$message  = sprintf(
 				__( 'Your existing subscription to %s will be cancelled and replaced with a new subscription that automatically renews %s for %s.', 'edd-recurring' ),

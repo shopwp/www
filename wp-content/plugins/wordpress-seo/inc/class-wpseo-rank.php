@@ -6,7 +6,7 @@
  */
 
 /**
- * Holder for SEO Rank information
+ * Holder for SEO Rank information.
  */
 class WPSEO_Rank {
 
@@ -49,7 +49,7 @@ class WPSEO_Rank {
 	);
 
 	/**
-	 * Holds the translation from seo score slug to actual score range
+	 * Holds the translation from seo score slug to actual score range.
 	 *
 	 * @var array
 	 */
@@ -98,7 +98,7 @@ class WPSEO_Rank {
 	}
 
 	/**
-	 * Returns a CSS class for this rank
+	 * Returns a CSS class for this rank.
 	 *
 	 * @return string
 	 */
@@ -115,7 +115,7 @@ class WPSEO_Rank {
 	}
 
 	/**
-	 * Returns a label for this rank
+	 * Returns a label for this rank.
 	 *
 	 * @return string
 	 */
@@ -132,17 +132,37 @@ class WPSEO_Rank {
 	}
 
 	/**
-	 * Returns a label for use in a drop down
+	 * Returns a label for use in a drop down.
 	 *
 	 * @return mixed
 	 */
 	public function get_drop_down_label() {
 		$labels = array(
-			self::NO_FOCUS => __( 'SEO: No Focus Keyphrase', 'wordpress-seo' ),
-			self::BAD      => __( 'SEO: Needs improvement', 'wordpress-seo' ),
-			self::OK       => __( 'SEO: OK', 'wordpress-seo' ),
-			self::GOOD     => __( 'SEO: Good', 'wordpress-seo' ),
-			self::NO_INDEX => __( 'SEO: Post Noindexed', 'wordpress-seo' ),
+			self::NO_FOCUS => sprintf(
+				/* translators: %s expands to the SEO score */
+				__( 'SEO: %s', 'wordpress-seo' ),
+				__( 'No Focus Keyphrase', 'wordpress-seo' )
+			),
+			self::BAD => sprintf(
+				/* translators: %s expands to the SEO score */
+				__( 'SEO: %s', 'wordpress-seo' ),
+				__( 'Needs improvement', 'wordpress-seo' )
+			),
+			self::OK => sprintf(
+				/* translators: %s expands to the SEO score */
+				__( 'SEO: %s', 'wordpress-seo' ),
+				__( 'OK', 'wordpress-seo' )
+			),
+			self::GOOD => sprintf(
+				/* translators: %s expands to the SEO score */
+				__( 'SEO: %s', 'wordpress-seo' ),
+				__( 'Good', 'wordpress-seo' )
+			),
+			self::NO_INDEX => sprintf(
+				/* translators: %s expands to the SEO score */
+				__( 'SEO: %s', 'wordpress-seo' ),
+				__( 'Post Noindexed', 'wordpress-seo' )
+			),
 		);
 
 		return $labels[ $this->rank ];
@@ -155,9 +175,21 @@ class WPSEO_Rank {
 	 */
 	public function get_drop_down_readability_labels() {
 		$labels = array(
-			self::BAD      => __( 'Readability: Needs improvement', 'wordpress-seo' ),
-			self::OK       => __( 'Readability: OK', 'wordpress-seo' ),
-			self::GOOD     => __( 'Readability: Good', 'wordpress-seo' ),
+			self::BAD => sprintf(
+				/* translators: %s expands to the readability score */
+				__( 'Readability: %s', 'wordpress-seo' ),
+				__( 'Needs improvement', 'wordpress-seo' )
+			),
+			self::OK => sprintf(
+				/* translators: %s expands to the readability score */
+				__( 'Readability: %s', 'wordpress-seo' ),
+				__( 'OK', 'wordpress-seo' )
+			),
+			self::GOOD => sprintf(
+				/* translators: %s expands to the readability score */
+				__( 'Readability: %s', 'wordpress-seo' ),
+				__( 'Good', 'wordpress-seo' )
+			),
 		);
 
 		return $labels[ $this->rank ];
@@ -188,7 +220,7 @@ class WPSEO_Rank {
 	}
 
 	/**
-	 * Returns a rank for a specific numeric score
+	 * Returns a rank for a specific numeric score.
 	 *
 	 * @param int $score The score to determine a rank for.
 	 *
@@ -209,7 +241,7 @@ class WPSEO_Rank {
 	}
 
 	/**
-	 * Returns a list of all possible SEO Ranks
+	 * Returns a list of all possible SEO Ranks.
 	 *
 	 * @return WPSEO_Rank[]
 	 */
@@ -218,7 +250,7 @@ class WPSEO_Rank {
 	}
 
 	/**
-	 * Returns a list of all possible Readability Ranks
+	 * Returns a list of all possible Readability Ranks.
 	 *
 	 * @return WPSEO_Rank[]
 	 */
@@ -227,7 +259,7 @@ class WPSEO_Rank {
 	}
 
 	/**
-	 * Converts a numeric rank into a WPSEO_Rank object, for use in functional array_* functions
+	 * Converts a numeric rank into a WPSEO_Rank object, for use in functional array_* functions.
 	 *
 	 * @param string $rank SEO Rank.
 	 *

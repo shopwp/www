@@ -1,64 +1,55 @@
 .component-mailinglist {
-  background: color(offwhite);
-  padding: $space-l*3.5 0;
-  position: relative;
-  color: color(base);
-  background-size: 35%;
-  background-image: url('imgs/bg-stuff-2.png');
+   background: color(offwhite);
+   // padding: $space-l * 3.5 0;
+   position: relative;
+   color: color(base);
+   // background-image: url('imgs/bg-stuff-2.png');
 
-
-  .form-label {
-    color: color(base);
-    font-weight: 100;
-    z-index: 99;
-  }
-
-  .is-focused {
-    .form-label {
+   .form-label {
       color: color(base);
-    }
-  }
+      font-weight: 100;
+      z-index: 99;
+   }
 
-  .form-input {
-    border: none;
-  }
+   .is-focused {
+      .form-label {
+         color: color(base);
+      }
+   }
 
-  label.error {
-    font-size: inherit;
-  }
-
+   label.error {
+      font-size: inherit;
+   }
 }
 
 .mailinglist-group-copy {
-  color: color(white);
-  z-index: 9999999999999;
+   color: color(white);
+   z-index: 9999999999999;
 
-  @include device(600, 'max') {
-    z-index: 999;
-  }
-
+   @include device(600, 'max') {
+      z-index: 999;
+   }
 }
 
 .mailinglist-heading {
-  margin-bottom: 0;
-  color: color(base);
+   margin-bottom: 0;
+   color: color(base);
 
-  @include device(600, 'max') {
-    font-size: $font-xxxl;
-  }
+   @include device(600, 'max') {
+      font-size: $font-xxxl;
+   }
 
-  @include device(400, 'max') {
-    font-size: $font-xl;
-  }
-
+   @include device(400, 'max') {
+      font-size: $font-xl;
+   }
 }
 
 .mailinglist-copy {
-  margin-top: $space-xxxs;
-  text-align: center;
-  color: color(base);
+   margin-top: $space-xxxs;
+   text-align: center;
+   color: color(base);
 
-  @include device(400, 'max') {
-    font-size: 1em;
-  }
+   @include device(400, 'max') {
+      font-size: 1em;
+   }
 }

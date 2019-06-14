@@ -10,6 +10,12 @@ Animate Labels
 
 */
 function animateLabel($) {
+   $('#mailinglist-form .form-label').on('click', function(e) {
+      $(this)
+         .next()
+         .focus()
+   })
+
    $('#mailinglist-form .form-input').on('focusin', function() {
       $(this)
          .closest('.form-control')

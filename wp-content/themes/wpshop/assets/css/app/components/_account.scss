@@ -1,95 +1,91 @@
 .account-cat {
-  font-size: $font-l;
-  // font-weight: bold;
-  margin: 0;
-  padding: $space-s 0;
-  border-bottom: 1px solid color(light-grey);
+   font-size: $font-l;
+   // font-weight: bold;
+   margin: 0;
+   padding: $space-s 0;
+   border-bottom: 1px solid color(light-grey);
 
-  &:first-child {
-    padding-top: 0;
-  }
+   &:first-child {
+      padding-top: 0;
+   }
 
-  &:last-child {
-    padding-bottom: 0;
-    border: none;
-  }
+   &:last-child {
+      padding-bottom: 0;
+      border: none;
+   }
 
-  &:hover {
-    cursor: pointer;
-    opacity: $opacity-hard;
-  }
+   &:hover {
+      cursor: pointer;
+      opacity: $opacity-hard;
+   }
 }
 
 .receipt-account-wrapper {
-  text-align: center;
-  margin-bottom: 3em;
+   text-align: center;
+   margin-bottom: 3em;
 }
 
-.component[class*="component-account"] {
-  animation-duration: 0.5s;
-  margin-bottom: $space-l;
+.component[class*='component-account'] {
+   animation-duration: 0.5s;
+   margin-bottom: $space-l;
 }
 
 .component-account-licenses-upgrades {
-  margin-top: 0;
+   margin-top: 0;
 }
 
 .component-account-licenses {
-  .edd_sl_expiration {
-    width: 45%;
-  }
+   .edd_sl_expiration {
+      width: 45%;
+   }
 }
 
 .component-account-sub {
-  margin-bottom: $space-xl*2;
+   margin-bottom: $space-xl * 2;
 }
 
 .component-account-profile {
-  .component-account-sub {
-    margin-bottom: 10px;
+   .component-account-sub {
+      margin-bottom: 10px;
 
-    .accordion-heading {
-      padding: 1em 0;
-      font-size: 20px;  
-    }
-
-  }
+      .accordion-heading {
+         padding: 1em 0;
+         font-size: 20px;
+      }
+   }
 }
 
 .user-info {
-  margin-top: $space-m;
+   margin-top: $space-m;
 }
 
 .view-key-wrapper {
-  display: flex;
-  align-items: center;
+   display: flex;
+   align-items: center;
 
-  .fa {
-    @include device(1400, 'max') {
-      display: none;
-    }
-  }
-
+   .fa {
+      @include device(1400, 'max') {
+         display: none;
+      }
+   }
 }
 
 .component-heading {
-  // margin-bottom: $space-xxl;
+   // margin-bottom: $space-xxl;
 }
-
 
 .component-account-heading {
-  margin-bottom: $space-xs;
-  font-weight: bold;
+   margin-bottom: $space-xs;
+   font-weight: bold;
 
-  .fa {
-    font-size: $font-s;
-    margin-right: $space-xxxs;
-    position: relative;
-    top: -1px;
-  }
-
+   .fa {
+      font-size: $font-s;
+      margin-right: $space-xxxs;
+      position: relative;
+      top: -1px;
+   }
 }
 
-.edd_download_history_row .edd_download_file_link {
-  margin-top: 0;
-}
+// .edd_download_history_row .edd_download_file_link {
+//   margin-top: 0;
+// }

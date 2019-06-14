@@ -152,7 +152,12 @@ class EDD_Recurring_Emails {
 		$expiration    = strtotime( $this->subscription->expiration );
 
 		$text = str_replace( '{name}', $customer_name, $text );
-		$text = str_replace( '{subscription_name}', $download->get_name(), $text );
+
+		// Make sure a valid download object was found before attempting to use its methods.
+		if ( $download instanceof EDD_Download ) {
+			$text = str_replace( '{subscription_name}', $download->get_name(), $text );
+		}
+
 		$text = str_replace( '{expiration}', date_i18n( 'F j, Y', $expiration ), $text );
 		$text = str_replace( '{amount}', edd_currency_filter( edd_format_amount( $amount ) ), $text );
 

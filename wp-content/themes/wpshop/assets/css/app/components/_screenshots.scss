@@ -1,88 +1,106 @@
 .component-screenshots {
-  background: white;
-  margin: 0;
-  border-top: 5em solid white;
+   background: white;
+   //   margin: 0;
+   //   border-top: 5em solid white;
 
-  @include device(1000, 'max') {
+   @include device(1000, 'max') {
+      .screenshot {
+         flex-direction: column;
+      }
 
-    .screenshot {
-      flex-direction: column;
-    }
+      .screenshot-image-wrapper {
+         text-align: center;
+         width: 100%;
+         max-width: 100%;
+         flex: 0 0 100%;
+         margin: 0;
+         max-width: 640px;
+      }
 
-    .screenshot-image-wrapper {
-      text-align: center;
-      width: 100%;
-      max-width: 100%;
-      flex: 0 0 100%;
-      margin: 0;
-      max-width: 640px;
-    }
+      .screenshot-image {
+         max-width: 100%;
+         position: relative;
+         margin: 0 auto;
+         left: 0;
+      }
 
-    .screenshot-image {
-      max-width: 100%;
-      position: relative;
-      margin: 0 auto;
-      left: 0;
-    }
-
-    .screenshot-image-description {
-      margin: 1em auto 3em;
-      padding: 0;
-      max-width: 700px;
-      width: 100%;
-    }
-
-  }
-
+      .screenshot-image-description {
+         margin: 1em auto 3em;
+         padding: 0;
+         max-width: 700px;
+         width: 100%;
+      }
+   }
 }
 
 .page.demo,
 .page.purchase {
-  .component-screenshots {
-    margin-bottom: 3em;
-  }
+   .component-screenshots {
+      margin-bottom: 3em;
+   }
 }
 
 .screenshots {
-  list-style: none;
-  margin: 0;
-  max-width: 100%;
-  padding: 0;
+   list-style: none;
+   margin: 0;
+   max-width: 100%;
+   padding: 0;
 }
 
 .screenshot {
-  margin-bottom: $space-xxl;
+   margin-bottom: $space-xxl;
+   position: relative;
 }
 
 .guide-image {
-  @include drop-shadow();
+   @include drop-shadow();
 }
 
 .screenshot-image {
-  @include shadow();
+   @include shadow();
 
-  border: 1px solid #c2c2c2;
-  left: 13%;
-  max-width: 87%;
-  position: relative;
+   border: 1px solid #c2c2c2;
+   // left: 13%;
+   max-width: 85%;
+   margin: 0 auto;
+   display: block;
+   // position: relative;
 }
 
 .screenshot-image-wrapper {
-  padding-left: 0;
-  width: 55%;
-  max-width: 55%;
-  flex: 0 0 55%;
-  margin-right: 3em;
+   padding-left: 0;
+   margin: 0;
+   padding: 0;
+   width: 100%;
+   max-width: 100%;
+   flex: 0 0 100%;
+
+   // margin-right: 3em;
 }
 
 .screenshot-image-description {
-  width: 40%;
-  max-width: 40%;
-  flex: 0 0 40%;
-  padding-right: 4em;
-  margin-top: 2px;
+   // width: 40%;
+   // max-width: 40%;
+   // flex: 0 0 40%;
+   // padding-right: 4em;
+   // margin-top: 2px;
+   position: absolute;
+   width: 40%;
+   max-width: 40%;
+   z-index: 999;
+   flex: 0 0 40%;
+   padding-right: 4em;
+   margin-top: 2px;
+   background: white;
+   font-size: 1.2em;
+   padding: 2em;
+   border-radius: 10px;
+   top: 50%;
+   right: 0;
+   transform: translate(15px, -50%);
+   box-shadow: -25px 24px 25px 0 rgba(0, 0, 0, 0.2);
 }
 
 .screenshots-short-description {
-  margin-bottom: 3em;
+   margin-bottom: 3em;
 }

@@ -350,8 +350,8 @@ class EDD_Subscription {
 	public function add_payment( $args = array() ) {
 
 		$args = wp_parse_args( $args, array(
-			'amount'         => '',
-			'tax'            => '',
+			'amount'         => '', // This is the full amount that was charged at the gateway, INCLUDING tax.
+			'tax'            => '', // This is going to be blank since 2.8, where taxes were no longer sent to the gateway. The only exception is when doing a manual renewal through the EDD subscription single view.
 			'transaction_id' => '',
 			'gateway'        => '',
 		) );
@@ -397,7 +397,8 @@ class EDD_Subscription {
 
 		} elseif( ! empty( $this->recurring_tax_rate ) ) {
 
-			$tax = $args['amount'] * $this->recurring_tax_rate;
+			// The $args['amount'] includes the tax. We need to calculate the tax as though it is included in the amount.
+			$tax = $args['amount'] - ( $args['amount'] / ( 1 + $this->recurring_tax_rate ) );
 
 		} elseif( ! empty( $this->recurring_tax ) ) {
 

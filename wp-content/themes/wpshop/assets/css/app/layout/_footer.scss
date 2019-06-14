@@ -1,73 +1,71 @@
 .footer {
-  text-align: center;
-  font-size: $font-s;
-  margin-top: 0;
-  background: color(base);
+   text-align: center;
+   font-size: $font-s;
+   margin-top: 0;
+   // background: color(base);
+   background: #0c051e;
+   background: linear-gradient(180deg, #12062a 0%, #180b37 100%);
 
-  @include device(800, 'max') {
-
-  }
-
+   @include device(800, 'max') {
+   }
 }
 
 .footer-wrapper {
-  padding: $space-xxl*2 0 $space-xl*2 0;
-  position: relative;
-  margin: 0;
-  color: #fff;
-  margin: 0;
-  color: color(white);
+   padding: $space-xxl * 2 0 $space-xl * 2 0;
+   position: relative;
+   margin: 0;
+   color: #fff;
+   margin: 0;
+   color: color(white);
 
-  .menu-item a {
-    color: color(white);
-  }
-
+   .menu-item a {
+      color: color(white);
+   }
 }
 
 .footer-social-link {
-  font-size: $font-xxxl;
-  padding: 0 $space-xxxs;
-  text-decoration: none;
-  border: none;
-  color: color(white);
+   font-size: $font-xxxl;
+   padding: 0 $space-xxxs;
+   text-decoration: none;
+   border: none;
+   color: color(white);
 
-  &:hover {
-    @include dim($opacity-soft);
-  }
+   &:hover {
+      @include dim($opacity-soft);
+   }
 }
 
 .footer-attr {
-  margin-top: $space-l;
-  text-transform: uppercase;
+   margin-top: $space-l;
+   // text-transform: uppercase;
 }
 
 .footer-social-links {
-  position: relative;
-  margin-top: $space-xxl*2;
+   position: relative;
+   margin-top: $space-xxl * 2;
 
-  // &:before {
-  //   content: '';
-  //   width: 160px;
-  //   height: 60px;
-  //   bottom: 45px;
-  //   left: calc(50% - 80px);
-  //   position: absolute;
-  //   background: url('imgs/wave-shape.svg');
-  //   background-size: contain;
-  //   background-position: 50% 50%;
-  //   opacity: 0.2;
-  // }
+   // &:before {
+   //   content: '';
+   //   width: 160px;
+   //   height: 60px;
+   //   bottom: 45px;
+   //   left: calc(50% - 80px);
+   //   position: absolute;
+   //   background: url('imgs/wave-shape.svg');
+   //   background-size: contain;
+   //   background-position: 50% 50%;
+   //   opacity: 0.2;
+   // }
 
-  &:before {
-    bottom: 35px;
-    position: relative;
-    content: '';
-    margin: $space-l auto 0 auto;
-    display: block;
-    height: 1px;
-    width: 100px;
-    background-color: color(white);
-    opacity: 0.3;
-  }
-
+   &:before {
+      bottom: 35px;
+      position: relative;
+      content: '';
+      margin: $space-l auto 0 auto;
+      display: block;
+      height: 1px;
+      width: 100px;
+      background-color: color(white);
+      opacity: 0.3;
+   }
 }

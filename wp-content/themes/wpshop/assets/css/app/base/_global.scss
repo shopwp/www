@@ -1,73 +1,78 @@
-html[lang="en-US"] {
-  margin: 0 !important;
-  padding: 0;
+html[lang='en-US'] {
+   margin: 0 !important;
+   padding: 0;
 }
 
 body {
-  min-height: 100vh;
-  width: 100%;
-  height: 100%;
-  letter-spacing: 0.01em;
-  line-height: 1.6;
-  position: relative;
-  font-size: 16px;
-  font-family: $font-primary;
-  color: color(base);
-  -webkit-backface-visibility: hidden;
-  background-color: color(white);
+   min-height: 100vh;
+   width: 100%;
+   height: 100%;
+   letter-spacing: 0.01em;
+   line-height: 1.6;
+   position: relative;
+   font-size: 16px;
+   font-family: $font-primary;
+   color: color(base);
+   -webkit-backface-visibility: hidden;
+   background-color: color(white);
 
-  * + * {
-    margin-top: 1.5rem;
-  }
+   * + * {
+      margin-top: 1.5rem;
+   }
 
-  @include device(1600, 'min') {
-    line-height: 1.5;
-  }
-
+   @include device(1600, 'min') {
+      line-height: 1.5;
+   }
 }
 
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+*,
+*:before,
+*:after {
+   text-rendering: optimizeLegibility;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   font-smoothing: antialiased;
 }
 
 ::selection {
-  background-color: color(notice-light);
+   background-color: color(notice-light);
 }
 
-code, kbd, pre, samp {
-  font-size: 16px;
-  margin-top: 0;
-  font-family: 'Source Code Pro', monospace;
+code,
+kbd,
+pre,
+samp {
+   font-size: 16px;
+   margin-top: 0;
+   font-family: 'Source Code Pro', monospace;
 
-  * {
-    -webkit-font-smoothing: initial;
-  }
+   * {
+      -webkit-font-smoothing: initial;
+   }
 
-  @include device(1440, 'max') {
-    font-size: 13px;
-  }
-
+   @include device(1440, 'max') {
+      font-size: 13px;
+   }
 }
 
 [data-language] code,
-[class^="lang"] code,
+[class^='lang'] code,
 pre [data-language],
-pre [class^="lang"] {
-  animation: 300ms ease-in-out 2s forwards fade-in;
+pre [class^='lang'] {
+   animation: 300ms ease-in-out 2s forwards fade-in;
 }
 
 .hljs {
-  background: #1e2940;
+   background: #1e2940;
 }
 
+ul,
+ol,
+dl {
+   padding: 0;
+   margin: $space-s 0 $space-m $space-m;
 
-ul, ol, dl {
-  padding: 0;
-  margin: $space-s 0 $space-m $space-m;
-
-  li {
-    margin-top: $space-xxs;
-  }
-
+   li {
+      margin-top: $space-xxs;
+   }
 }

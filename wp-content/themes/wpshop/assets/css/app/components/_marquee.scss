@@ -1,180 +1,184 @@
 .component-marquee {
-  width: 100%;
-  min-height: 68vh;
-  margin-top: 0;
+   width: 100%;
+   position: relative;
+   min-height: calc(80vh - 130px - 30px);
+   margin-bottom: 40px;
+   padding: 7em 0;
+   background: transparent;
+   // background-image: url('imgs/bg-stuff-2.png');
+   // background-size: cover;
+   // @include device(1700, 'min') {
+   //    min-height: 58vh;
+   // }
 
+   // @include device(1000, 'max') {
+   //    min-height: 60vh;
+   // }
 
-  @include device(1700, 'min') {
-    min-height: 58vh;
-  }
+   @include device(600, 'max') {
+      min-height: calc(100vh - 130px - 30px);
+   }
 
-  @include device(1000, 'max') {
-    min-height: 60vh;
-  }
-
-  @include device(600, 'max') {
-    min-height: 90vh;
-  }
-
-  .wordpress {
-    position: relative;
-
-    @include device(1000, 'max') {
-      display: block;
-    }
-
-    &:before {
+   .logo {
+      width: 38px;
+      height: 38px;
+   }
+   .logos {
       position: absolute;
-      top: 5.3em;
-      left: 4.6em;
-      content: '';
-      display: block;
-      background-image: url('imgs/icon-wp.svg');
-      width: 40px;
-      opacity: 0.75;
-      height: 40px;
+      bottom: -150px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+   }
 
-      @include device(1000, 'max') {
-        display: none;
+   .wordpress {
+      position: relative;
+
+      // @include device(1000, 'max') {
+      //    display: block;
+      // }
+
+      &:before {
+         // position: absolute;
+         // top: 300px;
+         // left: 400px;
+         content: '';
+         display: block;
+         background-image: url('imgs/icon-wp.svg');
+         width: 40px;
+         opacity: 0.75;
+         height: 40px;
+
+         @include device(1000, 'max') {
+            display: none;
+         }
       }
+   }
 
-    }
+   .shopify {
+      position: relative;
 
-  }
+      // @include device(1000, 'max') {
+      //    display: block;
+      // }
 
+      &:before {
+         // position: absolute;
+         // top: 300px;
+         // right: 394px;
+         content: '';
+         opacity: 0.75;
+         display: block;
+         background-image: url('imgs/icon-shopify.svg');
+         width: 40px;
+         height: 40px;
 
-  .shopify {
-    position: relative;
-
-    @include device(1000, 'max') {
-      display: block;
-    }
-
-    &:before {
-      position: absolute;
-      top: 5.3em;
-      right: 4.35em;
-      content: '';
-      opacity: 0.75;
-      display: block;
-      background-image: url('imgs/icon-shopify.svg');
-      width: 40px;
-      height: 40px;
-
-      @include device(1000, 'max') {
-        display: none;
+         @include device(1000, 'max') {
+            display: none;
+         }
       }
+   }
 
-    }
+   .fa-fw {
+      width: 1.6em;
+   }
 
-  }
-
-
-  .fa-fw {
-    width: 1.6em;
-  }
-
-  .btn:last-of-type {
-    margin-right: 0;
-  }
-
+   .btn:last-of-type {
+      margin-right: 0;
+   }
 }
 
 .marquee-img {
-  max-width: 60vw;
-  display: block;
-  margin: 0 auto;
-  position: relative;
-  top: 15vh;
+   max-width: 60vw;
+   display: block;
+   margin: 0 auto;
+   position: relative;
+   top: 15vh;
 }
 
 .marquee-content {
-  position: relative;
-  text-align: center;
-  top: 8vh;
-  left: -10px;
+   position: relative;
+   text-align: center;
+   top: 4vh;
+   left: -10px;
 
-  @include device(1500, 'max') {
-    top: 0;
-  }
+   h1 {
+      font-size: 42px;
+      font-size: 4.2vw;
+      max-width: 80vw;
+      line-height: 1;
+   }
 
-  @include device(1000, 'max') {
-    top: 0;
-    left: 0;
-    padding: 0 1em;
-  }
+   @include device(1500, 'max') {
+      top: 0;
+   }
 
-  @include device(700, 'max') {
-    padding: 0;
-  }
+   @include device(1000, 'max') {
+      top: 0;
+      left: 0;
+      padding: 0 1em;
+   }
 
+   @include device(700, 'max') {
+      padding: 0;
+   }
 }
 
 .marquee-heading {
-  max-width: 80vw;
-  font-size: $font-xxl*2.8;
-  font-weight: bold;
-  margin-bottom: 0;
+   max-width: 80vw;
+   font-size: $font-xxl * 2.8;
+   font-weight: bold;
+   margin-bottom: 0;
 
-  @include device(1500, 'max') {
-    right: 90px;
-    font-size: $font-xxl*2.6;
-    max-width: 100%;
-  }
+   @include device(1500, 'max') {
+      right: 90px;
+      font-size: $font-xxl * 2.6;
+      max-width: 100%;
+   }
 
-  @include device(1000, 'max') {
-    right: 90px;
-    font-size: $font-xxl*2.2;
-    max-width: 100%;
-  }
+   @include device(1000, 'max') {
+      right: 90px;
+      font-size: $font-xxl * 2.2;
+      max-width: 100%;
+   }
 
-  @include device(700, 'max') {
-    font-size: $font-xxl*1.7;
-  }
+   @include device(700, 'max') {
+      font-size: $font-xxl * 1.7;
+   }
 
-  @include device(500, 'max') {
-    // font-size: $font-xxl*1.7;
-  }
+   @include device(500, 'max') {
+      // font-size: $font-xxl*1.7;
+   }
 
-  .fa-cog,
-  .fa-sync-alt {
-    margin: 0 20px;
-  }
-
+   .fa-cog,
+   .fa-sync-alt {
+      margin: 0 20px;
+   }
 }
 
 .marquee-short-desc {
-  margin: 15px auto $space-xl auto;
-  font-size: $font-xxl;
-  max-width: 800px;
+   margin: 15px auto 1em auto;
+   font-size: $font-xxl;
+   max-width: 800px;
 
-  @include device(1500, 'max') {
-    max-width: 740px;
-    margin: $space-l auto;
-  }
+   @include device(1500, 'max') {
+      max-width: 740px;
+      margin: $space-l auto;
+   }
 
-  @include device(1000, 'max') {
-    right: 90px;
-    font-size: $font-xl;
-  }
+   @include device(1000, 'max') {
+      right: 90px;
+      font-size: $font-xl;
+   }
 
-  @include device(700, 'max') {
-    font-size: 1.1em;
-  }
-
+   @include device(700, 'max') {
+      font-size: 1.1em;
+   }
 }
 
-
-
-
-
-
-
-
 .component-how-it-works {
-  padding: $space-l*3.5 0;
-  background: color(secondary-light);
-  background-image: url('imgs/bg-stuff-2.png');
-  margin-top: 0;
-  text-align: center;
+   padding: $space-l * 3.5 0;
+   background: color(secondary-light);
+   background-image: url('imgs/bg-stuff-2.png');
+   margin-top: 0;
+   text-align: center;
 }

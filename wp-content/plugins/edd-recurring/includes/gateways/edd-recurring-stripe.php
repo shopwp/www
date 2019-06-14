@@ -290,14 +290,6 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 					$sub_options['stripe_account'] = $stripe_connect_account_id;
 				}
 
-				$stripe_sub = $customer->subscriptions->create( $args, $sub_options );
-
-				$this->subscriptions[ $key ]['profile_id'] = $stripe_sub->id;
-
-				wp_schedule_single_event( strtotime( '+2 minutes' ), 'edd_recurring_stripe_check_txn', array( $stripe_sub->id ) );
-
-				$customer->save();
-
 				if( ! empty( $create_one_time ) ) {
 
 					/*
@@ -313,10 +305,10 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 						'amount'   => edds_is_zero_decimal_currency() ? $subscription['initial_amount'] : round( $subscription['initial_amount'] * 100, 0 ),
 						'customer' => $customer,
 						'currency' => edd_get_currency(),
+						'capture'  => false,
 						'metadata' => array(
-							'subscription_id' => $stripe_sub->id,
-							'license_id'      => $license_id,
-							'caller'          => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
+							'license_id' => $license_id,
+							'caller'     => __CLASS__ . '|' . __METHOD__ . '|' . __LINE__ . '|' . EDD_RECURRING_VERSION,
 						)
 					);
 
@@ -326,15 +318,35 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 						$charge_options['stripe_account'] = $stripe_connect_account_id;
 					}
 
-					$charge = \Stripe\Charge::create( $charge_args, $charge_options );
+					// Store the charge for a moment so we can possibly use it in an exception.
+					global $upgrade_charge;
+					$upgrade_charge = \Stripe\Charge::create( $charge_args, $charge_options );
 
-					$stripe_sub->metadata['upgrade_charge_id'] = $charge->id; // Store the charge ID for easier reference
+					// If the charge was successful, try and create the new subscription for the upgrade.
+					$stripe_sub = $customer->subscriptions->create( $args, $sub_options );
+
+					// If the subscription was successfully created, process the capture of the auth.
+					$upgrade_charge->capture();
+					$upgrade_charge->metadata['subscription_id'] = $stripe_sub->id;
+
+					$stripe_sub->metadata['upgrade_charge_id'] = $upgrade_charge->id; // Store the charge ID for easier reference
 
 					$stripe_sub->save();
 
-					$this->subscriptions[ $key ]['transaction_id'] = $charge->id;
+					$this->subscriptions[ $key ]['transaction_id'] = $upgrade_charge->id;
+
+				} else {
+
+					// This is not an upgrade, just create the sub as normal.
+					$stripe_sub = $customer->subscriptions->create( $args, $sub_options );
 
 				}
+
+				$this->subscriptions[ $key ]['profile_id'] = $stripe_sub->id;
+
+				wp_schedule_single_event( strtotime( '+2 minutes' ), 'edd_recurring_stripe_check_txn', array( $stripe_sub->id ) );
+
+				$customer->save();
 
 				if ( ! empty( $save_balance ) ) {
 					// Now reset the balance
@@ -343,11 +355,30 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 				}
 
 			} catch ( Exception $e ) {
+				global $upgrade_charge;
 
 				// Charging the customer failed so we need to undo the balance adjustment
 				if( ! empty( $balance_changed ) ) {
 					$customer->account_balance -= $balance_adjustment;
 					$customer->save();
+				}
+
+				/**
+				 * If we were upgrading any subscriptions with Software Licensing and the auth was successful but
+				 * creating the sub failed, we need to refund the auth charge to cancel it out.
+				 *
+				 * We're not listening for failed charges, as they never get set to 'Uncaptured', we're checking for if
+				 * a subscription fails to be created after our authorization is approved.
+				 *
+				 * If the authorization is approved, but the subscription fails to be created, we need to release the
+				 * authorization done during the upgrade process.
+				 */
+				$error_json = $e->getJsonBody();
+				$type       = $error_json['error']['type'];
+				if ( 'invalid_request_error' === $type && ! empty( $upgrade_charge ) ) {
+					if ( 'succeeded' === $upgrade_charge->staus && empty( $upgrade_charge->captured ) ) {
+						$upgrade_charge->refund();
+					}
 				}
 
 				$this->failed_subscriptions[] = array(

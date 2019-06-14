@@ -987,7 +987,7 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 			 * Let's catch those cases and consider the cancellation successful
 			 */
 			$cancelled_codes = array( 11556, 11557, 11531 );
-			if( in_array( $body['L_ERRORCODE0'], $cancelled_codes ) ) {
+			if( isset( $body['L_ERRORCODE0'] ) && in_array( $body['L_ERRORCODE0'], $cancelled_codes ) ) {
 				$success = true;
 			}
 

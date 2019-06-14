@@ -2,22 +2,113 @@
 
   <div class="marquee-content">
 
-    <h1 class="marquee-heading"><span class="wordpress">WordPress</span> <i class="fas fa-sync-alt fa-spin"></i> <span class="shopify">Shopify</span></h1>
+   <div class="logos">
+
+      <img class="logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-wp.svg" alt="WordPress Logo">
+      <img class="logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify.svg" alt="Shopify Logo">
+
+    </div>
+
+   <h1><?php the_sub_field('short_description'); ?></h1>
+   
+   
+    <!-- <h1 class="marquee-heading"></h1>
 
     <div class="marquee-short-desc">
       <?php the_sub_field('short_description'); ?>
-    </div>
+    </div> -->
+    
 
     <div class="btn-group l-row l-row-center">
-      <a href="https://wordpress.org/plugins/wpshopify" class="btn btn-l btn-secondary btn-download-free" data-gtm="learn-home"><i class="fas fa-download"></i> Download</a>
-      <a href="/purchase" class="btn btn-l" data-gtm="purchase-home"><i class="fas fa-cart-plus"></i> Purchase</a>
+      <a href="https://demo.wpshop.io" class="btn btn-l btn-secondary btn-download-free">View the demo</a>
     </div>
 
   </div>
+   <style>
 
+      @keyframes MoveUpDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(40px);
+  }
+}
+
+   .icon-test {
+      max-width: 60px;
+      position: absolute;
+      filter: grayscale(1);
+      /* filter: sepia(1); */
+      opacity: 0.15;    
+      /* transform: rotate(-30deg); */
+      /* filter: drop-shadow(6px 7px 2px rgba(0,0,0,0.15)); */
+      /* animation: MoveUpDown 7s linear infinite; */
+
+   }
+
+   .icon-test-1 {
+    top: 28vh;
+    left: 6vw;
+    /* max-width: 85px; */
+    transform: rotate(-45deg);
+   }
+
+   .icon-test-2 {
+    top: 7vh;
+    right: 9vw;
+    transform: rotate(-18deg);
+    /* max-width: 57px; */
+   }
+   .icon-test-3 {
+        top: 30px;
+    left: 32vw;
+    transform: rotate(-28deg);
+   }
+   .icon-test-4 {
+    bottom: 111px;
+    left: 11vw;
+
+    transform: rotate(15deg);
+   }
+
+   .icon-test-5 {
+        bottom: 80px;
+    right: 46vw;
+    transform: rotate(-15deg);
+    /* max-width: 60px; */
+   }
+    
+      .icon-test-6 {
+    right: 7vw;
+    bottom: 58px;
+    transform: rotate(14deg);
+    /* max-width: 50px;     */
+   }
+      .icon-test-7 {
+    bottom: 32vh;
+    right: 17vw;
+    transform: rotate(34deg);
+    /* max-width: 70px; */
+   }
+   
+
+   </style>
+  <!-- <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-1.svg" class="icon-test-1 icon-test">
+<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-2.svg" class="icon-test-2 icon-test">
+
+<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-3.svg" class="icon-test-3 icon-test">
+
+<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-4.svg" class="icon-test-4 icon-test">
+
+<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-5.svg" class="icon-test-5 icon-test">
+
+<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-6.svg" class="icon-test-6 icon-test">
+
+<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-7.svg" class="icon-test-7 icon-test"> -->
 </section>
 
-
+<!-- 
 <section class="component component-snippet l-col l-col-center l-row-center">
 
   <div class="l-contain">
@@ -68,4 +159,4 @@
 
   </div>
 
-</section>
+</section> -->

@@ -1,40 +1,53 @@
-/*
-
-Fonts
-
-*/
 $ms-base: 1em;
 $ms-ratio: 1.2;
 
-$font-xxxs:   ms(-4);
-$font-xxs:    ms(-3);
-$font-xs:     ms(-2);
-$font-s:      ms(-1);
-$font-m:      ms(0);
-$font-l:      ms(1);
-$font-xl:     ms(2);
-$font-xxl:    ms(3);
-$font-xxxl:   ms(4);
-$font-xxxxl:  ms(5);
+$font-xxxs: ms(-4);
+$font-xxs: ms(-3);
+$font-xs: ms(-2);
+$font-s: ms(-1);
+$font-m: ms(0);
+$font-l: ms(1);
+$font-xl: ms(2);
+$font-xxl: ms(3);
+$font-xxxl: ms(4);
+$font-xxxxl: ms(5);
 
+$heading-1: ms(5);
+$heading-2: ms(4);
+$heading-3: ms(2);
+$heading-4: ms(2);
+$heading-5: ms(1);
+$heading-6: ms(0);
 
-$heading-1:   ms(5);
-$heading-2:   ms(4);
-$heading-3:   ms(2);
-$heading-4:   ms(2);
-$heading-5:   ms(1);
-$heading-6:   ms(0);
-
-$font-primary: 'Open Sans', arial;
-$font-secondary: 'Catamaran', helvetica;
+$font-secondary: 'IBM Plex Sans', helvetica;
+$font-primary: 'Manrope', arial;
 
 @font-face {
-  font-family: 'FontAwesome';
-  src:url('../fonts/fa-solid-900.eot');
-  src:url('../fonts/fa-solid-900.eot') format('embedded-opentype'),
-    url('../fonts/fa-solid-900.ttf') format('truetype'),
-    url('../fonts/fa-solid-900.woff') format('woff'),
-    url('../fonts/fa-solid-900.svg') format('svg');
-  font-weight: normal;
-  font-style: normal;
+   font-family: 'Manrope';
+   src: url('../fonts/manrope-bold.woff2') format('woff2'), url('../fonts/manrope-bold.woff') format('woff'), url('../fonts/manrope-bold.otf') format('truetype');
+   font-style: normal;
+   font-weight: 700;
+}
+
+@font-face {
+   font-family: 'Manrope';
+   src: url('../fonts/manrope-medium.woff2') format('woff2'), url('../fonts/manrope-medium.woff') format('woff'), url('../fonts/manrope-medium.otf') format('truetype');
+   font-style: normal;
+   font-weight: 500;
+}
+
+@font-face {
+   font-family: 'Manrope';
+   src: url('../fonts/manrope-regular.woff2') format('woff2'), url('../fonts/manrope-regular.woff') format('woff'), url('../fonts/manrope-regular.otf') format('truetype');
+   font-style: normal;
+   font-weight: 400;
+}
+
+@font-face {
+   font-family: 'FontAwesome';
+   src: url('../fonts/fa-solid-900.eot');
+   src: url('../fonts/fa-solid-900.eot') format('embedded-opentype'), url('../fonts/fa-solid-900.ttf') format('truetype'), url('../fonts/fa-solid-900.woff') format('woff'),
+      url('../fonts/fa-solid-900.svg') format('svg');
+   font-weight: normal;
+   font-style: normal;
 }

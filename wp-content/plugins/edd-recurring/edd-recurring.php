@@ -5,7 +5,7 @@
  * Description: Sell subscriptions with Easy Digital Downloads
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com/
- * Version: 2.8.6
+ * Version: 2.8.7
  * Text Domain: edd-recurring
  * Domain Path: languages
  */
@@ -31,7 +31,7 @@ if ( ! defined( 'EDD_RECURRING_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_RECURRING_VERSION' ) ) {
-	define( 'EDD_RECURRING_VERSION', '2.8.6' );
+	define( 'EDD_RECURRING_VERSION', '2.8.7' );
 }
 
 final class EDD_Recurring {

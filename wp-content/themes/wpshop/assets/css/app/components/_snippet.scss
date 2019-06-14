@@ -1,161 +1,145 @@
 .component-snippet {
-  max-width: 100%;
-  background-color: color(white);
+   //   max-width: 100%;
+   //   background-color: color(white);
 
-  + .component-snippet {
-    .snippet {
-      margin-top: 0;
-    }
-
-    .snippet:first-child {
-      @include device(1000, 'max') {
-        flex-direction: column-reverse;
+   + .component-snippet {
+      .snippet {
+         margin-top: 0;
       }
-    }
 
-  }
+      .snippet:first-child {
+         @include device(1000, 'max') {
+            flex-direction: column-reverse;
+         }
+      }
+   }
 
-  + .component-support {
-    padding-bottom: 5em;
-    padding-top: 2em;
-  }
-
+   + .component-support {
+      padding-bottom: 5em;
+      padding-top: 2em;
+   }
 }
 
 .component-marquee + .component-snippet {
-  //background: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,255,255,1));
-  margin-bottom: 0;
-  padding-bottom: 0;
-  position: relative;
+   //background: linear-gradient(to bottom, rgba(255,0,0,0), rgba(255,255,255,1));
+   margin-bottom: 0;
+   padding-bottom: 0;
+   position: relative;
 
-  .snippet {
-    margin-top: 0;
-  }
+   .snippet {
+      margin-top: 0;
+   }
 
+   &:before {
+      content: '';
+      width: 100%;
+      height: 320px;
+      // background: rgba(255, 255, 255, 0.5);
+      top: -200px;
+      z-index: -1;
+      background: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 0, #ffffff 72%, #fff);
+      position: absolute;
 
-
-  &:before {
-    content: '';
-    width: 100%;
-    height: 320px;
-    // background: rgba(255, 255, 255, 0.5);
-    top: -200px;
-    z-index: -1;
-    background: linear-gradient(180deg,hsla(0,0%,100%,0) 0,#ffffff 72%,#fff);
-    position: absolute;
-
-    @include device(600, 'max') {
-      display: none;
-    }
-
-  }
-
-
-
+      @include device(600, 'max') {
+         display: none;
+      }
+   }
 }
 
 .snippet-heading {
-  font-size: $font-xl*2;
-  font-weight: bold;
+   font-size: $font-xl * 2;
+   font-weight: bold;
 
-  @include device(1200, 'max') {
-    font-size: $font-xl*1.6;
-  }
+   @include device(1200, 'max') {
+      font-size: $font-xl * 1.6;
+   }
 
-  @include device(700, 'max') {
-    font-size: $font-xl*1.2;
-  }
-
+   @include device(700, 'max') {
+      font-size: $font-xl * 1.2;
+   }
 }
 
 .snippet-image {
-  width: 400px;
-  height: auto;
-  padding-bottom: 0;
-  text-align: center;
-  margin: 0 auto;
+   width: 400px;
+   height: auto;
+   padding-bottom: 0;
+   text-align: center;
+   margin: 0 auto;
 
+   @include device(1400, 'max') {
+      width: 320px;
+   }
 
-  @include device(1400, 'max') {
-    width: 320px;
-  }
-
-  @include device(1200, 'max') {
-    width: 280px;
-  }
-
+   @include device(1200, 'max') {
+      width: 280px;
+   }
 }
 
 .snippet-content {
-  padding-top: 0;
-  width: 60%;
-  margin-left: 3em;
+   padding-top: 0;
+   width: 60%;
+   margin-left: 3em;
 
-  @include device(1000, 'max') {
-    width: 100%;
-    margin: 0;
-    text-align: center;
-  }
-
+   @include device(1000, 'max') {
+      width: 100%;
+      margin: 0;
+      text-align: center;
+   }
 }
 
 .snippet-copy {
-  font-size: $font-l;
-  width: 90%;
+   font-size: $font-l;
+   width: 90%;
 
-  @include device(1000, 'max') {
-    width: 100%;
-    font-size: $font-m;
-  }
-
+   @include device(1000, 'max') {
+      width: 100%;
+      font-size: $font-m;
+   }
 }
 
 .snippet {
-  margin-bottom: 3em;
-  width: 100%;
-  margin: $space-xxl auto;
-  position: relative;
+   margin-bottom: 3em;
+   width: 100%;
+   margin: $space-xxl auto;
+   position: relative;
 
-  @include device(600, 'max') {
-    // display: block;
-  }
+   @include device(600, 'max') {
+      // display: block;
+   }
 
-  // &:after {
-  //   content: '';
-  //   width: 160px;
-  //   height: 60px;
-  //   bottom: -35px;
-  //   left: calc(50% - 80px);
-  //   position: absolute;
-  //   background: url('imgs/wave-shape-dark.svg');
-  //   background-size: contain;
-  //   background-position: 50% 50%;
-  //   opacity: 1;
-  // }
+   // &:after {
+   //   content: '';
+   //   width: 160px;
+   //   height: 60px;
+   //   bottom: -35px;
+   //   left: calc(50% - 80px);
+   //   position: absolute;
+   //   background: url('imgs/wave-shape-dark.svg');
+   //   background-size: contain;
+   //   background-position: 50% 50%;
+   //   opacity: 1;
+   // }
 
-  &:after {
-    content: '';
-    margin: $space-l auto 0 auto;
-    display: block;
-    height: 1px;
-    width: 100px;
-    background-color: color(dark-grey);
+   &:after {
+      content: '';
+      margin: $space-l auto 0 auto;
+      display: block;
+      height: 1px;
+      width: 100px;
+      background-color: color(dark-grey);
 
-    @include device(1000, 'max') {
-      display: none;
-    }
+      @include device(1000, 'max') {
+         display: none;
+      }
+   }
 
-  }
-
-  &.snippet-made-with-devs {
-    &:after {
-      display: none;
-    }
-  }
-
+   &.snippet-made-with-devs {
+      &:after {
+         display: none;
+      }
+   }
 }
 
-
 .snippet-cta {
-  margin-bottom: $space-xxl*2;
+   margin-bottom: $space-xxl * 2;
 }

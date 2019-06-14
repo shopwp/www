@@ -1,7 +1,8 @@
 <?php
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * The Recurring Checkout Class.
@@ -38,30 +39,30 @@ class EDD_Recurring_Checkout {
 	 */
 	public function init() {
 
-		// Maybe show subscription terms under purchase link
+		// Maybe show subscription terms under purchase link.
 		add_action( 'edd_purchase_link_end', array( $this, 'show_single_terms_notice' ), 10, 2 );
 		add_action( 'edd_after_price_option', array( $this, 'show_variable_terms_notice' ), 10, 3 );
 		add_action( 'edd_after_price_options_list', array( $this, 'show_variable_custom_terms_notice' ), 11, 3 );
 		add_action( 'edd_checkout_cart_item_title_after', array( $this, 'show_terms_on_cart_item' ), 10, 1 );
 
-		// Maybe show signup fee under purchase link
+		// Maybe show signup fee under purchase link.
 		add_action( 'edd_purchase_link_end', array( $this, 'show_single_signup_fee_notice' ), 10, 2 );
 		add_action( 'edd_purchase_link_end', array( $this, 'show_single_custom_signup_fee_notice' ), 10, 2 );
 		add_action( 'edd_after_price_option', array( $this, 'show_variable_signup_fee_notice' ), 10, 3 );
 		add_action( 'edd_after_price_options_list', array( $this, 'show_multi_custom_signup_fee_notice' ), 11, 3 );
 
-		// Maybe show adjusted total on checkout for free trials
+		// Maybe show adjusted total on checkout for free trials.
 		add_action( 'edd_purchase_form_before_submit', array( $this, 'maybe_remove_total' ) );
 		add_action( 'edd_purchase_form_before_submit', array( $this, 'free_trial_total' ), 999 );
 
-		// Accounts for showing the login form when auto register is enabled, and login forms aren't shown
+		// Accounts for showing the login form when auto register is enabled, and login forms aren't shown.
 		add_action( 'edd_purchase_form_before_register_login', array( $this, 'force_login_fields' ) );
 
-		// Notify a user when a subscription failed to be purchased
+		// Notify a user when a subscription failed to be purchased.
 		add_action( 'edd_payment_receipt_before', array( $this, 'display_failed_subscriptions' ), 10, 2 );
 		add_action( 'edd_retry_failed_subs', array( $this, 'process_add_failed' ) );
 
-		// Check email entered on checkout for repeat trial purchase attempt
+		// Check email entered on checkout for repeat trial purchase attempt.
 		add_action( 'wp_ajax_nopriv_edd_recurring_check_repeat_trial', array( $this, 'check_repeat_trial' ) );
 
 	}
@@ -99,8 +100,8 @@ class EDD_Recurring_Checkout {
 	 * If multiple subscriptions are in the cart and one fails, notifiy the customer about it but process the rest
 	 *
 	 * @since  2.4.14
-	 * @param  WP_Post $payment      The WP_Post object of the payment
-	 * @param  array   $receipt_args Array of arguments of the payment receipt
+	 * @param  WP_Post $payment      The WP_Post object of the payment.
+	 * @param  array   $receipt_args Array of arguments of the payment receipt.
 	 * @return void
 	 */
 	public function display_failed_subscriptions( $payment, $receipt_args ) {
@@ -166,8 +167,8 @@ class EDD_Recurring_Checkout {
 	 * Display the signup fee notice under the purchase link
 	 *
 	 * @since  2.4
-	 * @param  int   $download_id The download ID beign displayed
-	 * @param  array $args      Array of arguements for the purcahse link
+	 * @param  int   $download_id The download ID beign displayed.
+	 * @param  array $args      Array of arguements for the purcahse link.
 	 * @return void
 	 */
 	public function show_single_signup_fee_notice( $download_id, $args ) {
@@ -184,7 +185,7 @@ class EDD_Recurring_Checkout {
 
 		if ( $download->has_variable_prices() ) {
 
-			$prices = $download->get_prices();
+			$prices               = $download->get_prices();
 			$variable_signup_fees = array();
 			foreach ( $prices as $price_id => $price ) {
 				$variable_signup_fees[ $price_id ] = edd_recurring()->get_signup_fee( $price_id, $download_id );
@@ -193,7 +194,7 @@ class EDD_Recurring_Checkout {
 			$high_fee = max( $variable_signup_fees );
 			$low_fee  = min( $variable_signup_fees );
 
-			// Only show the base notice if there is one signup fee, otherwise show on each variable price
+			// Only show the base notice if there is one signup fee, otherwise show on each variable price.
 			if ( $high_fee !== $low_fee ) {
 				return;
 			}
@@ -206,7 +207,7 @@ class EDD_Recurring_Checkout {
 
 		}
 
-		if ( empty( $signup_fee) ) {
+		if ( empty( $signup_fee ) ) {
 			return;
 		}
 
@@ -223,16 +224,16 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Display the signup fee notice under the purchase link for Custom Prices
+	 * Display the sign up fee notice under the purchase link for Custom Prices
 	 *
 	 * @since  2.5
-	 * @param  int   $download_id The download ID beign displayed
-	 * @param  array $args      Array of arguements for the purcahse link
+	 * @param  int   $download_id The download ID being displayed.
+	 * @param  array $args      Array of arguments for the purchase link.
 	 * @return void
 	 */
 	public function show_single_custom_signup_fee_notice( $download_id, $args ) {
 
-		if( ! defined( 'EDD_CUSTOM_PRICES' ) ) {
+		if ( ! defined( 'EDD_CUSTOM_PRICES' ) ) {
 			return;
 		}
 
@@ -241,13 +242,13 @@ class EDD_Recurring_Checkout {
 			return;
 		}
 
-		if( ! edd_recurring()->is_custom_recurring( $download_id ) ) {
+		if ( ! edd_recurring()->is_custom_recurring( $download_id ) ) {
 			return;
 		}
 
 		$signup_fee = edd_recurring()->get_custom_signup_fee( $download_id );
 
-		if ( empty( $signup_fee) ) {
+		if ( empty( $signup_fee ) ) {
 			return;
 		}
 
@@ -267,9 +268,9 @@ class EDD_Recurring_Checkout {
 	 * Show the signup fees by vraible prices
 	 *
 	 * @since  2.4
-	 * @param  int    $price_id    The price ID key
-	 * @param  string $price       The Price
-	 * @param  int    $download_id The download ID
+	 * @param  int    $price_id    The price ID key.
+	 * @param  string $price       The Price.
+	 * @param  int    $download_id The download ID.
 	 * @return void
 	 */
 	public function show_variable_signup_fee_notice( $price_id, $price, $download_id ) {
@@ -303,9 +304,9 @@ class EDD_Recurring_Checkout {
 	 * Show the signup fees for Custom Prices
 	 *
 	 * @since  2.5
-	 * @param  int    $download_id The download ID
-	 * @param  array  $prices      The array of price IDs for the download
-	 * @param  string $type        If the inputs are checkboxes (multi-select) or radio (single price)
+	 * @param  int    $download_id The download ID.
+	 * @param  array  $prices      The array of price IDs for the download.
+	 * @param  string $type        If the inputs are checkboxes (multi-select) or radio (single price).
 	 * @return void
 	 */
 	public function show_multi_custom_signup_fee_notice( $download_id, $prices, $type ) {
@@ -315,7 +316,7 @@ class EDD_Recurring_Checkout {
 			return;
 		}
 
-		if( ! edd_recurring()->is_custom_recurring( $download_id ) ) {
+		if ( ! edd_recurring()->is_custom_recurring( $download_id ) ) {
 			return;
 		}
 
@@ -337,11 +338,11 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Display the signup fee notice under the purchase link
+	 * Display the sign up fee notice under the purchase link
 	 *
 	 * @since  2.4
-	 * @param  int   $download_id The download ID beign displayed
-	 * @param  array $args      Array of arguements for the purcahse link
+	 * @param  int   $download_id The download ID being displayed.
+	 * @param  array $args      Array of arguments for the purchase link.
 	 * @return void
 	 */
 	public function show_single_terms_notice( $download_id, $args ) {
@@ -363,7 +364,7 @@ class EDD_Recurring_Checkout {
 		$period_single = strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) );
 		$times         = edd_recurring()->get_times_single( $download_id );
 
-		if( defined( 'EDD_CUSTOM_PRICES' ) ) {
+		if ( defined( 'EDD_CUSTOM_PRICES' ) ) {
 
 			$custom_period    = edd_recurring()->get_custom_period( $download_id );
 			$custom_period_ly = strtolower( edd_recurring()->get_pretty_subscription_frequency( $custom_period ) );
@@ -371,7 +372,7 @@ class EDD_Recurring_Checkout {
 
 		}
 
-		if( edd_recurring()->has_free_trial( $download_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+		if ( edd_recurring()->has_free_trial( $download_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
 
 			$trial      = edd_recurring()->get_trial_period( $download_id );
 			$free_trial = $trial['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $trial['unit'] ) );
@@ -384,7 +385,7 @@ class EDD_Recurring_Checkout {
 			<em>
 				<?php if ( empty( $times ) ) : ?>
 
-					<?php if( empty( $free_trial ) ) : ?>
+					<?php if ( empty( $free_trial ) ) : ?>
 						<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), $period_ly ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), $period_ly, $free_trial ); ?>
@@ -392,7 +393,7 @@ class EDD_Recurring_Checkout {
 
 				<?php else: ?>
 
-					<?php if( empty( $free_trial ) ) : ?>
+					<?php if ( empty( $free_trial ) ) : ?>
 						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $period_single, $times ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed once per %s, %d times with a %s free trial', 'edd-recurring' ), $period_single, $times, $free_trial ); ?>
@@ -401,13 +402,13 @@ class EDD_Recurring_Checkout {
 				<?php endif; ?>
 			</em>
 		</p>
-		<?php if( defined( 'EDD_CUSTOM_PRICES' ) && edd_recurring()->is_custom_recurring( $download_id ) ) : ?>
+		<?php if ( defined( 'EDD_CUSTOM_PRICES' ) && edd_recurring()->is_custom_recurring( $download_id ) ) : ?>
 			<p class="eddr-notice eddr-terms-notice eddr-custom-terms-notice" style="display:none">
 				<em>
 
 					<?php if ( empty( $custom_times ) ) : ?>
 
-						<?php if( empty( $free_trial ) ) : ?>
+						<?php if ( empty( $free_trial ) ) : ?>
 							<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), $custom_period_ly ); ?>
 						<?php else: ?>
 							<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), $custom_period_ly, $free_trial ); ?>
@@ -415,7 +416,7 @@ class EDD_Recurring_Checkout {
 
 					<?php else: ?>
 
-						<?php if( empty( $free_trial ) ) : ?>
+						<?php if ( empty( $free_trial ) ) : ?>
 							<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $custom_period, $custom_times ); ?>
 						<?php else: ?>
 							<?php printf( __( 'Billed once per %s, %d times with a %s free trial', 'edd-recurring' ), $custom_period, $custom_times, $free_trial ); ?>
@@ -431,12 +432,12 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Show the signup fees by vraible prices
+	 * Show the sign up fees by variable prices.
 	 *
 	 * @since  2.4
-	 * @param  int    $price_id    The price ID key
-	 * @param  string $price       The Price
-	 * @param  int    $download_id The download ID
+	 * @param  int    $price_id    The price ID key.
+	 * @param  string $price       The Price.
+	 * @param  int    $download_id The download ID.
 	 * @return void
 	 */
 	public function show_variable_terms_notice( $price_id, $price, $download_id ) {
@@ -454,11 +455,11 @@ class EDD_Recurring_Checkout {
 		$period_single = strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) );
 		$times         = edd_recurring()->get_times( $price_id, $download_id );
 
-		if( ! empty( $price['trial-quantity'] ) && ! empty( $price['trial-unit'] ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+		if ( ! empty( $price['trial-quantity'] ) && ! empty( $price['trial-unit'] ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
 
 			$free_trial = $price['trial-quantity'] . ' ' . $price['trial-unit'];
 
-		} else if( edd_recurring()->has_free_trial( $download_id, $price_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+		} else if ( edd_recurring()->has_free_trial( $download_id, $price_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
 
 			$trial      = edd_recurring()->get_trial_period( $download_id, $price_id );
 			$free_trial = $trial['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $trial['unit'] ) );
@@ -471,7 +472,7 @@ class EDD_Recurring_Checkout {
 			<em>
 				<?php if ( empty( $times ) ) : ?>
 
-					<?php if( empty( $free_trial ) ) : ?>
+					<?php if ( empty( $free_trial ) ) : ?>
 						<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), $period_ly ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), $period_ly, $free_trial ); ?>
@@ -479,7 +480,7 @@ class EDD_Recurring_Checkout {
 
 				<?php else: ?>
 
-					<?php if( empty( $free_trial ) ) : ?>
+					<?php if ( empty( $free_trial ) ) : ?>
 						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $period_single, $times ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed once per %s, %d times with a %s free trial', 'edd-recurring' ), $period_single, $times, $free_trial ); ?>
@@ -493,12 +494,12 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Show the subscription terms for variable prices
+	 * Show the subscription terms for variable prices.
 	 *
 	 * @since  2.5
-	 * @param  int    $download_id The download ID
-	 * @param  array  $prices      Variable prices
-	 * @param  string $type        Product type
+	 * @param  int    $download_id The download ID.
+	 * @param  array  $prices      Variable prices.
+	 * @param  string $type        Product type.
 	 * @return void
 	 */
 	public function show_variable_custom_terms_notice( $download_id, $prices, $type ) {
@@ -508,13 +509,13 @@ class EDD_Recurring_Checkout {
 			return;
 		}
 
-		if( ! defined( 'EDD_CUSTOM_PRICES' ) ) {
+		if ( ! defined( 'EDD_CUSTOM_PRICES' ) ) {
 
 			return;
 
 		}
 
-		if( ! edd_recurring()->is_custom_recurring( $download_id ) ) {
+		if ( ! edd_recurring()->is_custom_recurring( $download_id ) ) {
 
 			return;
 
@@ -525,7 +526,7 @@ class EDD_Recurring_Checkout {
 		$period_single = strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) );
 		$times         = edd_recurring()->get_custom_times( $download_id );
 
-		if( edd_recurring()->has_free_trial( $download_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+		if ( edd_recurring()->has_free_trial( $download_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
 
 			$trial      = edd_recurring()->get_trial_period( $download_id );
 			$free_trial = $trial['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $trial['unit'] ) );
@@ -539,7 +540,7 @@ class EDD_Recurring_Checkout {
 			<em>
 				<?php if ( empty( $times ) ) : ?>
 
-					<?php if( empty( $free_trial ) ) : ?>
+					<?php if ( empty( $free_trial ) ) : ?>
 						<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), $period_ly ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), $period_ly, $free_trial ); ?>
@@ -547,7 +548,7 @@ class EDD_Recurring_Checkout {
 
 				<?php else: ?>
 
-					<?php if( empty( $free_trial ) ) : ?>
+					<?php if ( empty( $free_trial ) ) : ?>
 						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $period_single, $times ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed once per %s, %d times with a %s free trial', 'edd-recurring' ), $period_single, $times, $free_trial ); ?>
@@ -562,10 +563,10 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Disclose the subscription terms on the cart item
+	 * Disclose the subscription terms on the cart item.
 	 *
 	 * @since  2.4
-	 * @param  array $item The cart item
+	 * @param  array $item The cart item.
 	 * @return void
 	 */
 	public function show_terms_on_cart_item( $item ) {
@@ -578,14 +579,14 @@ class EDD_Recurring_Checkout {
 
 		$download_id = absint( $item['id'] );
 
-		if( empty( $item['options']['recurring'] ) ) {
+		if ( empty( $item['options']['recurring'] ) ) {
 			return;
 		}
 
 		$period = $item['options']['recurring']['period'];
 		$times  = $item['options']['recurring']['times'];
 
-		if( ! empty( $item['options']['recurring']['trial_period']['unit'] ) && ! empty( $item['options']['recurring']['trial_period']['quantity'] ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+		if ( ! empty( $item['options']['recurring']['trial_period']['unit'] ) && ! empty( $item['options']['recurring']['trial_period']['quantity'] ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
 
 			$free_trial = $item['options']['recurring']['trial_period']['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $item['options']['recurring']['trial_period']['unit'] ) );
 
@@ -597,7 +598,7 @@ class EDD_Recurring_Checkout {
 			<em>
 				<?php if ( empty( $times ) ) : ?>
 
-					<?php if( empty( $free_trial ) ) : ?>
+					<?php if ( empty( $free_trial ) ) : ?>
 						<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) ) ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) ), $free_trial ); ?>
@@ -605,7 +606,7 @@ class EDD_Recurring_Checkout {
 
 				<?php else: ?>
 
-					<?php if( empty( $free_trial ) ) : ?>
+					<?php if ( empty( $free_trial ) ) : ?>
 						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) ), $times ); ?>
 					<?php else: ?>
 						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) ), $free_trial ); ?>
@@ -621,14 +622,14 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Remove default total display when cart contains a free trial
+	 * Remove default total display when cart contains a free trial.
 	 *
 	 * @since  2.6
 	 * @return void
 	 */
 	public function maybe_remove_total() {
 
-		if( ! edd_recurring()->cart_has_free_trial() ) {
+		if ( ! edd_recurring()->cart_has_free_trial() ) {
 			return;
 		}
 
@@ -636,14 +637,14 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Display a new total amount and note for free trials
+	 * Display a new total amount and note for free trials.
 	 *
 	 * @since  2.6
 	 * @return void
 	 */
 	public function free_trial_total() {
 
-		if( ! edd_recurring()->cart_has_free_trial() ) {
+		if ( ! edd_recurring()->cart_has_free_trial() ) {
 			return;
 		}
 
@@ -658,19 +659,19 @@ class EDD_Recurring_Checkout {
 	}
 
 	/**
-	 * Listen for the action to add failed subscriptions to the cart again
+	 * Listen for the action to add failed subscriptions to the cart again.
 	 *
 	 * @since  2.4.14
 	 * @return void
 	 */
 	public function process_add_failed() {
-		if( empty( $_POST['edd_recurring_add_failed'] ) ) {
+		if ( empty( $_POST['edd_recurring_add_failed'] ) ) {
 			return;
 		}
-		if( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() ) {
 			return;
 		}
-		if( ! wp_verify_nonce( $_POST['edd_retry_failed_subs'], 'edd_retry_failed_subs_nonce' ) ) {
+		if ( ! wp_verify_nonce( $_POST['edd_retry_failed_subs'], 'edd_retry_failed_subs_nonce' ) ) {
 			wp_die( __( 'Nonce verification failed', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 403 ) );
 		}
 
@@ -694,16 +695,24 @@ class EDD_Recurring_Checkout {
 
 	public function check_repeat_trial() {
 
+		if ( empty( $_POST['email'] ) || empty( $_POST['downloads'] ) ) {
+			return;
+		}
+
 		$email        = sanitize_text_field( $_POST['email'] );
-		$download_ids = array_map( 'absint', $_POST['downloads'] );
+
+		// Normalize and sanitize the download IDs.
+		$download_ids = ! is_array( $_POST['downloads'] ) ? array( $_POST['downloads'] ) : $_POST['downloads'];
+		$download_ids = array_map( 'absint', $download_ids );
+
 		$message      = '';
 
-		if( ! empty( $download_ids ) ) {
+		if ( ! empty( $download_ids ) ) {
 			foreach( $download_ids as $download_id ) {
 
-				if( edd_recurring()->has_trialed( $download_id, $email ) ) {
+				if ( edd_recurring()->has_trialed( $download_id, $email ) ) {
 
-					if( ! empty( $message ) ) {
+					if ( ! empty( $message ) ) {
 						$message .= '<br/>';
 					}
 

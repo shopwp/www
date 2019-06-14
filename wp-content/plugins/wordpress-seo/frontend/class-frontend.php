@@ -791,7 +791,7 @@ class WPSEO_Frontend {
 	 * @param array $robots  Robots data array.
 	 * @param int   $post_id The post ID for which to determine the $robots values, defaults to current post.
 	 *
-	 * @return    array
+	 * @return array
 	 */
 	public function robots_for_single_post( $robots, $post_id = 0 ) {
 		$noindex = $this->get_seo_meta_value( 'meta-robots-noindex', $post_id );
@@ -1914,6 +1914,7 @@ class WPSEO_Frontend {
 	 * Output the rel=publisher code on every page of the site.
 	 *
 	 * @deprecated 10.1.3
+	 * @codeCoverageIgnore
 	 *
 	 * @return boolean Boolean indicating whether the publisher link was printed.
 	 */

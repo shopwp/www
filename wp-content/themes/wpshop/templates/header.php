@@ -47,8 +47,8 @@
             <a href="<?php echo wp_logout_url('/login'); ?>" class="link-account">Logout</a>
 
           <?php } else { ?>
-            <a href="/login" class="btn btn-account btn-s">Login</a>
-
+            <a href="/purchase" class="btn btn-account btn-s">Purchase</a>
+            <a href="/login" class="menu-item-manual">Log in</a>
           <?php } ?>
 
           <?php if(edd_get_cart_quantity() > 0) { ?>
