@@ -12,28 +12,23 @@ a.button.edd-slg-social-unlink-profile,
    color: color(white);
    background-color: color(primary);
 
-   // background: #6e2eff;
-
+   border: none;
    position: relative;
    text-decoration: none;
-   // text-transform: uppercase;
    font-weight: 500;
    font-size: 17px;
    font-family: $font-primary;
    display: inline-block;
    line-height: 1;
-   // border: none;
-   // border: 2px solid #f0f0f0;
    border-radius: 0.4em;
    outline: none;
    z-index: 2;
    text-align: center;
    margin: 0;
    margin-top: $space-s;
-
    transition: all 0.08s ease;
 
-   // @include shadow();
+   @include shadow();
    // @include shrink();
    // @include grow();
 
@@ -97,19 +92,18 @@ a.button.edd-slg-social-unlink-profile,
    }
 }
 
-.edd-submit,
-.menu-item-back a,
 .edd_download_file_link,
 .btn-secondary {
    font-size: 1.2em;
    background-color: color(secondary);
-   // // background: rgb(14, 161, 195);
-   // background: rgb(9, 175, 184);
-   // background: linear-gradient(180deg, rgba(9, 175, 184, 1) 0%, rgba(18, 186, 195, 1) 100%);
 
    &:hover {
       background-color: darken(color(secondary), 6);
    }
+}
+
+.edd-submit {
+   font-size: 1.44em;
 }
 
 .btn-group {

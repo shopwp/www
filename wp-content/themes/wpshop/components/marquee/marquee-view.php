@@ -36,11 +36,11 @@
 }
 
    .icon-test {
-      max-width: 60px;
+      max-width: 55px;
       position: absolute;
       filter: grayscale(1);
       /* filter: sepia(1); */
-      opacity: 0.15;    
+      opacity: 0.1;    
       /* transform: rotate(-30deg); */
       /* filter: drop-shadow(6px 7px 2px rgba(0,0,0,0.15)); */
       /* animation: MoveUpDown 7s linear infinite; */
@@ -48,9 +48,8 @@
    }
 
    .icon-test-1 {
-    top: 28vh;
-    left: 6vw;
-    /* max-width: 85px; */
+    top: 15vh;
+    left: 5vw;
     transform: rotate(-45deg);
    }
 
@@ -58,10 +57,9 @@
     top: 7vh;
     right: 9vw;
     transform: rotate(-18deg);
-    /* max-width: 57px; */
    }
    .icon-test-3 {
-        top: 30px;
+        top: -10px;
     left: 32vw;
     transform: rotate(-28deg);
    }
@@ -76,36 +74,33 @@
         bottom: 80px;
     right: 46vw;
     transform: rotate(-15deg);
-    /* max-width: 60px; */
    }
     
       .icon-test-6 {
     right: 7vw;
     bottom: 58px;
     transform: rotate(14deg);
-    /* max-width: 50px;     */
    }
       .icon-test-7 {
-    bottom: 32vh;
-    right: 17vw;
-    transform: rotate(34deg);
-    /* max-width: 70px; */
+      bottom: 17vh;
+      right: 22vw;
+      transform: rotate(34deg);
    }
    
 
    </style>
-  <!-- <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-1.svg" class="icon-test-1 icon-test">
+  <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-1.svg" class="icon-test-1 icon-test">
 <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-2.svg" class="icon-test-2 icon-test">
 
 <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-3.svg" class="icon-test-3 icon-test">
 
 <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-4.svg" class="icon-test-4 icon-test">
 
-<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-5.svg" class="icon-test-5 icon-test">
+<!-- <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-5.svg" class="icon-test-5 icon-test"> -->
 
 <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-6.svg" class="icon-test-6 icon-test">
 
-<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-7.svg" class="icon-test-7 icon-test"> -->
+<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-7.svg" class="icon-test-7 icon-test">
 </section>
 
 <!-- 

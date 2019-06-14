@@ -2,7 +2,7 @@
 .edd_form,
 .search-form {
    width: 100%;
-   max-width: 700px;
+   max-width: $container-width-narrow;
    position: relative;
    margin: 0 auto 2em auto;
    // @include device(1000, 'max') {
@@ -13,19 +13,9 @@
    //   width: 100%;
    // }
 
-   a {
-      color: color(primary);
-   }
-
    .description {
       display: block;
       margin-top: $space-l;
-   }
-}
-
-.form-lg {
-   .form-input,
-   .btn {
    }
 }
 
@@ -132,13 +122,15 @@ select {
 
    &:disabled {
       background-color: color(medium-grey);
-      @include dim($opacity-hard);
+      // @include dim($opacity-hard);
+      opacity: 1;
+      box-shadow: none;
 
       &:hover {
-         opacity: $opacity-hard;
+         // opacity: $opacity-hard;
          cursor: not-allowed;
          background-color: color(medium-grey);
-         transform: scale(1);
+         // transform: scale(1);
       }
    }
 }
@@ -278,6 +270,8 @@ legend {
    width: 100%;
    text-align: center;
    position: relative;
+   font-weight: bold;
+   font-family: $font-secondary;
 
    p {
       font-size: $font-xxxs;
@@ -440,6 +434,15 @@ select {
    margin-bottom: $space-xxs;
 }
 
+.edd-apply-discount.edd-submit,
+#edd-add-license-renewal {
+   font-size: 17px;
+}
+#edd-cancel-license-renewal {
+   margin-left: 10px;
+   color: color(primary);
+}
+
 #edd_login_form {
    legend {
       display: none;
@@ -507,4 +510,9 @@ select {
    // thead th {
    //   padding-top: 0;
    // }
+}
+
+#edd-discount-code-wrap label {
+   margin-top: 2em;
+   font-size: 18px;
 }

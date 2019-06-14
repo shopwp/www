@@ -551,13 +551,13 @@ EDD
   .edd_sl_table td,
   #edd_checkout_cart_form th,
   #edd_checkout_cart_form td {
-    padding: 1.2em;
+    padding: 1em;
     vertical-align: top; }
   .edd-table input,
   .edd_sl_table input,
   #edd_checkout_cart_form input {
     background: #f4f5f7;
-    padding: 0.5787em 1.2em;
+    padding: 0.5787em 1em;
     margin-top: 0.40188em; }
 
 #edd_sl_license_keys {
@@ -576,7 +576,8 @@ EDD
 .edd_form label {
   margin-bottom: 0.69444em;
   display: block;
-  font-weight: bold; }
+  font-weight: bold;
+  font-family: "IBM Plex Sans", helvetica; }
   .edd_form label + .edd-description {
     margin-bottom: 1.2em; }
 
@@ -794,7 +795,9 @@ EDD
 #edd_checkout_cart_form {
   z-index: 99999; }
   #edd_checkout_cart_form th.edd_cart_total {
-    padding: 1.44em; }
+    padding: 0.5em;
+    font-size: 30px;
+    font-family: "IBM Plex Sans", helvetica; }
 
 .is-stuck {
   position: fixed !important;
@@ -872,7 +875,7 @@ EDD
     display: none; }
 
 .edd-description {
-  font-size: 0.83333em;
+  font-size: 15px;
   display: inline-block;
   margin-bottom: 0.69444em;
   margin-top: 0; }
@@ -910,6 +913,9 @@ EDD
   #edd_checkout_login_register.zoomIn,
   #edd_checkout_user_info.zoomIn {
     display: block; }
+
+#edd_purchase_form #edd_checkout_user_info {
+  margin-top: 5.76em; }
 
 #edd_checkout_login_register {
   display: none; }
@@ -1024,7 +1030,9 @@ EDD
   opacity: 0.4; }
 
 label {
-  position: relative; }
+  position: relative;
+  font-family: "IBM Plex Sans", helvetica;
+  font-size: 17px; }
   label .is-valid {
     display: block;
     -webkit-animation-duration: 0.8s;
@@ -1051,7 +1059,8 @@ select + .is-valid:after {
 #edd-card-address-wrap label,
 #edd-card-address-2-wrap label,
 .card-expiration label {
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  font-family: "IBM Plex Sans", helvetica; }
   #edd-card-name-wrap label.error,
   #edd-card-cvc-wrap label.error,
   #edd-card-number-wrap label.error,
@@ -1373,13 +1382,9 @@ table tr:first-child th {
 .edd_form,
 .search-form {
   width: 100%;
-  max-width: 700px;
+  max-width: 800px;
   position: relative;
   margin: 0 auto 2em auto; }
-  .form a,
-  .edd_form a,
-  .search-form a {
-    color: #415aff; }
   .form .description,
   .edd_form .description,
   .search-form .description {
@@ -1452,15 +1457,14 @@ select {
   textarea:disabled,
   select:disabled {
     background-color: #cbcbcb;
-    opacity: 0.4; }
+    opacity: 1;
+    -webkit-box-shadow: none;
+            box-shadow: none; }
     input:disabled:hover,
     textarea:disabled:hover,
     select:disabled:hover {
-      opacity: 0.4;
       cursor: not-allowed;
-      background-color: #cbcbcb;
-      -webkit-transform: scale(1);
-              transform: scale(1); }
+      background-color: #cbcbcb; }
 
 input[type='number'] {
   max-width: 50px;
@@ -1577,7 +1581,9 @@ legend {
   padding-bottom: 0.5787em;
   width: 100%;
   text-align: center;
-  position: relative; }
+  position: relative;
+  font-weight: bold;
+  font-family: "IBM Plex Sans", helvetica; }
   legend p {
     font-size: 0.48225em;
     font-style: italic; }
@@ -1684,6 +1690,14 @@ select {
   color: #c10e0e;
   margin-bottom: 0.48225em; }
 
+.edd-apply-discount.edd-submit,
+#edd-add-license-renewal {
+  font-size: 17px; }
+
+#edd-cancel-license-renewal {
+  margin-left: 10px;
+  color: #415aff; }
+
 #edd_login_form legend {
   display: none; }
 
@@ -1719,6 +1733,10 @@ select {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-top: 0; }
+
+#edd-discount-code-wrap label {
+  margin-top: 2em;
+  font-size: 18px; }
 
 .l-row {
   display: -webkit-box;
@@ -2105,11 +2123,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   text-align: center;
   font-size: 0.83333em;
   margin-top: 0;
-  background: #0c051e;
-  background: -webkit-gradient(linear, left top, left bottom, from(#12062a), to(#180b37));
-  background: -webkit-linear-gradient(top, #12062a 0%, #180b37 100%);
-  background: -o-linear-gradient(top, #12062a 0%, #180b37 100%);
-  background: linear-gradient(180deg, #12062a 0%, #180b37 100%); }
+  background: #0c051e; }
 
 .footer-wrapper {
   padding: 4.1472em 0 3.456em 0;
@@ -2560,6 +2574,7 @@ a.button.edd-slg-social-unlink-profile,
   padding: calc(1.2em - 8px) calc(2.0736em - 3px) calc(1.2em - 6px);
   color: #fff;
   background-color: #415aff;
+  border: none;
   position: relative;
   text-decoration: none;
   font-weight: 500;
@@ -2575,7 +2590,9 @@ a.button.edd-slg-social-unlink-profile,
   margin-top: 0.69444em;
   -webkit-transition: all 0.08s ease;
   -o-transition: all 0.08s ease;
-  transition: all 0.08s ease; }
+  transition: all 0.08s ease;
+  -webkit-box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+          box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2); }
   .btn:hover,
   .button:hover,
   a.button.edd-slg-social-unlink-profile:hover,
@@ -2690,17 +2707,16 @@ a.button.edd-slg-social-unlink-profile,
     text-rendering: auto;
     margin-right: 8px; }
 
-.edd-submit,
-.menu-item-back a,
 .edd_download_file_link,
 .btn-secondary {
   font-size: 1.2em;
   background-color: #09afb8; }
-  .edd-submit:hover,
-  .menu-item-back a:hover,
   .edd_download_file_link:hover,
   .btn-secondary:hover {
     background-color: #08939b; }
+
+.edd-submit {
+  font-size: 1.44em; }
 
 .btn-group {
   position: relative; }
@@ -3562,18 +3578,18 @@ body.page-template-template-home {
   padding-bottom: 1.44em; }
 
 #edd_purchase_form #edd_show_discount {
-  padding: 1em;
   border-radius: 10px;
-  border: 1px solid #cbcbcb;
-  text-align: center;
+  text-align: left;
   display: none; }
 
 #edd_checkout_form_wrap fieldset#edd_sl_renewal_fields {
-  padding: 1em;
+  padding: 0;
   border-radius: 10px;
-  border: 1px solid #cbcbcb;
-  text-align: center;
+  text-align: left;
   background: none; }
+
+#edd_checkout_form_wrap fieldset#edd_sl_renewal_fields #edd_sl_show_renewal_form_wrap {
+  text-align: left; }
 
 .component-screenshots {
   background: #fff; }
