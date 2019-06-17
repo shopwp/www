@@ -28,7 +28,8 @@ a.button.edd-slg-social-unlink-profile,
    margin-top: $space-s;
    transition: all 0.08s ease;
 
-   @include shadow();
+   // @include bob();
+   // @include shadow();
    // @include shrink();
    // @include grow();
 
@@ -37,11 +38,13 @@ a.button.edd-slg-social-unlink-profile,
    }
 
    &:hover {
+      // @include shadow();
+
       opacity: 1;
       // @include dim($opacity-soft);
       // box-shadow: none;
       // background-color: darken(color(primary), 62);
-      background-color: #2d4be2;
+      // background-color: #2d4be2;
    }
 
    &:focus {
@@ -97,9 +100,9 @@ a.button.edd-slg-social-unlink-profile,
    font-size: 1.2em;
    background-color: color(secondary);
 
-   &:hover {
-      background-color: darken(color(secondary), 6);
-   }
+   // &:hover {
+   //    background-color: darken(color(secondary), 6);
+   // }
 }
 
 .edd-submit {

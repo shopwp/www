@@ -5,8 +5,11 @@
    margin-bottom: 40px;
    padding: 7em 0;
    background: transparent;
-   // background-image: url('imgs/bg-stuff-2.png');
-   // background-size: cover;
+   background-image: url('imgs/stuff.png');
+   background-size: contain;
+   background-position: 30% -29%;
+   background-repeat: no-repeat;
+
    // @include device(1700, 'min') {
    //    min-height: 58vh;
    // }

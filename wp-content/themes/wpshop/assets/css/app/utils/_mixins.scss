@@ -119,3 +119,43 @@ Shadow
    // box-shadow: 0 2px 14px -3px #dadada;
    // border: 1px solid #dedede;
 }
+
+@keyframes hvr-bob {
+   0% {
+      -webkit-transform: translateY(-8px);
+      transform: translateY(-8px);
+   }
+   50% {
+      -webkit-transform: translateY(-4px);
+      transform: translateY(-4px);
+   }
+   100% {
+      -webkit-transform: translateY(-8px);
+      transform: translateY(-8px);
+   }
+}
+
+@keyframes hvr-bob-float {
+   100% {
+      -webkit-transform: translateY(-8px);
+      transform: translateY(-8px);
+   }
+}
+
+@mixin bob() {
+   display: inline-block;
+   vertical-align: middle;
+   transform: perspective(1px) translateZ(0);
+   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+   &:hover,
+   &:focus,
+   &:active {
+      animation-name: hvr-bob-float, hvr-bob;
+      animation-duration: 0.3s, 1.5s;
+      animation-delay: 0s, 0.3s;
+      animation-timing-function: ease-out, ease-in-out;
+      animation-iteration-count: 1, infinite;
+      animation-fill-mode: forwards;
+      animation-direction: normal, alternate;
+   }
+}

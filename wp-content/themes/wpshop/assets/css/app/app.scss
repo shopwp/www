@@ -70,3 +70,21 @@ Author URI:     https://simpleblend.net
 // body {
 //   font-size: inherit;
 // }
+
+// .marquee-content h1 .text-wrapper {
+//   position: relative;
+//   display: inline-block;
+//   padding-top: 0.2em;
+//   padding-right: 0.05em;
+//   padding-bottom: 0.1em;
+//   overflow: hidden;
+// }
+
+.marquee-content h1 {
+   opacity: 0;
+}
+
+.marquee-content h1 .letter {
+   display: inline-block;
+   line-height: 1em;
+}

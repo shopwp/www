@@ -133,6 +133,7 @@ function assets()
 
       wp_enqueue_style('Rainbow CSS', Assets\asset_path('css/vendor/paraiso-dark.css'), false, null, false);
       wp_enqueue_script('Rainbow JS', Assets\asset_path('js/vendor/rainbow-custom.min.js'), [], null, true);
+      wp_enqueue_script('Anime JS', Assets\asset_path('js/vendor/anime.min.js'), [], null, false);
       wp_enqueue_script('modernizr-js', Assets\asset_path('js/vendor/modernizr.min.js'), [], null, false);
 
       if (is_single() && comments_open() && get_option('thread_comments')) {

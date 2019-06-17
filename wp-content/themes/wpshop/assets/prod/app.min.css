@@ -49,6 +49,37 @@ Dim
 Shadow
 
 */
+@-webkit-keyframes hvr-bob {
+  0% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px); }
+  50% {
+    -webkit-transform: translateY(-4px);
+    transform: translateY(-4px); }
+  100% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px); } }
+@keyframes hvr-bob {
+  0% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px); }
+  50% {
+    -webkit-transform: translateY(-4px);
+    transform: translateY(-4px); }
+  100% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px); } }
+
+@-webkit-keyframes hvr-bob-float {
+  100% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px); } }
+
+@keyframes hvr-bob-float {
+  100% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px); } }
+
 @font-face {
   font-family: 'Manrope';
   src: url("../fonts/manrope-bold.woff2") format("woff2"), url("../fonts/manrope-bold.woff") format("woff"), url("../fonts/manrope-bold.otf") format("truetype");
@@ -2446,7 +2477,11 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     font-size: 1.2em;
     color: #0f0311;
     padding: 1.2em 1.1em; }
+    .menu-item a:hover {
+      opacity: 1;
+      text-decoration: underline; }
 
+.link-account,
 .menu-item-manual {
   margin: 0;
   border: none;
@@ -2454,6 +2489,10 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   font-size: 1em;
   color: #0f0311;
   padding: 1.2em 1.1em; }
+  .link-account:hover,
+  .menu-item-manual:hover {
+    opacity: 1;
+    text-decoration: underline; }
 
 .nav {
   list-style: none; }
@@ -2590,9 +2629,7 @@ a.button.edd-slg-social-unlink-profile,
   margin-top: 0.69444em;
   -webkit-transition: all 0.08s ease;
   -o-transition: all 0.08s ease;
-  transition: all 0.08s ease;
-  -webkit-box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
-          box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2); }
+  transition: all 0.08s ease; }
   .btn:hover,
   .button:hover,
   a.button.edd-slg-social-unlink-profile:hover,
@@ -2603,8 +2640,7 @@ a.button.edd-slg-social-unlink-profile,
   .menu-item-back a:hover,
   .entry-summary a:hover,
   #edd-purchase-button:hover {
-    opacity: 1;
-    background-color: #2d4be2; }
+    opacity: 1; }
   .btn:focus,
   .button:focus,
   a.button.edd-slg-social-unlink-profile:focus,
@@ -2711,9 +2747,6 @@ a.button.edd-slg-social-unlink-profile,
 .btn-secondary {
   font-size: 1.2em;
   background-color: #09afb8; }
-  .edd_download_file_link:hover,
-  .btn-secondary:hover {
-    background-color: #08939b; }
 
 .edd-submit {
   font-size: 1.44em; }
@@ -2909,7 +2942,11 @@ a.button.edd-slg-social-unlink-profile,
   min-height: calc(80vh - 130px - 30px);
   margin-bottom: 40px;
   padding: 7em 0;
-  background: transparent; }
+  background: transparent;
+  background-image: url("imgs/stuff.png");
+  background-size: contain;
+  background-position: 30% -29%;
+  background-repeat: no-repeat; }
   .component-marquee .logo {
     width: 38px;
     height: 38px; }
@@ -3743,6 +3780,13 @@ body.page-template-template-home {
   border-top: 50px solid #f4f5f7;
   border-left: 50vw solid transparent;
   border-right: 0vw solid transparent; }
+
+.marquee-content h1 {
+  opacity: 0; }
+
+.marquee-content h1 .letter {
+  display: inline-block;
+  line-height: 1em; }
 
 @media (max-width: 1000px) {
     .waves {

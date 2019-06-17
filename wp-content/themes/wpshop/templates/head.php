@@ -79,6 +79,6 @@
     <meta name="msapplication-TileColor" content="#FFFFFF">
     <meta name="msapplication-TileImage" content="<?php echo get_template_directory_uri() ?>/assets/imgs/favicons/mstile-144x144.png">
 
-  <?php } ?>
+  <?php } ?> 
 
 </head>

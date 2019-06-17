@@ -45,9 +45,15 @@
       //  letter-spacing: 0.04em;
       color: color(base);
       padding: 1.2em 1.1em;
+
+      &:hover {
+         opacity: 1;
+         text-decoration: underline;
+      }
    }
 }
 
+.link-account,
 .menu-item-manual {
    margin: 0;
    border: none;
@@ -55,6 +61,11 @@
    font-size: 1em;
    color: #0f0311;
    padding: 1.2em 1.1em;
+
+   &:hover {
+      opacity: 1;
+      text-decoration: underline;
+   }
 }
 
 .nav {

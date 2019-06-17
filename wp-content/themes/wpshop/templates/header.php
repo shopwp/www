@@ -43,11 +43,11 @@
           </a> -->
 
           <?php if(is_user_logged_in()) { ?>
-            <a href="/account" class="btn btn-account btn-s">My Account</a>
+            <a href="/account" class="btn btn-account">My Account</a>
             <a href="<?php echo wp_logout_url('/login'); ?>" class="link-account">Logout</a>
 
           <?php } else { ?>
-            <a href="/purchase" class="btn btn-account btn-s">Purchase</a>
+            <a href="/purchase" class="btn btn-account">Purchase</a>
             <a href="/login" class="menu-item-manual">Log in</a>
           <?php } ?>
 

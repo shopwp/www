@@ -36,14 +36,16 @@
 }
 
    .icon-test {
-      max-width: 55px;
+      max-width: 40px;
       position: absolute;
       filter: grayscale(1);
       /* filter: sepia(1); */
-      opacity: 0.1;    
+      opacity: 0.2;
       /* transform: rotate(-30deg); */
       /* filter: drop-shadow(6px 7px 2px rgba(0,0,0,0.15)); */
       /* animation: MoveUpDown 7s linear infinite; */
+
+      display: none;
 
    }
 
