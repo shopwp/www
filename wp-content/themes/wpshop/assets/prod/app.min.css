@@ -3781,6 +3781,7 @@ body.page-template-template-home {
   border-left: 50vw solid transparent;
   border-right: 0vw solid transparent; }
 
+.marquee-content .logo,
 .marquee-content h1 {
   opacity: 0; }
 

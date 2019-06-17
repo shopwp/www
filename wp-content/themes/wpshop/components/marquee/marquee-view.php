@@ -4,8 +4,8 @@
 
    <div class="logos">
 
-      <img class="logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-wp.svg" alt="WordPress Logo">
-      <img class="logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify.svg" alt="Shopify Logo">
+      <img class="logo wordpress-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-wp.svg" alt="WordPress Logo">
+      <img class="logo shopify-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify.svg" alt="Shopify Logo">
 
     </div>
 

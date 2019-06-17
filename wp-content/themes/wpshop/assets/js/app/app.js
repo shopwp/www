@@ -21,6 +21,24 @@ import { showLatestBuildVersion } from './docs/docs'
          delay: 0
       })
 
+      anime({
+         targets: '.marquee-content .logo.wordpress-logo',
+         opacity: [0, 1],
+         translateX: ['-20px', '0px'],
+         duration: 300,
+         easing: 'spring(1, 120, 10, 0)',
+         delay: 0
+      })
+
+      anime({
+         targets: '.marquee-content .logo.shopify-logo',
+         opacity: [0, 1],
+         translateX: ['20px', '0px'],
+         duration: 300,
+         easing: 'spring(1, 120, 10, 0)',
+         delay: 0
+      })
+
       $(document)
          .on('mouseenter', '.btn, .edd-submit', function() {
             anime.remove($(this))
