@@ -1,18 +1,25 @@
 td,
 th {
    text-align: left;
+   padding: 10px;
+   color: color(dark-grey);
 }
 
-td {
-   // padding-bottom: 0;
+thead {
+   background-color: color(light-grey);
+   color: color(dark-grey);
 }
 
 tr {
    border-bottom: 1px solid #cbcbcb;
 
-   &:last-child {
-      border-bottom: none;
-   }
+   // &:last-child {
+   //    border-bottom: none;
+   // }
+}
+
+table {
+   color: color(dark-grey);
 }
 
 @include device(600, 'max') {
@@ -86,22 +93,5 @@ tr {
 
    tbody {
       width: 100%;
-   }
-}
-
-table {
-   tr:first-child {
-      th {
-         padding-top: $space-m;
-         padding-bottom: 0;
-      }
-   }
-
-   tbody {
-      tr:last-of-type {
-         td {
-            // padding-bottom: $space-m;
-         }
-      }
    }
 }

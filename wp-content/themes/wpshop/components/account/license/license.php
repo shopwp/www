@@ -1,4 +1,6 @@
-<section class="component component-account-licenses">
+<section class="component component-account-licenses is-active" data-tab="License">
+
+   <h4 class="component-account-heading">License</h4>
 
   <?php
 

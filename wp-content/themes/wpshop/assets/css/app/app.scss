@@ -63,6 +63,8 @@ Author URI:     https://simpleblend.net
 @import 'components/screenshots';
 @import 'components/changelogs';
 @import 'components/divider';
+@import 'components/affiliate';
+@import 'components/pro';
 
 // State
 @import 'state/state';
@@ -80,12 +82,429 @@ Author URI:     https://simpleblend.net
 //   overflow: hidden;
 // }
 
-.marquee-content .logo,
-.marquee-content h1 {
-   opacity: 0;
+.marquee-content .logo {
+   opacity: 1;
 }
 
 .marquee-content h1 .letter {
    display: inline-block;
    line-height: 1em;
+}
+
+.marquee-content h1 {
+   animation-duration: 0.7s;
+   animation-iteration-count: 1;
+   transform-origin: bottom;
+   animation-name: slideIn;
+   // animation-delay: 1s;
+   animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+}
+
+.marquee-content .btn {
+   animation-duration: 0.5s;
+   animation-iteration-count: 1;
+   transform-origin: bottom;
+   // animation-delay: 1s;
+   animation-name: scaleIn;
+}
+
+.marquee-content .logo {
+   animation-duration: 0.5s;
+   animation-iteration-count: 1;
+   // animation-delay: 0.5s;
+}
+
+.marquee-content .wordpress-logo {
+   animation-name: slideInLogoLeft;
+}
+
+.marquee-content .shopify-logo {
+   animation-name: slideInLogoRight;
+}
+
+@keyframes slideInLogoLeft {
+   0% {
+      transform: translateX(-50px);
+      opacity: 0.4;
+   }
+
+   100% {
+      transform: translateX(0);
+      opacity: 1;
+   }
+}
+
+@keyframes slideInLogoRight {
+   0% {
+      transform: translateX(50px);
+      opacity: 0.4;
+   }
+
+   100% {
+      transform: translateX(0);
+      opacity: 1;
+   }
+}
+
+@keyframes slideIn {
+   0% {
+      transform: translateY(50px);
+      opacity: 0.4;
+   }
+
+   100% {
+      transform: translateY(0);
+      opacity: 1;
+   }
+}
+
+@keyframes scaleIn {
+   0% {
+      transform: scale(0);
+      // opacity: 0.4;
+   }
+
+   100% {
+      transform: scale(1);
+      opacity: 1;
+   }
+}
+
+@keyframes fadeIn {
+   0% {
+      opacity: 0;
+      // opacity: 0.4;
+   }
+
+   100% {
+      opacity: 1;
+   }
+}
+
+@keyframes blur {
+   0% {
+      filter: blur(0px);
+      // opacity: 0.4;
+   }
+
+   50% {
+      filter: blur(20px);
+   }
+
+   100% {
+      filter: blur(0px);
+   }
+}
+
+@keyframes shape {
+   0% {
+      border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
+      // opacity: 0.4;
+   }
+
+   50% {
+      border-radius: 50%;
+   }
+
+   100% {
+      border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
+   }
+}
+
+@keyframes floating {
+   0% {
+      transform: translateY(-10px);
+   }
+
+   50% {
+      transform: translateY(10px);
+   }
+
+   100% {
+      transform: translateY(-10px);
+   }
+}
+
+.footer-free-trial {
+   transform: translateY(0);
+   display: inline-block;
+   animation-duration: 3.4s;
+   animation-name: floating;
+   animation-iteration-count: infinite;
+   margin: 0;
+}
+
+.shape {
+   width: 20px;
+   height: 20px;
+   margin: 0;
+   position: absolute;
+   animation-duration: 1.4s;
+   animation-name: fadeIn;
+   opacity: 1;
+   transition: filter 1s ease;
+   // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
+
+   &:hover {
+      filter: blur(10px);
+   }
+}
+
+.shape1 {
+   width: 0;
+   height: 0;
+   border-style: solid;
+   border-width: 0 5px 8px 9px;
+   border-color: transparent transparent #ef2b6d transparent;
+   background: none;
+   top: -121px;
+   left: 1vw;
+   // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
+   transform: rotate(-27deg);
+}
+
+.shape2 {
+   left: -7vw;
+   transform: rotate(-11deg);
+   background-color: #ffca2e;
+   width: 14px;
+   height: 14px;
+}
+
+.shape3 {
+   left: 0vw;
+   transform: rotate(-45deg);
+   background-color: #8e9dfc;
+   width: 48px;
+   height: 1px;
+}
+
+.shape4 {
+   top: 114px;
+   width: 0;
+   height: 0;
+   border-style: solid;
+   border-width: 4px 4px 16px 10px;
+   border-color: transparent transparent #81f47d transparent;
+   background: none;
+   left: 2.34vw;
+   transform: rotate(67deg);
+}
+
+.shape5 {
+   top: -73px;
+   left: 11vw;
+   width: 15px;
+   height: 15px;
+   border-radius: 50%;
+   filter: blur(10px);
+   background-color: #8e9dfc;
+}
+
+.shape6 {
+   bottom: -60px;
+   left: -6vw;
+   border-radius: 50%;
+   height: 15px;
+   width: 15px;
+   background-color: #ef2b6d;
+   filter: blur(11px);
+}
+
+.shape7 {
+   bottom: -38px;
+   left: 6.4vw;
+   border-radius: 50%;
+   height: 17px;
+   width: 17px;
+   background-color: #8e9dfc;
+}
+
+.shape8 {
+   bottom: -108px;
+   left: 18vw;
+   width: 0;
+   height: 0;
+   border-style: solid;
+   border-width: 3px 9px 13px 4px;
+   border-color: transparent transparent #ef2b6d transparent;
+   background: none;
+   transform: rotate(67deg);
+}
+
+.shape9 {
+   right: 3vw;
+   top: -100px;
+   border-radius: 50%;
+   background-color: #ef2b6d;
+}
+
+.shape10 {
+   right: 0vw;
+   top: 20px;
+   background-color: #81f47d;
+   transform: rotate(20deg);
+   width: 12px;
+   height: 12px;
+}
+
+.shape11 {
+   right: -7vw;
+   top: -37px;
+   width: 0;
+   height: 0;
+   border-style: solid;
+
+   border-color: transparent transparent #8e9dfc transparent;
+   background: none;
+   border-width: 18px 8px 15px 3px;
+   transform: rotate(-124deg);
+}
+
+.shape12 {
+   right: -4vw;
+   top: 166px;
+   width: 20px;
+   height: 20px;
+   background-color: #ffca2e;
+   border-radius: 50%;
+   filter: blur(9px);
+}
+
+.shape13 {
+   right: 7vw;
+   top: 209px;
+   transform: rotate(-45deg);
+   background-color: #ef2b6d;
+   width: 68px;
+   height: 1px;
+}
+
+.shape14 {
+   width: 11px;
+   height: 11px;
+   // border-style: solid;
+   right: 5vw;
+   bottom: -103px;
+   // border-color: transparent transparent  transparent;
+   background-color: #8e9dfc;
+
+   // border-width: 18px 8px 25px 10px;
+   transform: rotate(-124deg);
+}
+
+.shape15 {
+   right: -7vw;
+   bottom: -90px;
+
+   width: 0;
+   height: 0;
+   border-style: solid;
+
+   border-color: transparent transparent #81f47d transparent;
+   background: none;
+   border-width: 3px 16px 15px 10px;
+   transform: rotate(172deg);
+}
+
+// mixin
+@mixin angle($pseudo, $flip: false, $angle: 1.5deg) {
+   // Possible values for $pseudo are: before, after, both
+   @if $pseudo == 'before' or $pseudo == 'after' or $pseudo == 'both' {
+      position: relative;
+      z-index: 1;
+
+      $selector: if($pseudo == 'both', '&:before,&:after', '&:#{$pseudo}');
+
+      #{$selector} {
+         background: inherit;
+         content: '';
+         display: block;
+         height: 50%;
+         left: 0;
+         position: absolute;
+         right: 0;
+         z-index: -1;
+         -webkit-backface-visibility: hidden; // for Chrome Windows
+      }
+
+      @if $pseudo == 'before' {
+         #{$selector} {
+            top: 0;
+            border-radius: 20px;
+            @if $flip {
+               transform: skewY($angle * -1);
+               transform-origin: 0 0;
+            } @else {
+               transform: skewY($angle);
+               transform-origin: 100% 0;
+            }
+         }
+      }
+
+      @if $pseudo == 'after' {
+         #{$selector} {
+            bottom: 0;
+            border-radius: 20px;
+            @if $flip {
+               transform: skewY($angle);
+               transform-origin: 0 100%;
+            } @else {
+               transform: skewY($angle * -1);
+               transform-origin: 100%;
+            }
+         }
+      }
+
+      @if $pseudo == 'both' {
+         &:before {
+            top: 0;
+
+            @if $flip {
+               transform: skewY($angle * -1);
+               transform-origin: 0 0;
+            } @else {
+               transform: skewY($angle);
+               transform-origin: 100% 0;
+            }
+         }
+
+         &:after {
+            bottom: 0;
+            border-radius: 20px;
+            @if $flip {
+               transform: skewY($angle);
+               transform-origin: 0 0;
+            } @else {
+               transform: skewY($angle * -1);
+               transform-origin: 100%;
+            }
+         }
+      }
+   }
+}
+
+// slanted edges here
+.edge--bottom {
+   @include angle(after);
+}
+
+.edge--bottom--reverse {
+   @include angle(after, true);
+}
+
+.edge--top {
+   @include angle(before);
+}
+
+.edge--top--reverse {
+   @include angle(before, true);
+}
+
+.edge--both {
+   @include angle(both);
+}
+
+.edge--both--reverse {
+   @include angle(both, true);
 }

@@ -13,7 +13,7 @@ function getStoredAuthData() {
 
   var options = {
     method: 'GET',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'json',
     data: {
       action: 'wps_check_valid_nonce'
@@ -33,7 +33,7 @@ function saveAuthData(data) {
 
   var options = {
     method: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'json',
     data: {
       action: 'wps_save_auth_data',
@@ -74,7 +74,7 @@ function getAccountCat(catSlug) {
 
   var options = {
     method: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'HTML',
     data: {
       action: 'wps_get_account_cat',
@@ -95,7 +95,7 @@ function getForgotPassForm() {
 
   var options = {
     method: 'GET',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'HTML',
     data: {
       action: 'wps_get_forgot_pass_form'
@@ -118,7 +118,7 @@ function getMailchimpListById() {
 
   var options = {
     type: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'json',
     data: {
       action: "mailinglist_signup",
@@ -139,7 +139,7 @@ function getUserByEmail(email) {
 
   var options = {
     type: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'json',
     data: {
       action: "wps_check_existing_username",
@@ -159,7 +159,7 @@ function updateAccountProfile(data) {
 
   var options = {
     type: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'json',
     data: {
       action: "wps_account_update_profile",
@@ -179,7 +179,7 @@ function updateAccountPassword(data) {
 
   var options = {
     type: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'json',
     data: {
       action: "wps_change_customer_password",
@@ -199,7 +199,7 @@ function forgotPassword(data) {
 
   var options = {
     type: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'json',
     data: {
       action: "wps_account_forgot_password",
@@ -219,7 +219,7 @@ function resetPassword(data) {
 
   var options = {
     type: 'POST',
-    url: '/wp/wp-admin/admin-ajax.php',
+    url: '/wp-admin/admin-ajax.php',
     dataType: 'json',
     data: {
       action: "wps_account_reset_password",

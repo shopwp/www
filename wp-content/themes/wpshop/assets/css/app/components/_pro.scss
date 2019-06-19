@@ -1,0 +1,28 @@
+.component-pro {
+   padding: 2em 0 3em;
+   max-width: $container-width;
+   background-color: #d0e5ff;
+   margin: 3em auto;
+   text-align: center;
+   outline: 7px solid rgb(18, 92, 127);
+   outline-offset: 10px;
+   outline-style: double;
+
+   h2 {
+      font-size: 2.5em;
+      text-align: center;
+   }
+
+   p {
+      font-size: 1.2em;
+      text-align: center;
+   }
+
+   .btn-group {
+      text-align: center;
+
+      a:last-child {
+         background-color: color(base);
+      }
+   }
+}

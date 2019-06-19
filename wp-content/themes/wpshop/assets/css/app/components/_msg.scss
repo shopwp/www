@@ -1,76 +1,74 @@
 .msg,
 label.error {
-  text-align: center;
-  font-size: $font-s;
-  color: color(dark-grey);
+   text-align: center;
+   font-size: $font-s;
+   color: color(base);
 
-  a {
-    color: color(dark-grey);
-  }
+   a {
+      color: color(base);
+   }
 
-  p {
-    margin-bottom: 0;
-  }
+   p {
+      margin-bottom: 0;
+   }
 
-  .fa {
-    margin-right: $space-xxs;
-  }
-
+   .fa {
+      margin-right: $space-xxs;
+   }
 }
 
 .msg-notice {
-  background-color: color(notice);
+   background-color: color(notice);
 }
 
 .msg-success {
-  background-color: color(success);
+   background-color: color(success);
 }
 
 .msg-error {
-  background-color: color(error);
+   background-color: color(error);
 }
 
 .msg {
-  color: color(dark-grey);
-  padding: $space-s $space-m;
-  border-radius: 0.4em;
-  font-weight: normal;
-  margin-bottom: $space-xl;
-  margin-top: $space-m;
-  position: relative;
+   color: color(base);
+   padding: $space-s $space-m;
+   border-radius: 0.4em;
+   font-weight: normal;
+   margin-bottom: $space-xl;
+   margin-top: $space-m;
+   position: relative;
 
-  position: fixed;
-  top: 28px;
-  left: 0;
-  width: auto;
-  width: 700px;
-  z-index: 999;
-  animation-duration: 0.5s;
-  left: 50%;
-  margin-left: -350px;
-  font-size: $font-m;
-  box-shadow: 0 8px 60px -6px hsla(0,0%,43%,.31);
+   position: fixed;
+   top: 23px;
+   left: 0;
+   width: auto;
+   width: 700px;
+   z-index: 999;
+   animation-duration: 0.5s;
+   left: 50%;
+   margin-left: -350px;
+   font-size: $font-m;
+   box-shadow: 0 13px 67px -4px hsla(0, 0%, 43.1%, 0.31);
 
-  @include device(800, 'max') {
-    width: 90%;
-    margin-left: -45%;
-  }
+   @include device(800, 'max') {
+      width: 90%;
+      margin-left: -45%;
+   }
 
-  &:after {
-    content: '';
-    display: block;
-  }
+   &:after {
+      content: '';
+      display: block;
+   }
 
-  a {
-    color: color(dark-grey);
-  }
-
+   a {
+      color: color(base);
+   }
 }
 
 .msg-not-fixed {
-  position: static;
-  display: inline-block;
-  margin-left: 0;
-  left: 0;
-  box-shadow: none;
+   position: static;
+   display: inline-block;
+   margin-left: 0;
+   left: 0;
+   box-shadow: none;
 }

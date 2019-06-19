@@ -3,35 +3,19 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 1600 500" style="enable-background:new 0 0 1600 500;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#FF5967;}
-	.st1{fill:#8DD941;}
-	.st2{fill:#FF8126;}
-	.st3{fill:#4DA6FF;}
-	.st4{fill:#FFC926;}
-	.st5{fill:#FFD659;}
-	.st6{fill:none;stroke:#4DA6FF;stroke-miterlimit:10;}
-	.st7{fill:none;stroke:#FF8126;stroke-miterlimit:10;}
-	.st8{fill:none;stroke:#FFD659;stroke-miterlimit:10;}
+	.st0{opacity:0.16;}
 </style>
-<polygon class="st0" points="158,19 162.4,28.3 150.7,26.3 "/>
-<polygon class="st1" points="178.2,301.1 171.7,287.4 189,290.5 "/>
-<polygon class="st2" points="1547,152.9 1538.6,141 1555.5,141 "/>
-<polygon class="st2" points="621.7,384.6 607.2,383.9 617.5,370.7 "/>
-<circle class="st2" cx="168.5" cy="465.6" r="10.9"/>
-<circle class="st0" cx="398.9" cy="147.2" r="5.2"/>
-<image style="overflow:visible;" width="87" height="87" xlink:href="8F26FC86B3C77CC6.png"  transform="matrix(1 0 0 1 285 59)">
-</image>
-<g>
-	
-		<image style="overflow:visible;" width="90" height="90" xlink:href="8F26FC86B3C77CC3.png"  transform="matrix(1 0 0 1 1486 265)">
-	</image>
-</g>
-<circle class="st0" cx="1343" cy="77.2" r="9.8"/>
-<rect x="1317.6" y="433.9" transform="matrix(0.7591 -0.651 0.651 0.7591 32.2192 968.2654)" class="st3" width="13.3" height="13.3"/>
-<rect x="21.4" y="173.4" transform="matrix(0.9397 -0.342 0.342 0.9397 -59.8835 20.4636)" class="st4" width="13.3" height="13.3"/>
-<rect x="1386.7" y="190.3" transform="matrix(0.9848 -0.1736 0.1736 0.9848 -12.9253 244.8203)" class="st1" width="11.9" height="11.9"/>
-<polygon class="st5" points="1172.7,241.1 1186,231.5 1186.2,250.4 "/>
-<line class="st6" x1="142" y1="244" x2="55" y2="331"/>
-<line class="st7" x1="1208" y1="428" x2="1164.5" y2="471.5"/>
-<line class="st8" x1="1035" y1="46" x2="991.5" y2="89.5"/>
+<polygon class="st0" points="35,240.2 41.1,253.1 24.8,250.3 "/>
+<polygon class="st0" points="96.4,361.5 87.4,342.4 111.3,346.7 "/>
+<polygon class="st0" points="1569.5,140.7 1560.2,127.3 1579,127.3 "/>
+<polygon class="st0" points="14.1,458.6 -6.1,457.6 8.3,439.2 "/>
+<circle class="st0" cx="246" cy="473.8" r="15.2"/>
+<circle class="st0" cx="127.7" cy="439.2" r="10"/>
+<circle class="st0" cx="-3.2" cy="526.9" r="7.2"/>
+<circle class="st0" cx="1542.9" cy="263.4" r="11"/>
+<circle class="st0" cx="1462.3" cy="384.2" r="5.5"/>
+<rect x="1302.9" y="449.3" transform="matrix(0.7591 -0.651 0.651 0.7591 18.3502 963.0369)" class="st0" width="14.9" height="14.9"/>
+<rect x="-17.6" y="114.5" transform="matrix(0.9397 -0.342 0.342 0.9397 -42.8453 4.6217)" class="st0" width="18.5" height="18.5"/>
+<rect x="1414.7" y="146.7" transform="matrix(0.9848 -0.1736 0.1736 0.9848 -5.0499 249.0795)" class="st0" width="13.3" height="13.3"/>
+<polygon class="st0" points="1542.9,478.6 1557.8,467.8 1558.1,489 "/>
 </svg>

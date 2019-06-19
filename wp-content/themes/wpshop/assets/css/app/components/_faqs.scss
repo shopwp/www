@@ -11,6 +11,7 @@
    padding: $space-l 0;
    font-size: $font-l;
    border-bottom: 1px solid color(medium-grey);
+   font-weight: bold;
 
    .fa-plus-square,
    .fa-minus-square {
@@ -22,7 +23,7 @@
 
    &:hover {
       cursor: pointer;
-      color: lighten(color(black), 40%);
+      text-decoration: underline;
    }
 
    @include device(700, 'max') {
@@ -36,15 +37,18 @@
    padding-top: $space-l;
    display: none;
    font-size: 16px;
+   opacity: 0;
 
    ol {
       margin-left: $space-l * 2;
    }
 
    &.is-open {
+      display: block;
       margin-bottom: $space-xxl;
       background: #f8f8f8;
       padding: 30px 40px;
+      opacity: 1;
    }
 }
 

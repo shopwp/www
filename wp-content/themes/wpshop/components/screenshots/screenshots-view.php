@@ -1,4 +1,4 @@
-<section class="component component-screenshots l-col l-col-center">
+<section class="component component-screenshots l-col l-col-center <?= $has_bg ? 'has-background' : ''; ?>">
 
   <?php if ($short_desc) { ?>
     <div class="screenshots-short-description">
@@ -20,7 +20,7 @@
 
         <li class="screenshot l-row l-row-left">
 
-          <div class="screenshot-image-wrapper">
+          <div class="screenshot-image-wrapper  <?= $has_bg ? 'edge--bottom edge--top--reverse' : ''; ?>">
             <img src="<?= $image['url']; ?>" alt="<?= $image['alt']; ?>" class="screenshot-image">
           </div>
 

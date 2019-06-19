@@ -2,13 +2,13 @@
    width: 100%;
    position: relative;
    min-height: calc(80vh - 130px - 30px);
-   margin-bottom: 40px;
+   // margin-bottom: 40px;
    padding: 7em 0;
    background: transparent;
-   background-image: url('imgs/stuff.png');
-   background-size: contain;
-   background-position: 30% -29%;
-   background-repeat: no-repeat;
+   // background-image: url('imgs/stuff.png');
+   // background-size: contain;
+   // background-position: 30% -29%;
+   // background-repeat: no-repeat;
 
    // @include device(1700, 'min') {
    //    min-height: 58vh;
@@ -101,7 +101,7 @@
 .marquee-content {
    position: relative;
    text-align: center;
-   top: 4vh;
+   top: 1vh;
    left: -10px;
 
    h1 {
@@ -180,7 +180,7 @@
 
 .component-how-it-works {
    padding: $space-l * 3.5 0;
-   background: color(secondary-light);
+   background: color(light-grey);
    background-image: url('imgs/bg-stuff-2.png');
    margin-top: 0;
    text-align: center;

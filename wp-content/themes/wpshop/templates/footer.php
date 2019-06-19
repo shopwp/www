@@ -6,6 +6,8 @@
     <nav class="nav-footer l-row l-row-center l-fill l-contain">
       <?php wp_nav_menu(['theme_location' => 'footer_navigation', 'menu_class' => 'nav l-row l-row-center']); ?>
     </nav>
+
+
   <?php endif; ?>
 
   <section class="footer-social-links">
@@ -21,6 +23,8 @@
     <a href="https://twitter.com/wpshopify" class="footer-social-link" target="_blank">
       <i class="fab fa-twitter"></i>
     </a>
+   
+    <a href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify" target="_blank" class="footer-link footer-free-trial">Shopify Free Trial 💎</a>
 
     <!-- <a href="https://instagram.com/simpleblend" class="footer-social-link">
       <i class="fa fa-instagram"></i>

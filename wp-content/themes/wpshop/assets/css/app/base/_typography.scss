@@ -54,10 +54,10 @@ h6 {
 }
 
 a {
-   color: color(links);
+   color: color(primary);
 
    &:hover {
-      opacity: $opacity-hard;
+      opacity: $opacity-soft;
    }
 }
 

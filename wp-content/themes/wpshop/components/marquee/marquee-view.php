@@ -2,15 +2,32 @@
 
   <div class="marquee-content">
 
-   <div class="logos">
+   <div class="shape shape1"></div>
+   <div class="shape shape2"></div>
+   <div class="shape shape3"></div>
+   <div class="shape shape4"></div>
+   <div class="shape shape5"></div>
+   <div class="shape shape6"></div>
+   <div class="shape shape7"></div>
+   <div class="shape shape8"></div>
+   <div class="shape shape9"></div>
+   <div class="shape shape10"></div>
+   <div class="shape shape11"></div>
+   <div class="shape shape12"></div>
+   <div class="shape shape13"></div>
+   <div class="shape shape14"></div>
+   <div class="shape shape15"></div>
+   <!-- <div class="shape shape16"></div> -->
+
+
+   <a class="logos" target="_blank" href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify">
 
       <img class="logo wordpress-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-wp.svg" alt="WordPress Logo">
       <img class="logo shopify-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify.svg" alt="Shopify Logo">
 
-    </div>
+    </a>
 
    <h1><?php the_sub_field('short_description'); ?></h1>
-   
    
     <!-- <h1 class="marquee-heading"></h1>
 
@@ -20,7 +37,7 @@
     
 
     <div class="btn-group l-row l-row-center">
-      <a href="https://demo.wpshop.io" class="btn btn-l btn-secondary btn-download-free">View the demo</a>
+      <a href="https://demo.wpshop.io" class="btn btn-l btn-secondary btn-download-free">See the demo</a>
     </div>
 
   </div>

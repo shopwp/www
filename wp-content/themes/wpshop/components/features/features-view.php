@@ -11,7 +11,7 @@
     <div class="card l-box">
       <h3 class="card-heading">
         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-sync.svg" class="card-heading-icon" alt="Syncing" /> Easy Syncing</h3>
-        <p>When you make a change in Shopify that change is updated in WordPress without any additional steps. We use Webhooks to capture the event behind the scenes allowing you to keep both sites in sync.</p>
+        <p>When you make a change in <a href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify" target="_blank">Shopify</a> that change is updated in WordPress without any additional steps. We use Webhooks to capture the event behind the scenes allowing you to keep both sites in sync.</p>
     </div>
 
     <div class="card l-box">
@@ -30,7 +30,7 @@
     <div class="card l-box">
       <h3 class="card-heading">
         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-cart.svg" class="card-heading-icon" alt="Cart" /> Cart</h3>
-      <p>We use the Shopify Buy Button SDK giving you a fully featured cart experience out of the box. The checkout page is handled by Shopify allowing you to lay your security concerns to rest.</p>
+      <p>We use the <a href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify" target="_blank">Shopify</a> Buy Button SDK giving you a fully featured cart experience out of the box. The checkout page is handled by <a href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify" target="_blank">Shopify</a> allowing you to lay your security concerns to rest.</p>
     </div>
 
     <div class="card l-box">

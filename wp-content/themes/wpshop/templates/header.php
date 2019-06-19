@@ -44,11 +44,11 @@
 
           <?php if(is_user_logged_in()) { ?>
             <a href="/account" class="btn btn-account">My Account</a>
-            <a href="<?php echo wp_logout_url('/login'); ?>" class="link-account">Logout</a>
+            <a href="<?php echo wp_logout_url('/login'); ?>" class="link-account">Log Out</a>
 
           <?php } else { ?>
             <a href="/purchase" class="btn btn-account">Purchase</a>
-            <a href="/login" class="menu-item-manual">Log in</a>
+            <a href="/login" class="menu-item-manual">Log In</a>
           <?php } ?>
 
           <?php if(edd_get_cart_quantity() > 0) { ?>

@@ -1,5 +1,7 @@
 .component-screenshots {
    background: white;
+   margin-bottom: 2em;
+   max-width: 100%;
    //   margin: 0;
    //   border-top: 5em solid white;
 
@@ -48,7 +50,7 @@
 }
 
 .screenshot {
-   margin-bottom: $space-xxl;
+   margin-bottom: 9em;
    position: relative;
 }
 
@@ -59,12 +61,25 @@
 .screenshot-image {
    @include shadow();
 
-   border: 1px solid #c2c2c2;
-   // left: 13%;
-   max-width: 85%;
+   max-width: 75%;
    margin: 0 auto;
    display: block;
-   // position: relative;
+}
+
+.screenshots-secondary-list {
+   display: flex;
+   flex-wrap: wrap;
+   margin-bottom: 13em;
+   position: relative;
+
+   .screenshot-image-description {
+   }
+}
+
+.screenshot-single {
+   width: calc(50% - 2em);
+   max-width: calc(50% - 2em);
+   margin: 1em;
 }
 
 .screenshot-image-wrapper {
@@ -76,6 +91,18 @@
    flex: 0 0 100%;
 
    // margin-right: 3em;
+}
+
+.component-screenshots.has-background {
+   .screenshot-image-wrapper {
+      background: color(off-white);
+      padding: 4em 0px;
+      border-radius: 20px;
+   }
+}
+
+.screenshot-heading {
+   text-align: center;
 }
 
 .screenshot-image-description {
@@ -92,13 +119,14 @@
    padding-right: 4em;
    margin-top: 2px;
    background: white;
-   font-size: 1.2em;
+   font-size: 1.1em;
    padding: 2em;
    border-radius: 10px;
-   top: 50%;
-   right: 0;
-   transform: translate(15px, -50%);
-   box-shadow: -25px 24px 25px 0 rgba(0, 0, 0, 0.2);
+   position: absolute;
+   top: 95%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   box-shadow: 0px 7px 30px 0 rgba(0, 0, 0, 0.2);
 }
 
 .screenshots-short-description {

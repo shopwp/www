@@ -10,15 +10,6 @@
   $user_info = get_userdata(get_current_user_id());
 
 
-
-
-  $download = edd_get_download('wp-shopify');
-
-  // echo "<pre>";
-  // print_r($download);
-  // echo "</pre>";
-
-
   ?>
 
   <form id="form-account-profile-general" action="address" method="post" class="form form-account accordion-content">

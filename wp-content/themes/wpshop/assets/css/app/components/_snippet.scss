@@ -126,7 +126,7 @@
       display: block;
       height: 1px;
       width: 100px;
-      background-color: color(dark-grey);
+      background-color: color(base);
 
       @include device(1000, 'max') {
          display: none;

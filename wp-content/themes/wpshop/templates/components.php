@@ -49,6 +49,21 @@
 
         get_template_part('components/screenshots/screenshots-controller');
 
+      // Screenshots Secondary
+      } else if(get_row_layout() == 'component_screenshots_secondary') {
+
+        get_template_part('components/screenshots-secondary/screenshots-secondary-controller');
+
+      // Screenshots
+      } else if(get_row_layout() == 'component_pro') {
+
+        get_template_part('components/pro/pro-controller');
+
+      // Affiliates
+      } else if(get_row_layout() == 'component_affiliate') {
+
+        get_template_part('components/affiliate/affiliate-controller');
+
       }
 
     endwhile;

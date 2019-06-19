@@ -1,14 +1,33 @@
 .component-mailinglist {
-   background: color(offwhite);
+   // background: color(light-grey);
    // padding: $space-l * 3.5 0;
    position: relative;
    color: color(base);
+   border-radius: 10px;
+
+   background-color: color(off-white);
+   // background-image: url(imgs/stuff.svg);
+   background-size: 85%;
+   background-position: 50% 50%;
+   padding: 3em 0 5em 0;
+
+   .form-messages {
+      position: absolute;
+      width: 100%;
+      padding: 10px;
+   }
+
    // background-image: url('imgs/bg-stuff-2.png');
 
    .form-label {
       color: color(base);
       font-weight: 100;
       z-index: 99;
+      top: 1.2em;
+      font-size: 1.2em;
+   }
+
+   .form-input {
    }
 
    .is-focused {
@@ -19,12 +38,54 @@
 
    label.error {
       font-size: inherit;
+      margin-top: 0;
+   }
+
+   .is-submitted {
+      .form-success {
+         margin-top: 1em;
+         margin-top: 1em;
+         background: #6aa892;
+         color: white;
+         padding: 10px;
+         border-radius: 0;
+      }
+   }
+
+   .l-contain-narrow {
+      max-width: 1200px;
+      width: 100%;
+      padding-top: 0;
+      padding-bottom: 0;
+   }
+
+   .form-control {
+      display: flex;
+
+      #mailinglist-email {
+         flex: 1;
+         border-radius: 10px 0 0 10px;
+         font-size: 1.2em;
+         margin: 0;
+      }
+      .btn-group {
+         width: 230px;
+         display: flex;
+
+         .btn {
+            border-radius: 0 0.4em 0.4em 0;
+            width: 100%;
+            font-size: 1.4em;
+            background-color: color(base);
+         }
+      }
    }
 }
 
 .mailinglist-group-copy {
    color: color(white);
    z-index: 9999999999999;
+   align-items: flex-start;
 
    @include device(600, 'max') {
       z-index: 999;
@@ -34,10 +95,7 @@
 .mailinglist-heading {
    margin-bottom: 0;
    color: color(base);
-
-   @include device(600, 'max') {
-      font-size: $font-xxxl;
-   }
+   // font-size: $font-xxxl;
 
    @include device(400, 'max') {
       font-size: $font-xl;
@@ -45,9 +103,10 @@
 }
 
 .mailinglist-copy {
-   margin-top: $space-xxxs;
-   text-align: center;
+   // font-size: 1.1em;
+   text-align: left;
    color: color(base);
+   margin-top: 20px;
 
    @include device(400, 'max') {
       font-size: 1em;

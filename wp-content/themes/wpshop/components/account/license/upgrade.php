@@ -1,4 +1,4 @@
-<section class="component component-account-licenses-upgrades">
+<section class="component component-account-licenses-upgrades" data-tab="Upgrade">
   <h4 class="component-account-heading">Upgrades</h4>
 
   <table id="edd_sl_license_upgrades" class="edd-table">

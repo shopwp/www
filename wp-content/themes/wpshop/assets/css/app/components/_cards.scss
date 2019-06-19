@@ -1,58 +1,53 @@
 .card {
-  background: color(white);
-  text-align: left;
+   background: color(white);
+   text-align: left;
 
-  flex: 0 0 48%;
-  max-width: 48%;
-  width: 48%;
+   flex: 0 0 48%;
+   max-width: 48%;
+   width: 48%;
 
-  margin-bottom: 2.5em;
+   margin-bottom: 2.5em;
 
-  @include card();
+   @include card();
 
-  p {
-    max-width: 90%;
-    margin: 0 auto 1em auto;
-  }
+   p {
+      max-width: 90%;
+      margin: 0 auto 1em auto;
+   }
 
-  @include device(800, 'max') {
-    flex: 0 0 100%;
-    max-width: 100%;
-    width: 100%;
-
-    p {
-      font-size: $font-s;
-      margin: 0;
-      width: 100%;
+   @include device(800, 'max') {
+      flex: 0 0 100%;
       max-width: 100%;
-    }
+      width: 100%;
 
-  }
-
+      p {
+         font-size: $font-s;
+         margin: 0;
+         width: 100%;
+         max-width: 100%;
+      }
+   }
 }
 
-
 .card-heading {
-  font-weight: bold;
-  color: color(secondary);
-  text-align: center;
+   font-weight: bold;
+   // color: color(secondary);
+   text-align: center;
 }
 
 .card-heading-icon {
-  width: 25px;
-  height: 25px;
-  position: relative;
-  left: -5px;
-  top: 5px;
+   width: 25px;
+   height: 25px;
+   position: relative;
+   left: -5px;
+   top: 5px;
 }
 
 .cards {
-
 }
 
-
 .doc-section {
-  margin-bottom: 3em;
+   margin-bottom: 3em;
 }
 
 //
@@ -80,7 +75,8 @@
 // }
 
 .component-features {
-  @include device(600, 'max') {
-    margin-top: 0;
-  }
+   background: white;
+   @include device(600, 'max') {
+      margin-top: 0;
+   }
 }

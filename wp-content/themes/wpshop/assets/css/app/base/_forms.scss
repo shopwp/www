@@ -94,6 +94,11 @@
    position: relative;
 }
 
+.form-input-s {
+   font-size: 16px;
+   padding: 0.9em;
+}
+
 input,
 textarea,
 select {
@@ -206,8 +211,8 @@ label[for='wps_customer_password_new'] {
 }
 
 .view-key-wrapper {
-   position: relative;
-   padding: 0.7em 0 0.8em 0;
+   // position: relative;
+   // padding: 0.7em 0 0.8em 0;
 
    .fa {
       position: absolute;
@@ -225,6 +230,7 @@ label[for='wps_customer_password_new'] {
 
    + svg {
       font-size: 20px;
+      margin: 0;
    }
 
    &:hover {
@@ -284,7 +290,7 @@ legend {
       display: block;
       height: 1px;
       width: 100px;
-      background-color: color(dark-grey);
+      background-color: color(base);
    }
 
    @include device(600, 'max') {
@@ -313,6 +319,8 @@ select {
 
 #mailinglist-form {
    margin-top: 1em;
+   width: 100%;
+   max-width: 100%;
 
    .form-control {
       margin-right: 0;
@@ -324,7 +332,7 @@ select {
 
    .spinner {
       margin: 0;
-      top: calc(64% - 12px);
+      top: calc(37% - 12px);
       right: calc(50% - 20px);
       width: 40px;
       height: 40px;
@@ -430,7 +438,7 @@ select {
 
 .form-note-invalid-field {
    text-align: center;
-   color: color(error-dark);
+   color: color(base);
    margin-bottom: $space-xxs;
 }
 
@@ -487,10 +495,6 @@ select {
 // }
 
 #edd_sl_license_keys2 {
-   border-bottom-left-radius: 0;
-   border-bottom-right-radius: 0;
-   border-bottom: 0;
-
    @include device(600, 'max') {
       display: flex;
       flex-direction: column;
@@ -498,9 +502,9 @@ select {
 }
 
 #edd_sl_license_keys {
-   border-top-left-radius: 0;
-   border-top-right-radius: 0;
-   border-top: 0;
+   // border-top-left-radius: 0;
+   // border-top-right-radius: 0;
+   // border-top: 0;
 
    @include device(600, 'max') {
       display: flex;

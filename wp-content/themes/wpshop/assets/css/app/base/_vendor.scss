@@ -5,22 +5,23 @@ EDD
 */
 .edd-table,
 .edd_sl_table,
-#edd_checkout_cart_form {
+#edd_checkout_cart_form,
+#edd_user_history {
    width: 100%;
    background: color(white);
    vertical-align: top;
-   margin-top: 0;
+   margin: 0 0 1em 0;
 
    @include card();
 
    th,
    td {
-      padding: 1em;
-      vertical-align: top;
+      // padding: 1em;
+      // vertical-align: top;
    }
 
    input {
-      background: color(offwhite);
+      background: color(light-grey);
       padding: $space-xs 1em;
       margin-top: $space-xxxs;
    }
@@ -28,11 +29,15 @@ EDD
 
 #edd_sl_license_keys {
    @include card();
+
+   > tr > td:first-child {
+      width: 35%;
+   }
 }
 
-#edd_sl_license_keys {
-   border-top: 0;
-}
+// #edd_sl_license_keys {
+//    border-top: 0;
+// }
 
 #edd_checkout_cart {
    width: 100%;
@@ -104,12 +109,12 @@ EDD
 .component-account-downloads {
    th,
    td {
-      width: 20%;
+      // width: 20%;
    }
 
-   #edd_download_history_pagination {
-      display: none;
-   }
+   // #edd_download_history_pagination {
+   //    display: none;
+   // }
 }
 
 .component-account-profile {
@@ -118,15 +123,15 @@ EDD
    }
 }
 
-.edd_cart_item,
-.edd_sl_license_row,
-.edd_cart_header_row,
-.edd_download_history_row,
-.edd_purchase_row {
-   td {
-      padding-top: 0;
-   }
-}
+// .edd_cart_item,
+// .edd_sl_license_row,
+// .edd_cart_header_row,
+// .edd_download_history_row,
+// .edd_purchase_row {
+//    td {
+//       padding-top: 0;
+//    }
+// }
 
 .edd_download_history_row {
    &:nth-child(2),
@@ -141,34 +146,35 @@ EDD
 
 .edd_sl_license_status {
    text-transform: capitalize;
+   width: 35%;
 }
 
-#edd_sl_license_keys2 .edd_sl_license_row td {
-   padding-bottom: 0;
-   width: auto;
-}
+// #edd_sl_license_keys2 .edd_sl_license_row td {
+//    padding-bottom: 0;
+//    width: auto;
+// }
 
-#edd_user_history td.edd_download_download_files {
-   padding-bottom: 2em;
-}
+// #edd_user_history td.edd_download_download_files {
+//    padding-bottom: 2em;
+// }
 
 #edd_sl_license_keys {
-   .edd_sl_license_row td {
-      width: auto;
+   // .edd_sl_license_row td {
+   //    width: auto;
 
-      &:first-child {
-         width: 410px;
-      }
-   }
+   //    &:first-child {
+   //       width: 410px;
+   //    }
+   // }
 
    .fa-key {
       margin-top: 0;
       margin-left: $space-m;
    }
 
-   .edd_sl_license_row td {
-      vertical-align: top;
-   }
+   // .edd_sl_license_row td {
+   //    vertical-align: top;
+   // }
 }
 
 /*
@@ -284,13 +290,13 @@ EDD
          }
 
          &.is-highlighted {
-            box-shadow: 0px 0px 0 5px #5adcb2 inset;
+            box-shadow: 0px 0px 0 5px color(secondary) inset;
             // transform: scale(1.05);
             // transition: all 0.25s ease;
             border: none;
 
             &:before {
-               background: #5adcb2;
+               background: color(secondary);
                color: color(white);
             }
          }
@@ -481,7 +487,7 @@ EDD
    .msg-notice {
       width: 100%;
       margin-top: 0;
-      background-color: color(notice-light);
+      background-color: color(light-grey);
       color: color(base);
 
       a {
@@ -635,7 +641,7 @@ EDD
    .edd_error {
       padding: 0;
       margin-bottom: 0;
-      color: color(dark-grey);
+      color: color(base);
    }
 }
 
@@ -823,7 +829,7 @@ form input:-moz-read-only.edd-submit {
 
 .edd_cart_item_price {
    em {
-      background-color: color(notice-light);
+      background-color: color(light-grey);
       padding: 5px 15px;
       border-radius: 5px;
       font-size: 13px;
@@ -834,10 +840,12 @@ form input:-moz-read-only.edd-submit {
 }
 
 #edd_sl_license_upgrades {
-   // border-radius: 0;
+   td:first-child {
+      width: 20%;
+   }
 
    td {
-      // padding-bottom: 0;
+      width: 10%;
    }
 }
 

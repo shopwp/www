@@ -1,4 +1,4 @@
-<section class="component component-account-profile">
+<section class="component component-account-profile" data-tab="Settings">
   <?php
 
     get_template_part('components/account/profile/general');

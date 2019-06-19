@@ -1,3 +1,9 @@
+.account {
+   .main {
+      margin-bottom: 7em;
+   }
+}
+
 .account-cat {
    font-size: $font-l;
    // font-weight: bold;
@@ -27,7 +33,38 @@
 
 .component[class*='component-account'] {
    animation-duration: 0.5s;
-   margin-bottom: $space-l;
+   margin: 0 auto $space-l auto;
+   padding: 0;
+   width: 100%;
+   max-width: 100%;
+   background: none;
+   display: none;
+
+   &.is-active {
+      display: block;
+      padding: 2px;
+      border-radius: 0px 0px 7px 7px;
+      width: 100%;
+      padding-top: 2em;
+      border: 1px solid color(medium-grey);
+      padding: 2em 2em 1em 2em;
+      border-top: 0;
+   }
+
+   &.component-account-user-info {
+      display: flex;
+      margin: 2em 0;
+   }
+}
+
+.account-user-info-image {
+   flex: 0 0 100px;
+   width: 100px;
+}
+
+.account-user-info-contact {
+   flex: 1;
+   margin: 0 0 0 1em;
 }
 
 .component-account-licenses-upgrades {
@@ -37,6 +74,10 @@
 .component-account-licenses {
    .edd_sl_expiration {
       width: 45%;
+   }
+
+   table .edd_sl_license_row td:first-child {
+      width: 35%;
    }
 }
 
@@ -56,12 +97,30 @@
 }
 
 .user-info {
-   margin-top: $space-m;
+   // margin-top: $space-m;
+   h5:first-child {
+      font-weight: bold;
+      margin-bottom: 5px;
+   }
+
+   .link-account {
+      padding: 0;
+      margin: 15px 0 0 0;
+      display: block;
+   }
+}
+
+.component-account-user-info {
+   margin-bottom: 3em;
+
+   .user-img {
+      border-radius: 50%;
+   }
 }
 
 .view-key-wrapper {
-   display: flex;
-   align-items: center;
+   // display: flex;
+   // align-items: center;
 
    .fa {
       @include device(1400, 'max') {
@@ -77,6 +136,7 @@
 .component-account-heading {
    margin-bottom: $space-xs;
    font-weight: bold;
+   display: none;
 
    .fa {
       font-size: $font-s;
@@ -89,3 +149,100 @@
 // .edd_download_history_row .edd_download_file_link {
 //   margin-top: 0;
 // }
+
+.account-nav {
+   margin: 0;
+   justify-content: flex-end;
+   display: flex;
+   flex-direction: column;
+}
+
+.account-nav-list {
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   justify-content: space-between;
+   display: flex;
+
+   > li:first-child {
+      margin-left: 0;
+   }
+
+   > li:last-child {
+      margin-right: 0;
+   }
+}
+
+.account-nav-list-item-link {
+   padding: 10px 20px;
+   background-color: color(base);
+   text-decoration: none;
+   color: white;
+   display: inline-block;
+   width: 100%;
+   text-align: center;
+   border-radius: 7px 7px 0 0;
+   font-size: 16px;
+   // font-weight: bold;
+
+   &:hover {
+      opacity: 0.8;
+   }
+
+   &.is-active {
+      background-color: #fff;
+      border: 1px solid color(medium-grey);
+      border-bottom: 0;
+      color: color(dark-grey);
+      font-weight: bold;
+
+      &:hover {
+         background-color: #fff;
+         color: color(dark-grey);
+         opacity: 1;
+         cursor: text;
+      }
+   }
+}
+
+.account-nav-list-item {
+   flex: 1;
+   margin: 0 2px;
+}
+
+.edd_download_download_name {
+   width: 230px;
+}
+
+.component-account-subscriptions {
+   .edd_subscription_name + br {
+      display: none;
+   }
+   .edd_subscription_billing_cycle {
+      margin-left: 10px;
+   }
+
+   td:nth-child(1) {
+      width: 30%;
+   }
+
+   td:nth-child(2) {
+      width: 10%;
+   }
+
+   td:nth-child(3) {
+      width: 13%;
+   }
+
+   td:nth-child(4) {
+      width: 15%;
+   }
+
+   td:nth-child(5) {
+      width: 13%;
+   }
+
+   td:nth-child(6) {
+      width: 19%;
+   }
+}

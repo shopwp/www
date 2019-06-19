@@ -150,6 +150,7 @@ function mailinglist_signup() {
     }
 
   } else {
+
     echo 'Invalid Nonce';
     die();
 

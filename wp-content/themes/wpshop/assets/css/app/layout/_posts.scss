@@ -1,103 +1,96 @@
 .post {
-
-  .entry-content {
-
-    p, li {
-      font-size: $font-l;
-    }
-
-    ul {
-      margin: $space-xl 0;
-      line-height: 1.4;
-      margin: 35px 0 40px 25px;
-
-      .emoji {
-        margin-left: -26px !important;
+   .entry-content {
+      p,
+      li {
+         font-size: $font-l;
       }
 
-    }
+      ul {
+         margin: $space-xl 0;
+         line-height: 1.4;
+         margin: 35px 0 40px 25px;
 
-    img {
-      box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
-    }
+         .emoji {
+            margin-left: -26px !important;
+         }
+      }
 
-  }
+      img {
+         box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
+      }
+   }
 
-  .entry-title {
-    text-align: center;
-  }
+   .entry-title {
+      text-align: center;
+   }
 
-  .meta-wrapper {
-    padding-bottom: $space-l;
-    justify-content: center;
-  }
-
+   .meta-wrapper {
+      padding-bottom: $space-l;
+      justify-content: center;
+   }
 }
 
 .post-logo-link {
-  &:hover {
-    opacity: 1;
-  }
+   &:hover {
+      opacity: 1;
+   }
 }
 
 .post-logo {
-  width: 20px;
-  height: 20px;
-  display: block;
-  position: relative;
-  top: 2px;
-  filter: drop-shadow( 0px 6px 12px rgba(0, 0, 0, 0.15) );
+   width: 20px;
+   height: 20px;
+   display: block;
+   position: relative;
+   top: 2px;
+   filter: drop-shadow(0px 6px 12px rgba(0, 0, 0, 0.15));
 }
 
 .byline.author {
-  display: flex;
+   display: flex;
 }
 
 .entry-summary {
+   //   p {
+   //     display: flex;
+   //     flex-direction: column;
+   //     align-items: center;
+   //   }
 
-  p {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .moretag {
-    margin-bottom: 2em;
-    margin-top: 16px;
-  }
-
+   .moretag {
+      margin-bottom: 2em;
+      margin-top: 16px;
+   }
 }
 
 .blog .post {
-  margin-bottom: 3em;
+   margin-bottom: 3em;
 }
 
 .article-footer {
-  text-align: center;
-  justify-content: center;
-  display: flex;
-  margin: 6em 0 3em 0;
+   text-align: center;
+   justify-content: center;
+   display: flex;
+   margin: 6em 0 3em 0;
 
-  .post-logo {
-    width: 40px;
-    height: 40px;
-    top: 0;
-    filter: drop-shadow( 0px 6px 12px rgba(0, 0, 0, 0.15) );
-  }
+   .post-logo {
+      width: 40px;
+      height: 40px;
+      top: 0;
+      filter: drop-shadow(0px 6px 12px rgba(0, 0, 0, 0.15));
+   }
 
-  .post-logo-link {
-    position: relative;
+   .post-logo-link {
+      position: relative;
 
-    &:before {
-      height: 1px;
-      width: 60px;
-      background: #bebebe;
-      position: absolute;
-      top: -40px;
-      display: block;
-      content: '';
-      left: -10px;
-    }
-  }
-
+      &:before {
+         height: 1px;
+         width: 60px;
+         background: #bebebe;
+         position: absolute;
+         top: -40px;
+         display: block;
+         content: '';
+         left: -10px;
+      }
+   }
 }

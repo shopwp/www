@@ -7,7 +7,7 @@ use Roots\Sage\Wrapper;
 require_once 'lib/Mobile-Detect/Mobile_Detect.php';
 $detect = new Mobile_Detect;
 
-$mobileBodyClass = $detect->isMobile() ? 'l-col is-mobile' : 'l-col';
+$mobileBodyClass = $detect->isMobile() ? 'is-mobile' : '';
 
 $notices_enabled = get_field('theme_notice_enable', 'option');
 
