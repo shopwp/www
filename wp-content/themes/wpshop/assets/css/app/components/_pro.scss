@@ -1,12 +1,20 @@
 .component-pro {
-   padding: 2em 0 3em;
+   padding: 0;
    max-width: $container-width;
    background-color: #d0e5ff;
-   margin: 3em auto;
+   margin: 7em auto 4em auto;
    text-align: center;
-   outline: 7px solid rgb(18, 92, 127);
-   outline-offset: 10px;
-   outline-style: double;
+   // outline: 7px solid rgb(18, 92, 127);
+   background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+   // outline-offset: 10px;
+   // outline-style: double;
+   outline: 10px solid #ffffff;
+   outline-offset: -2px;
+   outline-style: solid;
+
+   .component-inner {
+      background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+   }
 
    h2 {
       font-size: 2.5em;

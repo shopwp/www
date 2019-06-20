@@ -425,6 +425,7 @@ Author URI:     https://simpleblend.net
          position: absolute;
          right: 0;
          z-index: -1;
+         // opacity: 0.7;
          -webkit-backface-visibility: hidden; // for Chrome Windows
       }
 
@@ -432,6 +433,7 @@ Author URI:     https://simpleblend.net
          #{$selector} {
             top: 0;
             border-radius: 20px;
+
             @if $flip {
                transform: skewY($angle * -1);
                transform-origin: 0 0;
@@ -507,4 +509,30 @@ Author URI:     https://simpleblend.net
 
 .edge--both--reverse {
    @include angle(both, true);
+}
+
+.edge--top:before {
+   transform: skewY(1.5deg) translateX(50px);
+   transform-origin: 100% 0;
+   width: 92%;
+}
+
+.edge--bottom--reverse:after {
+   transform: skewY(1.5deg) translateX(-35px);
+   transform-origin: 0 100%;
+   width: 96%;
+   left: 3%;
+}
+
+.edge--bottom:after {
+   transform: skewY(-1.5deg) translateX(44px);
+   transform-origin: 100%;
+   width: 96%;
+}
+
+.edge--top--reverse:before {
+   transform: skewY(-1.5deg) translateX(-40px);
+   transform-origin: 0 0;
+   width: 96%;
+   left: 3%;
 }

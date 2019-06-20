@@ -52,8 +52,8 @@ import { showLatestBuildVersion } from './docs/docs'
             anime.remove($(this))
             anime({
                targets: $(this)[0],
-               scale: [1.04],
-               duration: 300,
+               scale: [0.94],
+               duration: 260,
                elasticity: 1000
             })
          })
@@ -61,7 +61,7 @@ import { showLatestBuildVersion } from './docs/docs'
             anime({
                targets: $(this)[0],
                scale: [1],
-               duration: 300,
+               duration: 260,
                elasticity: 1000
             })
          })

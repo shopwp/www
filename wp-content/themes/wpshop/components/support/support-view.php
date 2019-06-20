@@ -1,4 +1,4 @@
-<section class="component component-support <?php echo get_sub_field('support_full_width') ? 'component-support-fullwidth' : ''; ?>">
+<section class="component component-support edge--bottom--reverse edge--top">
   <div class="l-contain-narrow">
     <div class="l-col l-row-center l-col-center">
 

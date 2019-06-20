@@ -3,13 +3,21 @@
    // padding: $space-l * 3.5 0;
    position: relative;
    color: color(base);
-   border-radius: 10px;
+   border-radius: 20px;
 
    background-color: color(off-white);
    // background-image: url(imgs/stuff.svg);
-   background-size: 85%;
-   background-position: 50% 50%;
-   padding: 3em 0 5em 0;
+   // background-size: 85%;
+   // background-position: 50% 50%;
+   //   padding: 3em 0 5em 0;
+   padding: 0;
+   outline: 10px solid #ffffff;
+   outline-offset: -2px;
+   outline-style: solid;
+
+   .component-inner {
+      padding: 3em 0 5em 0;
+   }
 
    .form-messages {
       position: absolute;
@@ -85,7 +93,7 @@
 .mailinglist-group-copy {
    color: color(white);
    z-index: 9999999999999;
-   align-items: flex-start;
+   align-items: center;
 
    @include device(600, 'max') {
       z-index: 999;
@@ -95,7 +103,7 @@
 .mailinglist-heading {
    margin-bottom: 0;
    color: color(base);
-   // font-size: $font-xxxl;
+   font-size: 2.5em;
 
    @include device(400, 'max') {
       font-size: $font-xl;
@@ -103,8 +111,8 @@
 }
 
 .mailinglist-copy {
-   // font-size: 1.1em;
-   text-align: left;
+   font-size: 1.1em;
+   text-align: center;
    color: color(base);
    margin-top: 20px;
 

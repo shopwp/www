@@ -80,6 +80,11 @@
    }
 }
 
+.component-inner {
+   border-radius: 20px;
+   padding: 1em 0 1em;
+}
+
 .single-docs #drift-widget-container,
 .docs-template-default #drift-widget-container {
    display: none;

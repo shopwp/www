@@ -1,4 +1,7 @@
 <section class="component component-mailinglist form-wrapper l-col l-row-center edge--bottom edge--top--reverse" id="mailinglist">
+
+<div class="component-inner">
+
 <div class="l-contain-narrow">
   <div class="mailinglist-group-copy l-col l-col-center">
     <h2 class="mailinglist-heading">Stay up to date!</h2>
@@ -27,4 +30,7 @@
 
   </form>
 </div>
+
+</div>
+
 </section>

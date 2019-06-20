@@ -1,17 +1,18 @@
 .component-affiliate {
    background: white;
-   padding: 2em 0 7em 0;
+   padding: 2em 0 10em 0;
    position: relative;
 
    .description {
       text-align: center;
       margin-top: 10px;
+      font-size: 1.1em;
    }
 
    .heading {
       width: 100%;
       text-align: center;
-      font-size: $font-xxxl;
+      font-size: 2.5em;
    }
 
    .btn {
@@ -25,7 +26,7 @@
       width: 200px;
       max-width: 100%;
       opacity: 1;
-      margin: 0em auto 3em auto;
+      margin: 0em auto 2em auto;
       width: 200px;
    }
 }
