@@ -257,7 +257,7 @@ function initMessages($) {
 }
 
 function initPurchaseForm() {
-   jQuery('.edd_price_options li:first-of-type').addClass('is-highlighted is-valid')
+   // jQuery('.edd_price_options li:first-of-type').addClass('is-highlighted is-valid')
 
    jQuery('.edd_price_options li').on('click', function() {
       jQuery('.edd_price_option_35').prop('checked', false)

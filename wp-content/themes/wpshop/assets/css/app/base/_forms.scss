@@ -151,6 +151,13 @@ input[type='submit'] {
    height: auto;
 }
 
+#form-account-profile-general,
+#form-account-profile-password {
+   input[type='submit'] {
+      font-size: 1.2em;
+   }
+}
+
 input[type='search'] {
    border-radius: 10px;
 }
@@ -244,9 +251,9 @@ label[for='wps_customer_password_new'] {
 label.error {
    background: color(error);
    display: inline-block;
-   color: color(white);
+   color: color(base);
    // font-size: 13px;
-   padding: $space-s $space-m * 2;
+   padding: 0.59444em 2.4em;
    border-radius: 10px;
    font-weight: normal;
    // animation-duration: 0.1s;
@@ -264,7 +271,7 @@ label.error {
    }
 
    a {
-      color: color(white);
+      color: color(base);
    }
 }
 

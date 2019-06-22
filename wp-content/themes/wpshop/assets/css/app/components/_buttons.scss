@@ -24,7 +24,7 @@ a.button.edd-slg-social-unlink-profile,
    text-align: center;
    margin: 0;
    margin-top: $space-s;
-   transition: all 0.08s ease;
+   transition: all 0.2s ease;
 
    // @include bob();
    // @include shadow();
@@ -37,8 +37,10 @@ a.button.edd-slg-social-unlink-profile,
 
    &:hover {
       // @include shadow();
-
+      text-decoration: none;
+      transform: scale(0.95);
       opacity: 1;
+      color: rgba(255, 255, 255, 0.89);
       // @include dim($opacity-soft);
       // box-shadow: none;
       // background-color: darken(color(primary), 62);
@@ -187,15 +189,6 @@ input[type='submit'],
       font-family: 'FontAwesome';
       display: inline-block;
       margin-left: $space-s;
-   }
-}
-
-.purchase-confirmation .edd_purchase_receipt_files .edd_download_file_link {
-   background-color: color(primary);
-
-   &:hover {
-      opacity: 1;
-      background-color: darken(color(primary), 12);
    }
 }
 

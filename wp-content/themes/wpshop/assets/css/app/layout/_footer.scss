@@ -2,11 +2,81 @@
    text-align: center;
    font-size: $font-s;
    margin-top: 0;
+   position: relative;
+
    // background: color(base);
    // background: color(base);
    // background: linear-gradient(180deg, #12062a 0%, #180b37 100%);
 
    @include device(800, 'max') {
+   }
+
+   .shape1 {
+      left: 0;
+      display: none;
+   }
+   .shape2 {
+      left: 0;
+      display: none;
+   }
+   .shape3 {
+      left: 17vw;
+      top: auto;
+      display: none;
+      bottom: -41px;
+   }
+   .shape4 {
+      left: 0;
+      display: none;
+   }
+   .shape5 {
+      right: 12vw;
+      top: 140px;
+      left: auto;
+   }
+   .shape6 {
+      left: 14vw;
+      bottom: 100px;
+   }
+   .shape7 {
+      left: 0;
+      display: none;
+   }
+   .shape8 {
+      left: 0;
+      display: none;
+   }
+   .shape9 {
+      left: auto;
+      bottom: 40px;
+      top: auto;
+      right: 18vw;
+      width: 12px;
+      height: 12px;
+   }
+   .shape10 {
+      left: 9vw;
+      top: 145px;
+   }
+   .shape11 {
+      left: 0;
+      display: none;
+   }
+   .shape12 {
+      left: 0;
+      display: none;
+   }
+   .shape13 {
+      left: 0;
+      display: none;
+   }
+   .shape14 {
+      left: 0;
+      display: none;
+   }
+   .shape15 {
+      left: 0;
+      display: none;
    }
 }
 

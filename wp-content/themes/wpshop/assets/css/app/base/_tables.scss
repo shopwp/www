@@ -1,21 +1,22 @@
 td,
 th {
    text-align: left;
-   padding: 10px;
+   padding: 10px 20px;
    color: color(dark-grey);
 }
 
 thead {
-   background-color: color(light-grey);
+   // background-color: color(light-grey);
    color: color(dark-grey);
+   border-bottom: 1px solid #cbcbcb;
 }
 
 tr {
    border-bottom: 1px solid #cbcbcb;
 
-   // &:last-child {
-   //    border-bottom: none;
-   // }
+   &:last-child {
+      border-bottom: none;
+   }
 }
 
 table {

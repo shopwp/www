@@ -34,7 +34,6 @@
     <div class="marquee-short-desc">
       <?php the_sub_field('short_description'); ?>
     </div> -->
-    
 
     <div class="btn-group l-row l-row-center">
       <a href="https://demo.wpshop.io" class="btn btn-l btn-secondary btn-download-free">See the demo</a>

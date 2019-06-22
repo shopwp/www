@@ -65,6 +65,7 @@ Author URI:     https://simpleblend.net
 @import 'components/divider';
 @import 'components/affiliate';
 @import 'components/pro';
+@import 'components/how-it-works';
 
 // State
 @import 'state/state';
@@ -213,24 +214,24 @@ Author URI:     https://simpleblend.net
 
 @keyframes floating {
    0% {
-      transform: translateY(-10px);
+      transform: translateY(-2px);
    }
 
    50% {
-      transform: translateY(10px);
+      transform: translateY(5px);
    }
 
    100% {
-      transform: translateY(-10px);
+      transform: translateY(-2px);
    }
 }
 
 .footer-free-trial {
    transform: translateY(0);
    display: inline-block;
-   animation-duration: 3.4s;
-   animation-name: floating;
-   animation-iteration-count: infinite;
+   // animation-duration: 2.4s;
+   // animation-name: floating;
+   // animation-iteration-count: infinite;
    margin: 0;
 }
 
@@ -333,6 +334,8 @@ Author URI:     https://simpleblend.net
 }
 
 .shape9 {
+   width: 15px;
+   height: 15px;
    right: 3vw;
    top: -100px;
    border-radius: 50%;

@@ -15,6 +15,14 @@
 }
 
 .edd_price_options li[itemprop='offers'] {
+   transition: transform 0.2s ease;
+
+   &:not(.is-highlighted) {
+      &:hover {
+         transform: scale(0.95);
+      }
+   }
+
    .eddr-notice.variable-prices {
       display: none;
    }
@@ -28,4 +36,12 @@
 #edd_sl_renewal_form {
    margin-bottom: 1em;
    text-align: center;
+}
+
+.page.purchase {
+   .page-header {
+      margin-bottom: 0;
+      line-height: 1;
+      padding-bottom: 0;
+   }
 }

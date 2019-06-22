@@ -17,7 +17,7 @@
       position: relative;
       top: 3px;
       margin-right: $space-s;
-      box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
+      // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
    }
 
    &:hover {
@@ -60,13 +60,4 @@
    &:hover {
       opacity: $opacity-soft;
    }
-
-   // &:before {
-   //   display: block;
-   //   content: " ";
-   //   margin-top: -30px;
-   //   height: 30px;
-   //   visibility: hidden;
-   //   pointer-events: none;
-   // }
 }

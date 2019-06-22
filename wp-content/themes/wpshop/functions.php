@@ -93,7 +93,7 @@ add_filter('post_type_link', 'wpa_show_permalinks', 1, 2);
 
 function your_function($product_data)
 {
-   echo '<small class="purchase-options-note">(Your license key will be auto-renewed each year.)</small>';
+   // echo '<small class="purchase-options-note">(Your license key will auto-renew each year)</small>';
 }
 
 add_action('edd_purchase_link_top', 'your_function');

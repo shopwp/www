@@ -64,8 +64,13 @@
 
         get_template_part('components/affiliate/affiliate-controller');
 
-      }
+      // How it works
+      } else if(get_row_layout() == 'component_how_it_works') {
 
+        get_template_part('components/how-it-works/how-it-works-controller');
+
+      }
+      
     endwhile;
 
   else:

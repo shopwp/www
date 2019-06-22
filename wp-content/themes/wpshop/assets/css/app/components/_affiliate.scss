@@ -1,10 +1,10 @@
 .component-affiliate {
    background: white;
-   padding: 2em 0 10em 0;
+   padding: 1em 0 10em 0;
    position: relative;
 
    .description {
-      text-align: center;
+      text-align: left;
       margin-top: 10px;
       font-size: 1.1em;
    }
@@ -22,6 +22,13 @@
          margin-left: 10px;
       }
    }
+
+   .link {
+      display: block;
+      text-align: center;
+      width: 100%;
+   }
+
    .logo-shopify {
       width: 200px;
       max-width: 100%;

@@ -84,10 +84,22 @@
             border-radius: 0 0.4em 0.4em 0;
             width: 100%;
             font-size: 1.4em;
-            background-color: color(base);
+            background-color: #8b00ff;
+            transform: scale(1) !important;
+
+            &:hover {
+               transform: scale(1) !important;
+               color: #d7cde3;
+            }
          }
       }
    }
+}
+
+.stylized-border {
+   outline: 10px solid #fff;
+   outline-offset: -2px;
+   outline-style: solid;
 }
 
 .mailinglist-group-copy {

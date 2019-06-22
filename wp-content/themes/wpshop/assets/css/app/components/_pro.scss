@@ -1,19 +1,14 @@
 .component-pro {
-   padding: 0;
-   max-width: $container-width;
-   background-color: #d0e5ff;
-   margin: 7em auto 4em auto;
+   padding: 0 0 1em 0;
+   max-width: 100vw;
+   background-color: #e4f2ff;
+   margin: 4em auto 4em auto;
    text-align: center;
-   // outline: 7px solid rgb(18, 92, 127);
-   background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
-   // outline-offset: 10px;
-   // outline-style: double;
-   outline: 10px solid #ffffff;
-   outline-offset: -2px;
-   outline-style: solid;
+   border-radius: 0;
+   position: relative;
 
-   .component-inner {
-      background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+   .l-contain-narrow {
+      position: relative;
    }
 
    h2 {
@@ -23,7 +18,7 @@
 
    p {
       font-size: 1.2em;
-      text-align: center;
+      text-align: left;
    }
 
    .btn-group {

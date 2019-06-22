@@ -1,12 +1,10 @@
 .card {
    background: color(white);
    text-align: left;
-
-   flex: 0 0 48%;
-   max-width: 48%;
-   width: 48%;
-
-   margin-bottom: 2.5em;
+   flex: 0 0 49%;
+   max-width: 49%;
+   width: 49%;
+   margin-bottom: 1.5em;
 
    @include card();
 

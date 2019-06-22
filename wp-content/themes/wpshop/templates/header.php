@@ -53,7 +53,7 @@
 
           <?php if(edd_get_cart_quantity() > 0) { ?>
             <a href="<?php echo edd_get_checkout_uri(); ?>" class="header-cart-link">
-              <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="header-cart-quantity"><?php echo edd_get_cart_quantity(); ?></span>
+              <i class="far fa-shopping-cart"></i> <span class="header-cart-quantity"><?php echo edd_get_cart_quantity(); ?></span>
             </a>
           <?php } ?>
 
