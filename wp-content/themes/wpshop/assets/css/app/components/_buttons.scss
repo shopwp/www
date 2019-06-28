@@ -6,7 +6,8 @@ a.button.edd-slg-social-unlink-profile,
 .edd-submit,
 .search-submit,
 .menu-item-back a,
-#edd-purchase-button {
+#edd-purchase-button,
+#edd-recurring-update-submit {
    padding: calc(#{$space-m} - 8px) calc(#{$space-xxl} - 3px) calc(#{$space-m} - 6px);
    color: color(white);
    background-color: color(primary);
@@ -32,7 +33,7 @@ a.button.edd-slg-social-unlink-profile,
    // @include grow();
 
    @include device(500, 'max') {
-      font-size: 1em;
+      font-size: 1.3em;
    }
 
    &:hover {
@@ -52,11 +53,12 @@ a.button.edd-slg-social-unlink-profile,
       outline: none;
    }
 
+   &[disabled],
    &.is-disabled {
       background-color: color(medium-grey);
 
       &:hover {
-         opacity: 0.4;
+         opacity: 1;
          background-color: color(medium-grey);
          transform: scale(1);
       }

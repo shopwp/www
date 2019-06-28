@@ -32,11 +32,6 @@
    .l-contain-narrow {
       padding: 3em 4em;
       max-width: 900px;
-
-      @include device(600, 'max') {
-         padding: 2em;
-         max-width: 90vw;
-      }
    }
 
    .l-row {

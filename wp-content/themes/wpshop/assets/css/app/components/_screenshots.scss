@@ -8,6 +8,7 @@
    @include device(1000, 'max') {
       .screenshot {
          flex-direction: column;
+         margin-bottom: 5em;
       }
 
       .screenshot-image-wrapper {
@@ -16,21 +17,23 @@
          max-width: 100%;
          flex: 0 0 100%;
          margin: 0;
-         max-width: 640px;
       }
 
       .screenshot-image {
          max-width: 100%;
+         width: 100%;
          position: relative;
          margin: 0 auto;
          left: 0;
       }
 
       .screenshot-image-description {
-         margin: 1em auto 3em;
-         padding: 0;
-         max-width: 700px;
+         padding: 20px;
+         max-width: 100%;
          width: 100%;
+         position: static;
+         transform: none;
+         margin: 0;
       }
    }
 }
@@ -73,7 +76,9 @@
    margin-bottom: 13em;
    position: relative;
 
-   .screenshot-image-description {
+   @include device(1000, 'max') {
+      flex-direction: column;
+      margin-bottom: 4em;
    }
 }
 
@@ -109,6 +114,10 @@
 .screenshot-heading {
    text-align: center;
    font-size: 40px;
+
+   @include device(700, 'max') {
+      font-size: 24px;
+   }
 }
 
 .screenshot-image-description {
@@ -128,6 +137,14 @@
    transform: translate(-50%, -50%);
    box-shadow: 0px -8px 32px -4px rgba(0, 0, 0, 0.2);
 
+   @include device(1000, 'max') {
+      border-radius: 0;
+   }
+
+   @include device(800, 'max') {
+      font-size: 16px;
+   }
+
    &:after {
       display: block;
       content: '';
@@ -138,6 +155,11 @@
       left: 0;
       bottom: -104px;
       z-index: -1;
+
+      @include device(1000, 'max') {
+         height: 60px;
+         bottom: -35px;
+      }
    }
 }
 

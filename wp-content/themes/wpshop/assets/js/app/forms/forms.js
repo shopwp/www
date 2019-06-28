@@ -263,6 +263,10 @@ function initPurchaseForm() {
       jQuery('.edd_price_option_35').prop('checked', false)
       jQuery('.edd_price_options li').removeClass('is-highlighted is-valid')
 
+      jQuery('.edd_price_options li').addClass('is-not-highlighted')
+
+      jQuery(this).removeClass('is-not-highlighted')
+
       jQuery(this).addClass('is-highlighted is-valid')
       jQuery(this)
          .find('.edd_price_option_35')

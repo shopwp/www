@@ -339,6 +339,7 @@ Author URI:     https://simpleblend.net
    right: 3vw;
    top: -100px;
    border-radius: 50%;
+   filter: blur(9px);
    background-color: #ef2b6d;
 }
 
@@ -357,7 +358,6 @@ Author URI:     https://simpleblend.net
    width: 0;
    height: 0;
    border-style: solid;
-
    border-color: transparent transparent #8e9dfc transparent;
    background: none;
    border-width: 18px 8px 15px 3px;
@@ -386,13 +386,9 @@ Author URI:     https://simpleblend.net
 .shape14 {
    width: 11px;
    height: 11px;
-   // border-style: solid;
    right: 5vw;
    bottom: -103px;
-   // border-color: transparent transparent  transparent;
    background-color: #8e9dfc;
-
-   // border-width: 18px 8px 25px 10px;
    transform: rotate(-124deg);
 }
 
@@ -485,6 +481,13 @@ Author URI:     https://simpleblend.net
                transform-origin: 100%;
             }
          }
+      }
+   }
+
+   @include device(1200, 'max') {
+      &:before,
+      &:after {
+         display: none;
       }
    }
 }

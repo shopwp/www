@@ -216,6 +216,10 @@
 }
 
 .component-account-subscriptions {
+   #edd_secure_site_wrapper {
+      display: none;
+   }
+
    .edd_subscription_name + br {
       display: none;
    }
@@ -224,26 +228,30 @@
    }
 
    td:nth-child(1) {
-      width: 30%;
+      width: 18%;
    }
 
    td:nth-child(2) {
-      width: 10%;
+      width: 6%;
    }
 
    td:nth-child(3) {
-      width: 13%;
+      width: 12%;
    }
 
    td:nth-child(4) {
-      width: 15%;
+      width: 11%;
    }
 
    td:nth-child(5) {
-      width: 13%;
+      width: 9%;
    }
 
    td:nth-child(6) {
-      width: 19%;
+      width: 26%;
+   }
+
+   #edd_checkout_form_wrap #edd_cc_fields legend {
+      display: none;
    }
 }

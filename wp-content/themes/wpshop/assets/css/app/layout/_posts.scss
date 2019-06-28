@@ -2,7 +2,7 @@
    .entry-content {
       p,
       li {
-         font-size: $font-l;
+         font-size: 1.1em;
       }
 
       ul {
@@ -15,18 +15,41 @@
          }
       }
 
+      h2,
+      h3,
+      h4 {
+         margin: 2em 0 0.5em 0;
+         font-size: 1.6em;
+
+         &:first-child {
+            margin-top: 0;
+         }
+      }
+
       img {
-         box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
+         border-radius: 10px;
+         margin-top: 0;
+      }
+
+      img + img {
+         margin-top: 1em;
+      }
+
+      code {
+         font-size: 18px;
+         background: #ececec;
+         padding: 6px 10px;
+         border-radius: 5px;
       }
    }
 
    .entry-title {
-      text-align: center;
+      text-align: left;
    }
 
    .meta-wrapper {
       padding-bottom: $space-l;
-      justify-content: center;
+      justify-content: flex-start;
    }
 }
 
@@ -36,13 +59,22 @@
    }
 }
 
+.author-name {
+   margin: 0 10px;
+}
+
+.single-post {
+   .post {
+      margin-top: 4em;
+   }
+}
+
 .post-logo {
    width: 20px;
    height: 20px;
    display: block;
    position: relative;
    top: 2px;
-   filter: drop-shadow(0px 6px 12px rgba(0, 0, 0, 0.15));
 }
 
 .byline.author {
@@ -76,7 +108,6 @@
       width: 40px;
       height: 40px;
       top: 0;
-      filter: drop-shadow(0px 6px 12px rgba(0, 0, 0, 0.15));
    }
 
    .post-logo-link {

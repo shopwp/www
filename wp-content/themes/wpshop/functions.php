@@ -71,25 +71,7 @@ function wps_reset_pass_redirect()
 
 add_action('template_redirect', 'wps_reset_pass_redirect');
 
-function wps_identifier_for_post($post)
-{
-   return $post->ID;
-}
 
-function wpa_show_permalinks($post_link, $post)
-{
-   if (is_object($post) && $post->post_type == 'docs') {
-      $terms = wp_get_object_terms($post->ID, 'types');
-
-      if ($terms) {
-         return str_replace('%types%', $terms[0]->slug, $post_link);
-      }
-   }
-
-   return $post_link;
-}
-
-add_filter('post_type_link', 'wpa_show_permalinks', 1, 2);
 
 function your_function($product_data)
 {
@@ -115,16 +97,12 @@ add_action('edd_after_price_option', function () {
    echo '<small style="display:block;text-align:center;margin-top:-10px;">/per year</small>';
 });
 
-// function modify_read_more_link() {
-//   return '<a class="more-link" href="' . get_permalink() . '">Read More</a>';
-// }
-// add_filter( 'the_content_more_link', 'modify_read_more_link' );
 
 // Replaces the excerpt "Read More" text by a link
 function new_excerpt_more($more)
 {
    global $post;
-   return '<br><a class="moretag" href="' . get_permalink($post->ID) . '">Read More</a>';
+   return '... <a class="moretag" href="' . get_permalink($post->ID) . '">Read more</a>';
 }
 add_filter('excerpt_more', 'new_excerpt_more');
 

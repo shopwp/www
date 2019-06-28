@@ -294,6 +294,7 @@ EDD
             // @include grow();
          }
 
+         &:first-of-type,
          &.is-highlighted {
             box-shadow: 0px 0px 0 5px #8b00ff inset;
             // transform: scale(1.05);
@@ -303,6 +304,19 @@ EDD
             &:before {
                background: #8b00ff;
                color: color(white);
+            }
+         }
+
+         &.is-not-highlighted:first-of-type,
+         &.is-not-highlighted {
+            box-shadow: 0px 0px 0 5px #f0f0f0 inset;
+            // transform: scale(1.05);
+            // transition: all 0.25s ease;
+            border: none;
+
+            &:before {
+               background: #f0f0f0;
+               color: color(base);
             }
          }
 

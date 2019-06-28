@@ -11,10 +11,11 @@
    width: 100%;
    z-index: 99999;
    padding-bottom: 1em;
+   left: 0;
 
    &.is-active {
       display: block;
-      box-shadow: 0px 80px 177px -62px #a8a8a8;
+      background-color: color(base);
 
       #menu-mobile-menu {
          flex-direction: column;
@@ -22,7 +23,9 @@
 
       .menu-item a {
          width: 100%;
-         text-align: center;
+         text-align: left;
+         color: #fff;
+         font-size: 16px;
       }
 
       .current-menu-item:after {
@@ -113,10 +116,20 @@
 #menu-footer {
    @include device(800, 'max') {
       flex-direction: column;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
 
       .menu-item a {
          width: 100%;
          text-align: center;
       }
+   }
+}
+
+.menu-footer-container {
+   @include device(800, 'max') {
+      flex: 1;
    }
 }

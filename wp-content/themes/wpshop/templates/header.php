@@ -63,7 +63,7 @@
 
       <?php } ?>
 
-      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-mobile.svg" class="icon-mobile" alt="Mobile WP Shopify Menu" />
+      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-mobile.svg?v=2" class="icon-mobile" alt="Mobile WP Shopify Menu" />
 
     </div>
 

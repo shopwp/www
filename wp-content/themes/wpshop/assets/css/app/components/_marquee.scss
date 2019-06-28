@@ -18,8 +18,12 @@
    //    min-height: 60vh;
    // }
 
-   @include device(600, 'max') {
-      min-height: calc(100vh - 130px - 30px);
+   @include device(700, 'max') {
+      min-height: 79vh;
+
+      .shape {
+         display: none;
+      }
    }
 
    .logo {
@@ -27,10 +31,11 @@
       height: 38px;
    }
    .logos {
-      position: absolute;
-      bottom: -150px;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      // position: absolute;
+      // bottom: -150px;
+      // left: 50%;
+      // transform: translate(-50%, -50%);
+      margin: 0 auto;
    }
 
    .wordpress {
@@ -105,10 +110,28 @@
    left: -10px;
 
    h1 {
-      font-size: 42px;
       font-size: 4.2vw;
       max-width: 80vw;
       line-height: 1;
+
+      @include device(1300, 'max') {
+         font-size: 5.6vw;
+         max-width: 100%;
+      }
+
+      @include device(700, 'max') {
+         font-size: 9.4vw;
+      }
+   }
+
+   .btn {
+      @include device(700, 'max') {
+         font-size: 4.5vw;
+      }
+
+      @include device(400, 'max') {
+         font-size: 6vw;
+      }
    }
 
    @include device(1500, 'max') {
@@ -123,6 +146,11 @@
 
    @include device(700, 'max') {
       padding: 0;
+      flex: 1;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
    }
 }
 

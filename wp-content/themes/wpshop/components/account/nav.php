@@ -1,10 +1,39 @@
+<?php
+
+$action = isset($_GET['action']) ? $_GET['action'] : false;
+$message = isset($_GET['edd-message']) ? $_GET['edd-message'] : false;
+
+function isShowingLicense($action, $message) {
+
+   if ($action === 'manage_licenses') {
+
+      if ($message === 'cancelled' || $message === 'reactivated') {
+         return false;
+      }
+
+      return true;
+
+   } else {
+      
+      if ($action || $message) {
+         return false;
+      }
+      
+      return true;
+
+   }
+
+}
+
+?>
+
 <nav class="account-nav">
    <ul class="account-nav-list">
       <li class="account-nav-list-item">
-         <a href="#!" class="account-nav-list-item-link is-active" data-tab="License">License</a>
+         <a href="#!" class="account-nav-list-item-link <?= isShowingLicense($action, $message) ? 'is-active' : ''; ?>" data-tab="License">License</a>
       </li>
       <li class="account-nav-list-item">
-         <a href="#!" class="account-nav-list-item-link" data-tab="Subscriptions">Subscriptions</a>
+         <a href="#!" class="account-nav-list-item-link <?= $action === 'update' || $message === 'cancelled' || $message === 'reactivated' ? 'is-active' : ''; ?>" data-tab="Subscriptions">Subscriptions</a>
       </li>
       <li class="account-nav-list-item">
          <a href="#!" class="account-nav-list-item-link" data-tab="Downloads">Downloads</a>

@@ -145,6 +145,38 @@ input[type='number'] {
    text-align: center;
 }
 
+.edd-stripe-card-radio-item {
+   > label {
+      display: flex !important;
+
+      span {
+         margin: 0;
+      }
+
+      &:hover {
+         cursor: pointer;
+      }
+   }
+
+   input[type='radio'] {
+      width: auto;
+      margin-top: 5px;
+      margin-right: 10px;
+
+      &:hover {
+         cursor: pointer;
+      }
+   }
+
+   &.new-card-wrapper {
+      display: flex;
+
+      > label {
+         flex: 1;
+      }
+   }
+}
+
 input[type='submit'] {
    width: auto;
    border: none;
@@ -333,9 +365,9 @@ select {
       margin-right: 0;
    }
 
-   .btn {
-      margin: 0 auto;
-   }
+   // .btn {
+   //    margin: 0 auto;
+   // }
 
    .spinner {
       margin: 0;

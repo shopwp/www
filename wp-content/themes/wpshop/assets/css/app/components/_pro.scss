@@ -1,24 +1,33 @@
 .component-pro {
-   padding: 0 0 1em 0;
+   padding: 0.5em 0 1em 0;
    max-width: 100vw;
    background-color: #e4f2ff;
-   margin: 4em auto 4em auto;
+   margin: 4em auto 2em auto;
    text-align: center;
    border-radius: 0;
    position: relative;
 
    .l-contain-narrow {
       position: relative;
+      padding: 2em 1em 4em 1em;
    }
 
    h2 {
       font-size: 2.5em;
       text-align: center;
+
+      @include device(1000, 'max') {
+         font-size: 2em;
+      }
    }
 
    p {
       font-size: 1.2em;
       text-align: left;
+
+      @include device(1000, 'max') {
+         font-size: 16px;
+      }
    }
 
    .btn-group {
@@ -26,6 +35,36 @@
 
       a:last-child {
          background-color: color(base);
+      }
+   }
+
+   .section-separator {
+      position: absolute;
+      display: inline-block;
+      width: 400px;
+      height: 54px;
+      position: absolute;
+      top: -17px;
+      margin: 0;
+      z-index: 50;
+      left: 50%;
+      transform: translate(-50%, 0);
+
+      @include device(500, 'max') {
+         width: 300px;
+         height: 47px;
+      }
+   }
+
+   .separator2 {
+      top: auto;
+      bottom: -16px;
+      z-index: 50;
+      left: 50%;
+      transform: translate(-50%, 0) rotate(180deg);
+
+      @include device(1000, 'max') {
+         font-size: 16px;
       }
    }
 }

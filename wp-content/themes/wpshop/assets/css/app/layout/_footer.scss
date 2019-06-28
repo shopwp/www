@@ -48,7 +48,7 @@
    }
    .shape9 {
       left: auto;
-      bottom: 40px;
+      bottom: 72px;
       top: auto;
       right: 18vw;
       width: 12px;
@@ -57,6 +57,7 @@
    .shape10 {
       left: 9vw;
       top: 145px;
+      filter: blur(6px);
    }
    .shape11 {
       left: 0;
@@ -93,6 +94,10 @@
    margin: 0;
    color: color(base);
 
+   @include device(1000, 'max') {
+      padding: 4.1em 0 0 0;
+   }
+
    .footer-link {
       color: color(base);
       font-weight: bold;
@@ -110,6 +115,11 @@
 
    .menu-item {
       width: 33%;
+
+      @include device(800, 'max') {
+         width: 100%;
+      }
+
       a {
          color: color(base);
          width: 100%;
@@ -135,7 +145,6 @@
 
 .footer-attr {
    margin-top: $space-l;
-   // text-transform: uppercase;
    padding: 20px;
    background-color: white;
    color: color(base);

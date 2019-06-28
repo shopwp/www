@@ -1,6 +1,6 @@
 .header {
    margin: 0;
-   padding: $space-xl 0;
+   padding: $space-xl $space-l;
    // background: color(white);
    // box-shadow: 0 18px 17px -23px rgba(0,0,0,.2);
    // @include shadow();
@@ -32,9 +32,14 @@
    display: none;
    height: 25px;
    position: absolute;
-   top: -8px;
-   right: 0;
+   top: 6px;
+   right: 10px;
    z-index: 9999;
+   margin: 0;
+
+   @include device(900, 'max') {
+      right: 0;
+   }
 
    &:hover {
       cursor: pointer;
@@ -53,14 +58,23 @@
 
 .header-account {
    margin-left: 1em;
+
+   @include device(1300, 'max') {
+      margin-right: 5em;
+      position: relative;
+      top: -12px;
+   }
+
+   @include device(900, 'max') {
+      margin-right: 4em;
+      top: -14px;
+   }
 }
 
 .header-content {
    position: relative;
 
    @include device(1300, 'max') {
-      padding-right: $space-l * 3;
-
       .icon-mobile {
          display: block;
       }
@@ -172,6 +186,14 @@
    height: 50px;
    position: relative;
    top: 8px;
+
+   @include device(1300, 'max') {
+      top: -5px;
+   }
+
+   // @include device(600, 'max') {
+   //    height: 40px;
+   // }
 }
 
 .logo-link {
@@ -179,6 +201,9 @@
    position: relative;
    top: 5px;
 
+   @include device(1300, 'max') {
+      top: 0;
+   }
    &:hover {
       opacity: 1;
    }

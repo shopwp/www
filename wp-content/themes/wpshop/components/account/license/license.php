@@ -1,4 +1,12 @@
-<section class="component component-account-licenses is-active" data-tab="License">
+<?php
+
+$action = isset($_GET['action']) ? $_GET['action'] : false;
+$message = isset($_GET['edd-message']) ? $_GET['edd-message'] : false;
+
+?>
+
+
+<section class="component component-account-licenses <?= isShowingLicense($action, $message) ? 'is-active' : ''; ?>" data-tab="License">
 
    <h4 class="component-account-heading">License</h4>
 

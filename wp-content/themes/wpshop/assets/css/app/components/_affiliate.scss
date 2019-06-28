@@ -1,18 +1,30 @@
 .component-affiliate {
    background: white;
-   padding: 1em 0 10em 0;
+   padding: 1em 0 8em 0;
    position: relative;
+
+   @include device(700, 'max') {
+      margin-bottom: 5em;
+   }
 
    .description {
       text-align: left;
       margin-top: 10px;
       font-size: 1.1em;
+
+      @include device(1000, 'max') {
+         font-size: 16px;
+      }
    }
 
    .heading {
       width: 100%;
       text-align: center;
       font-size: 2.5em;
+
+      @include device(1000, 'max') {
+         font-size: 2em;
+      }
    }
 
    .btn {
@@ -36,4 +48,9 @@
       margin: 0em auto 2em auto;
       width: 200px;
    }
+}
+
+.component-mailinglist + .component-affiliate {
+   margin-top: 4em;
+   padding-bottom: 4em;
 }

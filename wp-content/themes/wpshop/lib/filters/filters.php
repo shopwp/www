@@ -55,22 +55,6 @@ function wps_edd_register_email_template($templates)
 
 add_filter('edd_email_templates', 'wps_edd_register_email_template', 9999);
 
-/*
-
-wps_edd_register_email_template
-
-*/
-function wps_edd_purchase_form_required_fields($required_fields)
-{
-   $required_fields['card_address'] = array(
-      'error_id' => 'invalid_billing_address',
-      'error_message' => __('Please enter your billing address.', 'edd')
-   );
-
-   return $required_fields;
-}
-
-// add_filter('edd_purchase_form_required_fields', 'wps_edd_purchase_form_required_fields');
 
 /*
 
@@ -116,19 +100,5 @@ function wps_on_login_redirect($redirect_to, $request, $user)
 
 add_filter('login_redirect', 'wps_on_login_redirect', 10, 3);
 
-/*
-
-Redirect non-admins to the homepage after logging into the site.
-
-*/
-function wps_checkout_button($btn)
-{
-   $splitButton = explode('/>', $btn);
-   $finalButton = $splitButton[0] . ' disabled />';
-
-   return $finalButton;
-}
-
-// add_filter( 'edd_checkout_button_purchase', 'wps_checkout_button' );
 
 ?>

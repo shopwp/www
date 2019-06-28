@@ -134,8 +134,11 @@ function assets()
    wp_enqueue_script('jQuery Validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js', [], null, true);
    wp_enqueue_script('jQuery Validate Additional Methods', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/additional-methods.min.js', ['jQuery Validate'], null, true);
 
-   wp_enqueue_style('WP Shopify CSS', Assets\asset_path('prod/app.min.css'), false, null);
-   wp_enqueue_script('WP Shopify JS', Assets\asset_path('prod/app.min.js'), [], '1.1', true);
+   
+   wp_enqueue_style('WP Shopify CSS', Assets\asset_path('prod/app.min.css'), false, filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.css'));
+
+
+   wp_enqueue_script('WP Shopify JS', Assets\asset_path('prod/app.min.js'), [], filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.js'), true);
 }
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\assets', 100);

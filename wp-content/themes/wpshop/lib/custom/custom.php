@@ -63,21 +63,6 @@ function isRegisteredAndPurchasing() {
 
 /*
 
-Remove bundled WordPress jQuery
-TODO: Do plugins need this?
-
-*/
-function jquery_cdn() {
-  if (!is_admin()) {
-    wp_deregister_script('jquery');
-    // wp_register_script('jquery', false);
-  }
-}
-// add_action('init', 'jquery_cdn');
-
-
-/*
-
 wps_forgot_password_shortcode
 
 */
@@ -328,6 +313,3 @@ function wps_do_password_reset($data) {
   }
 
 }
-
-
-?>
