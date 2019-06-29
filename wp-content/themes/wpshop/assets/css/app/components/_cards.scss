@@ -19,7 +19,7 @@
       width: 100%;
 
       p {
-         font-size: $font-s;
+         font-size: 16px;
          margin: 0;
          width: 100%;
          max-width: 100%;
@@ -29,8 +29,11 @@
 
 .card-heading {
    font-weight: bold;
-   // color: color(secondary);
    text-align: center;
+
+   @include device(600, 'max') {
+      font-size: 1.1em;
+   }
 }
 
 .card-heading-icon {
@@ -75,6 +78,7 @@
 .component-features {
    background: white;
    @include device(600, 'max') {
+      padding: 0;
       margin-top: 0;
    }
 }

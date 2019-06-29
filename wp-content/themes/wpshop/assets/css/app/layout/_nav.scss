@@ -12,25 +12,26 @@
    z-index: 99999;
    padding-bottom: 1em;
    left: 0;
+   background-color: color(base);
+
+   #menu-mobile-menu {
+      flex-direction: column;
+   }
+
+   .menu-item a {
+      width: 100%;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      font-weight: bold;
+   }
+
+   .current-menu-item:after {
+      display: none;
+   }
 
    &.is-active {
       display: block;
-      background-color: color(base);
-
-      #menu-mobile-menu {
-         flex-direction: column;
-      }
-
-      .menu-item a {
-         width: 100%;
-         text-align: left;
-         color: #fff;
-         font-size: 16px;
-      }
-
-      .current-menu-item:after {
-         display: none;
-      }
    }
 }
 

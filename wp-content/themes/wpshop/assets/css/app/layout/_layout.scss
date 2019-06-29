@@ -79,6 +79,9 @@
       &.component-mailinglist {
          padding-left: $space-xl;
          padding-right: $space-xl;
+         margin: 0;
+         width: 100%;
+         max-width: 100%;
       }
    }
 }

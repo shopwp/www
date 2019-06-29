@@ -107,6 +107,17 @@
       position: relative;
       top: -6px;
 
+      &.footer-free-trial {
+         transform: translateY(0);
+         display: inline-block;
+         margin: 0;
+
+         @include device(500, 'max') {
+            padding-left: 0;
+            padding-right: 0;
+         }
+      }
+
       &:hover {
          opacity: 1;
          text-decoration: underline;
@@ -154,18 +165,10 @@
    position: relative;
    margin-top: $space-xxl * 2;
 
-   // &:before {
-   //   content: '';
-   //   width: 160px;
-   //   height: 60px;
-   //   bottom: 45px;
-   //   left: calc(50% - 80px);
-   //   position: absolute;
-   //   background: url('imgs/wave-shape.svg');
-   //   background-size: contain;
-   //   background-position: 50% 50%;
-   //   opacity: 0.2;
-   // }
+   @include device(500, 'max') {
+      display: flex;
+      flex-direction: column;
+   }
 
    &:before {
       bottom: 35px;

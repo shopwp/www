@@ -4,7 +4,8 @@
    position: relative;
 
    @include device(700, 'max') {
-      margin-bottom: 5em;
+      margin-bottom: 0;
+      padding-bottom: 5em;
    }
 
    .description {
@@ -32,6 +33,18 @@
 
       svg {
          margin-left: 10px;
+      }
+
+      @include device(600, 'max') {
+         font-size: 20px;
+         width: 100%;
+         margin-left: 0;
+         margin-right: 0;
+         max-width: 100%;
+
+         svg {
+            display: none;
+         }
       }
    }
 

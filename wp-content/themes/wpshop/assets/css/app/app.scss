@@ -226,15 +226,6 @@ Author URI:     https://simpleblend.net
    }
 }
 
-.footer-free-trial {
-   transform: translateY(0);
-   display: inline-block;
-   // animation-duration: 2.4s;
-   // animation-name: floating;
-   // animation-iteration-count: infinite;
-   margin: 0;
-}
-
 .shape {
    width: 20px;
    height: 20px;
@@ -243,11 +234,10 @@ Author URI:     https://simpleblend.net
    animation-duration: 1.4s;
    animation-name: fadeIn;
    opacity: 1;
-   transition: filter 1s ease;
    // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
 
-   &:hover {
-      filter: blur(10px);
+   @include device(500, 'max') {
+      opacity: 0.4;
    }
 }
 
@@ -262,6 +252,10 @@ Author URI:     https://simpleblend.net
    left: 1vw;
    // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
    transform: rotate(-27deg);
+
+   @include device(700, 'max') {
+      top: 0;
+   }
 }
 
 .shape2 {
@@ -278,6 +272,10 @@ Author URI:     https://simpleblend.net
    background-color: #8e9dfc;
    width: 48px;
    height: 1px;
+
+   @include device(700, 'max') {
+      top: 63vh;
+   }
 }
 
 .shape4 {
@@ -319,6 +317,13 @@ Author URI:     https://simpleblend.net
    height: 17px;
    width: 17px;
    background-color: #8e9dfc;
+
+   @include device(700, 'max') {
+      height: 11px;
+      width: 11px;
+      bottom: 24vh;
+      left: -3.6vw;
+   }
 }
 
 .shape8 {
@@ -331,6 +336,10 @@ Author URI:     https://simpleblend.net
    border-color: transparent transparent #ef2b6d transparent;
    background: none;
    transform: rotate(67deg);
+
+   @include device(700, 'max') {
+      bottom: 5vh;
+   }
 }
 
 .shape9 {
@@ -341,6 +350,11 @@ Author URI:     https://simpleblend.net
    border-radius: 50%;
    filter: blur(9px);
    background-color: #ef2b6d;
+
+   @include device(700, 'max') {
+      right: 39vw;
+      top: 7vh;
+   }
 }
 
 .shape10 {
@@ -362,6 +376,11 @@ Author URI:     https://simpleblend.net
    background: none;
    border-width: 18px 8px 15px 3px;
    transform: rotate(-124deg);
+
+   @include device(700, 'max') {
+      right: 24vw;
+      top: 69vh;
+   }
 }
 
 .shape12 {
@@ -372,6 +391,11 @@ Author URI:     https://simpleblend.net
    background-color: #ffca2e;
    border-radius: 50%;
    filter: blur(9px);
+
+   @include device(700, 'max') {
+      right: 1vw;
+      top: 56vh;
+   }
 }
 
 .shape13 {
@@ -381,6 +405,11 @@ Author URI:     https://simpleblend.net
    background-color: #ef2b6d;
    width: 68px;
    height: 1px;
+
+   @include device(700, 'max') {
+      top: 16vw;
+      width: 27px;
+   }
 }
 
 .shape14 {
@@ -390,6 +419,11 @@ Author URI:     https://simpleblend.net
    bottom: -103px;
    background-color: #8e9dfc;
    transform: rotate(-124deg);
+
+   @include device(700, 'max') {
+      right: -4vw;
+      bottom: 36vh;
+   }
 }
 
 .shape15 {
@@ -404,6 +438,10 @@ Author URI:     https://simpleblend.net
    background: none;
    border-width: 3px 16px 15px 10px;
    transform: rotate(172deg);
+
+   @include device(700, 'max') {
+      bottom: 3vh;
+   }
 }
 
 // mixin

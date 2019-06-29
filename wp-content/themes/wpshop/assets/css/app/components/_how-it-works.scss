@@ -1,11 +1,12 @@
 .component-how-it-works {
    padding: $space-l * 3.5 0;
    background: none;
-   // background-image: url('imgs/bg-stuff-2.png');
-   // margin-top: 0;
-   // text-align: center;
    margin-bottom: 3em;
    padding-top: 0;
+
+   @include device(700, 'max') {
+      max-width: 90vw;
+   }
 }
 
 .video-wrapper {
@@ -13,11 +14,25 @@
    padding: 3em;
    margin-top: 7em;
    border-radius: 10px;
+
+   @include device(900, 'max') {
+      background: white;
+      padding: 0;
+      margin-top: 9em;
+   }
+
+   @include device(500, 'max') {
+      margin-top: 5em;
+   }
 }
 
 .video-wrapper-inner {
    max-width: 65vw;
    margin: 0 auto;
+
+   @include device(900, 'max') {
+      max-width: 85vw;
+   }
 }
 
 .how-wrapper {
@@ -26,12 +41,20 @@
    margin-bottom: 2em;
    flex-direction: row-reverse;
    justify-content: flex-end;
+
+   @include device(1100, 'max') {
+      min-height: 54vw;
+   }
+
+   @include device(700, 'max') {
+      min-height: 400px;
+   }
 }
 
 .how-content {
    max-width: 700px;
    position: absolute;
-   top: 7vw;
+   top: 8vw;
    right: 0;
    border-radius: 10px;
 
@@ -54,6 +77,12 @@
       background: #fff;
       padding: 2.3em 2em 2em 2em;
       box-shadow: -61px 34px 77px -18px rgba(0, 0, 0, 0.2);
+
+      @include device(1100, 'max') {
+         padding: 2.3em 1em 2em 1em;
+         box-shadow: none;
+         border-top: 4px solid color(base);
+      }
    }
    h3 {
       font-size: 1.6em;
@@ -61,6 +90,43 @@
 
    p {
       font-size: 1.1em;
+   }
+
+   @include device(1100, 'max') {
+      top: 30vw;
+
+      .num {
+         width: 30px;
+         height: 30px;
+         font-size: 23px;
+      }
+
+      h2 {
+         font-size: 1.5em;
+         text-align: center;
+      }
+
+      p {
+         max-width: 60%;
+         margin: 0 auto;
+      }
+   }
+
+   @include device(700, 'max') {
+      h2 {
+         font-size: 1.8em;
+      }
+
+      .num {
+         display: block;
+         margin: 0 auto 10px auto;
+      }
+
+      p {
+         margin-top: 1em;
+         max-width: 100%;
+         font-size: 16px;
+      }
    }
 }
 
@@ -72,6 +138,24 @@
       .inner {
          box-shadow: 61px 56px 125px -45px rgba(0, 0, 0, 0.3);
       }
+
+      @include device(1100, 'max') {
+         left: 50%;
+         transform: translate(-50%, 0%);
+         max-width: 100%;
+         width: 100%;
+
+         .inner {
+            box-shadow: 14px 20px 40px -30px rgba(0, 0, 0, 0.3);
+         }
+      }
+
+      @include device(1100, 'max') {
+         .inner {
+            box-shadow: none;
+            border-top: 4px solid color(base);
+         }
+      }
    }
 }
 .how-right {
@@ -82,6 +166,24 @@
       .inner {
          box-shadow: -61px 56px 125px -45px rgba(0, 0, 0, 0.3);
       }
+
+      @include device(1100, 'max') {
+         left: 50%;
+         transform: translate(-50%, 0%);
+         max-width: 100%;
+         width: 100%;
+
+         .inner {
+            box-shadow: 14px 20px 40px -30px rgba(0, 0, 0, 0.3);
+         }
+      }
+
+      @include device(1100, 'max') {
+         .inner {
+            box-shadow: none;
+            border-top: 4px solid color(base);
+         }
+      }
    }
 }
 
@@ -89,6 +191,10 @@
    max-width: 55vw;
    margin-top: 0;
    margin: 0 auto;
+
+   @include device(1500, 'max') {
+      max-width: 75vw;
+   }
 
    img {
       border-radius: 10px 10px 0px 0px;
