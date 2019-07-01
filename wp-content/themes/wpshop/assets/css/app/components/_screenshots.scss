@@ -25,6 +25,10 @@
          position: relative;
          margin: 0 auto;
          left: 0;
+
+         + .screenshot-image {
+            display: none;
+         }
       }
 
       .screenshot-image-description {
@@ -34,6 +38,13 @@
          position: static;
          transform: none;
          margin: 0;
+
+         border-top: 7px solid #1d144f;
+         border-radius: 10px;
+         border-radius: 20px;
+         background: #fff;
+         margin-top: -1em;
+         box-shadow: none;
       }
    }
 }
@@ -115,6 +126,12 @@
 .screenshot-heading {
    text-align: center;
    font-size: 40px;
+
+   .emoji {
+      margin-right: 13px !important;
+      position: relative;
+      top: 2px;
+   }
 
    @include device(1200, 'max') {
       font-size: 32px;

@@ -5,6 +5,7 @@
    text-align: center;
    margin-top: 0;
    margin-bottom: 3em;
+   border-radius: 0;
 
    @include device(600, 'max') {
       font-size: 85%;
@@ -32,6 +33,10 @@
    .l-contain-narrow {
       padding: 3em 4em;
       max-width: 900px;
+
+      @include device(600, 'max') {
+         padding: 3em 2em;
+      }
    }
 
    .l-row {

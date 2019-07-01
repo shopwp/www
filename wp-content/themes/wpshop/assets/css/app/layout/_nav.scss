@@ -3,19 +3,28 @@
    margin: 0;
 }
 
+.menu-mobile-menu-container {
+   width: 100%;
+}
+
 .nav-mobile {
-   display: none;
+   opacity: 0;
    position: absolute;
    top: 90px;
    background: white;
    width: 100%;
-   z-index: 99999;
+   z-index: -99999;
    padding-bottom: 1em;
    left: 0;
    background-color: color(base);
+   justify-content: center;
 
    #menu-mobile-menu {
       flex-direction: column;
+   }
+
+   &.fadeInDownBig {
+      z-index: 99999;
    }
 
    .menu-item a {
@@ -31,7 +40,7 @@
    }
 
    &.is-active {
-      display: block;
+      opacity: 1;
    }
 }
 

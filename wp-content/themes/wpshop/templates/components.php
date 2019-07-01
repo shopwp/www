@@ -69,6 +69,11 @@
 
         get_template_part('components/how-it-works/how-it-works-controller');
 
+      // Pro features
+      } else if(get_row_layout() == 'component_pro_features') {
+
+        get_template_part('components/pro-features/pro-features-controller');
+
       }
       
     endwhile;

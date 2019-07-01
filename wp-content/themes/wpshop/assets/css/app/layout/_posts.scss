@@ -37,14 +37,17 @@
 
       code {
          font-size: 18px;
-         background: #ececec;
-         padding: 6px 10px;
+         background: color(off-white);
+         padding: 4px 10px 7px 10px;
          border-radius: 5px;
       }
    }
 
    .entry-title {
       text-align: left;
+      a {
+         color: color(base);
+      }
    }
 
    .meta-wrapper {
@@ -79,6 +82,13 @@
 
 .byline.author {
    display: flex;
+
+   .logo-header {
+      max-width: 35px;
+      top: 2px;
+      height: auto;
+      width: 23px;
+   }
 }
 
 .entry-summary {
@@ -95,7 +105,7 @@
 }
 
 .blog .post {
-   margin-bottom: 3em;
+   margin-bottom: 5em;
 }
 
 .article-footer {

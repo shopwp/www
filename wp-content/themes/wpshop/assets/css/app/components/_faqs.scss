@@ -11,7 +11,6 @@
    padding: $space-l 0;
    font-size: $font-l;
    border-bottom: 1px solid color(medium-grey);
-   font-weight: bold;
 
    .fa-plus-square,
    .fa-minus-square {
@@ -28,6 +27,15 @@
 
    @include device(700, 'max') {
       font-size: $font-m;
+      position: relative;
+      padding-right: 4em;
+
+      .fa-plus-square,
+      .fa-minus-square {
+         position: absolute;
+         right: 0;
+         top: calc(50% - 10px);
+      }
    }
 }
 
@@ -49,6 +57,11 @@
       background: #f8f8f8;
       padding: 30px 40px;
       opacity: 1;
+
+      @include device(700, 'max') {
+         padding: 20px;
+         word-break: break-word;
+      }
    }
 }
 

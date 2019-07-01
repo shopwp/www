@@ -8,7 +8,7 @@ function initMobile($) {
       $(this)
          .parent()
          .toggleClass('is-active')
-      $('.nav-mobile').toggleClass('is-active')
+      $('.nav-mobile').toggleClass('fadeInDownBig')
    })
 }
 

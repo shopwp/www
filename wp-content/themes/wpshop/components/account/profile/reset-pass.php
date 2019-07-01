@@ -3,10 +3,9 @@
   <h4 class="heading-center"><?php _e( 'Choose a New Password', 'personalize-login' ); ?></h4>
 
   <form name="form-reset-pass" id="form-reset-pass" action="" method="post" autocomplete="off" class="form form-account">
-
-    <input type="hidden" id="user_login" name="login" value="<?php echo esc_attr( $_REQUEST['login'] ); ?>" autocomplete="off" />
-
-    <input type="hidden" name="key" value="<?php echo isset($_REQUEST['key']) ? $_REQUEST['key'] : '' ?>" />
+  
+    <input type="hidden" id="user_login" name="login" value="<?= isset($_REQUEST['login']) ? $_REQUEST['login'] : ''; ?>" autocomplete="off" />
+    <input type="hidden" name="key" value="<?= isset($_REQUEST['key']) ? $_REQUEST['key'] : '' ?>" />
 
     <div class="form-input">
       <label for="wps_account_new_password"><?php _e( 'New password', 'personalize-login' ) ?></label>

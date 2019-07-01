@@ -16,6 +16,10 @@
    outline-offset: -2px;
    outline-style: solid;
 
+   @include device(1000, 'max') {
+      padding: 0 2em;
+   }
+
    .component-inner {
       padding: 3em 0 5em 0;
    }
@@ -52,6 +56,8 @@
    label.error {
       font-size: inherit;
       margin-top: 0;
+      position: relative;
+      top: 16px;
    }
 
    .is-submitted {

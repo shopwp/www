@@ -1,0 +1,40 @@
+.component-pro-features {
+   padding: $space-l * 3.5 0;
+   background: none;
+   margin-bottom: 3em;
+   padding-top: 0;
+   margin-top: 4em;
+   // @include device(700, 'max') {
+   //    max-width: 90vw;
+   // }
+   h2 {
+      font-size: 2.01em;
+   }
+   p {
+      font-size: 18px;
+   }
+   @include device(700, 'max') {
+      max-width: 90vw;
+
+      p {
+         font-size: 16px;
+      }
+      h2 {
+         font-size: 1.8em;
+      }
+
+      .how-content h2 {
+         font-size: 1.4em;
+      }
+   }
+}
+
+.page.pro .component-pro-features {
+   margin-top: 1em;
+}
+
+.page.purchase .component-pro-features {
+   @include device(700, 'max') {
+      margin-top: 0;
+   }
+}

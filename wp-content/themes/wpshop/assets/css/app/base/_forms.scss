@@ -515,6 +515,10 @@ select {
 
 #edd_checkout_form_wrap {
    margin-top: 1.1em;
+
+   @include device(500, 'max') {
+      padding: 0 20px;
+   }
 }
 
 .wps-checkout-login-spacer {

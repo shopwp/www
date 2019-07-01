@@ -5,7 +5,7 @@
 <div class="l-contain-narrow">
   <div class="mailinglist-group-copy l-col l-col-center">
     <h2 class="mailinglist-heading">Stay up to date!</h2>
-    <p class="mailinglist-copy">Enter your email for the latest developments, beta invites, and discounts!</p>
+    <p class="mailinglist-copy">Enter your email for new developments, beta invites, and discounts.</p>
   </div>
 
   <form id="mailinglist-form" class="form form-lg l-row-center" action="" method="post" data-nonce="<?php echo wp_create_nonce('mailinglist'); ?>">

@@ -8,9 +8,6 @@
    // background: color(base);
    // background: linear-gradient(180deg, #12062a 0%, #180b37 100%);
 
-   @include device(800, 'max') {
-   }
-
    .shape1 {
       left: 0;
       display: none;
@@ -78,6 +75,22 @@
    .shape15 {
       left: 0;
       display: none;
+   }
+
+   @include device(800, 'max') {
+      .shape9 {
+         bottom: 41vw;
+      }
+
+      .shape6 {
+         bottom: 53vw;
+      }
+   }
+
+   @include device(500, 'max') {
+      .shape {
+         display: none;
+      }
    }
 }
 

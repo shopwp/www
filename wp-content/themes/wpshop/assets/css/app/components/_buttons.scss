@@ -109,6 +109,12 @@ a.button.edd-slg-social-unlink-profile,
 input[type='submit'],
 .edd-submit {
    font-size: 1.44em;
+
+   @include device(600, 'max') {
+      font-size: 1.2em;
+      width: 100%;
+      margin-top: 0;
+   }
 }
 
 .btn-group {
@@ -183,6 +189,10 @@ input[type='submit'],
          margin-left: $space-s;
          display: none;
       }
+   }
+
+   @include device(600, 'max') {
+      font-size: 26px;
    }
 }
 

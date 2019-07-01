@@ -41,7 +41,11 @@
     </a> -->
 
   </section>
-  <section class="footer-attr">&copy; <?php echo date("Y") ?> WP Shopify </section>
+  <section class="footer-attr">
+     <a class="logo-link" href="<?= esc_url(home_url('/purchase')); ?>">
+        <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header">
+      </a>
+  </section>
 
 </div>
 

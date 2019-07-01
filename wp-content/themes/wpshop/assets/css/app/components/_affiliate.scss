@@ -1,6 +1,6 @@
 .component-affiliate {
    background: white;
-   padding: 1em 0 8em 0;
+   padding: 1em 0 7em 0;
    position: relative;
 
    @include device(700, 'max') {
@@ -45,6 +45,10 @@
          svg {
             display: none;
          }
+      }
+
+      @include device(400, 'max') {
+         font-size: 17px;
       }
    }
 

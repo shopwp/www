@@ -1,5 +1,14 @@
 .edd_download_purchase_form {
    width: 100%;
+   margin-top: 4em;
+
+   @include device(1400, 'max') {
+      padding: 0 20px;
+   }
+
+   @include device(600, 'max') {
+      padding: 0;
+   }
 }
 
 .edd_purchase_submit_wrapper {
