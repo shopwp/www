@@ -1,7 +1,13 @@
 <article <?php post_class(); ?>>
 
   <header>
-    <h2 class="entry-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+
+  <a href="<?php the_permalink(); ?>" class="post-link">
+
+     <?php echo get_the_post_thumbnail( $post_id, 'large', array( 'class' => 'alignleft' ) ); ?>
+    <h2 class="entry-title"><?php the_title(); ?></h2>
+
+    </a>
     <?php get_template_part('templates/entry-meta'); ?>
   </header>
 

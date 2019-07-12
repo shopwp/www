@@ -2890,6 +2890,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   margin-bottom: 4.1472em; }
 
 .blog .page-header {
+  display: none;
   margin-bottom: 3em; }
 
 .main {
@@ -3242,7 +3243,8 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 
 .post .entry-content p,
 .post .entry-content li {
-  font-size: 1.1em; }
+  font-size: 1.1em;
+  color: #000; }
 
 .post .entry-content ul {
   margin: 1.728em 0;
@@ -3280,10 +3282,19 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     color: #1d144f; }
 
 .post .meta-wrapper {
-  padding-bottom: 1.44em;
   -webkit-box-pack: start;
       -ms-flex-pack: start;
           justify-content: flex-start; }
+
+.post-link:hover {
+  opacity: 1; }
+
+.post-link,
+.post-link .entry-title {
+  text-decoration: none; }
+
+.entry-title {
+  margin-top: 1em; }
 
 .post-logo-link:hover {
   opacity: 1; }
@@ -3291,7 +3302,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .author-name {
   margin: 0 10px; }
 
-.single-post .post {
+.post {
   margin-top: 4em; }
 
 .post-logo {

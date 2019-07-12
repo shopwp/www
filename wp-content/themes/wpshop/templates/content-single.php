@@ -2,12 +2,13 @@
 
   <article <?php post_class(); ?>>
 
-    <?php if(get_post_type( get_the_ID() ) !== 'docs') { ?>
-      <header>
+    <header>
+
+         <?php echo get_the_post_thumbnail( $post_id, 'large', array( 'class' => 'alignleft' ) ); ?>
         <h1 class="entry-title"><?php the_title(); ?></h1>
+
         <?php get_template_part('templates/entry-meta'); ?>
       </header>
-    <?php } ?>
 
     <div class="entry-content">
       <?php the_content(); ?>

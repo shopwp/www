@@ -3,6 +3,7 @@
       p,
       li {
          font-size: 1.1em;
+         color: black;
       }
 
       ul {
@@ -45,15 +46,29 @@
 
    .entry-title {
       text-align: left;
+
       a {
          color: color(base);
       }
    }
 
    .meta-wrapper {
-      padding-bottom: $space-l;
+      // padding-bottom: $space-l;
       justify-content: flex-start;
    }
+}
+
+.post-link:hover {
+   opacity: 1;
+}
+
+.post-link,
+.post-link .entry-title {
+   text-decoration: none;
+}
+
+.entry-title {
+   margin-top: 1em;
 }
 
 .post-logo-link {
@@ -66,10 +81,14 @@
    margin: 0 10px;
 }
 
-.single-post {
-   .post {
-      margin-top: 4em;
-   }
+// .single-post {
+//    .post {
+//       margin-top: 4em;
+//    }
+// }
+
+.post {
+   margin-top: 4em;
 }
 
 .post-logo {

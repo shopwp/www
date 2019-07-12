@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
+class ComposerStaticInitd2b16fc7ca509930996b015a89b2f130
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -256,7 +256,6 @@ class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
         'WPSEO_Help_Center' => __DIR__ . '/../..' . '/admin/class-help-center.php',
         'WPSEO_Help_Center_Item' => __DIR__ . '/../..' . '/admin/class-help-center-item.php',
         'WPSEO_Help_Center_Template_Variables_Tab' => __DIR__ . '/../..' . '/admin/help_center/class-template-variables-tab.php',
-        'WPSEO_How_To_Block' => __DIR__ . '/../..' . '/inc/structured-data-blocks/class-how-to-block.php',
         'WPSEO_Image_Utils' => __DIR__ . '/../..' . '/inc/class-wpseo-image-utils.php',
         'WPSEO_Import_AIOSEO' => __DIR__ . '/../..' . '/admin/import/plugins/class-import-aioseo.php',
         'WPSEO_Import_Greg_SEO' => __DIR__ . '/../..' . '/admin/import/plugins/class-import-greg-high-performance-seo.php',
@@ -333,6 +332,7 @@ class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
         'WPSEO_Metabox_Null_Tab' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-null-tab.php',
         'WPSEO_Metabox_Section' => __DIR__ . '/../..' . '/admin/metabox/interface-metabox-section.php',
         'WPSEO_Metabox_Section_React' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-section-react.php',
+        'WPSEO_Metabox_Section_Readability' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-section-readability.php',
         'WPSEO_Metabox_Tab' => __DIR__ . '/../..' . '/admin/metabox/interface-metabox-tab.php',
         'WPSEO_Metabox_Tab_Section' => __DIR__ . '/../..' . '/admin/metabox/class-metabox-tab-section.php',
         'WPSEO_Multiple_Keywords_Modal' => __DIR__ . '/../..' . '/admin/class-multiple-keywords-modal.php',
@@ -414,12 +414,14 @@ class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
         'WPSEO_Schema_FAQ' => __DIR__ . '/../..' . '/frontend/schema/class-schema-faq.php',
         'WPSEO_Schema_FAQ_Question_List' => __DIR__ . '/../..' . '/frontend/schema/class-schema-faq-question-list.php',
         'WPSEO_Schema_FAQ_Questions' => __DIR__ . '/../..' . '/frontend/schema/class-schema-faq-questions.php',
+        'WPSEO_Schema_HowTo' => __DIR__ . '/../..' . '/frontend/schema/class-schema-howto.php',
         'WPSEO_Schema_IDs' => __DIR__ . '/../..' . '/frontend/schema/class-schema-ids.php',
         'WPSEO_Schema_Image' => __DIR__ . '/../..' . '/frontend/schema/class-schema-image.php',
         'WPSEO_Schema_MainImage' => __DIR__ . '/../..' . '/frontend/schema/class-schema-main-image.php',
         'WPSEO_Schema_Organization' => __DIR__ . '/../..' . '/frontend/schema/class-schema-organization.php',
         'WPSEO_Schema_Person' => __DIR__ . '/../..' . '/frontend/schema/class-schema-person.php',
         'WPSEO_Schema_Person_Upgrade_Notification' => __DIR__ . '/../..' . '/admin/class-schema-person-upgrade-notification.php',
+        'WPSEO_Schema_Utils' => __DIR__ . '/../..' . '/frontend/schema/class-schema-utils.php',
         'WPSEO_Schema_WebPage' => __DIR__ . '/../..' . '/frontend/schema/class-schema-webpage.php',
         'WPSEO_Schema_Website' => __DIR__ . '/../..' . '/frontend/schema/class-schema-website.php',
         'WPSEO_Shortcode_Filter' => __DIR__ . '/../..' . '/admin/ajax/class-shortcode-filter.php',
@@ -696,10 +698,10 @@ class ComposerStaticInitf22b8825991ccda35c7813f5b3928f77
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf22b8825991ccda35c7813f5b3928f77::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf22b8825991ccda35c7813f5b3928f77::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf22b8825991ccda35c7813f5b3928f77::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitf22b8825991ccda35c7813f5b3928f77::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd2b16fc7ca509930996b015a89b2f130::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd2b16fc7ca509930996b015a89b2f130::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitd2b16fc7ca509930996b015a89b2f130::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitd2b16fc7ca509930996b015a89b2f130::$classMap;
 
         }, null, ClassLoader::class);
     }
