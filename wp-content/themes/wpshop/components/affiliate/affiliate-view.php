@@ -7,7 +7,7 @@
       
       <h2 class="heading">Still need a Shopify store?</h2>
       <div class="description">
-         Start your free 14-day trial of <a href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify" target="_blank">Shopify</a> using our link below. We'll also be credited when you sign up which helps us to continue work on WP Shopify!
+         Get 15% off WP Shopify Pro when you start your free 14-day trial of <a href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify" target="_blank">Shopify</a> using our link below. We'll also be credited when you sign up which helps us continue working on WP Shopify!
       </div>
 
       <a href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify" target="_blank" class="btn btn-l">Free Shopify 14-day Trial <i class="far fa-external-link-square-alt"></i></a>   

@@ -2,13 +2,16 @@
 
   <article <?php post_class(); ?>>
 
-    <header>
+   <header>
 
-         <?php echo get_the_post_thumbnail( $post_id, 'large', array( 'class' => 'alignleft' ) ); ?>
-        <h1 class="entry-title"><?php the_title(); ?></h1>
+      
+      <h1 class="entry-title"><?php the_title(); ?></h1>
 
-        <?php get_template_part('templates/entry-meta'); ?>
-      </header>
+      <?php get_template_part('templates/entry-meta'); ?>
+
+      <?php echo get_the_post_thumbnail( $post_id, 'large', array( 'class' => 'alignleft' ) ); ?>
+      
+   </header>
 
     <div class="entry-content">
       <?php the_content(); ?>

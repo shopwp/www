@@ -68,6 +68,11 @@
       } else if(get_row_layout() == 'component_how_it_works') {
 
         get_template_part('components/how-it-works/how-it-works-controller');
+      
+        // Examples
+      } else if(get_row_layout() == 'component_examples') {
+
+        get_template_part('components/examples/examples-controller');
 
       // Pro features
       } else if(get_row_layout() == 'component_pro_features') {

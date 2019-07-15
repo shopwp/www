@@ -1,44 +1,5 @@
 /*
 
-Get the stored Auth data
-Returns: Promise
-
-*/
-function getStoredAuthData() {
-   var options = {
-      method: 'GET',
-      url: '/wp-admin/admin-ajax.php',
-      dataType: 'json',
-      data: {
-         action: 'wps_check_valid_nonce'
-      }
-   }
-
-   return jQuery.ajax(options)
-}
-
-/*
-
-Set the Auth data
-Returns: Promise
-
-*/
-function saveAuthData(data) {
-   var options = {
-      method: 'POST',
-      url: '/wp-admin/admin-ajax.php',
-      dataType: 'json',
-      data: {
-         action: 'wps_save_auth_data',
-         data: data
-      }
-   }
-
-   return jQuery.ajax(options)
-}
-
-/*
-
 Get docs data
 Returns: Promise
 
@@ -65,7 +26,7 @@ Returns: Promise
 function getAccountCat(catSlug) {
    var options = {
       method: 'POST',
-      url: '/wp-admin/admin-ajax.php',
+      url: '/wp/wp-admin/admin-ajax.php',
       dataType: 'HTML',
       data: {
          action: 'wps_get_account_cat',
@@ -85,7 +46,7 @@ Returns: Promise
 function getForgotPassForm() {
    var options = {
       method: 'GET',
-      url: '/wp-admin/admin-ajax.php',
+      url: '/wp/wp-admin/admin-ajax.php',
       dataType: 'HTML',
       data: {
          action: 'wps_get_forgot_pass_form'
@@ -105,12 +66,9 @@ function getMailchimpListById($) {
    var emailVal = $('#mailinglist-email').val(),
       emailnonce = $('#mailinglist-form #_wpnonce').val()
 
-   console.log('emailVal', emailVal)
-   console.log('emailnonce', emailnonce)
-
    return jQuery.ajax({
       type: 'POST',
-      url: '/wp-admin/admin-ajax.php',
+      url: '/wp/wp-admin/admin-ajax.php',
       dataType: 'json',
       data: {
          action: 'mailinglist_signup',
@@ -128,7 +86,7 @@ Check for existing user by email
 function getUserByEmail(email) {
    var options = {
       type: 'POST',
-      url: '/wp-admin/admin-ajax.php',
+      url: '/wp/wp-admin/admin-ajax.php',
       dataType: 'json',
       data: {
          action: 'wps_check_existing_username',
@@ -147,7 +105,7 @@ Account - Update profile
 function updateAccountProfile(data) {
    var options = {
       type: 'POST',
-      url: '/wp-admin/admin-ajax.php',
+      url: '/wp/wp-admin/admin-ajax.php',
       dataType: 'json',
       data: {
          action: 'wps_account_update_profile',
@@ -166,7 +124,7 @@ Account - Update profile
 function updateAccountPassword(data) {
    var options = {
       type: 'POST',
-      url: '/wp-admin/admin-ajax.php',
+      url: '/wp/wp-admin/admin-ajax.php',
       dataType: 'json',
       data: {
          action: 'wps_change_customer_password',
@@ -185,7 +143,7 @@ Account - Start Reset Password Process
 function forgotPassword(data) {
    var options = {
       type: 'POST',
-      url: '/wp-admin/admin-ajax.php',
+      url: '/wp/wp-admin/admin-ajax.php',
       dataType: 'json',
       data: {
          action: 'wps_account_forgot_password',
@@ -204,7 +162,7 @@ Account - Fnish Reset Password Process
 function resetPassword(data) {
    var options = {
       type: 'POST',
-      url: '/wp-admin/admin-ajax.php',
+      url: '/wp/wp-admin/admin-ajax.php',
       dataType: 'json',
       data: {
          action: 'wps_account_reset_password',
@@ -215,4 +173,4 @@ function resetPassword(data) {
    return jQuery.ajax(options)
 }
 
-export { getStoredAuthData, saveAuthData, getDoc, getAccountCat, getForgotPassForm, getMailchimpListById, getUserByEmail, updateAccountProfile, updateAccountPassword, forgotPassword, resetPassword }
+export { getDoc, getAccountCat, getForgotPassForm, getMailchimpListById, getUserByEmail, updateAccountProfile, updateAccountPassword, forgotPassword, resetPassword }

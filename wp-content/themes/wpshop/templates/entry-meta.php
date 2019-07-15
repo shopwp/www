@@ -9,7 +9,7 @@
     
   </p>
 
-   <span class="author-name">By Andrew Robbins</span>
+   <!-- <span class="author-name">By Andrew Robbins</span> -->
    <time class="updated" datetime="<?= get_post_time('c', true); ?>"><?= get_the_date(); ?></time>
   
 </div>

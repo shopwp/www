@@ -53,8 +53,23 @@
    }
 
    .meta-wrapper {
-      // padding-bottom: $space-l;
+      padding-bottom: $space-l;
+      border-bottom: 1px solid #ddd;
       justify-content: flex-start;
+   }
+}
+
+.single-post {
+   .post {
+      .entry-title {
+         text-align: center;
+      }
+
+      .meta-wrapper {
+         border: none;
+         padding-bottom: 0;
+         justify-content: center;
+      }
    }
 }
 
@@ -104,9 +119,10 @@
 
    .logo-header {
       max-width: 35px;
-      top: 2px;
+      top: 1px;
       height: auto;
       width: 23px;
+      margin-right: 10px;
    }
 }
 
@@ -116,10 +132,14 @@
    //     flex-direction: column;
    //     align-items: center;
    //   }
+   font-size: 1.1em;
 
    .moretag {
       margin-bottom: 2em;
       margin-top: 16px;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
    }
 }
 

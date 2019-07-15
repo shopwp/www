@@ -29,8 +29,29 @@
    }
 }
 
+.page.examples .component-pro-features,
 .page.pro .component-pro-features {
    margin-top: 1em;
+}
+
+.page.examples .how-wrapper {
+   margin-bottom: 4em;
+}
+
+@media (max-width: 1100px) {
+   .page.examples .how-content .inner {
+      text-align: center;
+   }
+}
+@media (max-width: 900px) {
+   .page.examples .how-wrapper {
+      margin-bottom: 7em;
+   }
+}
+@media (max-width: 600px) {
+   .page.examples .how-wrapper {
+      margin-bottom: 1em;
+   }
 }
 
 .page.purchase .component-pro-features {

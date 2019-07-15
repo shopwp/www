@@ -10,8 +10,6 @@ On Mailing List Form submission
 function validateMailingListForm($) {
    $('#mailinglist-form').validate({
       submitHandler: function(form, e) {
-         console.log('eee', e)
-
          e.preventDefault()
 
          $(form).addClass('is-submitting')
@@ -31,7 +29,6 @@ function validateMailingListForm($) {
                $('#mailinglist-email')
                   .focus()
                   .select()
-               console.log('data ..........', data)
 
                if (data.code !== 200) {
                   $(form)
@@ -115,16 +112,12 @@ function validateMailingListForm($) {
             .addClass('form-valid')
       },
       errorPlacement: function(error, element) {
-         console.log('vvv', error)
-
          error.appendTo($('.form-error'))
       }
    })
 }
 
 function initMailinglist($) {
-   console.log('initMailinglist')
-
    validateMailingListForm($)
 }
 

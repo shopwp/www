@@ -54,7 +54,7 @@ function onProfileChange($) {
             wps_customer_email: {
                email: true,
                remote: {
-                  url: '/wp-admin/admin-ajax.php',
+                  url: '/wp/wp-admin/admin-ajax.php',
                   type: 'post',
                   data: {
                      action: 'wps_check_existing_username',
