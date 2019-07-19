@@ -13,6 +13,28 @@
    }
 }
 
+.home.page .component-marquee,
+.home.page .header {
+   background: #e4f2ff;
+}
+
+.home.page .component-marquee {
+   max-width: 100%;
+   border-radius: 0;
+}
+
+.home.page section:nth-of-type(2) .screenshots:before {
+   content: '';
+   display: block;
+   height: 100%;
+   width: 107%;
+   position: absolute;
+   top: 0;
+   left: -50px;
+   background: rgb(255, 255, 255);
+   background: linear-gradient(0deg, rgba(255, 255, 255, 1) 33%, rgba(228, 242, 255, 1) 76%);
+}
+
 .meta-wrapper {
    border: none;
    padding-bottom: $space-s;

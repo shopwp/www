@@ -3,7 +3,7 @@
 Plugin Name: Advanced Custom Fields PRO
 Plugin URI: https://www.advancedcustomfields.com
 Description: Customize WordPress with powerful, professional and intuitive fields.
-Version: 5.8.1
+Version: 5.8.2
 Author: Elliot Condon
 Author URI: https://www.advancedcustomfields.com
 Text Domain: acf
@@ -17,7 +17,7 @@ if( ! class_exists('ACF') ) :
 class ACF {
 	
 	/** @var string The plugin version number */
-	var $version = '5.8.1';
+	var $version = '5.8.2';
 	
 	/** @var array The plugin settings array */
 	var $settings = array();
@@ -121,7 +121,6 @@ class ACF {
 		
 		// api
 		include_once( ACF_PATH . 'includes/api/api-helpers.php');
-		acf_include('includes/api/api-input.php');
 		acf_include('includes/api/api-template.php');
 		acf_include('includes/api/api-term.php');
 		
@@ -134,7 +133,6 @@ class ACF {
 		acf_include('includes/acf-hook-functions.php');
 		
 		// Include functions.
-		acf_include('includes/acf-deprecated-functions.php');
 		acf_include('includes/acf-field-functions.php');
 		acf_include('includes/acf-field-group-functions.php');
 		acf_include('includes/acf-form-functions.php');
@@ -142,6 +140,7 @@ class ACF {
 		acf_include('includes/acf-post-functions.php');
 		acf_include('includes/acf-user-functions.php');
 		acf_include('includes/acf-value-functions.php');
+		acf_include('includes/acf-input-functions.php');
 		
 		// fields
 		acf_include('includes/fields.php');

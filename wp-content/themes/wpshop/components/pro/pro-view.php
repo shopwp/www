@@ -1,3 +1,12 @@
+   <?php if (is_page('home') || is_page('pro') || is_page('purchase')) { ?>
+
+      <div class="component component-screenshots l-col l-col-center" style="max-width: 1000px;margin: 2em auto 8em auto;">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0dmn5Yrzqlw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+   <?php } ?>
+
+
 <section class="component component-pro l-col l-row-center">
 
 <svg class="section-separator separator1" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 579 33" xml:space="preserve"> 

@@ -2523,6 +2523,28 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   .header .btn-account {
     margin-left: 2em; }
 
+.home.page .component-marquee,
+.home.page .header {
+  background: #e4f2ff; }
+
+.home.page .component-marquee {
+  max-width: 100%;
+  border-radius: 0; }
+
+.home.page section:nth-of-type(2) .screenshots:before {
+  content: '';
+  display: block;
+  height: 100%;
+  width: 107%;
+  position: absolute;
+  top: 0;
+  left: -50px;
+  background: #fff;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(33%, #fff), color-stop(76%, #e4f2ff));
+  background: -webkit-linear-gradient(bottom, #fff 33%, #e4f2ff 76%);
+  background: -o-linear-gradient(bottom, #fff 33%, #e4f2ff 76%);
+  background: linear-gradient(0deg, #fff 33%, #e4f2ff 76%); }
+
 .meta-wrapper {
   border: none;
   padding-bottom: 0.69444em; }
@@ -4668,7 +4690,7 @@ body.page-template-template-home {
         border-radius: 0 0.4em 0.4em 0;
         width: 100%;
         font-size: 1.4em;
-        background-color: #8b00ff;
+        background-color: #1d144f;
         -webkit-transform: scale(1) !important;
                 transform: scale(1) !important;
         margin: 0; }
@@ -4930,6 +4952,7 @@ body.page-template-template-home {
   margin-bottom: 3em; }
 
 .screenshots {
+  position: relative;
   list-style: none;
   margin: 0;
   max-width: 100%;
