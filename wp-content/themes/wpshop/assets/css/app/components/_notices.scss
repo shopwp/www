@@ -25,6 +25,29 @@
    }
 }
 
+.is-showing-notices {
+   margin-top: 50px;
+
+   @include device(900, 'max') {
+      margin-top: 80px;
+   }
+
+   @include device(500, 'max') {
+      margin-top: 100px;
+   }
+}
+
+.headroom {
+    will-change: transform;
+    transition: transform 200ms linear;
+}
+.headroom--pinned {
+    transform: translateY(0%);
+}
+.headroom--unpinned {
+    transform: translateY(-100%);
+}
+
 .component-notice {
    margin: 0;
    padding: 0;
@@ -35,6 +58,11 @@
    color: white;
    font-size: 17px;
    font-weight: bold;
+   position: fixed;
+    border-radius: 0;
+    max-width: 100%;
+    z-index: 999999;	
+	// display: none;
 
    p {
       margin: 0;
@@ -65,16 +93,17 @@
    text-align: center;
 }
 
-.docs-template-default {
+.edd-page,
+.page.purchase,
+.edd-success.purchase-confirmation.is-showing-notices {
    .component-notice {
       display: none;
    }
 }
 
-.edd-success.purchase-confirmation.is-showing-notices {
-   .component-notice {
-      display: none;
-   }
+.page.purchase,
+.edd-page.is-showing-notices {
+   margin-top: 0;
 }
 
 .edd_cart_discount {

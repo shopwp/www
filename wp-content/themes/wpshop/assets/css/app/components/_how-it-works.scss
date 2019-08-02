@@ -204,3 +204,25 @@
       border-radius: 10px 10px 0px 0px;
    }
 }
+
+.component-pro-features .how-image {
+   filter: brightness(0.8);
+   z-index: -1;
+}
+
+.page.pro-features .component-pro-features,
+.page.examples .component-pro-features,
+.page.pro .component-pro-features {
+   margin-top: 1em;
+}
+
+.component-screenshots .screenshots-secondary-list .screenshot-single {
+   max-height: 430px;
+}
+.wp-block-preformatted {
+    background: #e4f2ff;
+    color: black;
+    padding: 1em;
+    border-radius: 7px;
+    font-size: 1.1em;		
+}

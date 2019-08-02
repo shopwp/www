@@ -4839,6 +4839,33 @@ body.page-template-template-home {
 .is-showing-notices.edd-checkout #edd_checkout_cart_form_header {
   display: none; }
 
+.is-showing-notices {
+  margin-top: 50px; }
+  @media (max-width: 900px) {
+    .is-showing-notices {
+      margin-top: 80px; } }
+  @media (max-width: 500px) {
+    .is-showing-notices {
+      margin-top: 100px; } }
+
+.headroom {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 200ms linear;
+  transition: -webkit-transform 200ms linear;
+  -o-transition: transform 200ms linear;
+  transition: transform 200ms linear;
+  transition: transform 200ms linear, -webkit-transform 200ms linear; }
+
+.headroom--pinned {
+  -webkit-transform: translateY(0%);
+          transform: translateY(0%); }
+
+.headroom--unpinned {
+  -webkit-transform: translateY(-100%);
+          transform: translateY(-100%); }
+
 .component-notice {
   margin: 0;
   padding: 0;
@@ -4848,7 +4875,11 @@ body.page-template-template-home {
   color: #761901;
   color: #fff;
   font-size: 17px;
-  font-weight: bold; }
+  font-weight: bold;
+  position: fixed;
+  border-radius: 0;
+  max-width: 100%;
+  z-index: 999999; }
   .component-notice p {
     margin: 0;
     color: #761901; }
@@ -4869,11 +4900,14 @@ body.page-template-template-home {
   padding: 0.69444em 0;
   text-align: center; }
 
-.docs-template-default .component-notice {
-  display: none; }
-
+.edd-page .component-notice,
+.page.purchase .component-notice,
 .edd-success.purchase-confirmation.is-showing-notices .component-notice {
   display: none; }
+
+.page.purchase,
+.edd-page.is-showing-notices {
+  margin-top: 0; }
 
 .edd_cart_discount .edd_discount {
   display: block;
@@ -4907,7 +4941,9 @@ body.page-template-template-home {
 .component-screenshots {
   background: #fff;
   margin-bottom: 2em;
-  max-width: 100%; }
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: hidden; }
   @media (max-width: 1000px) {
     .component-screenshots .screenshot {
       -webkit-box-orient: vertical;
@@ -5395,6 +5431,26 @@ body.page-template-template-home {
   .how-image img {
     border-radius: 10px 10px 0px 0px; }
 
+.component-pro-features .how-image {
+  -webkit-filter: brightness(0.8);
+          filter: brightness(0.8);
+  z-index: -1; }
+
+.page.pro-features .component-pro-features,
+.page.examples .component-pro-features,
+.page.pro .component-pro-features {
+  margin-top: 1em; }
+
+.component-screenshots .screenshots-secondary-list .screenshot-single {
+  max-height: 430px; }
+
+.wp-block-preformatted {
+  background: #e4f2ff;
+  color: #000;
+  padding: 1em;
+  border-radius: 7px;
+  font-size: 1.1em; }
+
 .component-pro-features {
   padding: 5.04em 0;
   background: none;
@@ -5415,6 +5471,7 @@ body.page-template-template-home {
       .component-pro-features .how-content h2 {
         font-size: 1.4em; } }
 
+.page.pro-features .component-pro-features,
 .page.examples .component-pro-features,
 .page.pro .component-pro-features {
   margin-top: 1em; }

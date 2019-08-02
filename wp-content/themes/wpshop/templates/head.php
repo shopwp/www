@@ -52,4 +52,6 @@
    <link rel="manifest" href="<?php echo get_template_directory_uri() ?>/assets/imgs/favicons/site.webmanifest">
     <meta name="mobile-web-app-capable" content="yes">
 
+<script src="https://unpkg.com/headroom.js"></script>
+
 </head>

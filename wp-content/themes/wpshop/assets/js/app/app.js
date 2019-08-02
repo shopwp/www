@@ -22,5 +22,14 @@ import { initFAQs } from './faqs/faqs'
       jQuery('iframe[src*="youtube"]')
          .parent()
          .fitVids()
+
+        // grab an element
+var myElement = document.querySelector(".component-notice");
+console.log('myElement', myElement);
+
+// construct an instance of Headroom, passing the element
+var headroom  = new Headroom(myElement);
+// initialise
+headroom.init();    
    })
 })(jQuery)

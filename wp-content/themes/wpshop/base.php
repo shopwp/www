@@ -77,6 +77,7 @@ global $post;
 
   <body <?php body_class($mobileBodyClass); ?>">
 
+
     <!--[if IE]>
       <div class="alert alert-warning">
         <?php _e('You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.', 'sage'); ?>
@@ -153,7 +154,12 @@ global $post;
 
     ?>
 
+<?php
 
+if ( get_field('theme_notice_enable', 'option') ) {
+  include(locate_template('components/notices/notices-view.php'));
+}
+?>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
