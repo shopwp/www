@@ -1,4 +1,3 @@
-<?php if ( $post->post_type !== 'docs') { ?>
 
   <header class="header">
 
@@ -24,6 +23,15 @@
           </nav>
         <?php endif; ?>
 
+        <?php if (has_nav_menu('primary_sub')) : ?>
+         <div class="sub-nav-wrapper">
+          <nav class="nav-primary-sub l-row l-row-right l-fill l-col-center">
+            <?php wp_nav_menu(['theme_location' => 'primary_sub', 'menu_class' => 'nav l-row']); ?>
+          </nav>
+          <i class="fal fa-ellipsis-v"></i>
+          </div>
+        <?php endif; ?>
+
       <?php } ?>
 
       <?php if( !is_page('checkout') ) { ?>
@@ -47,7 +55,7 @@
             <a href="<?php echo wp_logout_url('/login'); ?>" class="link-account">Log Out</a>
 
           <?php } else { ?>
-            <a href="/purchase" class="btn btn-account">Purchase</a>
+            <a href="/purchase" class="btn btn-account">Purchase 🎉</a>
             <a href="/login" class="menu-item-manual">Log In</a>
           <?php } ?>
 
@@ -78,5 +86,3 @@
     <?php endif; ?>
 
   </header>
-
-<?php } ?>

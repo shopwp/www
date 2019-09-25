@@ -15,7 +15,6 @@ if ($notices_enabled) {
   $mobileBodyClass .= ' is-showing-notices';
 }
 
-global $post;
 
 ?>
 
@@ -31,9 +30,11 @@ global $post;
 //     $stuff = '';
 //   }
 
-  if( is_page('purchase-confirmation') ) {
+  if ( is_page('purchase-confirmation') ) {
 
     $purchaseData = Extras\wps_get_recent_receipt_data();
+
+   if (!empty($purchaseData)) {
 
   ?>
 
@@ -69,9 +70,9 @@ global $post;
 
   </script>
 
-  <?php }
+  <?php } 
 
-  ?>
+   } ?>
 
   <?php get_template_part('templates/head'); ?>
 
@@ -105,7 +106,7 @@ global $post;
 
     <?php } else { ?>
 
-      <div class="wrap container l-fill l-row<?php echo is_page_template('template-narrow.php') ? ' l-contain-narrow' : ' l-contain'; ?><?php echo isRegisteredAndPurchasing() ? ' is-registered-and-purchasing' : ''; ?><?php echo $post->post_type === 'docs' ? ' is-docs' : ''; ?>" role="document">
+      <div class="wrap container l-fill l-row<?php echo is_page_template('template-narrow.php') ? ' l-contain-narrow' : ' l-contain'; ?><?php echo isRegisteredAndPurchasing() ? ' is-registered-and-purchasing' : ''; ?>" role="document">
 
     <?php } ?>
 

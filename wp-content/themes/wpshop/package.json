@@ -126,6 +126,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
-    "animejs": "^3.0.1"
+    "animejs": "^3.0.1",
+    "tippy.js": "^4.3.5"
   }
 }

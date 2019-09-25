@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability
 Requires at least: 4.9
 Tested up to: 5.2.2
-Stable tag: 11.6
+Stable tag: 12.1
 Requires PHP: 5.2.4
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -105,39 +105,56 @@ You'll find answers to many of your questions on [kb.yoast.com](https://yoa.st/1
 
 == Changelog ==
 
-= 11.6.0 =
-Release Date: July 9th, 2019
+= 12.1.0 =
+Release Date: September 17th, 2019
 
-Yoast SEO 11.6 is out today. Of course, we did the regular round of bug fixing, but the focus of this release is two-fold: a new, much easier to use tabbed interface for the meta box and an updated HowTo structured data content block for WordPress. Find out all about Yoast SEO 11.6 in [our 11.6 release post](https://yoa.st/release-11-6)!
-
-Enhancements:
-
-* Changes the tabs in the metabox to horizontal tabs.
-* Splits the content optimization tab in the metabox into two separate tabs: an SEO and a Readability tab.
-* Updates HowTo schema output to reflect Google's new guidelines.
-* Makes sure the media modal that is triggered for image uploads only displays images.
-
-Bugfixes:
-
-* Fixes a bug where the Schema `@id` for `Person` would be incorrect on posts when author archives where disabled. 
-* Fixes a bug where the Schema would contain `WebPage` instead of `CollectionPage` for a latest posts homepage and the static posts page type.
-* Fixes a bug where the Organization and Article Schema nodes would incorrectly be output when a website had not set their organization's name and/or logo.
-* Fixes a bug where the eye marker tooltips would break out of the metabox, which would hide the last part of the tooltip text.
-* Fixes a bug where instances of unfiltered HTML would be allowed in term descriptions where they shouldn't be.
-
-= 11.5.0 =
-Release Date: June 25th, 2019
-
-Yoast SEO 11.5 is out today. This release features a big change that gives you a better idea of how searchers see your snippets on mobile. Yep, we’ve overhauled the mobile snippet preview and brought it up-to-date with Google’s latest changes. And that, of course, includes that shiny favicon. Find out what Yoast SEO 11.5 is all about in [our 11.5 release post](https://yoa.st/release-11-5)!
+Yoast SEO 12.1 is out today! It features a couple of changes in order to match the design of Google’s search results pages, this includes those shiny new favicons. In addition to this, we added a number of new filters for our Schema implementation. See what else is new in the latest release of your favorite SEO plugin in [our 12.1 release post](https://yoa.st/release-12-1)!
 
 Enhancements:
 
-* Updates the Mobile Snippet Preview.
-* Moves the primary image for a page out of the `WebPage` piece into its own graph piece.
+* Updates the desktop snippet preview to match Google's new font sizes.
+* Introduces the usage of the site's favicon in the mobile snippet preview.
+* Adds a collapsible around the hidden problems and notifications on the Yoast dashboard.
+* Adds a filter `wpseo_schema_organization_social_profiles` that allows filtering an organization's social profiles in the schema output. Props to [juliquiron](https://github.com/juliquiron).
+* Adds a filter `wpseo_schema_company_name` that allows filtering the company name in the schema output. Props to [@andrewgillingham](https://github.com/andrewgillingham).
+* Adds a filter `wpseo_schema_company_logo_id` that allows filtering the company logo in the schema output. Props to [@andrewgillingham](https://github.com/andrewgillingham).
+* Adds a filter `wpseo_sitemap_exclude_empty_terms_taxonomy` to control hiding empty terms per taxonomy.
+* Adds a filter `wpseo_enable_structured_data_blocks` to allow disabling Yoast's structured data block editor blocks.
+* Adds a `get_robots` method to retrieve the robot HTML without it being output. Props to [@bradymwilliams](https://github.com/bradymwilliams).
+* Improves the input validation on the settings pages.
+* Improves the consistency of the plugin icons.
+* Improves the How-to and FAQ blocks styling for better compatibility with latest version of the WordPress blocks editor.
 
 Bugfixes:
 
-* Fixes missing trailing slash for the homepage on post sitemap. Props to [stodorovic](https://github.com/stodorovic).
+* Fixes a bug where subscription checks would fail on some sites due to certificate verification being disabled.
+* Fixes a bug where the primary term selector would not display HTML entities properly. Props to [@dlh01](https://github.com/dlh01).
+
+Other:
+
+* Allows showing specific dashboard feeds based on the `wp_version` and `php_version` of a site.
+* Removes the AMP Glue plugin suggestion from the SEO dashboard when AMP and Yoast SEO are installed. The AMP Glue plugin by Yoast will be discontinued soon.
+* Removes the `Courses` menu-item.
+
+= 12.0.0 =
+Release Date: September 3rd, 2019
+
+Contrary to what the version number might suggest, Yoast SEO 12.0 isn’t a huge release. It’s simply the next release in our current release schedule, but after hitting 11.9 a couple of weeks ago we had no choice but to go for 12.0. That’s how it goes! But don’t worry, there’s enough interesting stuff in this release, including two new checks for the Portuguese language. Read more about Yoast SEO 12.0 in [our 12.0 release post](https://yoa.st/release-12-0)!
+
+Enhancements:
+
+* Adds a filter `wpseo_exclude_from_sitemap_by_term_ids` that allows excluding a term from the XML sitemap.
+* Adds a filter `wpseo_xml_sitemap_include_images` that allows excluding images from the XML sitemap.
+* Adds a maximum width to the metabox, props to [@justemoilouise](https://github.com/justemoilouise).
+* Adds support for the assessment that checks whether multiple sentences begin with the same word for Portuguese, props to [amesdigital](https://github.com/amesdigital).
+* Improves the wording in the configuration wizard notification, props to [@emilyatmobtown](https://github.com/emilyatmobtown).
+* Improves user input validation for URLs.
+* Improves the sentence length assessment for Portuguese by increasing the recommended sentence length limit, props to [amesdigital](https://github.com/amesdigital).
+* Updates the document title with a message to communicate form submission errors have occurred.
+
+Bugfixes:
+
+* Fixes a bug where a 404 error would be shown for the second sitemap (and up) of the author sitemaps in case of multiple author sitemaps.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).

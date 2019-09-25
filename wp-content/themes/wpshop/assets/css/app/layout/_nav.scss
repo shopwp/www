@@ -103,6 +103,49 @@
    }
 }
 
+.nav-primary-sub {
+   // display: none;
+   opacity: 0;
+}
+
+.nav-primary-sub ul {
+   margin: 0;
+   padding: 0;
+   display: flex;
+   flex-direction: column;
+
+   a {
+      color: color(base);
+      display: block;
+      width: 100%;
+      text-align: left;
+      font-size: 15px;
+      padding: 15px 20px;
+   }
+}
+
+.wpshopify-popover-theme.tippy-tooltip {
+   background: white;
+}
+
+.tippy-popper {
+   margin: 0;
+}
+[data-state='visible'] .nav-primary-sub {
+   opacity: 1;
+}
+
+.sub-nav-wrapper {
+   padding: 21px 20px 0 10px;
+   margin: 0;
+   position: relative;
+   left: 8px;
+   svg {
+      font-size: 35px;
+      margin: 0;
+   }
+}
+
 .link-account {
    margin-top: 0;
    margin-left: $space-s;

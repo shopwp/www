@@ -1,17 +1,16 @@
 <?php
-/*
-Plugin Name: Easy Digital Downloads - Auto Register
-Plugin URI: https://easydigitaldownloads.com/downloads/auto-register/
-Description: Automatically creates a WP user account at checkout, based on customer's email address.
-Version: 1.3.9
-Author: Andrew Munro, Pippin Williamson, and Chris Klosowski
-Contributors: sumobi, mordauk, cklosows, mindctrl
-Author URI: https://easydigitaldownloads.com/
-Text Domain: edd-auto-register
-Domain Path: languages
-License: GPL-2.0+
-License URI: http://www.opensource.org/licenses/gpl-license.php
-*/
+/**
+ * Plugin Name: Easy Digital Downloads - Auto Register
+ * Plugin URI:  https://easydigitaldownloads.com/downloads/auto-register/
+ * Description: Automatically creates a WP user account at checkout, based on customer's email address.
+ * Version:     1.3.11
+ * Author:      Sandhills Development, LLC
+ * Author URI:  https://sandhillsdev.com
+ * Text Domain: edd-auto-register
+ * Domain Path: languages
+ * License:     GPL-2.0+
+ * License URI: http://www.opensource.org/licenses/gpl-license.php
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
@@ -86,7 +85,7 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 		 */
 		private function setup_globals() {
 
-			$this->version    = '1.3.5';
+			$this->version    = '1.3.11';
 
 			// paths
 			$this->file         = __FILE__;
@@ -106,6 +105,7 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 		private function hooks() {
 
 			if ( ! class_exists( 'EDD_Customer' ) ) {
+				edd_debug_log( 'Auto Register: Not loaded, EDD_Customer class is not available.' );
 				add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 				return;
 			}
@@ -128,7 +128,7 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 			add_filter( 'edd_can_checkout', array( $this, 'can_checkout' ) );
 
 			// create user when purchase is created
-			add_action( 'edd_insert_payment', array( $this, 'maybe_insert_user' ), 10, 2 );
+			add_action( 'edd_payment_saved', array( $this, 'maybe_insert_user' ), 10, 2 );
 
 			// stop EDD from sending new user notification, we want to customize this a bit
 			remove_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
@@ -284,12 +284,20 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 		 *
 		 * @since 1.3
 		 */
-		public function maybe_insert_user( $payment_id, $payment_data ) {
+		public function maybe_insert_user( $payment_id, $payment ) {
 
-			// It's possible that a extension (like recurring) has already auto-inserted a user, let's verify
+			edd_debug_log( 'EDDAR: maybe_insert_user running...' );
+			edd_debug_log( 'Payment: ' . print_r( $payment, true ) );
+
+			// This function only creates users using a Payment. If the payment ID is empty, we can't do that.
+			if ( empty( $payment->ID ) ) {
+				return false;
+			}
+
+			// If the user is not logged in
 			if ( ! is_user_logged_in() ) {
 
-				$customer    = new EDD_Customer( $payment_data['user_info']['email'] );
+				$customer    = new EDD_Customer( $payment->email );
 				$payment_ids = explode( ',', $customer->payment_ids );
 
 				if ( is_array( $payment_ids ) && ! empty( $payment_ids ) ) {
@@ -304,7 +312,29 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 
 				}
 
-				$user_id = $this->create_user( $payment_data, $payment_id );
+				// We will manually re-build the purchase_data array the way that create_user expects it.
+				// We have to do it this way, instead of passing a payment ID, because a payment ID may not yet exist, as is the case for recurring.
+				$purchase_data = array(
+					'price'        => $payment->total,
+					'date'         => $payment->date,
+					'user_email'   => $payment->email,
+					'purchase_key' => $payment->key,
+					'currency'     => $payment->currency,
+					'downloads'    => $payment->downloads,
+					'user_info' => array(
+						'id'         => $payment->user_id,
+						'email'      => $payment->email,
+						'first_name' => $payment->first_name,
+						'last_name'  => $payment->last_name,
+						'discount'   => $payment->discounts,
+						'address'    => $payment->address,
+					),
+					'cart_details' => $payment->cart_details,
+					'status'       => $payment->status,
+					'fees'         => $payment->fees,
+				);
+
+				$this->create_user( $purchase_data );
 
 			} else {
 
@@ -328,19 +358,6 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 			edd_update_payment_meta( $payment_id, '_edd_payment_user_id', $user_id );
 			edd_update_payment_meta( $payment_id, '_edd_payment_meta', $payment_meta );
 
-			if ( class_exists( 'EDD_Software_Licensing' ) ) {
-
-				$licenses = edd_software_licensing()->get_licenses_of_purchase( $payment_id );
-
-				if( $licenses ) {
-					foreach ( $licenses as $license ) {
-
-						update_post_meta( $license->ID, '_edd_sl_user_id', $user_id );
-
-					}
-				}
-			}
-
 		}
 
 		/**
@@ -358,15 +375,8 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 				return false;
 			}
 
-			$user = get_user_by( 'email', $payment_data['user_info']['email'] );
-
 			// User account already exists
-			if ( $user ) {
-
-				if( is_multisite() ) {
-					add_user_to_blog( get_current_blog_id(), $user->ID, get_option( 'default_role' ) );
-				}
-
+			if ( get_user_by( 'email', $payment_data['user_info']['email'] ) ) {
 				return false;
 			}
 
@@ -413,6 +423,7 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 
 			return $user_id;
 		}
+
 
 		/**
 		 * Settings
@@ -479,7 +490,15 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
  * @return object Returns an instance of the EDD_Auto_Register class
  */
 function edd_auto_register() {
+
+	if ( ! function_exists( 'edd_debug_log' ) ) {
+		function edd_debug_log( $message = '' ) {
+			error_log( $message, 3,  trailingslashit( wp_upload_dir() ) . 'edd-debug-log.txt' );
+		}
+	}
+
 	return EDD_Auto_Register::get_instance();
+
 }
 
 /**

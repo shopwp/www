@@ -1,5 +1,7 @@
 <head>
 
+<script src="https://kit.fontawesome.com/4b023c7b57.js" crossorigin="anonymous"></script>
+
   <!--
 
   Only load drift on non-docs related pages

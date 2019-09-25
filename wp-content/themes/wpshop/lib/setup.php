@@ -31,6 +31,7 @@ function setup()
    // http://codex.wordpress.org/Function_Reference/register_nav_menus
    register_nav_menus([
       'primary_navigation' => __('Primary Navigation', 'sage'),
+      'primary_sub' => __('Primary Sub', 'sage'),
       'footer_navigation' => __('Footer Navigation', 'sage'),
       'checkout_navigation' => __('Checkout Navigation', 'sage'),
       'mobile_navigation' => __('Mobile Navigation', 'sage')
@@ -115,7 +116,7 @@ Theme assets
 function assets()
 {
 
-   wp_enqueue_script('fontawesome-js', Assets\asset_path('js/vendor/fontawesome-all.min.js'), [], null, true);
+
    wp_enqueue_style('Animate CSS', '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);
    wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Open+Sans:400,700|Noto+Sans|Bitter:400,700|IBM+Plex+Sans:400,700|Catamaran:400,700|Suez+One&display=swap', false, null);
 

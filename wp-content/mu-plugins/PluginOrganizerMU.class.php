@@ -3,7 +3,7 @@
 Plugin Name: Plugin Organizer MU
 Plugin URI: http://www.sterupdesign.com
 Description: A plugin for specifying the load order of your plugins.
-Version: 10.0.1
+Version: 10.1.2
 Author: Jeff Sterup
 Author URI: http://www.sterupdesign.com
 License: GPL2
@@ -20,6 +20,7 @@ class PluginOrganizerMU {
 		$this->detectMobile = get_option('PO_disable_plugins_mobile');
 		$this->secure=0;
 		$this->debugMsg=array();
+		$this->adminMsg=array();
 		if ($this->detectMobile == 1) {
 			$this->detect_mobile();
 		}
@@ -68,13 +69,9 @@ class PluginOrganizerMU {
 			}
 			
 			$this->set_requested_permalink();
-			if (get_option('PO_updating_plugin') != '1' && get_option("PO_version_num") != "10.0.1" && !is_admin()) {
+			if (get_option('PO_updating_plugin') != '1' && get_option("PO_version_num") != "10.1.2") {
 				$newPluginList = $pluginList;
-				update_option("PO_disable_plugins_frontend", "0");
-				update_option("PO_disable_plugins_admin", "0");
-				if ($displayDebugMsg == 1) {
-					$this->debugMsg[] = 'Selective plugin loading has been disabled because the version numbers of the MU plugin and the standard plugin don\'t match.';
-				}
+				$this->adminMsg[] = '<strong>WARNING:</strong> Selective plugin loading for Plugin Organizer has been disabled because the version numbers of the MU plugin and the standard plugin don\'t match.<br />The current version number returned from the database is '.get_option("PO_version_num").' and the current MU plugin version number is 10.1.2.<br />If you are using a caching plugin try clearing the cache.';
 			} else {
 				$sql = "SELECT disabled_plugins, disabled_mobile_plugins, disabled_groups, disabled_mobile_groups FROM ".$wpdb->prefix."po_plugins WHERE post_type='global_plugin_lists' AND post_id=0";
 				$storedPluginLists = $wpdb->get_row($sql, ARRAY_A);
@@ -206,6 +203,20 @@ class PluginOrganizerMU {
 							$loopCount++;
 							$this->requestedPermalinkHash = $wpdb->prepare('%s', md5($this->requestedPermalink));
 							$permalinkHashes[] = $this->requestedPermalinkHash;
+
+							$innerLoopCount = 0;
+							$previousIndex = 8;
+							$lastOcc = strrpos($this->requestedPermalink, "/");
+							while ($innerLoopCount < 25 && $previousIndex < $lastOcc) {
+								$startReplace = strpos($this->requestedPermalink, '/', $previousIndex);
+								$endReplace = strpos($this->requestedPermalink, '/', $startReplace+1);
+								if ($endReplace === false) {
+									$endReplace = strlen($this->requestedPermalink);
+								}
+								$permalinkHashes[] = $wpdb->prepare('%s', md5(substr_replace($this->requestedPermalink, "/*/", $startReplace, ($endReplace-$startReplace)+1)));
+								$previousIndex = $endReplace;
+								$innerLoopCount++;
+							}
 						}
 						
 						if (sizeof($permalinkHashes) > 0) {

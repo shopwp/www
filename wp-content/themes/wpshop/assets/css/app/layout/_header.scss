@@ -13,6 +13,14 @@
    }
 }
 
+.component-marquee .btn:last-of-type {
+   background: color(primary);
+}
+
+.header .btn-account {
+   background: color(base);
+}
+
 .home.page .component-marquee,
 .home.page .header {
    background: #e4f2ff;

@@ -11,6 +11,8 @@
 class WPSEO_Plugin_Availability {
 
 	/**
+	 * Holds the plugins.
+	 *
 	 * @var array
 	 */
 	protected $plugins = array();
@@ -105,24 +107,6 @@ class WPSEO_Plugin_Availability {
 				'_dependencies' => array(
 					'Advanced Custom Fields' => array(
 						'slug' => 'advanced-custom-fields/acf.php',
-					),
-				),
-				'version_sync'  => false,
-			),
-
-			'yoastseo-amp' => array(
-				'url'           => 'https://wordpress.org/plugins/glue-for-yoast-seo-amp/',
-				'title'         => 'Yoast SEO AMP Glue',
-				'description'   => sprintf(
-					/* translators: %1$s expands to Yoast SEO */
-					__( 'Seamlessly integrate %1$s into your AMP pages!', 'wordpress-seo' ),
-					'Yoast SEO'
-				),
-				'installed'     => false,
-				'slug'          => 'glue-for-yoast-seo-amp/yoastseo-amp.php',
-				'_dependencies' => array(
-					'AMP' => array(
-						'slug' => 'amp/amp.php',
 					),
 				),
 				'version_sync'  => false,

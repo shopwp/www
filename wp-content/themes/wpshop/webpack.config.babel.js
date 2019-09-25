@@ -25,7 +25,8 @@ module.exports = () => {
     eval === faster bundle time
 
     */
-      devtool: ifProd('source-map', 'eval'),
+      // devtool: ifProd('source-map', 'eval'),
+      // mode: 'production',
       entry: {
          vendor: ['validator', 'dateFormat'],
          app: [path.resolve('assets/js/app/app.js')],
@@ -96,6 +97,9 @@ module.exports = () => {
                booleans: true,
                properties: true,
                loops: true
+            },
+            output: {
+               comments: false
             }
          }),
          new HappyPack({

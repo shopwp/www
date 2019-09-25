@@ -23,8 +23,9 @@
     <a href="https://github.com/wpshopify" class="footer-social-link" target="_blank">
       <i class="fab fa-github"></i>
     </a>
-    <a href="https://wpshop.io/purchase" class="footer-social-link gtm-link-support" target="_blank">
-      <i class="fab fa-slack" aria-hidden="true"></i>
+
+    <a href="https://www.instagram.com/wpshopifyplugin/" class="footer-social-link gtm-link-support" target="_blank">
+      <i class="fab fa-instagram" aria-hidden="true"></i>
     </a>
 
     
@@ -34,7 +35,7 @@
     
     
    
-    <a href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify" target="_blank" class="footer-link footer-free-trial">Shopify Free Trial 💎</a>
+    <a href="https://www.shopify.com/?ref=wps" target="_blank" class="footer-link footer-free-trial">👉 Shopify Free Trial</a>
 
     <!-- <a href="https://instagram.com/simpleblend" class="footer-social-link">
       <i class="fa fa-instagram"></i>

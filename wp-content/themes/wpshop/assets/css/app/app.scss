@@ -237,7 +237,7 @@ Author URI:     https://simpleblend.net
    opacity: 1;
    // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
 
-   @include device(500, 'max') {
+   @include device(700, 'max') {
       opacity: 0.4;
    }
 }
@@ -249,8 +249,8 @@ Author URI:     https://simpleblend.net
    border-width: 0 5px 8px 9px;
    border-color: transparent transparent #ef2b6d transparent;
    background: none;
-   top: -121px;
-   left: 1vw;
+   top: 256px;
+   left: -4vw;
    // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
    transform: rotate(-27deg);
 
@@ -287,13 +287,13 @@ Author URI:     https://simpleblend.net
    border-width: 4px 4px 16px 10px;
    border-color: transparent transparent #81f47d transparent;
    background: none;
-   left: 2.34vw;
+   left: -20px;
    transform: rotate(67deg);
 }
 
 .shape5 {
-   top: -73px;
-   left: 11vw;
+   top: -19px;
+   left: 15vw;
    width: 15px;
    height: 15px;
    border-radius: 50%;
@@ -328,13 +328,13 @@ Author URI:     https://simpleblend.net
 }
 
 .shape8 {
-   bottom: -108px;
+   bottom: -97px;
    left: 18vw;
    width: 0;
    height: 0;
    border-style: solid;
    border-width: 3px 9px 13px 4px;
-   border-color: transparent transparent #ef2b6d transparent;
+   border-color: transparent transparent #81f47d transparent;
    background: none;
    transform: rotate(67deg);
 
@@ -346,8 +346,8 @@ Author URI:     https://simpleblend.net
 .shape9 {
    width: 15px;
    height: 15px;
-   right: 3vw;
-   top: -100px;
+   right: -5vw;
+   top: 312px;
    border-radius: 50%;
    filter: blur(9px);
    background-color: #ef2b6d;
@@ -355,11 +355,12 @@ Author URI:     https://simpleblend.net
    @include device(700, 'max') {
       right: 39vw;
       top: 7vh;
+      display: none;
    }
 }
 
 .shape10 {
-   right: 0vw;
+   right: 5vw;
    top: 20px;
    background-color: #81f47d;
    transform: rotate(20deg);
@@ -387,11 +388,11 @@ Author URI:     https://simpleblend.net
 .shape12 {
    right: -4vw;
    top: 166px;
-   width: 20px;
-   height: 20px;
-   background-color: #ffca2e;
+   width: 10px;
+   height: 10px;
+   background-color: #ffda6d;
    border-radius: 50%;
-   filter: blur(9px);
+   filter: blur(0px);
 
    @include device(700, 'max') {
       right: 1vw;
@@ -400,8 +401,8 @@ Author URI:     https://simpleblend.net
 }
 
 .shape13 {
-   right: 7vw;
-   top: 209px;
+   right: 6vw;
+   top: 300px;
    transform: rotate(-45deg);
    background-color: #ef2b6d;
    width: 68px;
@@ -417,7 +418,7 @@ Author URI:     https://simpleblend.net
    width: 11px;
    height: 11px;
    right: 5vw;
-   bottom: -103px;
+   bottom: -80px;
    background-color: #8e9dfc;
    transform: rotate(-124deg);
 
@@ -581,3 +582,31 @@ Author URI:     https://simpleblend.net
 //    width: 96%;
 //    left: 3%;
 // }
+
+.logo-partner {
+   width: 25px;
+   position: relative;
+   height: 25px;
+   top: 7px;
+   margin-right: 6px;
+}
+
+.callout {
+   text-decoration: none;
+   color: #1d144f;
+   margin-top: 3em;
+   display: block;
+
+   @include device(400, 'max') {
+      font-size: 13px;
+   }
+
+   span {
+      border-bottom: 1px solid #1d144f;
+      padding-bottom: 3px;
+   }
+
+   svg {
+      margin-left: 5px;
+   }
+}

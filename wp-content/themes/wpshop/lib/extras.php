@@ -64,6 +64,10 @@ function wps_get_recent_receipt_data() {
 
   }
 
+  if (empty($payment_key)) {
+     return [];
+  }
+
   $payment_id    = edd_get_purchase_id_by_key( $payment_key );
   $payment       = get_post( $payment_id );
   $meta          = edd_get_payment_meta( $payment->ID );

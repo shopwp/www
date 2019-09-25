@@ -19,6 +19,13 @@
    <div class="shape shape15"></div>
    <!-- <div class="shape shape16"></div> -->
 
+   <a class="logos" target="_blank" href="https://www.shopify.com/?ref=wps">
+
+      <img class="logo wordpress-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-wp.svg" alt="WordPress Logo">
+      <img class="logo shopify-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify.svg" alt="Shopify Logo">
+
+    </a>
+
    <h1><?php the_sub_field('short_description'); ?></h1>
    
     <!-- <h1 class="marquee-heading"></h1>
@@ -28,15 +35,12 @@
     </div> -->
 
     <div class="btn-group l-row l-row-center">
-      <a href="https://demo.wpshop.io" class="btn btn-l btn-secondary btn-download-free">See the demo</a>
+      <a href="https://demo.wpshop.io" class="btn btn-l btn-secondary btn-download-free" target="_blank">See the demo 🚀</a>
     </div>
 
-    <a class="logos" target="_blank" href="https://www.shopify.com/?ref=wps&utm_content=links&utm_medium=website&utm_source=wpshopify">
-
-      <img class="logo wordpress-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-wp.svg" alt="WordPress Logo">
-      <img class="logo shopify-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify.svg" alt="Shopify Logo">
-
-    </a>
+   <a href="https://www.shopify.com/?ref=wps" target="_blank" class="callout">
+   <img class="logo-partner" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify-green.svg" alt="Shopify Partner Logo"> <span>Start your free Shopify 14 day trial <i class="far fa-external-link-square-alt"></i></span>
+   </a>
 
   </div>
    <style>

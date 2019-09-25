@@ -3,7 +3,7 @@
    position: relative;
    min-height: calc(80vh - 130px - 30px);
    // margin-bottom: 40px;
-   padding: 7em 0;
+   padding: 5em 0;
    background: transparent;
    // background-image: url('imgs/stuff.png');
    // background-size: contain;
@@ -23,9 +23,25 @@
    .logo {
       width: 38px;
       height: 38px;
+
+      @include device(700, 'max') {
+         width: 28px;
+         height: 28px;
+      }
+
+      @include device(500, 'max') {
+         width: 20px;
+         height: 20px;
+      }
    }
    .logos {
-      margin: 0 auto;
+      margin: 0 auto 2em auto;
+      display: inline-block;
+
+      @include device(600, 'max') {
+         position: relative;
+         top: -17vw;
+      }
    }
 
    .wordpress {
@@ -89,7 +105,7 @@
 .marquee-content {
    position: relative;
    text-align: center;
-   top: 1vh;
+   top: -5.5vh;
    left: -10px;
 
    h1 {
@@ -122,22 +138,27 @@
    }
 
    @include device(1500, 'max') {
-      top: 0;
+      top: -8vh;
    }
 
    @include device(1000, 'max') {
-      top: 0;
+      top: -6vh;
       left: 0;
       padding: 0 1em;
    }
 
    @include device(700, 'max') {
+      top: -9vh;
       padding: 0;
       flex: 1;
       justify-content: center;
       display: flex;
       flex-direction: column;
       align-items: center;
+   }
+
+   @include device(600, 'max') {
+      top: -2vh;
    }
 }
 

@@ -1,6 +1,7 @@
 .form,
 .edd_form,
-.search-form {
+.search-form,
+.affwp-form {
    width: 100%;
    max-width: $container-width-narrow;
    position: relative;
@@ -110,7 +111,7 @@ select {
    background: color(white);
    color: color(base);
    margin-top: 0;
-   border: 1px solid color(medium-grey);
+   border: 1px solid #959595;
    font-weight: normal;
 
    &:focus {
@@ -138,6 +139,15 @@ select {
          // transform: scale(1);
       }
    }
+}
+
+.affwp-form input[type='checkbox'] {
+   width: auto;
+   margin-right: 10px;
+}
+
+.affwp-form input {
+   border: 1px solid #959595;
 }
 
 input[type='number'] {
@@ -364,10 +374,6 @@ select {
    .form-control {
       margin-right: 0;
    }
-
-   // .btn {
-   //    margin: 0 auto;
-   // }
 
    .spinner {
       margin: 0;

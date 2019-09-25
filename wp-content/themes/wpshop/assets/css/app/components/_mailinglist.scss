@@ -104,7 +104,7 @@
             border-radius: 0 0.4em 0.4em 0;
             width: 100%;
             font-size: 1.4em;
-            background-color: #1d144f;
+            background-color: color(base);
             transform: scale(1) !important;
             margin: 0;
 
@@ -115,7 +115,6 @@
 
             &:hover {
                transform: scale(1) !important;
-               color: #d7cde3;
             }
          }
       }
