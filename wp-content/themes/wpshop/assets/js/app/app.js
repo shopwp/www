@@ -29,24 +29,22 @@ import tippy from 'tippy.js'
       console.log('myElement', myElement)
 
       if (myElement) {
-         // construct an instance of Headroom, passing the element
          var headroom = new Headroom(myElement)
-         // initialise
          headroom.init()
       }
 
       var subMenuTrigger = document.querySelector('.sub-nav-wrapper')
       var subMenuContent = document.querySelector('.nav-primary-sub')
 
-      console.log('subMenuTrigger', subMenuTrigger)
-      console.log('subMenuContent', subMenuContent)
-
       tippy(subMenuTrigger, {
          animateFill: false,
          content: subMenuContent,
          interactive: true,
          animation: 'shift-away',
-         theme: 'wpshopify-popover'
+         theme: 'wpshopify-popover',
+         arrow: true,
+         arrowType: 'round',
+         distance: 7
       })
    })
 })(jQuery)

@@ -72,6 +72,18 @@ function wps_reset_pass_redirect()
 add_action('template_redirect', 'wps_reset_pass_redirect');
 
 
+// function wpse12535_redirect_sample() {
+
+//     if (!is_user_logged_in() && is_page('affiliates')) {
+//       wp_safe_redirect('/forgot-password');
+//       exit();
+//     }
+
+// }
+
+// add_action( 'template_redirect', 'affiliates' );
+
+
 
 function your_function($product_data)
 {

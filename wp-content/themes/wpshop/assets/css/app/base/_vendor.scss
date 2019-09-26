@@ -627,7 +627,7 @@ EDD
    .button.is-disabled {
       &:hover {
          cursor: pointer;
-         background-color: color(secondary);
+         background-color: #ececec;
       }
    }
 }
@@ -1044,4 +1044,123 @@ Auth page
    .pace {
       display: none;
    }
+}
+
+/*
+
+Affiliate WP
+
+*/
+.affwp-tos {
+   font-weight: normal;
+}
+
+#affwp-login-form legend {
+   display: none;
+}
+
+#affwp-affiliate-dashboard {
+   display: flex;
+   margin: 0;
+
+   .form,
+   .edd_form,
+   .search-form,
+   .affwp-form {
+      max-width: 100%;
+   }
+
+   input[type='submit'],
+   .edd-submit {
+      font-size: 1.2em;
+      width: auto;
+   }
+
+   input:not([type='checkbox']) {
+      height: 50px;
+   }
+
+   .affwp-datepicker,
+   #affwp-graphs-date-options {
+      height: 50px;
+      width: 200px;
+      margin-right: 0.7em;
+   }
+}
+
+#affwp-affiliate-dashboard-url-generator {
+   h5 {
+      margin-top: 2em;
+   }
+}
+
+#affwp-affiliate-dashboard-stats {
+   .affwp-tab-content {
+      margin-bottom: 2em;
+   }
+}
+
+#affwp-affiliate-dashboard-stats,
+.affwp-tab-content,
+.account-content-wrapper {
+   margin-top: 0;
+   flex: 1;
+}
+
+.affwp-tab-content {
+   padding: 0 0 0 2em;
+}
+
+.account-wrapper {
+   width: 100%;
+}
+
+#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li.active a {
+   color: color(base);
+}
+
+.account-nav-wrapper,
+.account-nav-wrapper ul,
+#affwp-affiliate-dashboard-tabs {
+   width: 300px;
+   max-width: 300px;
+   display: flex;
+   flex-direction: column;
+}
+
+#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li.affwp-affiliate-dashboard-tab:last-of-type {
+   a {
+      border-bottom: none;
+   }
+}
+
+#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li {
+   margin-bottom: 10px;
+
+   a {
+      width: 100%;
+      display: block;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+
+      transition: color ease 0.14s;
+
+      &:hover {
+         opacity: 1;
+         color: color(base);
+      }
+   }
+}
+
+#affwp-affiliate-dashboard .affwp-send-notifications-wrap label,
+.affwp-form .affwp-tos,
+.affwp-form .affwp-user-remember {
+   width: auto;
+   font-weight: normal;
+   display: inline;
+}
+
+table.affwp-table td,
+table.affwp-table th {
+   color: #181625;
 }

@@ -1,4 +1,4 @@
-   <?php if (is_page('home') || is_page('pro') || is_page('purchase')) { ?>
+   <?php if ( is_page('pro') || is_page('purchase')) { ?>
 
       <div class="component component-screenshots l-col l-col-center" style="max-width: 1000px;margin: 2em auto 8em auto;">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/0dmn5Yrzqlw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -42,3 +42,12 @@
 									</g></svg>
 
 </section>
+
+
+   <?php if ( is_page('home') ) { ?>
+
+      <div class="component component-screenshots l-col l-col-center" style="max-width: 1000px;margin: 9.4em auto 6em auto;">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0dmn5Yrzqlw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      
+   <?php } ?>

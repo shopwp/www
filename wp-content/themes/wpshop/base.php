@@ -76,7 +76,7 @@ if ($notices_enabled) {
 
   <?php get_template_part('templates/head'); ?>
 
-  <body <?php body_class($mobileBodyClass); ?>">
+  <body <?php body_class($mobileBodyClass); ?>>
 
 
     <!--[if IE]>

@@ -79,6 +79,11 @@
 
         get_template_part('components/pro-features/pro-features-controller');
 
+      // Pro features
+      } else if(get_row_layout() == 'component_affiliate_register') {
+
+        get_template_part('components/affiliate-register/controller');
+
       }
       
     endwhile;

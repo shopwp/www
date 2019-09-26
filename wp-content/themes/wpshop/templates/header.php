@@ -25,6 +25,8 @@
 
         <?php if (has_nav_menu('primary_sub')) : ?>
          <div class="sub-nav-wrapper">
+            
+
           <nav class="nav-primary-sub l-row l-row-right l-fill l-col-center">
             <?php wp_nav_menu(['theme_location' => 'primary_sub', 'menu_class' => 'nav l-row']); ?>
           </nav>
@@ -50,12 +52,29 @@
             <i class="fa fa-twitter"></i>
           </a> -->
 
-          <?php if(is_user_logged_in()) { ?>
-            <a href="/account" class="btn btn-account">My Account</a>
-            <a href="<?php echo wp_logout_url('/login'); ?>" class="link-account">Log Out</a>
+          <?php if(is_user_logged_in()) { 
+
+            $user = wp_get_current_user();
+            $affiliate_id = affwp_get_affiliate_id( $user->ID );
+
+            $customer = new EDD_Customer($user->ID, true );
+
+            if (empty($customer->email) && $affiliate_id) {
+               $account_link = '/affiliates';
+               $login_link = '/affiliate-login';
+
+            } else {
+               $account_link = '/account';
+               $login_link = '/login';
+            }
+
+             
+             ?>
+            <a href="<?= $account_link; ?>" class="btn btn-account">My Account</a>
+            <a href="<?php echo wp_logout_url($login_link); ?>" class="link-account">Log Out</a>
 
           <?php } else { ?>
-            <a href="/purchase" class="btn btn-account">Purchase 🎉</a>
+            <a href="/purchase" class="btn btn-account">Purchase</a>
             <a href="/login" class="menu-item-manual">Log In</a>
           <?php } ?>
 

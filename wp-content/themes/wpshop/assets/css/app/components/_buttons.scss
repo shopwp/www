@@ -55,11 +55,11 @@ a.button.edd-slg-social-unlink-profile,
 
    &[disabled],
    &.is-disabled {
-      background-color: color(medium-grey);
+      background-color: #ececec;
 
       &:hover {
          opacity: 1;
-         background-color: color(medium-grey);
+         background-color: #ececec;
          transform: scale(1);
       }
    }

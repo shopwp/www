@@ -15,6 +15,7 @@ body {
    color: color(base);
    -webkit-backface-visibility: hidden;
    background-color: color(white);
+   overflow-x: hidden;
 
    * + * {
       margin-top: 1.5rem;

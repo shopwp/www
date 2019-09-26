@@ -63,7 +63,7 @@
       <div class="how-content">
          <div class="inner">
       <h2><span class="num">5</span>Sell!</h2>
-      <p>WP Shopify comes with a <a href="https://demo.wpshop.io/" target="_blank">built-in cart</a> experience. When the user is ready pay, they're taken to the default Shopify checkout page.</p>
+      <p>WP Shopify comes with a <a href="https://demo.wpshop.io/" target="_blank">built-in cart</a> experience. When the user is ready to pay, they're taken to the default Shopify checkout page.</p>
             </div>
       </div>
       <div class="how-image">

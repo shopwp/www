@@ -25,6 +25,17 @@ function isShowingLicense($action, $message) {
 
 }
 
+
+$user = wp_get_current_user();
+$affiliate_id = affwp_get_affiliate_id($user->ID);
+
+if ($affiliate_id) {
+   $is_affiliate = true;
+
+} else {
+   $is_affiliate = false;
+}
+
 ?>
 
 <nav class="account-nav">
@@ -47,6 +58,9 @@ function isShowingLicense($action, $message) {
       </li>
       <li class="account-nav-list-item">
          <a href="#!" class="account-nav-list-item-link" data-tab="Settings">Settings</a>
+      </li>
+      <li class="account-nav-list-item">
+         <a href="<?= $is_affiliate ? '/affiliates' : '/become-an-affiliate' ?>" class="account-nav-list-item-link affiliates">Affiliate Dashboard</a>
       </li>
    </ul>
 </nav>

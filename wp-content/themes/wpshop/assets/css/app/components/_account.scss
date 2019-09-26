@@ -46,7 +46,7 @@
       border-radius: 0px 0px 7px 7px;
       width: 100%;
       padding-top: 2em;
-      border: 1px solid color(medium-grey);
+      // border: 1px solid color(medium-grey);
       padding: 2em 2em 1em 2em;
       border-top: 0;
    }
@@ -78,7 +78,7 @@
    }
 
    table .edd_sl_license_row td:first-child {
-      width: 35%;
+      width: 45%;
    }
 }
 
@@ -164,6 +164,7 @@
    padding: 0;
    justify-content: space-between;
    display: flex;
+   flex-direction: column;
 
    > li:first-child {
       margin-left: 0;
@@ -174,32 +175,48 @@
    }
 }
 
+.account-back-to-wrapper {
+   text-align: center;
+   margin-bottom: 3em;
+   display: block;
+   text-align: center;
+   margin-top: -29px;
+}
+
+.account-back-to {
+}
+
 .account-nav-list-item-link {
-   padding: 10px 20px;
-   background-color: color(base);
+   // padding: 10px 20px;
+   // background-color: color(base);
    text-decoration: none;
-   color: white;
+   color: color(primary);
    display: inline-block;
    width: 100%;
-   text-align: center;
-   border-radius: 7px 7px 0 0;
+   text-align: left;
+   // border-radius: 7px 7px 0 0;
    font-size: 16px;
+   width: 100%;
+   display: block;
+   border-bottom: 1px solid #ddd;
+   padding-bottom: 10px;
    // font-weight: bold;
+   transition: color ease 0.14s;
 
    &:hover {
-      opacity: 0.8;
+      opacity: 1;
+      color: color(base);
    }
 
    &.is-active {
       background-color: #fff;
-      border: 1px solid color(medium-grey);
-      border-bottom: 0;
-      color: color(dark-grey);
+      // border: 1px solid color(medium-grey);
+      color: color(base);
       font-weight: bold;
 
       &:hover {
          background-color: #fff;
-         color: color(dark-grey);
+         color: color(base);
          opacity: 1;
          cursor: text;
       }
@@ -208,7 +225,9 @@
 
 .account-nav-list-item {
    flex: 1;
-   margin: 0 2px;
+   display: inline-block;
+   padding: 0 10px 0 0;
+   margin: 0 0 10px 0;
 }
 
 .edd_download_download_name {

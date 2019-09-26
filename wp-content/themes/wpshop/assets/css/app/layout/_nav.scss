@@ -104,8 +104,15 @@
 }
 
 .nav-primary-sub {
-   // display: none;
+   position: relative;
    opacity: 0;
+
+   svg {
+      position: absolute;
+      top: -40px;
+      left: calc(50% - 20px);
+      font-size: 60px;
+   }
 }
 
 .nav-primary-sub ul {
@@ -124,25 +131,71 @@
    }
 }
 
+.menu-primary-sub-container {
+   margin: 0;
+   width: 100%;
+   display: none;
+}
+
+.tippy-popper .menu-primary-sub-container {
+   display: block;
+}
+
 .wpshopify-popover-theme.tippy-tooltip {
    background: white;
+   box-shadow: 0 50px 100px -20px rgba(50, 50, 93, 0.25), 0 30px 60px -30px rgba(0, 0, 0, 0.3), 0 -18px 60px -10px rgba(0, 0, 0, 0.025);
+
+   .tippy-content {
+      margin-top: 0;
+   }
+
+   .tippy-roundarrow {
+      fill: white;
+   }
 }
 
 .tippy-popper {
+   min-width: 200px;
    margin: 0;
 }
 [data-state='visible'] .nav-primary-sub {
    opacity: 1;
 }
 
+@keyframes slideInQuick {
+   0% {
+      transform: translateY(10px);
+      opacity: 0.4;
+   }
+
+   100% {
+      transform: translateY(0);
+      opacity: 1;
+   }
+}
 .sub-nav-wrapper {
-   padding: 21px 20px 0 10px;
+   padding: 21px 11px 0 10px;
    margin: 0;
    position: relative;
    left: 8px;
+
+   @include device(1300, 'max') {
+      display: none;
+   }
+   &:focus {
+      outline: none;
+   }
+
    svg {
       font-size: 35px;
       margin: 0;
+
+      animation-duration: 0.4s;
+      animation-iteration-count: 1;
+      transform-origin: bottom;
+      animation-name: slideInQuick;
+      // animation-delay: 1s;
+      animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
    }
 }
 

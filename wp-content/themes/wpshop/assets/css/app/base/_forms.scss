@@ -6,13 +6,6 @@
    max-width: $container-width-narrow;
    position: relative;
    margin: 0 auto 2em auto;
-   // @include device(1000, 'max') {
-   //   width: 90%;
-   // }
-   //
-   // @include device(600, 'max') {
-   //   width: 100%;
-   // }
 
    .description {
       display: block;
@@ -127,7 +120,7 @@ select {
    }
 
    &:disabled {
-      background-color: color(medium-grey);
+      background-color: #ececec;
       // @include dim($opacity-hard);
       opacity: 1;
       box-shadow: none;
@@ -135,7 +128,7 @@ select {
       &:hover {
          // opacity: $opacity-hard;
          cursor: not-allowed;
-         background-color: color(medium-grey);
+         background-color: #ececec;
          // transform: scale(1);
       }
    }
@@ -568,4 +561,16 @@ select {
 #edd-discount-code-wrap label {
    margin-top: 2em;
    font-size: 18px;
+}
+
+.affwp-errors,
+.affwp-notice {
+   margin: 0 auto 2em auto;
+   max-width: 800px;
+   text-align: center;
+}
+
+.affwp-errors {
+   background-color: color(error);
+   border-color: color(error);
 }

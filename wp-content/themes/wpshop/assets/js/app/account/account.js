@@ -169,6 +169,10 @@ function showUpgrades($) {
 
 function toggleTabs() {
    jQuery('.account-nav-list-item-link').on('click', function(e) {
+      if (jQuery(this).hasClass('affiliates')) {
+         return
+      }
+
       e.preventDefault()
 
       var tab = jQuery(this).data('tab')
