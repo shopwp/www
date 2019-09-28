@@ -302,14 +302,14 @@ EDD
 
          &:first-of-type,
          &.is-highlighted {
-            box-shadow: 0px 0px 0 5px #8b00ff inset;
+            box-shadow: 0px 0px 0 5px #009eff inset;
             // transform: scale(1.05);
             // transition: all 0.25s ease;
 
             border: none;
 
             &:before {
-               background: #8b00ff;
+               background: #009eff;
                color: color(white);
                border-bottom: 0;
             }
@@ -1063,6 +1063,10 @@ Affiliate WP
    display: flex;
    margin: 0;
 
+   .user-info {
+      position: absolute;
+      top: -70px;
+   }
    .form,
    .edd_form,
    .search-form,
@@ -1126,6 +1130,16 @@ Affiliate WP
    max-width: 300px;
    display: flex;
    flex-direction: column;
+
+   .user-info {
+      position: absolute;
+      top: -70px;
+   }
+}
+
+.account-nav-wrapper,
+#affwp-affiliate-dashboard-tabs {
+   position: relative;
 }
 
 #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li.affwp-affiliate-dashboard-tab:last-of-type {
@@ -1135,8 +1149,6 @@ Affiliate WP
 }
 
 #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li {
-   margin-bottom: 10px;
-
    a {
       width: 100%;
       display: block;
@@ -1147,9 +1159,43 @@ Affiliate WP
 
       &:hover {
          opacity: 1;
-         color: color(base);
+         text-decoration: underline;
       }
    }
+
+   &.active {
+      a:hover {
+         text-decoration: none;
+      }
+   }
+}
+
+.affwp-affiliate-dashboard-tab {
+   position: relative;
+
+   // .svg-inline--fa {
+   //    opacity: 0;
+   //    position: absolute;
+   // }
+
+   &.active {
+      a {
+         background: #f6f6f6;
+      }
+      // .svg-inline--fa {
+      //    opacity: 1;
+      //    position: absolute;
+      //    right: 50%;
+      //    top: 1px;
+      //    font-size: 22px;
+      // }
+   }
+}
+
+#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li a {
+   margin-top: 0;
+   padding-top: 10px;
+   padding-left: 10px;
 }
 
 #affwp-affiliate-dashboard .affwp-send-notifications-wrap label,
@@ -1163,4 +1209,31 @@ Affiliate WP
 table.affwp-table td,
 table.affwp-table th {
    color: #181625;
+}
+
+.edd_price_options li[itemprop='offers'] > label {
+   margin-top: 1.3em;
+}
+
+#affwp-affiliate-dashboard-url-generator h5 {
+   font-weight: bold;
+}
+
+table.affwp-table td.affwp-table-no-data,
+table.affwp-table th.affwp-table-no-data {
+   padding: 1em;
+}
+
+.affwp-form label {
+   font-size: 1em;
+}
+
+.affwp-wrap.affwp-payment-email-wrap,
+#affwp-affiliate-dashboard h4,
+#affwp-graphs-filter {
+   margin-top: 0;
+}
+
+#affwp-affiliate-dashboard h4 {
+   display: none;
 }

@@ -107,21 +107,28 @@ Author URI:     https://simpleblend.net
    animation-iteration-count: 1;
    transform-origin: bottom;
    // animation-delay: 1s;
-   animation-name: scaleIn;
+   animation-name: slideIn;
+}
+
+.marquee-content .callout {
+   animation-duration: 0.5s;
+   animation-iteration-count: 1;
+   transform-origin: bottom;
+   animation-name: slideIn;
 }
 
 .marquee-content .logo {
    animation-duration: 0.5s;
    animation-iteration-count: 1;
-   // animation-delay: 0.5s;
+   transform-origin: bottom;
 }
 
 .marquee-content .wordpress-logo {
-   animation-name: slideInLogoLeft;
+   animation-name: slideIn;
 }
 
 .marquee-content .shopify-logo {
-   animation-name: slideInLogoRight;
+   animation-name: slideIn;
 }
 
 @keyframes slideInLogoLeft {

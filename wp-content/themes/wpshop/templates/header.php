@@ -71,7 +71,7 @@
              
              ?>
             <a href="<?= $account_link; ?>" class="btn btn-account">My Account</a>
-            <a href="<?php echo wp_logout_url($login_link); ?>" class="link-account">Log Out</a>
+            <a href="<?php echo wp_logout_url($login_link); ?>" class="link-account">Logout</a>
 
           <?php } else { ?>
             <a href="/purchase" class="btn btn-account">Purchase</a>

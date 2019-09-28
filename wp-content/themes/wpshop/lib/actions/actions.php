@@ -30,9 +30,7 @@ function wps_custom_login_logo()
 {
    echo '<style type="text/css">
     .login h1 a {
-      background-image: url(' .
-      get_stylesheet_directory_uri() .
-      '/assets/prod/imgs/logo-mark.svg) !important;
+      background-image: url("/wp-content/uploads/2019/06/logo-mark-v2.svg") !important;
       margin-bottom: 0;
       line-height: 3;
       height: 120px;
@@ -50,20 +48,32 @@ function wps_custom_login_logo()
 
 add_action('login_head', 'wps_custom_login_logo');
 
+function my_login_logo_url() {
+    return home_url();
+}
+add_filter( 'login_headerurl', 'my_login_logo_url' );
+
+function my_login_logo_url_title() {
+    return 'WP Shopify';
+}
+add_filter( 'login_headertext', 'my_login_logo_url_title' );
+
 /*
 
 wps_login_redirect
 
 */
-function wps_login_redirect()
-{
-   if (!is_user_logged_in() && is_page('account')) {
-      wp_redirect('/login');
-      exit();
-   }
-}
+// function wps_login_redirect()
+// {
 
-add_action('template_redirect', 'wps_login_redirect');
+//    if (!is_user_logged_in() && is_page('account')) {
+//       wp_redirect('/login');
+//       exit();
+//    }
+  
+// }
+
+// add_action('template_redirect', 'wps_login_redirect');
 
 function process_add_transfer()
 {

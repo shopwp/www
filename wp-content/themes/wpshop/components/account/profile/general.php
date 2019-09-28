@@ -26,7 +26,7 @@
     </div>
 
     <div class="btn-wrap">
-      <input type="submit" name="wps_customer_address_submit" class="btn btn-secondary" value="Save profile">
+      <input type="submit" name="wps_customer_address_submit" class="btn btn-primary" value="Save profile">
       <div class="spinner spinner-sm"></div>
     </div>
 

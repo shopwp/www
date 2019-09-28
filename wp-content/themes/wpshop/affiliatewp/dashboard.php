@@ -1,7 +1,15 @@
 <?php $active_tab = affwp_get_active_affiliate_area_tab(); ?>
 
 <div class="account-back-to-wrapper">
+
+<?php 
+
+$user = wp_get_current_user();
+
+if (!is_affiliate_only($user)) { ?>
    <a href="/account" class="account-back-to">Back to account</a>
+<?php } ?>
+
 </div>
 
 <div id="affwp-affiliate-dashboard">
@@ -56,7 +64,15 @@
 		do_action( 'affwp_affiliate_dashboard_notices', affwp_get_affiliate_id(), $active_tab );
 		?>
 
+
+
 		<ul id="affwp-affiliate-dashboard-tabs">
+
+      <div class="user-info">
+   <b><?= $user->data->display_name; ?></b>
+   <p><?= $user->data->user_email; ?></p>
+</div>
+
 			<?php
 
 			$tabs = affwp_get_affiliate_area_tabs();
@@ -64,7 +80,8 @@
 			if ( $tabs ) {
 				foreach ( $tabs as $tab_slug => $tab_title ) : ?>
 					<?php if ( affwp_affiliate_area_show_tab( $tab_slug ) ) : ?>
-					<li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab_slug ? ' active' : ''; ?>">
+               <li class="affwp-affiliate-dashboard-tab<?php echo $active_tab == $tab_slug ? ' active' : ''; ?>">
+               
 						<a href="<?php echo esc_url( affwp_get_affiliate_area_page_url( $tab_slug ) ); ?>"><?php echo $tab_title; ?></a>
 					</li>
 					<?php endif; ?>
@@ -73,7 +90,7 @@
 
 			/**
 			 * Fires immediately after core Affiliate Area tabs are output,
-			 * but before the 'Log Out' tab is output (if enabled).
+			 * but before the 'Logout' tab is output (if enabled).
 			 *
 			 * @since 1.0
 			 *
@@ -85,7 +102,7 @@
 
 			<?php if ( affiliate_wp()->settings->get( 'logout_link' ) ) : ?>
 			<li class="affwp-affiliate-dashboard-tab">
-				<a href="<?php echo esc_url( affwp_get_logout_url() ); ?>"><?php _e( 'Log out', 'affiliate-wp' ); ?></a>
+				<a href="<?php echo esc_url( affwp_get_logout_url() ); ?>"><?php _e( 'Logout', 'affiliate-wp' ); ?></a>
 			</li>
 			<?php endif; ?>
 

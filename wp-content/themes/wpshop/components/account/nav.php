@@ -60,7 +60,24 @@ if ($affiliate_id) {
          <a href="#!" class="account-nav-list-item-link" data-tab="Settings">Settings</a>
       </li>
       <li class="account-nav-list-item">
-         <a href="<?= $is_affiliate ? '/affiliates' : '/become-an-affiliate' ?>" class="account-nav-list-item-link affiliates">Affiliate Dashboard</a>
+         
+         <a href="<?= $is_affiliate ? '/affiliates' : '/become-an-affiliate' ?>" class="account-nav-list-item-link affiliates">
+         
+         <?php 
+         
+            $user = wp_get_current_user();
+            $affiliate_id = affwp_get_affiliate_id( $user->ID );
+            
+            if ($affiliate_id) {
+               echo 'Affiliate Dashboard';
+            } else {
+               echo 'Become an Affiliate 💵';
+            }
+
+         ?>         
+      
+         </a>
+
       </li>
    </ul>
 </nav>

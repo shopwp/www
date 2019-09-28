@@ -11,7 +11,7 @@ Template Name: Account
 <?php
 
       $customer = new EDD_Customer(get_current_user_id(), true );
-
+      $user = wp_get_current_user();
       //
       // echo "<pre>";
       // print_r($customer);
@@ -23,20 +23,23 @@ Template Name: Account
 
 <div class="page-header">
 
-          <h1><?= get_the_title();?></h1>
+   <h1><?= get_the_title();?></h1>
 
-    
-  </div>
+</div>
 
 
 <section class="l-fill l-row l-contain">
 
 
-
-
    <div class="l-row account-wrapper">
 
       <div class="account-nav-wrapper">
+
+      <div class="user-info">
+         <b><?= $user->data->display_name; ?></b>
+         <p><?= $user->data->user_email; ?></p>
+      </div>
+         
 <?php 
       get_template_part('components/account/nav');
   ?>         

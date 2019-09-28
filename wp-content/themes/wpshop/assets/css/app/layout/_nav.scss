@@ -239,3 +239,15 @@
       flex: 1;
    }
 }
+
+.nav-primary-sub ul a {
+   position: relative;
+
+   svg {
+      position: absolute;
+      top: 18px;
+      right: 36px;
+      font-size: 14px;
+      left: auto;
+   }
+}

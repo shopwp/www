@@ -790,11 +790,11 @@ EDD
         width: 100%;
         margin-bottom: 1.728em; } }
     .edd_price_options > ul li:first-of-type, .edd_price_options > ul li.is-highlighted {
-      -webkit-box-shadow: 0px 0px 0 5px #8b00ff inset;
-              box-shadow: 0px 0px 0 5px #8b00ff inset;
+      -webkit-box-shadow: 0px 0px 0 5px #009eff inset;
+              box-shadow: 0px 0px 0 5px #009eff inset;
       border: none; }
       .edd_price_options > ul li:first-of-type:before, .edd_price_options > ul li.is-highlighted:before {
-        background: #8b00ff;
+        background: #009eff;
         color: #fff;
         border-bottom: 0; }
     .edd_price_options > ul li.is-not-highlighted:first-of-type, .edd_price_options > ul li.is-not-highlighted {
@@ -1342,6 +1342,9 @@ Affiliate WP
   display: -ms-flexbox;
   display: flex;
   margin: 0; }
+  #affwp-affiliate-dashboard .user-info {
+    position: absolute;
+    top: -70px; }
   #affwp-affiliate-dashboard .form,
   #affwp-affiliate-dashboard .edd_form,
   #affwp-affiliate-dashboard .search-form,
@@ -1394,26 +1397,46 @@ Affiliate WP
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column; }
+  .account-nav-wrapper .user-info,
+  .account-nav-wrapper ul .user-info,
+  #affwp-affiliate-dashboard-tabs .user-info {
+    position: absolute;
+    top: -70px; }
+
+.account-nav-wrapper,
+#affwp-affiliate-dashboard-tabs {
+  position: relative; }
 
 #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li.affwp-affiliate-dashboard-tab:last-of-type a {
   border-bottom: none; }
 
-#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li {
-  margin-bottom: 10px; }
-  #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li a {
-    width: 100%;
-    display: block;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    -webkit-transition: color ease 0.14s;
-    -o-transition: color ease 0.14s;
-    transition: color ease 0.14s;
-    -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-    will-change: color; }
-    #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li a:hover {
-      opacity: 1;
-      color: #181625; }
+#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li a {
+  width: 100%;
+  display: block;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  -webkit-transition: color ease 0.14s;
+  -o-transition: color ease 0.14s;
+  transition: color ease 0.14s;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  will-change: color; }
+  #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li a:hover {
+    opacity: 1;
+    text-decoration: underline; }
+
+#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li.active a:hover {
+  text-decoration: none; }
+
+.affwp-affiliate-dashboard-tab {
+  position: relative; }
+  .affwp-affiliate-dashboard-tab.active a {
+    background: #f6f6f6; }
+
+#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li a {
+  margin-top: 0;
+  padding-top: 10px;
+  padding-left: 10px; }
 
 #affwp-affiliate-dashboard .affwp-send-notifications-wrap label,
 .affwp-form .affwp-tos,
@@ -1425,6 +1448,27 @@ Affiliate WP
 table.affwp-table td,
 table.affwp-table th {
   color: #181625; }
+
+.edd_price_options li[itemprop='offers'] > label {
+  margin-top: 1.3em; }
+
+#affwp-affiliate-dashboard-url-generator h5 {
+  font-weight: bold; }
+
+table.affwp-table td.affwp-table-no-data,
+table.affwp-table th.affwp-table-no-data {
+  padding: 1em; }
+
+.affwp-form label {
+  font-size: 1em; }
+
+.affwp-wrap.affwp-payment-email-wrap,
+#affwp-affiliate-dashboard h4,
+#affwp-graphs-filter {
+  margin-top: 0; }
+
+#affwp-affiliate-dashboard h4 {
+  display: none; }
 
 html[lang='en-US'] {
   margin: 0 !important;
@@ -1658,7 +1702,7 @@ table {
 .search-form,
 .affwp-form {
   width: 100%;
-  max-width: 810px;
+  max-width: 700px;
   position: relative;
   margin: 0 auto 2em auto; }
   .form .description,
@@ -3136,7 +3180,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   content: 'Developer';
   display: block; }
 
-#edd_price_option_35_unlimited:before {
+#edd_price_option_35_unlimitedsites:before {
   content: 'Agency';
   display: block; }
 
@@ -3481,6 +3525,15 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     -webkit-box-flex: 1;
         -ms-flex: 1;
             flex: 1; } }
+
+.nav-primary-sub ul a {
+  position: relative; }
+  .nav-primary-sub ul a svg {
+    position: absolute;
+    top: 18px;
+    right: 36px;
+    font-size: 14px;
+    left: auto; }
 
 .post .entry-content p,
 .post .entry-content li {
@@ -4254,8 +4307,7 @@ input[type='submit'],
     padding: 2px;
     border-radius: 0px 0px 7px 7px;
     width: 100%;
-    padding-top: 2em;
-    padding: 2em 2em 1em 2em;
+    padding: 0 2em 1em 2em;
     border-top: 0; }
   .component[class*='component-account'].component-account-user-info {
     display: -webkit-box;
@@ -4372,6 +4424,9 @@ input[type='submit'],
   display: block;
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  margin: 0;
   -webkit-transition: color ease 0.14s;
   -o-transition: color ease 0.14s;
   transition: color ease 0.14s;
@@ -4380,14 +4435,13 @@ input[type='submit'],
   will-change: color; }
   .account-nav-list-item-link:hover {
     opacity: 1;
-    color: #181625; }
+    text-decoration: underline; }
   .account-nav-list-item-link.is-active {
-    background-color: #fff;
+    background: #f6f6f6;
     color: #181625;
     font-weight: bold; }
     .account-nav-list-item-link.is-active:hover {
-      background-color: #fff;
-      color: #181625;
+      text-decoration: none;
       opacity: 1;
       cursor: text; }
 
@@ -4396,8 +4450,8 @@ input[type='submit'],
       -ms-flex: 1;
           flex: 1;
   display: inline-block;
-  padding: 0 10px 0 0;
-  margin: 0 0 10px 0; }
+  padding: 0;
+  margin: 0; }
 
 .edd_download_download_name {
   width: 230px; }
@@ -4408,9 +4462,6 @@ input[type='submit'],
 .component-account-subscriptions .edd_subscription_name + br {
   display: none; }
 
-.component-account-subscriptions .edd_subscription_billing_cycle {
-  margin-left: 10px; }
-
 .component-account-subscriptions td:nth-child(1) {
   width: 18%; }
 
@@ -4418,7 +4469,7 @@ input[type='submit'],
   width: 6%; }
 
 .component-account-subscriptions td:nth-child(3) {
-  width: 12%; }
+  width: 22%; }
 
 .component-account-subscriptions td:nth-child(4) {
   width: 11%; }
@@ -4654,7 +4705,9 @@ pre[class*="language-"] {
 
 #edd_sl_renewal_form {
   margin-bottom: 1em;
-  text-align: center; }
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto; }
 
 .page.purchase .page-header {
   margin-bottom: 0;
@@ -5860,22 +5913,34 @@ body.page-template-template-home {
           animation-iteration-count: 1;
   -webkit-transform-origin: bottom;
           transform-origin: bottom;
-  -webkit-animation-name: scaleIn;
-          animation-name: scaleIn; }
+  -webkit-animation-name: slideIn;
+          animation-name: slideIn; }
+
+.marquee-content .callout {
+  -webkit-animation-duration: 0.5s;
+          animation-duration: 0.5s;
+  -webkit-animation-iteration-count: 1;
+          animation-iteration-count: 1;
+  -webkit-transform-origin: bottom;
+          transform-origin: bottom;
+  -webkit-animation-name: slideIn;
+          animation-name: slideIn; }
 
 .marquee-content .logo {
   -webkit-animation-duration: 0.5s;
           animation-duration: 0.5s;
   -webkit-animation-iteration-count: 1;
-          animation-iteration-count: 1; }
+          animation-iteration-count: 1;
+  -webkit-transform-origin: bottom;
+          transform-origin: bottom; }
 
 .marquee-content .wordpress-logo {
-  -webkit-animation-name: slideInLogoLeft;
-          animation-name: slideInLogoLeft; }
+  -webkit-animation-name: slideIn;
+          animation-name: slideIn; }
 
 .marquee-content .shopify-logo {
-  -webkit-animation-name: slideInLogoRight;
-          animation-name: slideInLogoRight; }
+  -webkit-animation-name: slideIn;
+          animation-name: slideIn; }
 
 @-webkit-keyframes slideInLogoLeft {
   0% {

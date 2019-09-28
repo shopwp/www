@@ -45,9 +45,7 @@
       padding: 2px;
       border-radius: 0px 0px 7px 7px;
       width: 100%;
-      padding-top: 2em;
-      // border: 1px solid color(medium-grey);
-      padding: 2em 2em 1em 2em;
+      padding: 0 2em 1em 2em;
       border-top: 0;
    }
 
@@ -200,23 +198,25 @@
    display: block;
    border-bottom: 1px solid #ddd;
    padding-bottom: 10px;
+   padding-top: 10px;
+   padding-left: 10px;
+   margin: 0;
    // font-weight: bold;
    transition: color ease 0.14s;
 
    &:hover {
       opacity: 1;
-      color: color(base);
+      text-decoration: underline;
    }
 
    &.is-active {
-      background-color: #fff;
+      background: #f6f6f6;
       // border: 1px solid color(medium-grey);
       color: color(base);
       font-weight: bold;
 
       &:hover {
-         background-color: #fff;
-         color: color(base);
+         text-decoration: none;
          opacity: 1;
          cursor: text;
       }
@@ -226,8 +226,8 @@
 .account-nav-list-item {
    flex: 1;
    display: inline-block;
-   padding: 0 10px 0 0;
-   margin: 0 0 10px 0;
+   padding: 0;
+   margin: 0;
 }
 
 .edd_download_download_name {
@@ -243,7 +243,7 @@
       display: none;
    }
    .edd_subscription_billing_cycle {
-      margin-left: 10px;
+      // margin-left: 10px;
    }
 
    td:nth-child(1) {
@@ -255,7 +255,7 @@
    }
 
    td:nth-child(3) {
-      width: 12%;
+      width: 22%;
    }
 
    td:nth-child(4) {

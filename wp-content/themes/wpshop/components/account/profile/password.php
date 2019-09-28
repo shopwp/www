@@ -28,7 +28,7 @@
     </div>
 
     <div class="btn-wrap">
-      <input type="submit" name="wps_customer_password_submit" class="btn btn-secondary" value="Save Password">
+      <input type="submit" name="wps_customer_password_submit" class="btn btn-primary" value="Save Password">
       <div class="spinner spinner-sm"></div>
     </div>
 

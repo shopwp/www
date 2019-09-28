@@ -94,16 +94,16 @@ add_action('edd_purchase_link_top', 'your_function');
 
 function your_function_2($product_data)
 {
-   echo '<div class="receipt-account-wrapper"><a href="/account" class="btn btn-secondary">Go to account</a></div>';
+   echo '<div class="receipt-account-wrapper"><a href="/account" class="btn btn-primary">Go to account</a></div>';
 }
 
 add_action('edd_payment_receipt_before', 'your_function_2');
 
-add_action('login_init', function () {
-   if (!isset($_GET['action'])) {
-      wp_redirect('/login');
-   }
-});
+// add_action('login_init', function () {
+//    if (!isset($_GET['action'])) {
+//       wp_redirect('/login');
+//    }
+// });
 
 add_action('edd_after_price_option', function () {
    echo '<small style="display:block;text-align:center;margin-top:-10px;">/per year</small>';
@@ -132,3 +132,119 @@ function wpshop_custom_excerpt_length($length)
    return 20;
 }
 add_filter('excerpt_length', 'wpshop_custom_excerpt_length', 999);
+
+
+
+
+function is_admin_user($user) {
+
+   if (is_array($user->roles) && in_array('administrator', $user->roles)) {
+      return true;
+   }
+   
+   return false;
+
+}
+
+function is_affiliate_only($user) {
+
+   $affiliate_id = affwp_get_affiliate_id( $user->ID );
+   $customer = new EDD_Customer($user->ID, true );
+
+   if ($customer->email === NULL && $affiliate_id) {
+      return true;
+   }
+
+   return false;
+
+}
+
+
+function is_affiliate() {
+
+   $user = wp_get_current_user();
+   $affiliate_id = affwp_get_affiliate_id( $user->ID );
+
+   if ($affiliate_id) {
+      return true;
+   }
+
+   return false;
+
+}
+
+ 
+function wps_on_login_redirect($redirect_to, $user_id) {
+
+   $user = get_userdata($user_id);
+
+   // return $redirect_to;
+
+   if (isset($user->roles)) {
+
+      // Only admins end here
+      if (is_admin_user($user)) {
+         return admin_url();
+
+      }
+
+      // Only affiliates end here
+      if (is_affiliate_only($user)) {
+         return '/affiliates';
+
+      }
+
+      // Normal customers and customer affiliates end here
+      return '/account';
+      
+   }
+
+   // Fallback
+   return '/account';
+
+}
+
+add_filter('edd_login_redirect', 'wps_on_login_redirect', 10, 2);
+
+
+
+
+
+function wps_template_redirect() {
+
+   $user_d = wp_get_current_user();
+   $user = get_userdata($user_d->ID);
+
+   if (!is_user_logged_in() && is_page('account')) {
+      wp_redirect('/login');
+      exit();
+   }
+
+   if (!is_user_logged_in() && is_page('affiliates')) {
+      wp_redirect('/affiliate-login');
+      exit();
+   }   
+
+   if (is_user_logged_in() && is_page('become-an-affiliate') && is_affiliate()) {
+      wp_redirect('/affiliates');
+      exit();
+   }   
+
+   if (is_user_logged_in() && is_page('affiliate-login') && is_affiliate()) {
+      wp_redirect('/affiliates');
+      exit();
+   }   
+
+   if (is_user_logged_in() && is_page('affiliate-login') && !is_affiliate()) {
+      wp_redirect('/become-an-affiliate');
+      exit();
+   }   
+
+   // Only affiliates end here
+   if (is_affiliate_only($user) && is_page('account')) {
+      wp_redirect('/affiliates');
+      exit();
+   }
+}
+
+add_action( 'template_redirect', 'wps_template_redirect' );

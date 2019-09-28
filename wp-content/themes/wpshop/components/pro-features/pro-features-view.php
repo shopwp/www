@@ -1,6 +1,6 @@
 <section class="component component-pro-features">
-   
-   <?php if (!is_page('pro')) { ?>
+
+   <?php if (!is_page('pro') && !is_page('pro-features')) { ?>
       <div class="component-intro">
          <h2 style="text-align: center;">Included in Pro</h2>
          <p>Take your store to the next level and gain access to these pro-only features:</p>
@@ -11,11 +11,11 @@
       <div class="how-content">
          <div class="inner">
       <h2>🔭 Product Searching</h2>   
-      <p>Create an all-in-one <a href="https://demo.wpshop.io/search-example">search experience</a> for customers with real-time results. No page reloads! View the <a href="https://demo.wpshop.io/search-example">live demo</a> in action.</p>
+      <p>Create an all-in-one <a href="https://demo.wpshop.io/search-example" title="WP Shopify Search Example">search experience</a> for customers with real-time results. No page reloads! View the <a href="https://demo.wpshop.io/search-example" title="WP Shopify Search Example">live demo</a> in action.</p>
             </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature product searching" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/pro-search-opt.jpg" alt="WP Shopify Pro feature product searching" />
       </div>
 
    </div>
@@ -24,11 +24,11 @@
       <div class="how-content">
          <div class="inner">
       <h2>⚗️ Product Filtering</h2>   
-      <p>Easily create a <a href="https://demo.wpshop.io/storefront-example">dedicated storefront</a> on any page giving customers the ability to filter and sort your products. View the <a href="https://demo.wpshop.io/storefront-example">live demo</a> in action.</p>
+      <p>Easily create a <a href="https://demo.wpshop.io/storefront-example" title="WP Shopify Storefront Example">dedicated storefront</a> on any page giving customers the ability to filter and sort your products. View the <a href="https://demo.wpshop.io/storefront-example" title="WP Shopify Storefront Example">live demo</a> in action.</p>
             </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature product searching" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/pro-storefront-opt.jpg" alt="WP Shopify Pro feature product filtering" />
       </div>
 
    </div>
@@ -41,7 +41,7 @@
             </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature image zooming" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/pro-image-zoom-opt.jpg" alt="WP Shopify Pro feature image zooming" />
       </div>
       
    </div>
@@ -54,7 +54,7 @@
          </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature image zooming" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/pro-infinite-scroll-opt.jpg" alt="WP Shopify Pro feature infinite scrolling" />
       </div>
       
    </div>
@@ -67,7 +67,7 @@
          </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature image zooming" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature Selective Syncing" />
       </div>
       
    </div>
@@ -76,11 +76,11 @@
       <div class="how-content">
          <div class="inner">
             <h2>🗒️ Order Notes</h2>
-            <p>Collect special instructions from customers directly within the cart. This information is attached to the Shopify order. Learn more about <a href="https://help.shopify.com/en/themes/customization/cart/get-more-information-with-order-notes">how this works</a>.</p>
+            <p>Collect special instructions from customers directly within the cart. This information is attached to the Shopify order. Learn more about <a href="https://help.shopify.com/en/themes/customization/cart/get-more-information-with-order-notes" title="Shopify order notes">how this works</a>.</p>
          </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature image zooming" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/pro-cart-notes-opt.jpg" alt="WP Shopify Pro Order Notes" />
       </div>
       
    </div>
@@ -89,11 +89,11 @@
       <div class="how-content">
          <div class="inner">
             <h2>🛒 Cart Attributes</h2>
-            <p>WP Shopify Pro allows you to attach custom data to a customer's order. This can be anything you want, allowing you to customize ho information is then viewable within Shopify.</p>
+            <p>Add any kind of custom data to a customer's order that you want. This information is then filterable within Shopify.</p>
          </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature image zooming" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro Cart Attributes" />
       </div>
       
    </div>
@@ -102,11 +102,11 @@
       <div class="how-content">
          <div class="inner">
          <h2>🧩 PHP Templates</h2>
-         <p>With over <a href="https://docs.wpshop.io/templates" target="_blank">80+ templates</a>, you have the ability to customize any portion of the layout using HTML / PHP. Simply drop the templates folder into your theme and rename it to wps-templates.</p>
+         <p>WP Shopify Pro comes with customizable <a href="https://docs.wpshop.io" target="_blank" title="WP Shopify Documentation Site">PHP templates</a>. You'll have the ability to customize any portion of the layout using HTML / PHP. Simply drop the templates folder into your theme and rename it to wps-templates.</p>
             </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature image zooming" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/pro-templates.png" alt="WP Shopify Pro template overiding" />
       </div>
       
    </div>
@@ -115,11 +115,11 @@
       <div class="how-content">
          <div class="inner">
          <h2>👩‍💻 👨‍💻 Dedicated Support</h2>
-         <p>WP Shopify Pro customers gain access to dedicated and <em>live</em> support via our private Slack channel. We're available to help around the clock with any questions you may have—simple or complex.</p>
+         <p>WP Shopify Pro customers gain access to dedicated and live support via our private Slack channel. We're available to help around the clock with any questions you may have—simple or complex.</p>
             </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature image zooming" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/pro-dedicated-live-support-opt.jpg" alt="WP Shopify Pro Dedicated Support" />
       </div>
       
    </div>
@@ -128,11 +128,11 @@
       <div class="how-content">
          <div class="inner">
             <h2>🎯 Webhooks</h2>
-            <p>You'll have access to 27 different webhooks allowing you to capture events like product updates and order creation. Learn more about <a href="https://docs.wpshop.io/webhooks">Shopify webhooks</a>.</p>
+            <p>You'll have access to 27 different webhooks allowing you to capture events like product updates and order creation. Learn more about <a href="https://docs.wpshop.io/webhooks" title="WP Shopify Webhooks Documentation">Shopify webhooks</a>.</p>
          </div>
       </div>
       <div class="how-image">
-         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/wps-step1-zoomed-new.png" alt="WP Shopify Pro feature image zooming" />
+         <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/pro-webhooks.png" alt="WP Shopify Pro Webhooks" />
       </div>
       
    </div>

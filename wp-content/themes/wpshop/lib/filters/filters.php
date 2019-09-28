@@ -79,26 +79,3 @@ function wps_custom_login_lostpassword_url()
 }
 
 add_filter('lostpassword_url', 'wps_custom_login_lostpassword_url');
-
-/*
-
-Redirect non-admins to the homepage after logging into the site.
-
-*/
-function wps_on_login_redirect($redirect_to, $request, $user)
-{
-   if (isset($user->roles)) {
-      if (is_array($user->roles) && in_array('administrator', $user->roles)) {
-         return admin_url();
-      } else {
-         return '/account';
-      }
-   }
-
-   return '/account';
-}
-
-add_filter('login_redirect', 'wps_on_login_redirect', 10, 3);
-
-
-?>
