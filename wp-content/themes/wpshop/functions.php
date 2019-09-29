@@ -240,6 +240,11 @@ function wps_template_redirect() {
       exit();
    }   
 
+   if (is_user_logged_in() && is_page('affiliates') && !is_affiliate()) {
+      wp_redirect('/become-an-affiliate');
+      exit();
+   }   
+
    // Only affiliates end here
    if (is_affiliate_only($user) && is_page('account')) {
       wp_redirect('/affiliates');

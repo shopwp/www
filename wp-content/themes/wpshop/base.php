@@ -171,6 +171,17 @@ if ( get_field('theme_notice_enable', 'option') ) {
       ga('send', 'pageview');
 
 
+      var myElement = document.querySelector(".component-notice");
+
+
+      if (myElement) {
+         // construct an instance of Headroom, passing the element
+         var headroom = new Headroom(myElement)
+         // initialise
+         headroom.init()
+      }
+
+
     </script>
 
   </body>
