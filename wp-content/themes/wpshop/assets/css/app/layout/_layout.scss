@@ -1,232 +1,253 @@
 .home {
-   .main {
-      @include device(500, 'max') {
-         display: none;
-      }
-   }
+  .main {
+    @include device(500, "max") {
+      display: none;
+    }
+  }
+}
+
+.page-content {
+  width: 100%;
+  font-size: 18px;
+  text-align: center;
+}
+
+.page-id-159 .page-content,
+.page-id-199033 .page-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.page-id-199033 .page-content {
+  text-align: left;
 }
 
 .blog {
-   .main {
-      margin-bottom: $space-xxl * 2;
-   }
+  .main {
+    margin-bottom: $space-xxl * 2;
+  }
 
-   .page-header {
-      display: none;
-      margin-bottom: 3em;
-   }
+  .page-header {
+    display: none;
+    margin-bottom: 3em;
+  }
 }
 
 .main {
-   width: 100%;
-   margin-bottom: 3em;
-   margin: $space-l auto;
-   position: relative;
+  width: 100%;
+  margin-bottom: 3em;
+  margin: $space-l auto;
+  position: relative;
 
-   @include device(800, 'max') {
-      padding: 0 $space-m;
-   }
+  @include device(800, "max") {
+    padding: 0 $space-m;
+  }
 
-   @include device(500, 'max') {
-      padding: 0;
-   }
+  @include device(500, "max") {
+    padding: 0;
+  }
 }
 
 .is-docs {
-   .main {
-      width: calc(100% - 520px);
-      margin-left: 520px;
-      margin-right: 0;
-      margin-top: 3em;
-      margin-bottom: 10em;
-      padding-right: 5em;
-   }
+  .main {
+    width: calc(100% - 520px);
+    margin-left: 520px;
+    margin-right: 0;
+    margin-top: 3em;
+    margin-bottom: 10em;
+    padding-right: 5em;
+  }
 
-   + .footer {
-      display: none;
-   }
+  + .footer {
+    display: none;
+  }
 }
 
 .wrap {
-   margin-top: 0;
+  margin-top: 0;
 }
 
 .content {
-   max-width: 1400px;
-   margin: 0 auto;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 #wpadminbar {
-   display: none;
+  display: none;
 }
 
 .component {
-   max-width: 85vw;
-   width: calc(100%);
-   background-color: color(off-white);
-   padding: 0 3em;
-   border: none;
-   margin: 0 auto;
-   border-radius: 20px;
-   // border-radius: 10px;
+  max-width: 85vw;
+  width: calc(100%);
+  background-color: color(off-white);
+  padding: 0 3em;
+  border: none;
+  margin: 0 auto;
+  border-radius: 20px;
+  // border-radius: 10px;
 
-   @include device(700, 'max') {
-      padding: 0 1em;
+  @include device(700, "max") {
+    padding: 0 1em;
 
-      &.component-mailinglist {
-         padding-left: $space-xl;
-         padding-right: $space-xl;
-         margin: 0;
-         width: 100%;
-         max-width: 100%;
-      }
-   }
+    &.component-mailinglist {
+      padding-left: $space-xl;
+      padding-right: $space-xl;
+      margin: 0;
+      width: 100%;
+      max-width: 100%;
+    }
+  }
 }
 
 .component-inner {
-   border-radius: 20px;
-   padding: 1em 0 1em;
+  border-radius: 20px;
+  padding: 1em 0 1em;
 }
 
 .component-intro {
-   margin-bottom: 6em;
-   position: relative;
+  margin-bottom: 6em;
+  position: relative;
 
-   &:after {
-      position: absolute;
-      content: '';
-      display: block;
-      width: 40px;
-      height: 1px;
-      background: #898989;
-      left: 50%;
-      transform: translate(-50%, 0);
-      margin-top: 2em;
-   }
+  &:after {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: #898989;
+    left: 50%;
+    transform: translate(-50%, 0);
+    margin-top: 2em;
+  }
 
-   p {
-      text-align: center;
-   }
+  p {
+    text-align: center;
+  }
 }
 
+.purchase .component-comparison-chart .component-intro h2,
 .purchase .component-pro-features .component-intro h2 {
-   font-size: 2.4em;
+  font-size: 2.4em;
 
-   @include device(700, 'max') {
-      font-size: 1.9em;
-   }
+  @include device(700, "max") {
+    font-size: 1.9em;
+  }
+}
+
+.component-comparison-chart + .component-pro-features {
+  margin-top: 10em;
 }
 
 .error404 {
-   .alert {
-      max-width: $container-width-narrow;
-      margin: 0 auto;
-      text-align: left;
-      font-size: 18px;
-   }
+  .alert {
+    max-width: $container-width-narrow;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 18px;
+  }
 
-   .wrap.container {
-      margin-bottom: 8em;
-   }
+  .wrap.container {
+    margin-bottom: 8em;
+  }
 }
 
 #edd_price_option_35_singlesite {
-   &:before {
-      content: 'Personal';
-      display: block;
-   }
+  &:before {
+    content: "Personal";
+    display: block;
+  }
 }
 
 #edd_price_option_35_2-5sites {
-   &:before {
-      content: 'Developer';
-      display: block;
-   }
+  &:before {
+    content: "Developer";
+    display: block;
+  }
 }
 
 #edd_price_option_35_unlimitedsites {
-   &:before {
-      content: 'Agency';
-      display: block;
-   }
+  &:before {
+    content: "Agency";
+    display: block;
+  }
 }
 
 .edd_price_options {
-   li[itemprop='offers'] {
-      position: relative;
+  li[itemprop="offers"] {
+    position: relative;
 
-      @include device(900, 'max') {
-         padding-bottom: 0;
+    @include device(900, "max") {
+      padding-bottom: 0;
+    }
+
+    @include device(600, "max") {
+      padding-right: 1.2em;
+      padding-left: 1.2em;
+      padding-top: 1.2em;
+      border-radius: 5px;
+    }
+
+    &.is-valid {
+      &:after {
+        top: 9px;
+        left: 15px;
+        opacity: 1;
+        width: 35px;
+        height: 35px;
+        background: url("imgs/icon-check-white.svg");
+
+        @include device(600, "max") {
+          top: 10px;
+          width: 30px;
+          height: 30px;
+        }
       }
+    }
 
-      @include device(600, 'max') {
-         padding-right: 1.2em;
-         padding-left: 1.2em;
-         padding-top: 1.2em;
-         border-radius: 5px;
+    &:before {
+      text-align: center;
+      font-size: $font-xl;
+      font-weight: bold;
+      background: color(light-grey);
+      margin-top: -1em;
+      width: calc(100% + 2em);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      margin-left: -1em;
+      padding: 10px 0;
+      border-bottom: 1px solid #cbcbcb;
+
+      @include device(600, "max") {
+        font-size: 1.2em;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
       }
+    }
 
-      &.is-valid {
-         &:after {
-            top: 9px;
-            left: 15px;
-            opacity: 1;
-            width: 35px;
-            height: 35px;
-            background: url('imgs/icon-check-white.svg');
+    &:hover {
+      cursor: pointer;
+    }
 
-            @include device(600, 'max') {
-               top: 10px;
-               width: 30px;
-               height: 30px;
-            }
-         }
-      }
-
-      &:before {
-         text-align: center;
-         font-size: $font-xl;
-         font-weight: bold;
-         background: color(light-grey);
-         margin-top: -1em;
-         width: calc(100% + 2em);
-         border-top-left-radius: 10px;
-         border-top-right-radius: 10px;
-         margin-left: -1em;
-         padding: 10px 0;
-         border-bottom: 1px solid #cbcbcb;
-
-         @include device(600, 'max') {
-            font-size: 1.2em;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-         }
-      }
-
+    label {
       &:hover {
-         cursor: pointer;
+        cursor: pointer;
       }
+    }
 
-      label {
-         &:hover {
-            cursor: pointer;
-         }
+    .edd_price_option_35,
+    input[type="radio"] {
+      visibility: hidden;
+      @include device(900, "max") {
+        position: absolute;
       }
-
-      .edd_price_option_35,
-      input[type='radio'] {
-         visibility: hidden;
-         @include device(900, 'max') {
-            position: absolute;
-         }
-      }
-   }
+    }
+  }
 }
 
 .purchase-confirmation {
-   .page-header,
-   .page-header + span {
-      margin-bottom: 0;
-      padding-bottom: 0;
-   }
+  .page-header,
+  .page-header + span {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
 }

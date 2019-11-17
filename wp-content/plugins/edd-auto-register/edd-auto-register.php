@@ -3,7 +3,7 @@
  * Plugin Name: Easy Digital Downloads - Auto Register
  * Plugin URI:  https://easydigitaldownloads.com/downloads/auto-register/
  * Description: Automatically creates a WP user account at checkout, based on customer's email address.
- * Version:     1.3.11
+ * Version:     1.3.13
  * Author:      Sandhills Development, LLC
  * Author URI:  https://sandhillsdev.com
  * Text Domain: edd-auto-register
@@ -85,7 +85,7 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 		 */
 		private function setup_globals() {
 
-			$this->version    = '1.3.11';
+			$this->version    = '1.3.13';
 
 			// paths
 			$this->file         = __FILE__;
@@ -105,8 +105,15 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
 		private function hooks() {
 
 			if ( ! class_exists( 'EDD_Customer' ) ) {
-				edd_debug_log( 'Auto Register: Not loaded, EDD_Customer class is not available.' );
+
 				add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+
+				if( function_exists( 'edd_debug_log') ) {
+
+					edd_debug_log( 'Auto Register: Not loaded, EDD_Customer class is not available.' );
+
+				}
+
 				return;
 			}
 
@@ -490,15 +497,7 @@ if ( ! class_exists( 'EDD_Auto_Register' ) ) {
  * @return object Returns an instance of the EDD_Auto_Register class
  */
 function edd_auto_register() {
-
-	if ( ! function_exists( 'edd_debug_log' ) ) {
-		function edd_debug_log( $message = '' ) {
-			error_log( $message, 3,  trailingslashit( wp_upload_dir() ) . 'edd-debug-log.txt' );
-		}
-	}
-
 	return EDD_Auto_Register::get_instance();
-
 }
 
 /**

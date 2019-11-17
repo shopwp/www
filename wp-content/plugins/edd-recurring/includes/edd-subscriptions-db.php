@@ -23,7 +23,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 		$this->table_name  = $wpdb->prefix . 'edd_subscriptions';
 		$this->primary_key = 'id';
-		$this->version     = '1.3';
+		$this->version     = '1.4';
 
 	}
 
@@ -48,6 +48,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 			'transaction_id'        => '%s',
 			'parent_payment_id'     => '%d',
 			'product_id'            => '%d',
+			'price_id'              => '%d',
 			'created'               => '%s',
 			'expiration'            => '%s',
 			'trial_period'          => '%s',
@@ -77,6 +78,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 			'transaction_id'            => '',
 			'parent_payment_id'         => 0,
 			'product_id'                => 0,
+			'price_id'                  => 0,
 			'created'                   => date( 'Y-m-d H:i:s' ),
 			'expiration'                => date( 'Y-m-d H:i:s' ),
 			'trial_period'              => '',
@@ -139,15 +141,28 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		}
 
 		// Specific products
-		if( ! empty( $args['product_id'] ) ) {
+		if ( ! empty( $args['product_id'] ) ) {
 
-			if( is_array( $args['product_id'] ) ) {
+			if ( is_array( $args['product_id'] ) ) {
 				$product_ids = implode( ',', array_map('intval', $args['product_id'] ) );
 			} else {
 				$product_ids = intval( $args['product_id'] );
 			}
 
 			$where .= " AND t1.product_id IN( {$product_ids} ) ";
+
+		}
+
+		// Specific price_ids
+		if ( isset( $args['price_id'] ) ) {
+
+			if ( is_array( $args['price_id'] ) ) {
+				$price_ids = implode( ',', array_map( 'intval', $args['price_id'] ) );
+			} else {
+				$price_ids = intval( $args['price_id'] );
+			}
+
+			$where .= " AND t1.price_id IN( {$price_ids} ) ";
 
 		}
 
@@ -456,6 +471,19 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 		}
 
+		// Specific price_ids
+		if ( isset( $args['price_id'] ) ) {
+
+			if ( is_array( $args['price_id'] ) ) {
+				$price_ids = implode( ',', array_map( 'intval', $args['price_id'] ) );
+			} else {
+				$price_ids = intval( $args['price_id'] );
+			}
+
+			$where .= " AND t1.price_id IN( {$price_ids} ) ";
+
+		}
+
 		// Specific parent payments
 		if( ! empty( $args['parent_payment_id'] ) ) {
 
@@ -686,8 +714,6 @@ class EDD_Subscriptions_DB extends EDD_DB {
 	 */
 	public function create_table() {
 
-		global $wpdb;
-
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
@@ -704,6 +730,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		transaction_id varchar(60) NOT NULL,
 		parent_payment_id bigint(20) NOT NULL,
 		product_id bigint(20) NOT NULL,
+		price_id bigint(20) DEFAULT '0',
 		created datetime NOT NULL,
 		expiration datetime NOT NULL,
 		trial_period varchar(20) NOT NULL,
@@ -714,7 +741,8 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		KEY profile_id (profile_id),
 		KEY customer (customer_id),
 		KEY transaction (transaction_id),
-		KEY customer_and_status ( customer_id, status)
+		KEY customer_and_status ( customer_id, status),
+		KEY product_id_price_id (product_id,price_id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
 
 		dbDelta( $sql );

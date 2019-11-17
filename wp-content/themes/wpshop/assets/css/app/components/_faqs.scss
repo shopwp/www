@@ -3,6 +3,7 @@
    background: transparent;
 }
 
+
 .faqs {
    margin-left: 0;
 }
@@ -12,11 +13,17 @@
    font-size: $font-l;
    border-bottom: 1px solid color(medium-grey);
 
+   > div {
+      width: 100%;
+      position: relative;
+   }
+
    .fa-plus-square,
    .fa-minus-square {
       font-size: $font-l;
-      position: relative;
-      top: 5px;
+          position: absolute;
+    top: 5px;
+    right: 0;
       // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
    }
 

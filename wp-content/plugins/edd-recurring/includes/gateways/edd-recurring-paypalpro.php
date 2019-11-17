@@ -63,6 +63,9 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 			edd_set_error( 'edd_recurring_no_paypal_api', __( 'It appears that you have not configured PayPal API access. Please configure it in EDD &rarr; Settings', 'edd_recurring' ) );
 		}
 
+		if ( count( edd_get_cart_contents() ) > 1 && ! $this->can_purchase_multiple_subs() ) {
+			edd_set_error( 'subscription_invalid', __( 'Only one subscription may be purchased through this payment method per checkout.', 'edd-recurring' ) );
+		}
 
 	}
 
@@ -445,15 +448,20 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 			status_header( 200 );
 
 			$posted          = apply_filters( 'edd_recurring_ipn_post', $_POST ); // allow $_POST to be modified
-			
+
 			if( ! isset( $posted['recurring_payment_id'] ) ) {
 				return; // This is not related to Recurring Payments
 			}
-			
+
 			$amount          = number_format( (float) $posted['mc_gross'], 2 );
 			$payment_status  = $posted['payment_status'];
 			$currency_code   = $posted['mc_currency'];
 			$subscription    = new EDD_Subscription( $posted['recurring_payment_id'], true );
+
+			$parent_payment = edd_get_payment( $subscription->parent_payment_id );
+			if ( $parent_payment->gateway !== $this->id ) {
+				return;
+			}
 
 			if( empty( $subscription->id ) || $subscription->id < 1 )  {
 				die( 'No subscription found' );
@@ -554,7 +562,7 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 	}
 
 	/**
-	 * Refund charges and cancel subscription when refunding via View Order Details
+	 * Refund charges when refunding via View Order Details
 	 *
 	 * @access      public
 	 * @since       2.4.11
@@ -652,15 +660,6 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 					// Prevents the PayPal Pro one-time gateway from trying to process the refundl
 					$payment->update_meta( '_edd_paypalpro_refunded', true );
 					$payment->add_note( sprintf( __( 'PayPal Pro Refund Transaction ID: %s', 'edd-recurring' ), $body['REFUNDTRANSACTIONID'] ) );
-
-					foreach( $subs as $subscription ) {
-
-						// Cancel subscription
-						$this->cancel( $subscription, true );
-						$subscription->cancel();
-						$payment->add_note( sprintf( __( 'Subscription %d cancelled.', 'edd-recurring' ), $subscription->id ) );
-
-					}
 
 				}
 
@@ -846,6 +845,20 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Determines if PayPal Pro allows multiple subscriptions to be purchased at once.
+	 *
+	 * PayPal Pro has deprecated this entirely as of November 1, 2019.
+	 *
+	 * @see https://github.com/easydigitaldownloads/edd-recurring/issues/1231
+	 * @see https://github.com/easydigitaldownloads/edd-recurring/issues/1092
+	 * @since 2.9.3
+	 * @return bool
+	 */
+	public function can_purchase_multiple_subs() {
+		return false;
 	}
 
 	/**

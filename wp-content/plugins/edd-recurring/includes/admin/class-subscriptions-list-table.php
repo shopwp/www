@@ -222,7 +222,22 @@ class EDD_Subscription_Reports_Table extends WP_List_Table {
 	 * @return      string
 	 */
 	function column_product_id( $item ) {
-		return '<a href="' . esc_url( admin_url( 'post.php?action=edit&post=' . $item->product_id ) ) . '">' . get_the_title( $item->product_id ) . '</a>';
+		$download = edd_get_download( $item->product_id );
+
+		if ( $download instanceof  EDD_Download ) {
+			$product_name = $download->get_name();
+			if ( ! is_null( $item->price_id ) && $download->has_variable_prices() ) {
+				$prices = $download->get_prices();
+				if ( isset( $prices[ $item->price_id ] ) && ! empty( $prices[ $item->price_id ]['name'] ) ) {
+					$product_name .= ' &mdash; ' . $prices[ $item->price_id ]['name'];
+				}
+			}
+
+			return '<a href="' . esc_url( admin_url( 'post.php?action=edit&post=' . $item->product_id ) ) . '">' . $product_name . '</a>';
+		} else {
+			return '&mdash;';
+		}
+
 	}
 
 	/**
@@ -233,7 +248,7 @@ class EDD_Subscription_Reports_Table extends WP_List_Table {
 	 * @return      string
 	 */
 	function column_actions( $item ) {
-		return '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-subscriptions&id=' . $item->id ) ) . '" title="' . esc_attr( __( 'View or edit subscription', 'edd-recurring' ) ) . '">' . __( 'View', 'edd-recurring' ) . '</a>';
+		return '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-subscriptions&id=' . $item->id ) ) . '" title="' . esc_attr( __( 'View View or edit subscription', 'edd-recurring' ) ) . '">' . __( 'View', 'edd-recurring' ) . '</a>';
 	}
 
 

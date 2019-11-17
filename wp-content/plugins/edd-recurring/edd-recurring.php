@@ -5,7 +5,7 @@
  * Description: Sell subscriptions with Easy Digital Downloads
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com/
- * Version: 2.8.7
+ * Version: 2.9.3
  * Text Domain: edd-recurring
  * Domain Path: languages
  */
@@ -31,7 +31,7 @@ if ( ! defined( 'EDD_RECURRING_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_RECURRING_VERSION' ) ) {
-	define( 'EDD_RECURRING_VERSION', '2.8.7' );
+	define( 'EDD_RECURRING_VERSION', '2.9.3' );
 }
 
 final class EDD_Recurring {
@@ -156,7 +156,7 @@ final class EDD_Recurring {
 			self::includes_admin();
 		}
 
-		if( EDD_RECURRING_VERSION != get_option( 'edd_recurring_version' ) ){
+		if ( EDD_RECURRING_VERSION != get_option( 'edd_recurring_version' ) ) {
 			edd_recurring_install();
 		}
 
@@ -254,6 +254,7 @@ final class EDD_Recurring {
 			'class-recurring-reports.php',
 			'subscriptions.php',
 			'metabox.php',
+			'refunds.php',
 			'settings.php',
 			'scripts.php',
 			'class-reports-filters.php',
@@ -1959,7 +1960,7 @@ function EDD_Recurring() {
 
 	return EDD_Recurring::instance();
 }
-add_action( 'plugins_loaded', 'EDD_Recurring', 100 );
+add_action( 'plugins_loaded', 'EDD_Recurring', 98 );
 
 
 /**
@@ -2008,6 +2009,11 @@ function edd_recurring_install() {
 
 			// Set any other upgrades as completed on a fresh install.
 			edd_set_upgrade_complete( 'recurring_paypalproexpress_logs' );
+			edd_set_upgrade_complete( 'recurring_add_price_id_column' );
+			edd_set_upgrade_complete( 'recurring_update_price_id_column' );
+			edd_set_upgrade_complete( 'recurring_cancel_subs_if_times_met' );
+			edd_set_upgrade_complete( 'recurring_add_tax_columns_to_subs_table' );
+			edd_set_upgrade_complete( 'recurring_27_subscription_meta' );
 
 		}
 

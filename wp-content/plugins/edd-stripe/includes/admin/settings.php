@@ -112,7 +112,7 @@ function edds_add_settings( $settings ) {
 		array(
 			'id'    => 'stripe_billing_fields',
 			'name'  => __( 'Billing Address Display', 'edds' ),
-			'desc'  => __( 'Select how you would like to display the billing address fields on the checkout form. <p><strong>Notes</strong>:</p><p>If taxes are enabled, this option cannot be changed from "Full address".</p><p>This setting does <em>not</em> apply to Stripe Checkout options below.</p><p>If set to "No address fields", you <strong>must</strong> disable "zip code verification" in your Stripe account.</p>', 'edds' ),
+			'desc'  => __( 'Select how you would like to display the billing address fields on the checkout form. <p><strong>Notes</strong>:</p><p>If taxes are enabled, this option cannot be changed from "Full address".</p><p>If set to "No address fields", you <strong>must</strong> disable "zip code verification" in your Stripe account.</p>', 'edds' ),
 			'type'  => 'select',
 			'options' => array(
 				'full'        => __( 'Full address', 'edds' ),
@@ -142,51 +142,37 @@ function edds_add_settings( $settings ) {
 			'tooltip_desc'  => __( 'If you choose this option, Stripe will not charge the customer right away after checkout, and the payment status will be set to preapproved in Easy Digital Downloads. You (as the admin) can then manually change the status to Complete by going to Payment History and changing the status of the payment to Complete. Once you change it to Complete, the customer will be charged. Note that most typical stores will not need this option.', 'edds' ),
 		),
 		array(
-			'id'    => 'stripe_checkout_settings',
-			'name'  => __( 'Stripe Checkout Options', 'edds' ),
-			'type'  => 'header'
-		),
-		array(
-			'id'    => 'stripe_checkout',
-			'name'  => __( 'Enable Stripe Checkout', 'edds' ),
-			'desc'  => __( 'Check this if you would like to enable the <a target="_blank" href="https://stripe.com/checkout">Stripe Checkout</a> modal window on the main checkout screen.', 'edds' ),
-			'type'  => 'checkbox'
-		),
-		array(
-			'id'    => 'stripe_checkout_button_text',
-			'name'  => __( 'Complete Purchase Text', 'edds' ),
-			'desc'  => __( 'Enter the text shown on the checkout\'s submit button. This is the button that opens the Stripe Checkout modal window.', 'edds' ),
-			'type'  => 'text',
-			'std'   => __( 'Next', 'edds' )
-		),
-		array(
-			'id'    => 'stripe_checkout_image',
-			'name'  => __( 'Checkout Logo', 'edds' ),
-			'desc'  => __( 'Upload an image to be shown on the Stripe Checkout modal window. Recommended minimum size is 128x128px. Leave blank to disable the image.', 'edds' ),
-			'type'  => 'upload'
-		),
-		array(
-			'id'    => 'stripe_checkout_billing',
-			'name'  => __( 'Enable Billing Address', 'edds' ),
-			'desc'  => __( 'Check this box to instruct Stripe to collect a billing address in the Checkout modal window.', 'edds' ),
-			'type'  => 'checkbox',
-			'std'   => 0,
-		),
-		array(
-			'id'    => 'stripe_checkout_zip_code',
-			'name'  => __( 'Enable Zip / Postal Code', 'edds' ),
-			'desc'  => __( 'Check this box to instruct Stripe to collect a zip / postal code in the Checkout modal window.', 'edds' ),
-			'type'  => 'checkbox',
-			'std'   => 0,
-		),
-		array(
-			'id'    => 'stripe_checkout_remember',
-			'name'  => __( 'Enable Remember Me', 'edds' ),
-			'desc'  => __( 'Check this box to enable the Remember Me option in the Stripe Checkout modal window.', 'edds' ),
-			'type'  => 'checkbox',
-			'std'   => 0,
-		),
+			'id' => 'stripe_restrict_assets',
+			'name' => ( __( 'Restrict Stripe Assets', 'edds' ) ),
+			'desc' => ( __( 'Only load Stripe.com hosted assets on pages that specifically utilize Stripe functionality.', 'edds' ) ),
+			'type' => 'checkbox',
+			'tooltip_title' => __( 'Loading Javascript from Stripe', 'edds' ),
+			'tooltip_desc' => __( 'Stripe advises that their Javascript library be loaded on every page to take advantage of their advanced fraud detection rules. If you are not concerned with this, enable this setting to only load the Javascript when necessary. Read more about Stripe\'s recommended setup here: https://stripe.com/docs/web/setup.', 'edds' ),
+		)
 	);
+
+	if ( edd_get_option( 'stripe_checkout' ) ) {
+		$stripe_settings[] = array(
+			'id'    => 'stripe_checkout',
+			'name'  => '<strong>' . __( 'Stripe Checkout', 'edds' ) . '</strong>',
+			'type'  => 'stripe_checkout_notice',
+			'desc'  => wp_kses(
+				sprintf(
+					/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+					esc_html__( 'To ensure your website is compliant with the new %1$sStrong Customer Authentication%2$s (SCA) regulations, the legacy Stripe Checkout modal is no longer supported. Payments are still securely accepted through through Stripe on the standard Easy Digital Downloads checkout page. "Buy Now" buttons will also automatically redirect to the standard checkout page.', 'edds' ),
+					'<a href="https://stripe.com/en-ca/guides/strong-customer-authentication" target="_blank" rel="noopener noreferrer">',
+					'</a>'
+				),
+				array(
+					'a' => array(
+						'href'   => true,
+						'rel'    => true,
+						'target' => true,
+					)
+				)
+			),
+		);
+	}
 
 	if ( version_compare( EDD_VERSION, 2.5, '>=' ) ) {
 		$stripe_settings = array( 'edd-stripe' => $stripe_settings );
@@ -268,6 +254,21 @@ function edd_stripe_connect_notice_callback( $args ) {
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	$html = '<div class="'.$class.'" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']">' . $value . '</div>';
+
+	echo $html;
+}
+
+/**
+ * Callback for the stripe_checkout_notice field type.
+ *
+ * @since 2.7.0
+ *
+ * @param array $args The setting field arguments
+ */
+function edd_stripe_checkout_notice_callback( $args ) {
+	$value = isset( $args['desc'] ) ? $args['desc'] : '';
+
+	$html = '<div class="notice notice-warning inline' . edd_sanitize_html_class( $args['field_class'] ) . '" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']">' . wpautop( $value ) . '</div>';
 
 	echo $html;
 }

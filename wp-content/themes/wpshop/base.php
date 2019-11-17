@@ -15,11 +15,23 @@ if ($notices_enabled) {
   $mobileBodyClass .= ' is-showing-notices';
 }
 
+if (is_page('faq')) {
+   $props = ' itemscope itemtype="https://schema.org/FAQPage"';
+
+} else if (is_page('how')) {
+   $props = ' itemscope itemtype="http://schema.org/HowTo"';
+
+} else {
+   $props = '';
+}
 
 ?>
 
+
+
+
 <!doctype html>
-<html <?php language_attributes(); ?>>
+<html <?php language_attributes(); ?> <?= $props; ?>>
 
   <?php
 

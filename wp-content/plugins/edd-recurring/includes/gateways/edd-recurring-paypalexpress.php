@@ -88,9 +88,8 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 			if ( edd_is_gateway_active( 'stripe' ) || edd_is_gateway_active( '2checkout_onsite' ) || edd_is_gateway_active( 'authorize' ) ) {
 				edd_set_error( 'subscription_invalid', __( 'Only one subscription may be purchased through PayPal per checkout. To purchase multiple subscriptions, please pay by Credit Card', 'edd-recurring' ) );
 			} else {
-				edd_set_error( 'subscription_invalid', __( 'Only one subscription may be purchased through PayPal per checkout.', 'edd-recurring') );
+				edd_set_error( 'subscription_invalid', __( 'Only one subscription may be purchased through PayPal per checkout.', 'edd-recurring' ) );
 			}
-
 		}
 
 	}
@@ -307,12 +306,10 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 								break;
 						}
 
-						if( ! empty( $details['free_trial'] ) ) {
-
-							$trial_period = edd_recurring()->get_trial_period( $subscription->product_id );
+						if( ! empty( $details['free_trial'] ) && ! empty( $subscription->trial_period ) ) {
 
 							// Set start date to the end of the free trial.
-							$profile_start = date( 'Y-m-d\Tg:i:s', strtotime( '+' . $trial_period['quantity'] . ' ' . ucwords( $trial_period['unit'] ), current_time( 'timestamp' ) ) );
+							$profile_start = date( 'Y-m-d\Tg:i:s', strtotime( '+' . $subscription->trial_period, current_time( 'timestamp' ) ) );
 
 						} else {
 
@@ -657,6 +654,11 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 
 			$subscription = new EDD_Subscription( $posted['recurring_payment_id'], true );
 
+			$parent_payment = edd_get_payment( $subscription->parent_payment_id );
+			if ( $parent_payment->gateway !== $this->id ) {
+				return;
+			}
+
 			if( empty( $subscription->id ) || $subscription->id < 1 )  {
 				edd_debug_log( 'Recurring PayPal Express - IPN: no matching subscription found detected, bailing. Data: ' . var_export( $posted, true ) );
 				die( 'No subscription found' );
@@ -888,17 +890,6 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 					$payment->update_meta( '_edd_paypalexpress_refunded', true );
 					$payment->add_note( sprintf( __( 'PayPal Express Refund Transaction ID: %s', 'edd-recurring' ), $body['REFUNDTRANSACTIONID'] ) );
 
-					foreach( $subs as $subscription ) {
-
-						if ( 'cancelled' !== $subscription->status ) {
-							// Cancel subscription
-							$this->cancel( $subscription, true );
-							$subscription->cancel();
-							$payment->add_note( sprintf( __( 'Subscription %d cancelled.', 'edd-recurring' ), $subscription->id ) );
-						}
-
-					}
-
 				}
 
 				// End publish/revoked case
@@ -1089,52 +1080,15 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 	/**
 	 * Determines if PayPal Express allows multiple subscriptions to be purchased at once.
 	 *
-	 * PayPal Express has deprecated the methods used to create multiple subscriptions via a single purchase. They do allow
-	 * accounts that have created subscriptions via this method prior to January 1, 2017 to continue to use this method,
-	 * so we use this method to determine if a store is allowed to have multiple subscriptions purchased via PayPal Express.
+	 * PayPal Express has deprecated this entirely as of November 1, 2019.
 	 *
-	 * If you know your account has this ability, but do not have any subscriptions purchased via PayPal Express prior to
-	 * January 1, 2017, you can use the following to force allowing  multiple subscriptions.
-	 *
-	 * define( 'EDD_PPE_ALLOW_MULTIPLE_SUBS', true );
-	 *
-	 * If your account is not allowed to process multiple subscriptions in a single purchase, the full payment will still go through
-	 * and the products will purchased, but only a single subscription will be made for one of the products purchased, the rest
-	 * will not have a recurring billing profile setup and will need to be manually renewed.
-	 *
+	 * @see https://github.com/easydigitaldownloads/edd-recurring/issues/1231
 	 * @see https://github.com/easydigitaldownloads/edd-recurring/issues/1092
 	 * @since 2.8.5
 	 * @return bool
 	 */
 	public function can_purchase_multiple_subs() {
-
-		if ( defined( 'EDD_PPE_ALLOW_MULTIPLE_SUBS' ) ) {
-			$can_purchase_multiple_subs = filter_var( EDD_PPE_ALLOW_MULTIPLE_SUBS, FILTER_VALIDATE_BOOLEAN );
-		} else {
-			$can_purchase_multiple_subs = get_option( 'edd_ppe_can_purchase_multiple_subs' );
-
-			// If the option does not exist, we get a false return, so we need to set it.
-			if ( false === $can_purchase_multiple_subs ) {
-				$subs_db = new EDD_Subscriptions_DB;
-
-				$args = array(
-					'date'    => array(
-						'end' => '2017-01-01 00:00:00',
-					),
-					'number'  => 1,
-					'status'  => array( 'expired', 'active', 'cancelled', 'failing', 'trialling', 'completed' ), // All of these statuses would have at once been active
-					'gateway' => 'paypalexpress',
-				);
-
-				$found_sub                  = $subs_db->get_subscriptions( $args );
-				$can_purchase_multiple_subs = ! empty( $found_sub ) ? true : false;
-				$option_value               = $can_purchase_multiple_subs ? '1' : '0';
-
-				update_option( 'edd_ppe_can_purchase_multiple_subs', $option_value );
-			}
-		}
-
-		return filter_var( $can_purchase_multiple_subs, FILTER_VALIDATE_BOOLEAN );
+		return false;
 	}
 
 	/**

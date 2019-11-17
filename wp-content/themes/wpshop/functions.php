@@ -253,3 +253,17 @@ function wps_template_redirect() {
 }
 
 add_action( 'template_redirect', 'wps_template_redirect' );
+
+
+
+function add_script_attributes($tag, $handle) {
+
+   if ($handle !== 'fitvids' && $handle !== 'WPS Vendor Commons' && $handle !== 'WPS Fonts' && $handle !== 'modernizr-js' && $handle !== 'WP Shopify JS') {
+      return $tag;
+   }
+
+   return str_replace(' src', ' defer="defer" src', $tag );
+
+}
+
+add_filter('script_loader_tag', 'add_script_attributes', 10, 2);

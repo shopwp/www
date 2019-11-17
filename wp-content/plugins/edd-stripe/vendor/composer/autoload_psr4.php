@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Zend\\Dom\\' => array($vendorDir . '/zendframework/zend-dom/src'),
     'Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
+    'SteveGrunwell\\PHPUnit_Markup_Assertions\\' => array($vendorDir . '/stevegrunwell/phpunit-markup-assertions/src'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src/Composer/Installers'),
 );

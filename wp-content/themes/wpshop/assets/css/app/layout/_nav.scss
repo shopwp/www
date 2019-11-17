@@ -158,6 +158,16 @@
    min-width: 200px;
    margin: 0;
 }
+
+.is-showing-notices .tippy-popper {
+   margin-top: -60px;
+}
+
+.is-showing-notices.purchase .tippy-popper {
+   margin-top: 0;
+}
+
+
 [data-state='visible'] .nav-primary-sub {
    opacity: 1;
 }

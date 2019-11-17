@@ -1,4 +1,24 @@
 <?php
+
+/**
+ * Allows preconfigured Stripe API requests to be made.
+ *
+ * @since 2.7.0
+ *
+ * @throws \EDD_Stripe_Utils_Exceptions_Stripe_Object_Not_Found When attempting to call an object or method that is not available.
+ * @throws \Stripe\Error                                        When any Stripe-related error occurs.
+ *
+ * @param string $object Name of the Stripe object to request.
+ * @param string $method Name of the API operation to perform during the request.
+ * @param mixed ...$args Additional arguments to pass to the request.
+ * @return \Stripe\StripeObject 
+ */
+function edds_api_request( $object, $method, $args = null ) {
+	$api = new EDD_Stripe_API();
+
+	return call_user_func_array( array( $api, 'request' ), func_get_args() );
+}
+
 /**
  * Retrieve the exsting cards setting.
  * @return bool
@@ -22,6 +42,7 @@ function edd_stripe_get_existing_cards( $user_id = 0 ) {
 	}
 
 	$enabled = edd_stripe_existing_cards_enabled();
+
 	if ( ! $enabled ) {
 		return array();
 	}
@@ -33,34 +54,92 @@ function edd_stripe_get_existing_cards( $user_id = 0 ) {
 	}
 
 	// Check if the user has existing cards
-	$customer_cards = array();
+	$customer_cards     = array();
 	$stripe_customer_id = edds_get_stripe_customer_id( $user_id );
+
 	if ( ! empty( $stripe_customer_id ) ) {
-		$secret_key      = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) ) ;
-		\Stripe\Stripe::setApiKey( $secret_key );
 		try {
-			$stripe_customer = \Stripe\Customer::retrieve( $stripe_customer_id );
+			$stripe_customer = edds_api_request( 'Customer', 'retrieve', $stripe_customer_id );
 
 			if ( isset( $stripe_customer->deleted ) && $stripe_customer->deleted ) {
-				return array();
+				return $customer_cards;
 			}
 
-			$customer_sources = $stripe_customer->sources->all( array( "object" => "card" ) );
-			$default_source   = $stripe_customer->default_source;
+			$payment_methods = edds_api_request( 'PaymentMethod', 'all', array(
+				'type'     => 'card',
+				'customer' => $stripe_customer->id,
+				'limit'    => 100,
+			) );
 
-			foreach ( $customer_sources->data as $source ) {
-				$customer_cards[ $source->id ] = array(
-					'source' => $source,
-				);
+			$cards = edds_api_request( 'Customer', 'allSources', $stripe_customer->id, array(
+				'limit' => 100,
+			)	);
 
-				$customer_cards[ $source->id ][ 'default' ] = $source->id === $default_source ? true : false;
+			$sources = array_merge( $payment_methods->data, $cards->data );
+
+			foreach ( $sources as $source ) {
+				$source_data     = new stdClass();
+				$source_data->id = $source->id;
+
+				switch( $source->object ) {
+					case 'payment_method':
+						$source_data->brand           = ucwords( $source->card->brand );
+						$source_data->last4           = $source->card->last4;
+						$source_data->exp_month       = $source->card->exp_month;
+						$source_data->exp_year        = $source->card->exp_year;
+						$source_data->fingerprint     = $source->card->fingerprint;
+						$source_data->address_line1   = $source->billing_details->address->line1;
+						$source_data->address_line2   = $source->billing_details->address->line2;
+						$source_data->address_city    = $source->billing_details->address->city;
+						$source_data->address_zip     = $source->billing_details->address->postal_code;
+						$source_data->address_state   = $source->billing_details->address->state;
+						$source_data->address_country = $source->billing_details->address->country;
+
+						$customer_cards[ $source->id ]['default'] = $source->id === $stripe_customer->invoice_settings->default_payment_method;
+						break;
+					case 'card':
+						$source_data->brand           = $source->brand;
+						$source_data->last4           = $source->last4;
+						$source_data->exp_month       = $source->exp_month;
+						$source_data->exp_year        = $source->exp_year;
+						$source_data->fingerprint     = $source->fingerprint;
+						$source_data->address_line1   = $source->address_line1;
+						$source_data->address_line2   = $source->address_line2;
+						$source_data->address_city    = $source->address_city;
+						$source_data->address_zip     = $source->address_zip;
+						$source_data->address_state   = $source->address_state;
+						$source_data->address_country = $source->address_country;
+						break;
+				}
+
+				$customer_cards[ $source->id ]['source']  = $source_data;
 			}
 		} catch ( Exception $e ) {
-			return array();
+			return $customer_cards;
+		}
+	}
+
+	// Put default card first.
+	usort(
+		$customer_cards,
+		function( $a, $b ) {
+			return ! $a['default'];
+		}
+	);
+	
+	// Show only the latest version of card for duplicates.
+	$fingerprints = array();
+	foreach ( $customer_cards as $key => $customer_card ) {
+		$fingerprint = $customer_card['source']->fingerprint;
+		if ( ! in_array( $fingerprint, $fingerprints ) ) {
+			$fingerprints[] = $fingerprint;
+		} else {
+			unset( $customer_cards[ $key ] );
 		}
 	}
 
 	$existing_cards[ $user_id ] = $customer_cards;
+
 	return $existing_cards[ $user_id ];
 }
 
@@ -209,4 +288,87 @@ function edds_is_zero_decimal_currency() {
 	}
 
 	return $ret;
+}
+
+/**
+ * Retrieves a sanitized statement descriptor.
+ *
+ * @since 2.6.19
+ *
+ * @return string $statement_descriptor Sanitized statement descriptor.
+ */
+function edds_get_statement_descriptor() {
+	$statement_descriptor = edd_get_option( 'stripe_statement_descriptor', '' );
+	$statement_descriptor = edds_sanitize_statement_descriptor( $statement_descriptor );
+
+	return $statement_descriptor;
+}
+
+/**
+ * Retrieves a list of unsupported characters for Stripe statement descriptors.
+ *
+ * @since 2.6.19
+ *
+ * @return array $unsupported_characters List of unsupported characters.
+ */
+function edds_get_statement_descriptor_unsupported_characters() {
+	$unsupported_characters = array(
+		'<',
+		'>',
+		'"',
+		'\'',
+		'\\',
+		'*',
+	);
+
+	/**
+	 * Filters the list of unsupported characters for Stripe statement descriptors.
+	 *
+	 * @since 2.6.19
+	 *
+	 * @param array $unsupported_characters List of unsupported characters.
+	 */
+	$unsupported_characters = apply_filters( 'edds_get_statement_descriptor_unsupported_characters', $unsupported_characters  );
+
+	return $unsupported_characters;
+}
+
+/**
+ * Sanitizes a string to be used for a statement descriptor.
+ *
+ * @since 2.6.19
+ *
+ * @link https://stripe.com/docs/connect/statement-descriptors#requirements
+ *
+ * @param string $statement_descriptor Statement descriptor to sanitize.
+ * @return string $statement_descriptor Sanitized statement descriptor.
+ */
+function edds_sanitize_statement_descriptor( $statement_descriptor ) {
+	$unsupported_characters = edds_get_statement_descriptor_unsupported_characters();
+
+	$statement_descriptor = trim( str_replace( $unsupported_characters, '', $statement_descriptor ) );
+	$statement_descriptor = substr( $statement_descriptor, 0, 22 );
+
+	return $statement_descriptor;
+}
+
+/**
+ * Retrieves a given registry instance by name.
+ *
+ * @since 2.6.19
+ *
+ * @param string $name Registry name.
+ * @return null|EDD_Stripe_Registry Null if the registry doesn't exist, otherwise the object instance.
+ */
+function edds_get_registry( $name ) {
+	switch( $name ) {
+		case 'admin-notices':
+			$registry = EDD_Stripe_Admin_Notices_Registry::instance();
+			break;
+		default:
+			$registry = null;
+			break;
+	}
+
+	return $registry;
 }

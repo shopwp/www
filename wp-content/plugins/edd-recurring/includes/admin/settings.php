@@ -31,6 +31,12 @@ function edd_recurring_settings( $settings ) {
 				'type'  => 'checkbox'
 			),
 			array(
+				'id'    => 'recurring_treat_completed_subs_as_active',
+				'name'  => __( 'Allow "Completed" subscriptions to download their files', 'edd-recurring' ),
+				'desc'  => __( 'When "Limit File Downloads" is enabled, would you like users with "Completed" subscriptions to be able to download their files, despite their subscription technically not being "Active"?', 'edd-recurring' ),
+				'type'  => 'checkbox'
+			),
+			array(
 				'id'   => 'recurring_show_terms_notice',
 				'name' => __( 'Display Subscription Terms', 'edd-recurring' ),
 				'desc' => __( 'When selected, the billing times and frequency will be shown below the purchase link.', 'edd-recurring' ),
@@ -48,6 +54,13 @@ function edd_recurring_settings( $settings ) {
 				'desc' => __( 'The label used for signup fees, if any. This is shown on checkout and on individual purchase options if "Display Signup Fee" above is checked.', 'edd-recurring' ),
 				'type' => 'text',
 				'std'  => __( 'Signup Fee', 'edd-recurring' )
+			),
+			array(
+				'id'   => 'recurring_cancel_button_text',
+				'name' => __( 'Cancel Subscription Text', 'edd-recurring' ),
+				'desc' => __( 'The label used for the Cancel action. This text is shown to the customer when managing their subscriptions.', 'edd-recurring' ),
+				'type' => 'text',
+				'std'  => __( 'Cancel', 'edd-recurring' )
 			),
 			array(
 				'id'    => 'recurring_one_time_discounts',
@@ -148,6 +161,26 @@ function edd_recurring_settings( $settings ) {
 				'name' => __( 'Subscription Expiration Reminders', 'edd-recurring' ),
 				'desc' => __( 'Configure the subscription expiration notice emails', 'edd-recurring' ),
 				'type' => 'hook'
+			),
+			array(
+				'id'    => 'enable_subscription_cancelled_admin_email',
+				'name'  => __( 'Subscription Cancelled Email for Admins', 'edd-recurring' ),
+				'desc'  => __( 'Check this if you\'d like admins to be sent an email notice when a customer cancels a subscription.', 'edd-recurring' ),
+				'type'  => 'checkbox'
+			),
+			array(
+				'id'    => 'subscription_cancelled_admin_subject',
+				'name'  => __( 'Subscription Cancelled Subject for Admins', 'edd-recurring' ),
+				'desc'  => __( 'Enter the subject line of the email sent to admins when a subscription is cancelled.', 'edd-recurring' ),
+				'type'  => 'text',
+				'std'   => __( 'Subscription {subscription_id} Cancelled', 'edd-recurring' )
+			),
+			array(
+				'id'    => 'subscription_cancelled_admin_message',
+				'name'  => __( 'Subscription Cancelled Message for Admins', 'edd-recurring' ),
+				'desc'  => __( 'Enter the body text of the email sent to admins when a subscription is cancelled.', 'edd-recurring' ),
+				'type'  => 'rich_editor',
+				'std'   => __( "Subscription ID: {subscription_id}\n\nCustomer: {name}\n\nSubscription: {subscription_name}\n\nView Subscription: {subscription_link}", 'edd-recurring' )
 			),
 		)
 	);

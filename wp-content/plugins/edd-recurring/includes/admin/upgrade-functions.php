@@ -19,9 +19,9 @@
 function edd_recurring_do_automatic_upgrades() {
 
 	$did_upgrade = false;
-	$version = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_recurring_version' ) );
+	$version = get_option( 'edd_recurring_version' );
 
-	if( $version <> EDD_RECURRING_VERSION ) {
+	if ( $version <> EDD_RECURRING_VERSION ) {
 
 		// Trigger DB upgrades
 		edd_recurring_install();
@@ -31,9 +31,9 @@ function edd_recurring_do_automatic_upgrades() {
 
 	}
 
-	if( $did_upgrade ) {
+	if ( $did_upgrade ) {
 
-		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );
 
 	}
 
@@ -120,6 +120,24 @@ function edd_show_recurring_upgrade_notices() {
 		printf(
 			'<div class="updated"><p>' . __( 'Easy Digital Downloads wants to check to see if any subscriptions need to be set to complete. Click <a href="%s">here</a> to start.', 'edd-recurring' ) . '</p></div>',
 			esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=recurring_cancel_subs_if_times_met' ) )
+		);
+
+	}
+
+	if ( ! edd_has_upgrade_completed( 'recurring_add_price_id_column' ) ) {
+
+		printf(
+			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to upgrade subscriptions table, click <a href="%s">here</a> to start the upgrade.', 'edd-recurring' ) . '</p></div>',
+			esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=recurring_add_price_id_column' ) )
+		);
+
+	}
+
+	if ( ! edd_has_upgrade_completed( 'recurring_update_price_id_column' ) ) {
+
+		printf(
+			'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to update the subscriptions table, click <a href="%s">here</a> to start the upgrade.', 'edd-recurring' ) . '</p></div>',
+			esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=recurring_update_price_id_column' ) )
 		);
 
 	}
@@ -898,7 +916,7 @@ function edd_recurring_fix_24_stripe_customers() {
 	} else {
 
 		if ( false === $log_only ) {
-			update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+			update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );
 			edd_set_upgrade_complete( 'fix_24_stripe_customers' );
 		} else {
 			fwrite( $log_file, 'Completed upgarde routine' . "\n");
@@ -1015,7 +1033,7 @@ function edd_recurring_27_add_subscription_id_meta() {
 
 	} else {
 
-		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+		update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );
 		edd_set_upgrade_complete( 'recurring_27_subscription_meta' );
 
 		delete_option( 'edd_doing_upgrade' );
@@ -1095,7 +1113,7 @@ function edd_recurring_paypalproexpress_logs() {
 
 	} else {
 
-		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+		update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );
 		edd_set_upgrade_complete( 'recurring_paypalproexpress_logs' );
 
 		delete_option( 'edd_doing_upgrade' );
@@ -1138,12 +1156,11 @@ function edd_recurring_add_tax_columns_to_subs_table() {
 
 	if ( empty( $total ) || $total <= 1 ) {
 
-		@$db->create_table();
 		$total = $db->count();
 
 		// We had no errors, so just mark the upgrade as complete.
 		if ( empty( $total ) ) {
-			update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+			update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );
 			edd_set_upgrade_complete( 'recurring_add_tax_columns_to_subs_table' );
 
 			delete_option( 'edd_doing_upgrade' );
@@ -1185,7 +1202,7 @@ function edd_recurring_add_tax_columns_to_subs_table() {
 
 	} else {
 
-		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+		update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );
 		edd_set_upgrade_complete( 'recurring_add_tax_columns_to_subs_table' );
 
 		delete_option( 'edd_doing_upgrade' );
@@ -1258,7 +1275,7 @@ function edd_recurring_cancel_subs_if_times_met() {
 
 	} else {
 
-		update_option( 'edd_recurring_version', preg_replace( '/[^0-9.].*/', '', EDD_RECURRING_VERSION ) );
+		update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );
 		edd_set_upgrade_complete( 'recurring_cancel_subs_if_times_met' );
 
 		delete_option( 'edd_doing_upgrade' );
@@ -1270,3 +1287,264 @@ function edd_recurring_cancel_subs_if_times_met() {
 
 }
 add_action( 'edd_recurring_cancel_subs_if_times_met', 'edd_recurring_cancel_subs_if_times_met' );
+
+/**
+ * Manages the addition of the `price_id` column in the database.
+ *
+ * @since 2.9.0
+ */
+function edd_upgrade_render_recurring_add_price_id_column() {
+	wp_enqueue_script( 'jquery' );
+
+	$migration_complete = edd_has_upgrade_completed( 'recurring_add_price_id_column' );
+
+	if ( $migration_complete ) : ?>
+		<div id="edd-sl-migration-complete" class="notice notice-success">
+			<p>
+				<?php _e( '<strong>Migration complete:</strong> You have already completed the subscription Price ID upgrade.', 'edd-recurring' ); ?>
+			</p>
+		</div>
+		<?php return; ?>
+	<?php endif; ?>
+
+	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
+		<p>
+			<?php _e( '<strong>Database Upgrade Complete:</strong> All database upgrades have been completed.', 'edd-recurring' ); ?>
+			<br /><br />
+			<?php _e( 'You may now leave this page.', 'edd-recurring' ); ?>
+		</p>
+	</div>
+
+	<div id="edd-migration-nav-warn" class="notice notice-info">
+		<p>
+			<?php _e( '<strong>Important:</strong> Please leave this screen open and do not navigate away until the process completes.', 'edd-recurring' ); ?>
+		</p>
+	</div>
+
+	<style>
+		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
+	</style>
+	<script>
+		jQuery( function($) {
+			$(document).ready(function () {
+				$(document).on("DOMNodeInserted", function (e) {
+					var element = e.target;
+
+					if (element.id === 'edd-batch-success') {
+						element = $(element);
+
+						element.parent().prev().find('.edd-migration.allowed').hide();
+						element.parent().prev().find('.edd-migration.unavailable').show();
+						var element_wrapper = element.parents().eq(4);
+						element_wrapper.find('.dashicons.dashicons-yes').show();
+
+						var next_step_wrapper = element_wrapper.next();
+						if (next_step_wrapper.find('.postbox').length) {
+							next_step_wrapper.find('.edd-migration.allowed').show();
+							next_step_wrapper.find('.edd-migration.unavailable').hide();
+
+							if (auto_start_next_step) {
+								next_step_wrapper.find('.edd-export-form').submit();
+							}
+						} else {
+							$('#edd-migration-nav-warn').hide();
+							$('#edd-migration-ready').slideDown();
+						}
+
+					}
+				});
+			});
+		});
+	</script>
+
+	<div class="metabox-holder">
+		<div class="postbox">
+			<h2 class="hndle">
+				<span><?php _e( 'Update subscription records', 'edd-recurring' ); ?></span>
+				<span class="dashicons dashicons-yes"></span>
+			</h2>
+			<div class="inside update-subscription-records-control">
+				<p>
+					<?php _e( 'This update will add the price ID of any variably priced subscription to the subscription record in the database.', 'edd-recurring' ); ?>
+				</p>
+				<form method="post" id="edd-add-price-id-column-subs-form" class="edd-export-form edd-import-export-form">
+			<span class="step-instructions-wrapper">
+
+				<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+				<?php if ( ! $migration_complete ) : ?>
+					<span class="edd-migration allowed">
+						<input type="submit" id="add-price-ids-submit" value="<?php _e( 'Update Subscriptions', 'edd-recurring' ); ?>" class="button-primary"/>
+					</span>
+				<?php else: ?>
+					<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Update Subscriptions', 'edd-recurring' ); ?>" class="button-secondary"/>
+					&mdash; <?php _e( 'Subscription records have already been updated.', 'edd-recurring' ); ?>
+				<?php endif; ?>
+
+				<input type="hidden" name="edd-export-class" value="EDD_Recurring_Add_Subscription_Price_IDs" />
+				<span class="spinner"></span>
+
+			</span>
+				</form>
+			</div><!-- .inside -->
+		</div><!-- .postbox -->
+	</div>
+
+	<?php
+}
+
+/**
+ * Manages the addition of the `price_id` column in the database.
+ *
+ * @since 2.9.3
+ */
+function edd_upgrade_render_recurring_update_price_id_column() {
+	wp_enqueue_script( 'jquery' );
+
+	$migration_complete = edd_has_upgrade_completed( 'recurring_update_price_id_column' );
+
+	if ( $migration_complete ) : ?>
+		<div id="edd-sl-migration-complete" class="notice notice-success">
+			<p>
+				<?php _e( '<strong>Migration complete:</strong> You have already completed the subscription Price ID upgrade.', 'edd-recurring' ); ?>
+			</p>
+		</div>
+		<?php return; ?>
+	<?php endif; ?>
+
+	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
+		<p>
+			<?php _e( '<strong>Database Upgrade Complete:</strong> All database upgrades have been completed.', 'edd-recurring' ); ?>
+			<br /><br />
+			<?php _e( 'You may now leave this page.', 'edd-recurring' ); ?>
+		</p>
+	</div>
+
+	<div id="edd-migration-nav-warn" class="notice notice-info">
+		<p>
+			<?php _e( '<strong>Important:</strong> Please leave this screen open and do not navigate away until the process completes.', 'edd-recurring' ); ?>
+		</p>
+	</div>
+
+	<style>
+		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
+	</style>
+	<script>
+		jQuery( function($) {
+			$(document).ready(function () {
+				$(document).on("DOMNodeInserted", function (e) {
+					var element = e.target;
+
+					if (element.id === 'edd-batch-success') {
+						element = $(element);
+
+						element.parent().prev().find('.edd-migration.allowed').hide();
+						element.parent().prev().find('.edd-migration.unavailable').show();
+						var element_wrapper = element.parents().eq(4);
+						element_wrapper.find('.dashicons.dashicons-yes').show();
+
+						var next_step_wrapper = element_wrapper.next();
+						if (next_step_wrapper.find('.postbox').length) {
+							next_step_wrapper.find('.edd-migration.allowed').show();
+							next_step_wrapper.find('.edd-migration.unavailable').hide();
+
+							if (auto_start_next_step) {
+								next_step_wrapper.find('.edd-export-form').submit();
+							}
+						} else {
+							$('#edd-migration-nav-warn').hide();
+							$('#edd-migration-ready').slideDown();
+						}
+
+					}
+				});
+			});
+		});
+	</script>
+
+	<div class="metabox-holder">
+		<div class="postbox">
+			<h2 class="hndle">
+				<span><?php _e( 'Update subscription records', 'edd-recurring' ); ?></span>
+				<span class="dashicons dashicons-yes"></span>
+			</h2>
+			<div class="inside update-subscription-records-control">
+				<p>
+					<?php _e( 'This update will update the price ID of any variably priced subscription to the subscription record in the database.', 'edd-recurring' ); ?>
+				</p>
+				<form method="post" id="edd-add-price-id-column-subs-form" class="edd-export-form edd-import-export-form">
+			<span class="step-instructions-wrapper">
+
+				<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+
+				<?php if ( ! $migration_complete ) : ?>
+					<span class="edd-migration allowed">
+						<input type="submit" id="update-price-ids-submit" value="<?php _e( 'Update Subscriptions', 'edd-recurring' ); ?>" class="button-primary"/>
+					</span>
+				<?php else: ?>
+					<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Update Subscriptions', 'edd-recurring' ); ?>" class="button-secondary"/>
+					&mdash; <?php _e( 'Subscription records have already been updated.', 'edd-recurring' ); ?>
+				<?php endif; ?>
+
+				<input type="hidden" name="edd-export-class" value="EDD_Recurring_Update_Subscription_Price_IDs" />
+				<span class="spinner"></span>
+
+			</span>
+				</form>
+			</div><!-- .inside -->
+		</div><!-- .postbox -->
+	</div>
+
+	<?php
+}
+
+
+/**
+ * Registers the upgrade routine to add the `price_id` column to the database.
+ *
+ * @since 2.9.0
+ */
+function edd_recurring_register_batch_subscription_price_id_column() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_subscription_price_id_batch_processor', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_recurring_register_batch_subscription_price_id_column', 10 );
+
+/**
+ * Includes the files to run the `price_id` column addition routine.
+ *
+ * @since 2.9.0
+ *
+ * @param string $class Batch processor class name.
+ */
+function edd_include_subscription_price_id_batch_processor( $class ) {
+
+	if ( 'EDD_Recurring_Add_Subscription_Price_IDs' === $class ) {
+		require_once EDD_RECURRING_PLUGIN_DIR . 'includes/admin/upgrades/class-add-subscription-price-ids.php';
+	}
+
+}
+
+/**
+ * Registers the upgrade routine to update the `price_id` column to the database.
+ *
+ * @since 2.9.3
+ */
+function edd_recurring_register_batch_subscription_price_id_column_update() {
+	add_action( 'edd_batch_export_class_include', 'edd_include_subscription_price_id_update_batch_processor', 10, 1 );
+}
+add_action( 'edd_register_batch_exporter', 'edd_recurring_register_batch_subscription_price_id_column_update', 10 );
+
+/**
+ * Includes the files to run the `price_id` column update routine.
+ *
+ * @since 2.9.3
+ *
+ * @param string $class Batch processor class name.
+ */
+function edd_include_subscription_price_id_update_batch_processor( $class ) {
+
+	if ( 'EDD_Recurring_Update_Subscription_Price_IDs' === $class ) {
+		require_once EDD_RECURRING_PLUGIN_DIR . 'includes/admin/upgrades/class-update-subscription-price-ids.php';
+	}
+
+}

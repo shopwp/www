@@ -140,7 +140,7 @@ function edd_recurring_new_subscription_details() {
 											<label for="tablecell"><?php _e( 'Product:', 'edd-recurring' ); ?></label>
 										</td>
 										<td>
-											<?php echo EDD()->html->product_dropdown( array( 'name' => 'product_id', 'chosen' => true ) ); ?>
+											<?php echo EDD()->html->product_dropdown( array( 'name' => 'product_id', 'chosen' => true, 'variations' => true ) ); ?>
 											<span class="edd-recurring-price-option-wrap"></span>
 											<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'Required. Select the product this subscription grants access to.', 'edd-recurring' ); ?>"></span>
 										</td>
@@ -387,11 +387,31 @@ function edd_recurring_subscription_details() {
 											<label for="tablecell"><?php _e( 'Product:', 'edd-recurring' ); ?></label>
 										</td>
 										<td>
-											<?php echo EDD()->html->product_dropdown( array( 'selected' => $sub->product_id, 'chosen' => true, 'name' => 'product_id', 'class' => 'edd-sub-product-id' ) ); ?>
+											<?php
+											$selected = $sub->product_id;
+											$download = edd_get_download( $selected );
+											if ( ! is_null( $sub->price_id ) && edd_has_variable_prices( $sub->product_id ) ) {
+												$selected .= '_' . $sub->price_id;
+											}
+
+											// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+											echo EDD()->html->product_dropdown(
+												array(
+													'selected'   => $selected,
+													'chosen'     => true,
+													'name'       => 'product_id',
+													'class'      => 'edd-sub-product-id',
+													'variations' => true,
+												)
+											);
+
+											if ( $download instanceof EDD_Download ) :
+											?>
 											<a href="<?php echo esc_url( add_query_arg( array(
 													'post'   => $sub->product_id,
 													'action' => 'edit'
 												), admin_url( 'post.php' ) ) ); ?>"><?php printf( __( 'View %s', 'edd-recurring' ), edd_get_label_singular() ); ?></a>
+											<?php endif; ?>
 										</td>
 									</tr>
 									<tr>
@@ -650,9 +670,21 @@ function edd_recurring_process_subscription_update() {
 	$expiration      = date( 'Y-m-d 23:59:59', strtotime( $_POST['expiration'] ) );
 	$profile_id      = sanitize_text_field( $_POST['profile_id'] );
 	$transaction_id  = sanitize_text_field( $_POST['transaction_id'] );
-	$product_id      = absint( $_POST['product_id'] );
+	$product_id      = sanitize_text_field( $_POST['product_id'] );
 	$subscription    = new EDD_Subscription( absint( $_POST['sub_id'] ) );
 	$status          = sanitize_text_field( $_POST['status'] );
+
+	$product_details = explode( '_', $product_id );
+	$product_id      = $product_details[0];
+	$has_variations  = edd_has_variable_prices( $product_id );
+	if ( $has_variations ) {
+		if ( ! isset( $product_details[1] ) ) {
+			wp_die( __( 'A variation is required for the selected product', 'edd-recurring' ), __( 'Error', 'edd-recurring' ), array( 'response' => 401 ) );
+		}
+
+		$price_id = $product_details[1];
+	}
+
 	$args            = array(
 		'status'         => $status,
 		'expiration'     => $expiration,
@@ -660,6 +692,10 @@ function edd_recurring_process_subscription_update() {
 		'product_id'     => $product_id,
 		'transaction_id' => $transaction_id,
 	);
+
+	if ( $has_variations && isset( $price_id ) ) {
+		$args['price_id'] = $price_id;
+	}
 
 	if( 'pending' !== $status && 'active' !== $status ) {
 		unset( $args['status'] );
@@ -767,7 +803,7 @@ function edd_recurring_process_subscription_creation() {
 	} else {
 
 		$options = array();
-		if( ! empty( $_POST['edd_price_option'] ) ) {
+		if ( ! empty( $_POST['edd_price_option'] ) ) {
 			$options['price_id'] = absint( $_POST['edd_price_option'] );
 		}
 
@@ -781,9 +817,8 @@ function edd_recurring_process_subscription_creation() {
 		$payment->date        = $created_date;
 		$payment->status      = 'pending';
 		$payment->save();
-		$payment->status      = 'complete';
+		$payment->status = 'complete';
 		$payment->save();
-
 	}
 
 	$args = array(
@@ -798,9 +833,10 @@ function edd_recurring_process_subscription_creation() {
 		'period'            => sanitize_text_field( $_POST['period'] ),
 		'parent_payment_id' => $payment->ID,
 		'product_id'        => absint( $_POST['product_id'] ),
+		'price_id'          => absint( $_POST['edd_price_option'] ),
 		'customer_id'       => $customer_id
-
 	);
+
 	$subscription = new EDD_Subscription;
 	$subscription->create( $args );
 

@@ -1011,3 +1011,75 @@ function edd_doing_cron() {
 	// Default to false
 	return false;
 }
+
+/**
+ * Check to see if we should be displaying promotional content
+ *
+ * In various parts of the plugin, we may choose to promote something like a sale for a limited time only. This
+ * function should be used to set the conditions under which the promotions will display.
+ *
+ * @since 2.9.20
+ *
+ * @return bool
+ */
+function edd_is_promo_active() {
+
+	// Set the date/time range based on UTC.
+	$start = strtotime( '2019-11-29 06:00:00' );
+	$end   = strtotime( '2019-12-07 05:59:59' );
+	$now   = time();
+
+	// Only display sidebar if the page is loaded within the date range.
+	if ( ( $now > $start ) && ( $now < $end ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Polyfills for is_countable and is_iterable
+ *
+ * This helps with plugin compatibility going forward. Many extensions have issues with more modern PHP versions,
+ * however unless teh customer is running WP 4.9.6 or PHP 7.3, we cannot use these functions.
+ *
+ */
+if ( ! function_exists( 'is_countable' ) ) {
+	/**
+	 * Polyfill for is_countable() function added in PHP 7.3 or WP 4.9.6.
+	 *
+	 * Verify that the content of a variable is an array or an object
+	 * implementing the Countable interface.
+	 *
+	 * @since 2.9.17
+	 *
+	 * @param mixed $var The value to check.
+	 *
+	 * @return bool True if `$var` is countable, false otherwise.
+	 */
+	function is_countable( $var ) {
+		return ( is_array( $var )
+		         || $var instanceof Countable
+		         || $var instanceof SimpleXMLElement
+		         || $var instanceof ResourceBundle
+		);
+	}
+}
+
+if ( ! function_exists( 'is_iterable' ) ) {
+	/**
+	 * Polyfill for is_iterable() function added in PHP 7.1  or WP 4.9.6.
+	 *
+	 * Verify that the content of a variable is an array or an object
+	 * implementing the Traversable interface.
+	 *
+	 * @since 2.9.17
+	 *
+	 * @param mixed $var The value to check.
+	 *
+	 * @return bool True if `$var` is iterable, false otherwise.
+	 */
+	function is_iterable( $var ) {
+		return ( is_array( $var ) || $var instanceof Traversable );
+	}
+}

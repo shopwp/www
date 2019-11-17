@@ -3,12 +3,29 @@
 /**
  * Load our javascript
  *
+ * The Stripe JS is by default, loaded on every page as suggested by Stripe. This can be overridden by using the Restrict Stripe Assets
+ * setting within the admin, and the Stripe Javascript resources will only be loaded when necessary.
+ * @link https://stripe.com/docs/web/setup
+ *
+ * The custom Javascript for EDD is loaded if the page is checkout. If checkout, the function is called directly with
+ * `true` set for the `$force_load_scripts` argument.
+ *
  * @access      public
  * @since       1.0
- * @param bool  $override Allows registering stripe.js on pages other than is_checkout()
+ *
+ * @param bool $force_load_scripts Allows registering our Javascript files on pages other than is_checkout().
+ *                                 This argument allows the `edd_stripe_js` function to be called directly, outside of
+ *                                 the context of checkout, such as the card management or update subscription payment method
+ *                                 UIs. Sending in 'true' will ensure that the Javascript resources are enqueued when you need them.
+ *
+ *
  * @return      void
  */
-function edd_stripe_js( $override = false ) {
+function edd_stripe_js( $force_load_scripts = false ) {
+	if ( false === edd_is_gateway_active( 'stripe' ) ) {
+		return;
+	}
+
 	if ( function_exists( 'edd_is_checkout' ) ) {
 
 		$publishable_key = NULL;
@@ -19,22 +36,18 @@ function edd_stripe_js( $override = false ) {
 			$publishable_key = edd_get_option( 'live_publishable_key', '' );
 		}
 
-		// Use minified libraries if SCRIPT_DEBUG is turned off
-		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-
-		wp_register_script( 'stripe-js', 'https://js.stripe.com/v2/', array( 'jquery' ), null );
+		wp_register_script( 'stripe-js', 'https://js.stripe.com/v3/', array( 'jquery' ), null );
 		wp_register_script( 'stripe-checkout', 'https://checkout.stripe.com/checkout.js', array( 'jquery' ), null );
-		wp_register_script( 'edd-stripe-js', EDDSTRIPE_PLUGIN_URL . 'assets/js/edd-stripe' . $suffix . '.js', array( 'jquery', 'stripe-js' ), EDD_STRIPE_VERSION, true );
+		wp_register_script( 'edd-stripe-js', EDDSTRIPE_PLUGIN_URL . 'assets/js/build/app.min.js', array( 'jquery', 'stripe-js', 'edd-ajax' ), EDD_STRIPE_VERSION, true );
 
-		wp_enqueue_script( 'stripe-js' );
+		$is_checkout     = edd_is_checkout();
+		$restrict_assets = edd_get_option( 'stripe_restrict_assets', false );
 
-		if ( edd_is_checkout() || $override ) {
+		if ( $is_checkout || $force_load_scripts || false === $restrict_assets ) {
+			wp_enqueue_script( 'stripe-js' );
+		}
 
-			$enqueue_checkout = edd_get_option( 'stripe_checkout', false ) || $override ? true : false;
-			if ( $enqueue_checkout ) {
-				wp_enqueue_script( 'stripe-checkout' );
-			}
-
+		if ( $is_checkout || $force_load_scripts ) {
 			wp_enqueue_script( 'edd-stripe-js' );
 			wp_enqueue_script( 'jQuery.payment' );
 
@@ -55,6 +68,10 @@ function edd_stripe_js( $override = false ) {
 				'no_key_error'                   => __( 'Stripe publishable key missing. Please enter your publishable key in Settings.', 'edds' ),
 				'checkout_required_fields_error' => __( 'Please fill out all required fields to continue your purchase.', 'edds' ),
 				'checkout_agree_to_terms'        => __( 'Please agree to the terms to complete your purchase.', 'edds' ),
+				'generic_error'                  => __( 'Unable to complete your request. Please try again.', 'edds' ),
+				'successPageUri'                 => edd_get_success_page_uri(),
+				'failurePageUri'                 => edd_get_failed_transaction_uri(),
+				'elementsOptions'                => edds_get_stripe_elements_options(),
 			) );
 
 			wp_localize_script( 'edd-stripe-js', 'edd_stripe_vars', $stripe_vars );
@@ -64,22 +81,23 @@ function edd_stripe_js( $override = false ) {
 }
 add_action( 'wp_enqueue_scripts', 'edd_stripe_js', 100 );
 
-function edd_stripe_css( $override = false ) {
-	if ( edd_is_checkout() || $override ) {
-		// Use minified libraries if SCRIPT_DEBUG is turned off
-		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+function edd_stripe_css( $force_load_scripts = false ) {
+	if ( false === edd_is_gateway_active( 'stripe' ) ) {
+		return;
+	}
 
+	if ( edd_is_checkout() || $force_load_scripts ) {
 		$deps = array( 'edd-styles' );
 
 		if ( ! wp_script_is( 'edd-styles', 'enqueued' ) ) {
 			$deps = array();
 		}
 
-		wp_register_style( 'edd-stripe', EDDSTRIPE_PLUGIN_URL . 'assets/css/style' . $suffix . '.css', $deps, EDD_STRIPE_VERSION );
+		wp_register_style( 'edd-stripe', EDDSTRIPE_PLUGIN_URL . 'assets/css/build/style.min.css', $deps, EDD_STRIPE_VERSION );
 		wp_enqueue_style( 'edd-stripe' );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'edd_stripe_css', PHP_INT_MAX );
+add_action( 'wp_enqueue_scripts', 'edd_stripe_css', 100 );
 
 /**
  * Load our admin javascript
@@ -132,9 +150,9 @@ function edd_stripe_connect_admin_script( $hook ) {
 		return;
 	}
 
-	wp_enqueue_style( 'edd-stripe-admin-styles', EDDSTRIPE_PLUGIN_URL . 'assets/css/admin-styles.css', array(), EDD_STRIPE_VERSION );
+	wp_enqueue_style( 'edd-stripe-admin-styles', EDDSTRIPE_PLUGIN_URL . 'assets/css/build/admin.css', array(), EDD_STRIPE_VERSION );
 
-	wp_enqueue_script( 'edd-stripe-admin-scripts', EDDSTRIPE_PLUGIN_URL . 'assets/js/edd-stripe-admin.js', array( 'jquery' ), EDD_STRIPE_VERSION );
+	wp_enqueue_script( 'edd-stripe-admin-scripts', EDDSTRIPE_PLUGIN_URL . 'assets/js/build/admin.min.js', array( 'jquery' ), EDD_STRIPE_VERSION );
 
 	$test_key = edd_get_option( 'test_publishable_key' );
 	$live_key = edd_get_option( 'live_publishable_key' );
@@ -152,30 +170,3 @@ function edd_stripe_connect_admin_script( $hook ) {
 	);
 }
 add_action( 'admin_enqueue_scripts', 'edd_stripe_connect_admin_script' );
-
-/**
- * Saves an option to remember that someone dismissed the Stripe Connect admin notice.
- *
- * @since 2.6.16
- */
-add_action( 'wp_ajax_edds_stripe_connect_dismiss_intro_notice', function() {
-
-	$error_message = __( 'There was an error dismissing the Stripe Connect notice. Please try again.', 'edds' );
-
-	if( ! wp_verify_nonce( $_POST['nonce'], 'edds_stripe_connect_intro_nonce' ) || ! current_user_can( 'manage_shop_settings' ) ) {
-		wp_send_json_error( array(
-			'error' => $error_message,
-		) );
-	}
-
-	$updated = edd_update_option( 'edds_stripe_connect_intro_notice_dismissed', true );
-
-	if( $updated === false ) {
-		wp_send_json_error( array(
-			'error' => $error_message,
-		) );
-	}
-
-	wp_send_json_success();
-} );
-

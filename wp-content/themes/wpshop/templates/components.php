@@ -84,6 +84,11 @@
 
         get_template_part('components/affiliate-register/controller');
 
+      // Comparison Chart
+      } else if(get_row_layout() == 'component_comparison_chart') {
+
+        get_template_part('components/comparison-chart/controller');
+
       }
       
     endwhile;

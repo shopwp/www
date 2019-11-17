@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Stripe Payment Gateway
 Plugin URL: https://easydigitaldownloads.com/downloads/stripe-gateway/
 Description: Adds a payment gateway for Stripe.com
-Version: 2.6.18
+Version: 2.7.4
 Author: Easy Digital Downloads
 Author URI: https://easydigitaldownloads.com
 Text Domain: edds
@@ -14,6 +14,8 @@ class EDD_Stripe {
 
 	private static $instance;
 
+	public $rate_limiting;
+
 	private function __construct() {
 
 	}
@@ -22,7 +24,7 @@ class EDD_Stripe {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof EDD_Stripe ) ) {
 			self::$instance = new EDD_Stripe;
 
-			if( version_compare( PHP_VERSION, '5.3.3', '<' ) ) {
+			if ( version_compare( PHP_VERSION, '5.6.0', '<' ) ) {
 
 				add_action( 'admin_notices', self::below_php_version_notice() );
 
@@ -33,9 +35,10 @@ class EDD_Stripe {
 				add_action( 'init', array( self::$instance, 'load_textdomain' ) );
 
 				self::$instance->includes();
-
+				self::$instance->setup_classes();
 				self::$instance->actions();
 				self::$instance->filters();
+
 
 				if ( class_exists( 'EDD_License' ) && is_admin() ) {
 					new EDD_License( __FILE__, 'Stripe Payment Gateway', EDD_STRIPE_VERSION, 'Easy Digital Downloads', 'stripe_license_key' );
@@ -48,7 +51,7 @@ class EDD_Stripe {
 	}
 
 	function below_php_version_notice() {
-		echo '<div class="error"><p>' . __( 'Your version of PHP is below the minimum version of PHP required by Easy Digital Downloads - Stripe Payment Gateway. Please contact your host and request that your version be upgraded to 5.3.3 or later.', 'edds' ) . '</p></div>';
+		echo '<div class="error"><p>' . __( 'Your version of PHP is below the minimum version of PHP required by Easy Digital Downloads - Stripe Payment Gateway. Please contact your host and request that your version be upgraded to 5.6.0 or greater.', 'edds' ) . '</p></div>';
 	}
 
 	private function setup_constants() {
@@ -60,7 +63,13 @@ class EDD_Stripe {
 			define( 'EDDSTRIPE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		}
 
-		define( 'EDD_STRIPE_VERSION', '2.6.18' );
+		define( 'EDD_STRIPE_VERSION', '2.7.4' );
+
+		// To be used with \Stripe\Stripe::setApiVersion.
+		define( 'EDD_STRIPE_API_VERSION', '2019-08-14' );
+
+		// To be used with \Stripe\Stripe::setAppInfo.
+		define( 'EDD_STRIPE_PARTNER_ID', 'pp_partner_DKh7NDe3Y5G8XG' );
 	}
 
 	private function includes() {
@@ -68,15 +77,34 @@ class EDD_Stripe {
 			require_once EDDS_PLUGIN_DIR . '/vendor/autoload.php';
 		}
 
+		require_once EDDS_PLUGIN_DIR . '/includes/class-stripe-api.php';
+
+		require_once EDDS_PLUGIN_DIR . '/includes/deprecated.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/compat.php';
+
+		require_once EDDS_PLUGIN_DIR . '/includes/utils/exceptions/class-attribute-not-found.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/utils/exceptions/class-stripe-object-not-found.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/utils/interface-static-registry.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/utils/class-registry.php';
+
+		require_once EDDS_PLUGIN_DIR . '/includes/emails.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/payment-receipt.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/card-actions.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/functions.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/gateway-actions.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/gateway-filters.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/payment-actions.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/webhooks.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/elements.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/scripts.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/template-functions.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/class-edd-stripe-rate-limiting.php';
 
 		if ( is_admin() ) {
+			require_once EDDS_PLUGIN_DIR . '/includes/admin/class-notices-registry.php';
+			require_once EDDS_PLUGIN_DIR . '/includes/admin/class-notices.php';
+			require_once EDDS_PLUGIN_DIR . '/includes/admin/notices.php';
+
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/admin-actions.php';
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/admin-filters.php';
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/settings.php';
@@ -96,6 +124,10 @@ class EDD_Stripe {
 
 	private function filters() {
 		add_filter( 'edd_payment_gateways', array( self::$instance, 'register_gateway' ) );
+	}
+
+	private function setup_classes() {
+		$this->rate_limiting = new EDD_Stripe_Rate_Limiting();
 	}
 
 	public function database_upgrades() {

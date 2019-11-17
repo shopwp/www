@@ -40,7 +40,6 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 		//Validate PayPal times server side when a download post is saved
 		add_action( 'save_post', array( $this, 'validate_paypal_recurring_download' ) );
 
-		add_action( 'edd_paypal_refund_purchase', array( $this, 'cancel_subscriptions_on_refund' ) );
 		add_action( 'edd_pre_refund_payment', array( $this, 'refund_renewal_payment' ) );
 
 	}
@@ -385,10 +384,22 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 		// Look to see if payment is same day as signup and we have set the transaction ID on the parent payment yet
 		if( $probably_is_initial_ipn && ( ! $transaction_id || $transaction_id == $subscription->parent_payment_id ) ) {
 
+			$payment = new EDD_Payment( $subscription->parent_payment_id );
+
+			// Check if the payment status is failed in the IPN.
+			if ( 'failed' === strtolower( $ipn_data['payment_status'] ) ) {
+				$payment->status = 'failed';
+				$payment->add_note( __( 'Payment failed at PayPal.', 'edd-recurring' ) );
+				$subscription->add_note( __( 'Payment processing failed at PayPal.', 'edd-recurring' ) );
+				$payment->save();
+				$subscription->update( array( 'status' => 'failing' ) );
+
+				return;
+			}
+
 			// Verify the amount paid
 			$initial_amount = round( $subscription->initial_amount, 2 );
 			$paid_amount    = round( $ipn_data['mc_gross'], 2 );
-			$payment        = new EDD_Payment( $subscription->parent_payment_id );
 
 			if( $paid_amount < $initial_amount ) {
 
@@ -493,6 +504,14 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 
 			return;
 
+		}
+
+		// Check if the payment status is failed in the IPN.
+		if ( 'failed' === strtolower( $ipn_data['payment_status'] ) ) {
+			// The payment failed at PayPal.
+			$subscription->update( array( 'status' => 'failing' ) );
+			$subscription->add_note( __( 'Renewal payment processing failed at PayPal.', 'edd-recurring' ) );
+			return;
 		}
 
 		if( edd_get_purchase_id_by_transaction_id( $ipn_data['txn_id'] ) ) {

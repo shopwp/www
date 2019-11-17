@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
-Tested up to: 5.2.1
-Stable Tag: 2.9.16
+Tested up to: 5.3
+Stable Tag: 2.9.20
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -188,6 +188,24 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.20, November 14, 2019 =
+* Fix: CSV download import issues with file to price assignments and AmazonS3 files.
+* Fix: The edd_after_payment_actions action fired via cron was missing attributes.
+* Fix: The SendWP connection link was visited if enter/return was pressed to update settings.
+* Added: Promo elements added to EDD admin screens.
+
+= 2.9.19, October 28, 2019 =
+* Fix: Limit register_meta calls to be for the download post type only, in preparation for WordPress 5.3 compatibility.
+
+= 2.9.18, October 21, 2019 =
+* Fix: Updated calls to register_meta for WordPress 5.3 compatibility.
+* Fix: Refactored edd_get_payment_status to work when Payment statuses are translated.
+* Fix: Improved the compatibility of file downloads with hosting configurations that involve symlinks for uploads.
+* Dev: Added the 'edd_show_nginx_redirect_notice' filter to allow programmatically hiding the nginx file protection admin notice.
+* Dev: Added polyfills for is_countable and is_iterable into EDD core.
+
+= 2.9.17, October 2, 2019 =
+* Security Fix: Prevent an authentication bypass to the EDD REST API when no API keys exist.
 
 = 2.9.16, June 11, 2019 =
 * Security Fix: Prevent a stored XSS (Cross Site Scripting) attempt on the IP addresses for logs.

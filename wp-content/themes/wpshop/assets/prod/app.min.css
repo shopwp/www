@@ -3078,6 +3078,19 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   .home .main {
     display: none; } }
 
+.page-content {
+  width: 100%;
+  font-size: 18px;
+  text-align: center; }
+
+.page-id-159 .page-content,
+.page-id-199033 .page-content {
+  max-width: 800px;
+  margin: 0 auto; }
+
+.page-id-199033 .page-content {
+  text-align: left; }
+
 .blog .main {
   margin-bottom: 4.1472em; }
 
@@ -3145,7 +3158,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   position: relative; }
   .component-intro:after {
     position: absolute;
-    content: '';
+    content: "";
     display: block;
     width: 40px;
     height: 1px;
@@ -3157,11 +3170,16 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   .component-intro p {
     text-align: center; }
 
+.purchase .component-comparison-chart .component-intro h2,
 .purchase .component-pro-features .component-intro h2 {
   font-size: 2.4em; }
   @media (max-width: 700px) {
+    .purchase .component-comparison-chart .component-intro h2,
     .purchase .component-pro-features .component-intro h2 {
       font-size: 1.9em; } }
+
+.component-comparison-chart + .component-pro-features {
+  margin-top: 10em; }
 
 .error404 .alert {
   max-width: 810px;
@@ -3173,29 +3191,29 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   margin-bottom: 8em; }
 
 #edd_price_option_35_singlesite:before {
-  content: 'Personal';
+  content: "Personal";
   display: block; }
 
 #edd_price_option_35_2-5sites:before {
-  content: 'Developer';
+  content: "Developer";
   display: block; }
 
 #edd_price_option_35_unlimitedsites:before {
-  content: 'Agency';
+  content: "Agency";
   display: block; }
 
-.edd_price_options li[itemprop='offers'] {
+.edd_price_options li[itemprop="offers"] {
   position: relative; }
   @media (max-width: 900px) {
-    .edd_price_options li[itemprop='offers'] {
+    .edd_price_options li[itemprop="offers"] {
       padding-bottom: 0; } }
   @media (max-width: 600px) {
-    .edd_price_options li[itemprop='offers'] {
+    .edd_price_options li[itemprop="offers"] {
       padding-right: 1.2em;
       padding-left: 1.2em;
       padding-top: 1.2em;
       border-radius: 5px; } }
-  .edd_price_options li[itemprop='offers'].is-valid:after {
+  .edd_price_options li[itemprop="offers"].is-valid:after {
     top: 9px;
     left: 15px;
     opacity: 1;
@@ -3203,11 +3221,11 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     height: 35px;
     background: url("imgs/icon-check-white.svg"); }
     @media (max-width: 600px) {
-      .edd_price_options li[itemprop='offers'].is-valid:after {
+      .edd_price_options li[itemprop="offers"].is-valid:after {
         top: 10px;
         width: 30px;
         height: 30px; } }
-  .edd_price_options li[itemprop='offers']:before {
+  .edd_price_options li[itemprop="offers"]:before {
     text-align: center;
     font-size: 1.44em;
     font-weight: bold;
@@ -3220,20 +3238,20 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     padding: 10px 0;
     border-bottom: 1px solid #cbcbcb; }
     @media (max-width: 600px) {
-      .edd_price_options li[itemprop='offers']:before {
+      .edd_price_options li[itemprop="offers"]:before {
         font-size: 1.2em;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px; } }
-  .edd_price_options li[itemprop='offers']:hover {
+  .edd_price_options li[itemprop="offers"]:hover {
     cursor: pointer; }
-  .edd_price_options li[itemprop='offers'] label:hover {
+  .edd_price_options li[itemprop="offers"] label:hover {
     cursor: pointer; }
-  .edd_price_options li[itemprop='offers'] .edd_price_option_35,
-  .edd_price_options li[itemprop='offers'] input[type='radio'] {
+  .edd_price_options li[itemprop="offers"] .edd_price_option_35,
+  .edd_price_options li[itemprop="offers"] input[type="radio"] {
     visibility: hidden; }
     @media (max-width: 900px) {
-      .edd_price_options li[itemprop='offers'] .edd_price_option_35,
-      .edd_price_options li[itemprop='offers'] input[type='radio'] {
+      .edd_price_options li[itemprop="offers"] .edd_price_option_35,
+      .edd_price_options li[itemprop="offers"] input[type="radio"] {
         position: absolute; } }
 
 .purchase-confirmation .page-header,
@@ -3441,6 +3459,12 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .tippy-popper {
   min-width: 200px;
   margin: 0; }
+
+.is-showing-notices .tippy-popper {
+  margin-top: -60px; }
+
+.is-showing-notices.purchase .tippy-popper {
+  margin-top: 0; }
 
 [data-state='visible'] .nav-primary-sub {
   opacity: 1; }
@@ -5056,11 +5080,15 @@ body.page-template-template-home {
   padding: 1.44em 0;
   font-size: 1.2em;
   border-bottom: 1px solid #cbcbcb; }
+  .faq-question > div {
+    width: 100%;
+    position: relative; }
   .faq-question .fa-plus-square,
   .faq-question .fa-minus-square {
     font-size: 1.2em;
-    position: relative;
-    top: 5px; }
+    position: absolute;
+    top: 5px;
+    right: 0; }
   .faq-question:hover {
     cursor: pointer;
     text-decoration: underline; }
@@ -5673,7 +5701,7 @@ body.page-template-template-home {
     text-align: center;
     margin-right: 15px;
     position: relative;
-    top: -1px; }
+    top: -2px; }
   .how-content .inner {
     border-radius: 10px;
     background: #fff;
@@ -5834,6 +5862,47 @@ body.page-template-template-home {
 @media (max-width: 700px) {
   .page.purchase .component-pro-features {
     margin-top: 0; } }
+
+.component-comparison-chart {
+  background-color: transparent; }
+  .component-comparison-chart table {
+    width: 100%; }
+  .component-comparison-chart td {
+    border-right: 1px solid #cbcbcb; }
+    .component-comparison-chart td a:not(.btn) {
+      color: #181625; }
+  .component-comparison-chart td,
+  .component-comparison-chart th {
+    font-size: 17px; }
+  .component-comparison-chart th {
+    font-size: 20px; }
+  .component-comparison-chart thead .btn {
+    margin-top: 0;
+    background-color: #181625; }
+  .component-comparison-chart thead .cell-center {
+    padding-bottom: 1em; }
+  .component-comparison-chart thead a {
+    text-decoration: none;
+    color: #181625; }
+  .component-comparison-chart .cell-no-border {
+    border: none; }
+  .component-comparison-chart .cell-heading {
+    font-size: 20px;
+    font-weight: bold; }
+  .component-comparison-chart .cell {
+    text-align: center; }
+  .component-comparison-chart .cell-yes {
+    background: #ebf4eb; }
+  .component-comparison-chart .cell-no {
+    background: #fff4f4; }
+  .component-comparison-chart .cell-center {
+    text-align: center; }
+  .component-comparison-chart .pro {
+    background: #181625;
+    color: #fff;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 18px; }
 
 .is-visible {
   visibility: visible;

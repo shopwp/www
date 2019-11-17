@@ -28,6 +28,7 @@ class EDD_Subscription {
 	public $transaction_id        = '';
 	public $parent_payment_id     = 0;
 	public $product_id            = 0;
+	public $price_id              = null;
 	public $created               = '0000-00-00 00:00:00';
 	public $expiration            = '0000-00-00 00:00:00';
 	public $trial_period          = '';
@@ -143,6 +144,7 @@ class EDD_Subscription {
 			'bill_times'            => 0,
 			'parent_payment_id'     => 0,
 			'product_id'            => 0,
+			'price_id'              => null,
 			'created'               => '',
 			'expiration'            => '',
 			'status'                => '',
@@ -182,10 +184,23 @@ class EDD_Subscription {
 	 */
 	public function update( $args = array() ) {
 
+		$current_product  = $this->product_id;
+		$current_price_id = $this->price_id;
+
 		$ret = $this->subs_db->update( $this->id, $args );
 
 		if ( isset( $args['status'] ) ) {
 			$this->set_status( $args['status'] );
+		}
+
+		if ( $ret ) {
+			if ( isset( $args['product_id'] ) && $current_product != $args['product_id'] ) {
+				$this->add_note( sprintf( __( 'Product ID changed from %d to %d.', 'edd-recurring' ), $current_product, $args['product_id'] ) );
+			}
+
+			if ( isset( $args['price_id'] ) && ! is_null( $args['price_id'] ) && $current_price_id != $args['price_id'] ) {
+				$this->add_note( sprintf( __( 'Price ID changed from %d to %d.', 'edd-recurring' ), $current_price_id, $args['price_id'] ) );
+			}
 		}
 
 		// Clear the object cache for this subscription.
@@ -846,7 +861,21 @@ class EDD_Subscription {
 
 		$ret = false;
 
-		if( ! $this->is_expired() && ( $this->status == 'active' || $this->status == 'cancelled' || $this->status == 'trialling' ) ) {
+		// Set which subscription statuses should be considered "active".
+		$active_statuses = array(
+			'active', // Active is obviously an active state.
+			'cancelled', // Cancelled is an active state because it just means it won't renew, but is also not yet expired.
+			'trialling', // Trialing is an active state because people should have access to downloads during a trial.
+		);
+
+		// Check if completed subscriptions should be treated as "Active" subscriptions.
+		$treat_completed_subs_as_active = edd_get_option( 'recurring_treat_completed_subs_as_active' );
+
+		if ( $treat_completed_subs_as_active ) {
+			$active_statuses[] = 'completed';
+		}
+
+		if ( ! $this->is_expired() && in_array( $this->status, $active_statuses, true ) ) {
 			$ret = true;
 		}
 

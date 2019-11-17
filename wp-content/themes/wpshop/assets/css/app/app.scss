@@ -6,70 +6,71 @@ Author URI:     https://simpleblend.net
 */
 
 // Vendor
-@import '../vendor/modular-scale';
+@import "../vendor/modular-scale";
 
 // Utilities
-@import 'utils/mixins';
-@import 'utils/variables/fonts';
-@import 'utils/variables/opacities';
-@import 'utils/variables/breakpoints';
-@import 'utils/variables/animations';
-@import 'utils/variables/grid';
-@import 'utils/variables/colors';
-@import 'utils/variables/spacing';
-@import 'utils/functions';
+@import "utils/mixins";
+@import "utils/variables/fonts";
+@import "utils/variables/opacities";
+@import "utils/variables/breakpoints";
+@import "utils/variables/animations";
+@import "utils/variables/grid";
+@import "utils/variables/colors";
+@import "utils/variables/spacing";
+@import "utils/functions";
 
 // Base
-@import 'base/resets';
-@import 'base/vendor';
-@import 'base/global';
-@import 'base/typography';
-@import 'base/tables';
-@import 'base/forms';
+@import "base/resets";
+@import "base/vendor";
+@import "base/global";
+@import "base/typography";
+@import "base/tables";
+@import "base/forms";
 
 // Layout
-@import 'layout/grid';
-@import 'layout/header';
-@import 'layout/footer';
-@import 'layout/layout';
-@import 'layout/sidebar';
-@import 'layout/nav';
-@import 'layout/posts';
+@import "layout/grid";
+@import "layout/header";
+@import "layout/footer";
+@import "layout/layout";
+@import "layout/sidebar";
+@import "layout/nav";
+@import "layout/posts";
 
 // Modules
-@import 'components/buttons';
-@import 'components/spinner';
-@import 'components/seperator';
-@import 'components/modal';
-@import 'components/cards';
-@import 'components/marquee';
-@import 'components/products';
-@import 'components/account';
-@import 'components/icons';
-@import 'components/steps';
-@import 'components/msg';
-@import 'components/code';
-@import 'components/search';
-@import 'components/purchase';
-@import 'components/accordion';
-@import 'components/support';
-@import 'components/home';
-@import 'components/snippet';
-@import 'components/mailinglist';
-@import 'components/faqs';
-@import 'components/changelog';
-@import 'components/downloads';
-@import 'components/notices';
-@import 'components/screenshots';
-@import 'components/changelogs';
-@import 'components/divider';
-@import 'components/affiliate';
-@import 'components/pro';
-@import 'components/how-it-works';
-@import 'components/pro-features';
+@import "components/buttons";
+@import "components/spinner";
+@import "components/seperator";
+@import "components/modal";
+@import "components/cards";
+@import "components/marquee";
+@import "components/products";
+@import "components/account";
+@import "components/icons";
+@import "components/steps";
+@import "components/msg";
+@import "components/code";
+@import "components/search";
+@import "components/purchase";
+@import "components/accordion";
+@import "components/support";
+@import "components/home";
+@import "components/snippet";
+@import "components/mailinglist";
+@import "components/faqs";
+@import "components/changelog";
+@import "components/downloads";
+@import "components/notices";
+@import "components/screenshots";
+@import "components/changelogs";
+@import "components/divider";
+@import "components/affiliate";
+@import "components/pro";
+@import "components/how-it-works";
+@import "components/pro-features";
+@import "components/comparison-chart";
 
 // State
-@import 'state/state';
+@import "state/state";
 
 // body {
 //   font-size: inherit;
@@ -85,372 +86,372 @@ Author URI:     https://simpleblend.net
 // }
 
 .marquee-content .logo {
-   opacity: 1;
+  opacity: 1;
 }
 
 .marquee-content h1 .letter {
-   display: inline-block;
-   line-height: 1em;
+  display: inline-block;
+  line-height: 1em;
 }
 
 .marquee-content h1 {
-   animation-duration: 0.7s;
-   animation-iteration-count: 1;
-   transform-origin: bottom;
-   animation-name: slideIn;
-   // animation-delay: 1s;
-   animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+  animation-duration: 0.7s;
+  animation-iteration-count: 1;
+  transform-origin: bottom;
+  animation-name: slideIn;
+  // animation-delay: 1s;
+  animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
 }
 
 .marquee-content .btn {
-   animation-duration: 0.5s;
-   animation-iteration-count: 1;
-   transform-origin: bottom;
-   // animation-delay: 1s;
-   animation-name: slideIn;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  transform-origin: bottom;
+  // animation-delay: 1s;
+  animation-name: slideIn;
 }
 
 .marquee-content .callout {
-   animation-duration: 0.5s;
-   animation-iteration-count: 1;
-   transform-origin: bottom;
-   animation-name: slideIn;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  transform-origin: bottom;
+  animation-name: slideIn;
 }
 
 .marquee-content .logo {
-   animation-duration: 0.5s;
-   animation-iteration-count: 1;
-   transform-origin: bottom;
+  animation-duration: 0.5s;
+  animation-iteration-count: 1;
+  transform-origin: bottom;
 }
 
 .marquee-content .wordpress-logo {
-   animation-name: slideIn;
+  animation-name: slideIn;
 }
 
 .marquee-content .shopify-logo {
-   animation-name: slideIn;
+  animation-name: slideIn;
 }
 
 @keyframes slideInLogoLeft {
-   0% {
-      transform: translateX(-50px);
-      opacity: 0.4;
-   }
+  0% {
+    transform: translateX(-50px);
+    opacity: 0.4;
+  }
 
-   100% {
-      transform: translateX(0);
-      opacity: 1;
-   }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideInLogoRight {
-   0% {
-      transform: translateX(50px);
-      opacity: 0.4;
-   }
+  0% {
+    transform: translateX(50px);
+    opacity: 0.4;
+  }
 
-   100% {
-      transform: translateX(0);
-      opacity: 1;
-   }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
-   0% {
-      transform: translateY(50px);
-      opacity: 0.4;
-   }
+  0% {
+    transform: translateY(50px);
+    opacity: 0.4;
+  }
 
-   100% {
-      transform: translateY(0);
-      opacity: 1;
-   }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes scaleIn {
-   0% {
-      transform: scale(0);
-      // opacity: 0.4;
-   }
+  0% {
+    transform: scale(0);
+    // opacity: 0.4;
+  }
 
-   100% {
-      transform: scale(1);
-      opacity: 1;
-   }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
-   0% {
-      opacity: 0;
-      // opacity: 0.4;
-   }
+  0% {
+    opacity: 0;
+    // opacity: 0.4;
+  }
 
-   100% {
-      opacity: 1;
-   }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes blur {
-   0% {
-      filter: blur(0px);
-      // opacity: 0.4;
-   }
+  0% {
+    filter: blur(0px);
+    // opacity: 0.4;
+  }
 
-   50% {
-      filter: blur(20px);
-   }
+  50% {
+    filter: blur(20px);
+  }
 
-   100% {
-      filter: blur(0px);
-   }
+  100% {
+    filter: blur(0px);
+  }
 }
 
 @keyframes shape {
-   0% {
-      border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
-      // opacity: 0.4;
-   }
+  0% {
+    border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
+    // opacity: 0.4;
+  }
 
-   50% {
-      border-radius: 50%;
-   }
+  50% {
+    border-radius: 50%;
+  }
 
-   100% {
-      border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
-   }
+  100% {
+    border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
+  }
 }
 
 @keyframes floating {
-   0% {
-      transform: translateY(-2px);
-   }
+  0% {
+    transform: translateY(-2px);
+  }
 
-   50% {
-      transform: translateY(5px);
-   }
+  50% {
+    transform: translateY(5px);
+  }
 
-   100% {
-      transform: translateY(-2px);
-   }
+  100% {
+    transform: translateY(-2px);
+  }
 }
 
 .shape {
-   width: 20px;
-   height: 20px;
-   margin: 0;
-   position: absolute;
-   animation-duration: 1.4s;
-   animation-name: fadeIn;
-   opacity: 1;
-   // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  position: absolute;
+  animation-duration: 1.4s;
+  animation-name: fadeIn;
+  opacity: 1;
+  // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
 
-   @include device(700, 'max') {
-      opacity: 0.4;
-   }
+  @include device(700, "max") {
+    opacity: 0.4;
+  }
 }
 
 .shape1 {
-   width: 0;
-   height: 0;
-   border-style: solid;
-   border-width: 0 5px 8px 9px;
-   border-color: transparent transparent #ef2b6d transparent;
-   background: none;
-   top: 256px;
-   left: -4vw;
-   // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
-   transform: rotate(-27deg);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 5px 8px 9px;
+  border-color: transparent transparent #ef2b6d transparent;
+  background: none;
+  top: 256px;
+  left: -4vw;
+  // border-radius: 30% 70% 70% 30% / 30% 64% 36% 70%;
+  transform: rotate(-27deg);
 
-   @include device(700, 'max') {
-      top: 0;
-   }
+  @include device(700, "max") {
+    top: 0;
+  }
 }
 
 .shape2 {
-   left: -7vw;
-   transform: rotate(-11deg);
-   background-color: #ffca2e;
-   width: 14px;
-   height: 14px;
+  left: -7vw;
+  transform: rotate(-11deg);
+  background-color: #ffca2e;
+  width: 14px;
+  height: 14px;
 }
 
 .shape3 {
-   left: 0vw;
-   transform: rotate(-45deg);
-   background-color: #8e9dfc;
-   width: 48px;
-   height: 1px;
+  left: 0vw;
+  transform: rotate(-45deg);
+  background-color: #8e9dfc;
+  width: 48px;
+  height: 1px;
 
-   @include device(700, 'max') {
-      top: 63vh;
-   }
+  @include device(700, "max") {
+    top: 63vh;
+  }
 }
 
 .shape4 {
-   top: 114px;
-   width: 0;
-   height: 0;
-   border-style: solid;
-   border-width: 4px 4px 16px 10px;
-   border-color: transparent transparent #81f47d transparent;
-   background: none;
-   left: -20px;
-   transform: rotate(67deg);
+  top: 114px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 4px 4px 16px 10px;
+  border-color: transparent transparent #81f47d transparent;
+  background: none;
+  left: -20px;
+  transform: rotate(67deg);
 }
 
 .shape5 {
-   top: -19px;
-   left: 15vw;
-   width: 15px;
-   height: 15px;
-   border-radius: 50%;
-   filter: blur(10px);
-   background-color: #8e9dfc;
+  top: -19px;
+  left: 15vw;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  filter: blur(10px);
+  background-color: #8e9dfc;
 }
 
 .shape6 {
-   bottom: -60px;
-   left: -6vw;
-   border-radius: 50%;
-   height: 15px;
-   width: 15px;
-   background-color: #ef2b6d;
-   filter: blur(11px);
+  bottom: -60px;
+  left: -6vw;
+  border-radius: 50%;
+  height: 15px;
+  width: 15px;
+  background-color: #ef2b6d;
+  filter: blur(11px);
 }
 
 .shape7 {
-   bottom: -38px;
-   left: 6.4vw;
-   border-radius: 50%;
-   height: 17px;
-   width: 17px;
-   background-color: #8e9dfc;
+  bottom: -38px;
+  left: 6.4vw;
+  border-radius: 50%;
+  height: 17px;
+  width: 17px;
+  background-color: #8e9dfc;
 
-   @include device(700, 'max') {
-      height: 11px;
-      width: 11px;
-      bottom: 24vh;
-      left: -3.6vw;
-   }
+  @include device(700, "max") {
+    height: 11px;
+    width: 11px;
+    bottom: 24vh;
+    left: -3.6vw;
+  }
 }
 
 .shape8 {
-   bottom: -97px;
-   left: 18vw;
-   width: 0;
-   height: 0;
-   border-style: solid;
-   border-width: 3px 9px 13px 4px;
-   border-color: transparent transparent #81f47d transparent;
-   background: none;
-   transform: rotate(67deg);
+  bottom: -97px;
+  left: 18vw;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 3px 9px 13px 4px;
+  border-color: transparent transparent #81f47d transparent;
+  background: none;
+  transform: rotate(67deg);
 
-   @include device(700, 'max') {
-      bottom: 5vh;
-   }
+  @include device(700, "max") {
+    bottom: 5vh;
+  }
 }
 
 .shape9 {
-   width: 15px;
-   height: 15px;
-   right: -5vw;
-   top: 312px;
-   border-radius: 50%;
-   filter: blur(9px);
-   background-color: #ef2b6d;
+  width: 15px;
+  height: 15px;
+  right: -5vw;
+  top: 312px;
+  border-radius: 50%;
+  filter: blur(9px);
+  background-color: #ef2b6d;
 
-   @include device(700, 'max') {
-      right: 39vw;
-      top: 7vh;
-      display: none;
-   }
+  @include device(700, "max") {
+    right: 39vw;
+    top: 7vh;
+    display: none;
+  }
 }
 
 .shape10 {
-   right: 5vw;
-   top: 20px;
-   background-color: #81f47d;
-   transform: rotate(20deg);
-   width: 12px;
-   height: 12px;
+  right: 5vw;
+  top: 20px;
+  background-color: #81f47d;
+  transform: rotate(20deg);
+  width: 12px;
+  height: 12px;
 }
 
 .shape11 {
-   right: -7vw;
-   top: -37px;
-   width: 0;
-   height: 0;
-   border-style: solid;
-   border-color: transparent transparent #8e9dfc transparent;
-   background: none;
-   border-width: 18px 8px 15px 3px;
-   transform: rotate(-124deg);
+  right: -7vw;
+  top: -37px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent transparent #8e9dfc transparent;
+  background: none;
+  border-width: 18px 8px 15px 3px;
+  transform: rotate(-124deg);
 
-   @include device(700, 'max') {
-      right: 24vw;
-      top: 69vh;
-   }
+  @include device(700, "max") {
+    right: 24vw;
+    top: 69vh;
+  }
 }
 
 .shape12 {
-   right: -4vw;
-   top: 166px;
-   width: 10px;
-   height: 10px;
-   background-color: #ffda6d;
-   border-radius: 50%;
-   filter: blur(0px);
+  right: -4vw;
+  top: 166px;
+  width: 10px;
+  height: 10px;
+  background-color: #ffda6d;
+  border-radius: 50%;
+  filter: blur(0px);
 
-   @include device(700, 'max') {
-      right: 1vw;
-      top: 56vh;
-   }
+  @include device(700, "max") {
+    right: 1vw;
+    top: 56vh;
+  }
 }
 
 .shape13 {
-   right: 6vw;
-   top: 300px;
-   transform: rotate(-45deg);
-   background-color: #ef2b6d;
-   width: 68px;
-   height: 1px;
+  right: 6vw;
+  top: 300px;
+  transform: rotate(-45deg);
+  background-color: #ef2b6d;
+  width: 68px;
+  height: 1px;
 
-   @include device(700, 'max') {
-      top: 16vw;
-      width: 27px;
-   }
+  @include device(700, "max") {
+    top: 16vw;
+    width: 27px;
+  }
 }
 
 .shape14 {
-   width: 11px;
-   height: 11px;
-   right: 5vw;
-   bottom: -80px;
-   background-color: #8e9dfc;
-   transform: rotate(-124deg);
+  width: 11px;
+  height: 11px;
+  right: 5vw;
+  bottom: -80px;
+  background-color: #8e9dfc;
+  transform: rotate(-124deg);
 
-   @include device(700, 'max') {
-      right: -4vw;
-      bottom: 36vh;
-   }
+  @include device(700, "max") {
+    right: -4vw;
+    bottom: 36vh;
+  }
 }
 
 .shape15 {
-   right: -7vw;
-   bottom: -90px;
+  right: -7vw;
+  bottom: -90px;
 
-   width: 0;
-   height: 0;
-   border-style: solid;
+  width: 0;
+  height: 0;
+  border-style: solid;
 
-   border-color: transparent transparent #81f47d transparent;
-   background: none;
-   border-width: 3px 16px 15px 10px;
-   transform: rotate(172deg);
+  border-color: transparent transparent #81f47d transparent;
+  background: none;
+  border-width: 3px 16px 15px 10px;
+  transform: rotate(172deg);
 
-   @include device(700, 'max') {
-      bottom: 3vh;
-   }
+  @include device(700, "max") {
+    bottom: 3vh;
+  }
 }
 
 // // mixin
@@ -591,29 +592,29 @@ Author URI:     https://simpleblend.net
 // }
 
 .logo-partner {
-   width: 25px;
-   position: relative;
-   height: 25px;
-   top: 7px;
-   margin-right: 6px;
+  width: 25px;
+  position: relative;
+  height: 25px;
+  top: 7px;
+  margin-right: 6px;
 }
 
 .callout {
-   text-decoration: none;
-   color: #1d144f;
-   margin-top: 3em;
-   display: block;
+  text-decoration: none;
+  color: #1d144f;
+  margin-top: 3em;
+  display: block;
 
-   @include device(400, 'max') {
-      font-size: 13px;
-   }
+  @include device(400, "max") {
+    font-size: 13px;
+  }
 
-   span {
-      border-bottom: 1px solid #1d144f;
-      padding-bottom: 3px;
-   }
+  span {
+    border-bottom: 1px solid #1d144f;
+    padding-bottom: 3px;
+  }
 
-   svg {
-      margin-left: 5px;
-   }
+  svg {
+    margin-left: 5px;
+  }
 }

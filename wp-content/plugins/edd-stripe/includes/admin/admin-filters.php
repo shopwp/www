@@ -40,23 +40,6 @@ function edd_stripe_link_transaction_id( $transaction_id, $payment_id ) {
 }
 add_filter( 'edd_payment_details_transaction_id-stripe', 'edd_stripe_link_transaction_id', 10, 2 );
 
-/**
- * Display the Preapprove column label
- *
- * @since 1.6
- * @return array
- */
-function edds_payments_column( $columns ) {
-
-	global $edd_options;
-
-	if ( isset( $edd_options['stripe_preapprove_only'] ) ) {
-		$columns['preapproval'] = __( 'Preapproval', 'edds' );
-	}
-	return $columns;
-}
-add_filter( 'edd_payments_table_columns', 'edds_payments_column' );
-
 
 /**
  * Display the payment status filters
@@ -65,12 +48,15 @@ add_filter( 'edd_payments_table_columns', 'edds_payments_column' );
  * @return array
  */
 function edds_payment_status_filters( $views ) {
-	$payment_count        = wp_count_posts( 'edd_payment' );
-	$preapproval_count    = '&nbsp;<span class="count">(' . $payment_count->preapproval . ')</span>';
-	$cancelled_count      = '&nbsp;<span class="count">(' . $payment_count->cancelled . ')</span>';
-	$current              = isset( $_GET['status'] ) ? $_GET['status'] : '';
-	$views['preapproval'] = sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'preapproval', admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ), $current === 'preapproval' ? ' class="current"' : '', __( 'Preapproval Pending', 'edds' ) . $preapproval_count );
-	$views['cancelled']   = sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'cancelled', admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ), $current === 'cancelled' ? ' class="current"' : '', __( 'Cancelled', 'edds' ) . $cancelled_count );
+	$payment_count             = wp_count_posts( 'edd_payment' );
+	$preapproval_count         = '&nbsp;<span class="count">(' . $payment_count->preapproval . ')</span>';
+	$preapproval_pending_count = '&nbsp;<span class="count">(' . $payment_count->preapproval_pending . ')</span>';
+	$cancelled_count           = '&nbsp;<span class="count">(' . $payment_count->cancelled . ')</span>';
+	$current                   = isset( $_GET['status'] ) ? $_GET['status'] : '';
+
+	$views['preapproval']         = sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'preapproval', admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ), $current === 'preapproval' ? ' class="current"' : '', __( 'Preapproved', 'edds' ) . $preapproval_count );
+	$views['pending_preapproval'] = sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'preapproval_pending', admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ), $current === 'preapproval_pending' ? ' class="current"' : '', __( 'Preapproval Pending', 'edds' ) . $preapproval_pending_count );
+	$views['cancelled']           = sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'cancelled', admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ), $current === 'cancelled' ? ' class="current"' : '', __( 'Cancelled', 'edds' ) . $cancelled_count );
 
 	return $views;
 }
@@ -83,7 +69,7 @@ add_filter( 'edd_payments_table_views', 'edds_payment_status_filters' );
  * @return string
  */
 function edds_payments_column_data( $value, $payment_id, $column_name ) {
-	if ( $column_name == 'preapproval' ) {
+	if ( $column_name == 'status' ) {
 		$status      = get_post_status( $payment_id );
 		$customer_id = get_post_meta( $payment_id, '_edds_stripe_customer_id', true );
 
@@ -97,6 +83,7 @@ function edds_payments_column_data( $value, $payment_id, $column_name ) {
 			'nonce'           => $nonce,
 			'edd-action'      => 'charge_stripe_preapproval'
 		);
+
 		$cancel_args          = array(
 			'preapproval_key' => $customer_id,
 			'payment_id'      => $payment_id,
@@ -104,11 +91,22 @@ function edds_payments_column_data( $value, $payment_id, $column_name ) {
 			'edd-action'      => 'cancel_stripe_preapproval'
 		);
 
-		if ( 'preapproval' === $status ) {
-			$value = '<a href="' . esc_url( add_query_arg( $preapproval_args, admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ) . '" class="button-secondary button">' . __( 'Process Payment', 'edds' ) . '</a>&nbsp;';
-			$value .= '<a href="' . esc_url( add_query_arg( $cancel_args, admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ) . '" class="button-secondary button">' . __( 'Cancel Preapproval', 'edds' ) . '</a>';
+		$actions = array();
+
+		$value .= '<p class="row-actions">';
+
+		if ( in_array( $status, array( 'preapproval', 'preapproval_pending' ), true ) ) {
+			$actions[] = '<a href="' . esc_url( add_query_arg( $preapproval_args, admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ) . '">' . __( 'Process', 'edds' ) . '</a>';
+
+			if ( 'cancelled' !== $status ) {
+				$actions[] = '<span class="delete"><a href="' . esc_url( add_query_arg( $cancel_args, admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ) . '">' . __( 'Cancel', 'edds' ) . '</a></span>';
+			}
 		}
+
+		$value .= implode( ' | ', $actions );
+
+		$value .= '</p>';
 	}
 	return $value;
 }
-add_filter( 'edd_payments_table_column', 'edds_payments_column_data', 10, 3 );
+add_filter( 'edd_payments_table_column', 'edds_payments_column_data', 20, 3 );

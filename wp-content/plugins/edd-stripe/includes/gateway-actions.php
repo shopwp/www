@@ -7,6 +7,14 @@
  * @return void
  */
 function edds_register_post_statuses() {
+	register_post_status( 'preapproval_pending', array(
+		'label'                     => _x( 'Preapproval Pending', 'Pending preapproved payment', 'edds' ),
+		'public'                    => true,
+		'exclude_from_search'       => false,
+		'show_in_admin_all_list'    => true,
+		'show_in_admin_status_list' => true,
+		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'edds' )
+	) );
 	register_post_status( 'preapproval', array(
 		'label'                     => _x( 'Preapproved', 'Preapproved payment', 'edds' ),
 		'public'                    => true,
@@ -33,7 +41,7 @@ add_action( 'init',  'edds_register_post_statuses', 110 );
  * @return void
  */
 function edd_stripe_register_email_tags() {
-	$statement_descriptor = edd_get_option( 'stripe_statement_descriptor', '' );
+	$statement_descriptor = edds_get_statement_descriptor();
 	if ( ! empty( $statement_descriptor ) ) {
 		edd_add_email_tag( 'stripe_statement_descriptor', __( 'Outputs a line stating what charges will appear as on customer\'s credit card statements.', 'edds' ), 'edd_stripe_statement_descriptor_template_tag' );
 	}
@@ -54,7 +62,7 @@ function edd_stripe_statement_descriptor_template_tag( $payment_id ) {
 		return '';
 	}
 
-	$statement_descriptor = edd_get_option( 'stripe_statement_descriptor', '' );
+	$statement_descriptor = edds_get_statement_descriptor();
 	if ( empty( $statement_descriptor ) ) {
 		return '';
 	}

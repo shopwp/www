@@ -20,6 +20,14 @@ class EDD_Recurring_Gateway {
 	public $custom_meta = array();
 
 	/**
+	 * Registers additionally supported functionalities for specific gateways.
+	 *
+	 * @since 2.9.0
+	 * @type array
+	 */
+	public $supports = array();
+
+	/**
 	 * Get things started
 	 *
 	 * @access      public
@@ -50,7 +58,6 @@ class EDD_Recurring_Gateway {
 		add_action( 'edd_after_cc_fields', array( $this, 'after_cc_fields' ) );
 
 		add_filter( 'edd_subscription_profile_link_' . $this->id, array( $this, 'link_profile_id' ), 10, 2 );
-		add_filter( 'edd_purchase_data_before_gateway' . $this->id, array( $this, 'maybe_skip_manual_on_free' ), 10, 2 );
 	}
 
 	/**
@@ -171,9 +178,11 @@ class EDD_Recurring_Gateway {
 	 *
 	 * @access      public
 	 * @since       2.4
-	 * @return      bool
+	 * @param       EDD_Subscription $subscription The EDD_Subscription object for the EDD Subscription being cancelled.
+	 * @param       bool             $valid Currently this defaults to be true at all times.
+	 * @return      void
 	 */
-	public function cancel( $subscription, $valid ) { }
+	public function cancel( $subscription, $valid ) {}
 
 	/**
 	 * Determines if a subscription can be reactivated through the gateway
@@ -613,6 +622,7 @@ class EDD_Recurring_Gateway {
 
 			$args = array(
 				'product_id'            => $subscription['id'],
+				'price_id'              => isset( $subscription['price_id'] ) ? $subscription['price_id'] : null,
 				'user_id'               => $this->purchase_data['user_info']['id'],
 				'parent_payment_id'     => $this->payment_id,
 				'status'                => $status,
@@ -673,20 +683,89 @@ class EDD_Recurring_Gateway {
 			return;
 		}
 
-		if( ! edd_recurring()->cart_contains_recurring() ) {
+		if ( ! edd_recurring()->cart_contains_recurring() ) {
 			return;
-		}
-
-		if ( edd_recurring()->cart_is_mixed() ) {
-			edd_set_error( 'edd_recurring_mixed_cart', __( 'Subscriptions and non-subscriptions may not be purchased at the same time. Please purchase each separately.', 'edd-recurring' ) );
 		}
 
 		if ( edd_recurring()->cart_is_mixed_with_trials() ) {
 			edd_set_error( 'edd_recurring_mixed_trials_cart', __( 'Free trials and non-trials may not be purchased at the same time. Please purchase each separately.', 'edd-recurring' ) );
 		}
 
-		$this->validate_fields( $data, $posted );
+		// Show errors related to mixed carts.
 
+		$enabled_gateways = edd_get_enabled_payment_gateways();
+
+		$show_mixed_error = (
+			! in_array( 'mixed_cart', $this->supports, true ) &&
+			edd_recurring()->cart_is_mixed()
+		);
+
+		if ( $show_mixed_error ) {
+
+			if ( ! isset( $enabled_gateways['stripe'] ) ) {
+
+				// Show generic error to non show managers if no other gateways can be used to complete the purchase.
+				if ( ! current_user_can( 'manage_shop_settings' ) ) {
+					edd_set_error( 'edd_recurring_mixed_cart', __( 'Subscriptions and non-subscriptions may not be purchased at the same time. Please purchase each separately.', 'edd-recurring' ) );
+
+				// Alert shop managers that Stripe supports mixed carts.
+				} else {
+					edd_set_error(
+						'edd_recurring_mixed_cart_install_gateway',
+						wp_kses(
+							wpautop(
+								'<em>' . __( 'This message is showing because you are a shop manager', 'edd-recurring' ) . '</em>'
+							) .
+							wpautop(
+								sprintf(
+									/** translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+									__( 'Your active payment gateways do not support mixed carts. The %1$sStripe Payment Gateway%2$s allows customers to purchase carts containing both recurring subscriptions and one-time charges at the same time.', 'edd-recurring' ),
+									'<a href="https://easydigitaldownloads.com/downloads/stripe-gateway/?utm_source=checkout&utm_medium=recurring&utm_campaign=admin" rel="noopener noreferrer" target="_blank">',
+									'</a>'
+								)
+							),
+							array(
+								'em' => true,
+								'p'  => true,
+								'a'  => array(
+									'href'   => true,
+									'rel'    => true,
+									'target' => true,
+								),
+							)
+						)
+					);
+				}
+
+			// Show an error to switch to the Stripe gateway to complete purchase.
+			} else {
+
+				$gateway_checkout_uri = add_query_arg( 
+					array(
+						'payment-mode' => 'stripe',
+					),
+					edd_get_checkout_uri()
+				);
+
+				edd_set_error(
+					'edd_recurring_mixed_cart_use_gateway',
+					wp_kses(
+						sprintf(
+							__( 'Sorry, purchasing a subscription and non-subscription product is only supported when paying by credit card. %1$sSwitch to this payment method%2$s.', 'edd-recurring' ),
+							'<a href="' . esc_url( $gateway_checkout_uri ) . '">',
+							'</a>'
+						),
+						array(
+							'a' => array(
+								'href'   => true,
+							),
+						)
+					)
+				);
+			}
+		}
+
+		$this->validate_fields( $data, $posted );
 	}
 
 	/**
@@ -924,28 +1003,6 @@ class EDD_Recurring_Gateway {
 
 	public function link_profile_id( $profile_id, $subscription ) {
 		return $profile_id;
-	}
-
-	/**
-	 * Easy Digital Downloads automatically sets the gateway to "manual" if the cart total is 0.
-	 *
-	 * In order for free trials to work, we need to reset "manual" to the selected gateway to ensure the proper gateway processes the signup.
-	 *
-	 * @access      public
-	 * @since       2.6
-	 * @return      array
-	 */
-	public function maybe_skip_manual_on_free( $purchase_data, $valid_data ) {
-
-		if ( edd_recurring()->is_purchase_recurring( $purchase_data ) ) {
-
-
-
-			$purchase_data['gateway'] = $gateway;
-
-		}
-
-		return $purchase_data;
 	}
 
 }

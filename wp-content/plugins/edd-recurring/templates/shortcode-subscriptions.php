@@ -48,7 +48,23 @@ if ( is_user_logged_in() ):
 				<tr>
 					<?php do_action( 'edd_recurring_history_row_start', $subscription ); ?>
 					<td>
-						<span class="edd_subscription_name"><?php echo get_the_title( $subscription->product_id ); ?></span><br/>
+						<?php
+						$download = edd_get_download( $subscription->product_id );
+
+						if ( $download instanceof EDD_Download ) {
+							$product_name = $download->get_name();
+							if ( ! is_null( $subscription->price_id ) && $download->has_variable_prices() ) {
+								$prices = $download->get_prices();
+								if ( isset( $prices[ $subscription->price_id ] ) && ! empty( $prices[ $subscription->price_id ]['name'] ) ) {
+									$product_name .= ' &mdash; ' . $prices[ $subscription->price_id ]['name'];
+								}
+							}
+						} else {
+							$product_name = '&mdash;';
+						}
+
+						?>
+						<span class="edd_subscription_name"><?php echo esc_html( $product_name ); ?></span><br/>
 						<span class="edd_subscription_billing_cycle"><?php echo edd_currency_filter( edd_format_amount( $subscription->recurring_amount ), edd_get_payment_currency_code( $subscription->parent_payment_id ) ) . ' / ' . $frequency; ?></span>
 					</td>
 					<td>
@@ -78,7 +94,9 @@ if ( is_user_logged_in() ):
 						<?php endif; ?>
 						<?php if( $subscription->can_cancel() ) : ?>
 							&nbsp;|&nbsp;
-							<a href="<?php echo esc_url( $subscription->get_cancel_url() ); ?>" class="edd_subscription_cancel"><?php _e( 'Cancel', 'edd-recurring' ); ?></a>
+							<a href="<?php echo esc_url( $subscription->get_cancel_url() ); ?>" class="edd_subscription_cancel">
+								<?php echo edd_get_option( 'recurring_cancel_button_text', __( 'Cancel', 'edd-recurring' ) ); ?>
+							</a>
 						<?php endif; ?>
 						<?php if( $subscription->can_reactivate() ) : ?>
 							&nbsp;|&nbsp;

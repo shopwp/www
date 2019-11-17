@@ -1,0 +1,73 @@
+.component-comparison-chart {
+  background-color: transparent;
+
+  table {
+    width: 100%;
+  }
+
+  td {
+    border-right: 1px solid #cbcbcb;
+
+    a:not(.btn) {
+      color: #181625;
+    }
+  }
+
+  td,
+  th {
+    font-size: 17px;
+  }
+
+  th {
+    font-size: 20px;
+  }
+
+  thead {
+    .btn {
+      margin-top: 0;
+      background-color: #181625;
+    }
+
+    .cell-center {
+      padding-bottom: 1em;
+    }
+
+    a {
+      text-decoration: none;
+      color: #181625;
+    }
+  }
+
+  .cell-no-border {
+    border: none;
+  }
+
+  .cell-heading {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .cell {
+    text-align: center;
+  }
+
+  .cell-yes {
+    background: #ebf4eb;
+  }
+
+  .cell-no {
+    background: #fff4f4;
+  }
+
+  .cell-center {
+    text-align: center;
+  }
+
+  .pro {
+    background: #181625;
+    color: white;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 18px;
+  }
+}

@@ -1,56 +1,108 @@
 <?php
 /**
+ * Card actions.
+ *
+ * @package EDD_Stripe
+ * @since   2.7.0
+ */
+
+/**
  * Process the card update actions from the manage card form.
  *
  * @since 2.6
  * @param $data
  * @return void
  */
-function edd_stripe_process_card_update( $data ) {
-	$response = array();
-
-	$card_id  = isset( $data['card_id'] ) ? sanitize_text_field( $data['card_id'] ) : '';
-	if ( ! isset( $data['nonce'] ) || ! wp_verify_nonce( $data['nonce'], $card_id . '_update' ) ) {
-		$response['success'] = false;
-		$response['message'] = __( 'Error updating card.', 'edds' );
-	} elseif ( empty ( $card_id ) || empty( $data['user_id'] ) ) {
-		$response['success'] = false;
-		$response['message'] = __( 'Missing card or user ID.', 'edds' );
-	}
-
+function edd_stripe_process_card_update() {
 	$enabled = edd_stripe_existing_cards_enabled();
+
+	// Feature not enabled.
 	if ( ! $enabled ) {
-		$response['success'] = false;
-		$response['message'] = __( 'This feature is not available at this time.', 'edds' );
+		return wp_send_json_error( array(
+			'message' => __( 'This feature is not available at this time.', 'edds' ),
+		) );
 	}
 
-	if ( ! isset( $response['success'] ) || false !== $response['success'] ) {
-		$stripe_customer_id = edds_get_stripe_customer_id( $data['user_id'] );
-		if ( ! empty( $stripe_customer_id ) ) {
-			$secret_key = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) ) ;
+	// Source can't be found.
+	$payment_method = isset( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
 
-			\Stripe\Stripe::setApiKey( $secret_key );
-			$stripe_customer = \Stripe\Customer::retrieve( $stripe_customer_id );
+	if ( empty ( $payment_method ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
+	}
 
-			$card = $stripe_customer->sources->retrieve( $card_id );
-			foreach( $data['card_data'] as $key => $value ) {
-				if ( ! empty( $value ) ) {
-					$card->$key = $value;
-				} else {
-					$card->$key = null;
-				}
-			}
+	// Nonce failed.
+	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], $payment_method . '_update' ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
+	}
 
-			$card->save();
-			$response['success'] = true;
-			$response['message'] = __( 'Card successfully updated', 'edds' );
+	// Customer can't be found.
+	$stripe_customer_id = edds_get_stripe_customer_id( get_current_user_id() );
+
+	if ( empty( $stripe_customer_id ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
+	}
+
+	try {
+		$card_args   = array();
+		$card_fields = array(
+			'address_city',
+			'address_country',
+			'address_line1',
+			'address_line2',
+			'address_zip',
+			'address_state',
+			'exp_month',
+			'exp_year',
+		);
+
+		foreach ( $card_fields as $card_field ) {
+			$card_args[ $card_field ] = ( isset( $_POST[ $card_field ] ) && '' !== $_POST[ $card_field ] )
+				? sanitize_text_field( $_POST[ $card_field ] )
+				: null;
 		}
-	}
 
-	echo json_encode( $response );
-	die();
+		// Update a PaymentMethod
+		if ( 'pm_' === substr( $payment_method, 0, 3 ) ) {
+			$address_args = array(
+				'city'        => $card_args['address_city'],
+				'country'     => $card_args['address_country'],
+				'line1'       => $card_args['address_line1'],
+				'line2'       => $card_args['address_line2'],
+				'postal_code' => $card_args['address_zip'],
+				'state'       => $card_args['address_state'],
+			);
+
+			edds_api_request( 'PaymentMethod', 'update', $payment_method, array(
+				'billing_details' => array(
+					'address' => $address_args,
+				),
+				'card'  => array(
+					'exp_month' => $card_args['exp_month'],
+					'exp_year'  => $card_args['exp_year'],
+				),
+			) );
+
+		// Update a legacy Card.
+		} else {
+			edds_api_request( 'Customer', 'updateSource', $stripe_customer_id, $payment_method, $card_args );
+		}
+
+		return wp_send_json_success( array(
+			'message' => esc_html__( 'Card successfully updated.', 'edds' ),
+		) );
+	} catch( \Exception $e ) {
+		return wp_send_json_error( array(
+			'message' => esc_html( $e->getMessage() ),
+		) );
+	}
 }
-add_action( 'edd_update_stripe_card', 'edd_stripe_process_card_update', 10, 1 );
+add_action( 'wp_ajax_edds_update_payment_method', 'edd_stripe_process_card_update' );
 
 /**
  * Process the set default card action from the manage card form.
@@ -60,42 +112,58 @@ add_action( 'edd_update_stripe_card', 'edd_stripe_process_card_update', 10, 1 );
  * @return void
  */
 function edd_stripe_process_card_default( $data ) {
-	$response = array();
-
-	$card_id  = isset( $data['card_id'] ) ? sanitize_text_field( $data['card_id'] ) : '';
-	if ( ! isset( $data['nonce'] ) || ! wp_verify_nonce( $data['nonce'], $card_id . '_update' ) ) {
-		$response['success'] = false;
-		$response['message'] = __( 'Error updating card.', 'edds' );
-	} elseif ( empty ( $card_id ) || empty( $data['user_id'] ) ) {
-		$response['success'] = false;
-		$response['message'] = __( 'Missing card or user ID.', 'edds' );
-	}
-
 	$enabled = edd_stripe_existing_cards_enabled();
+
+	// Feature not enabled.
 	if ( ! $enabled ) {
-		$response['success'] = false;
-		$response['message'] = __( 'This feature is not available at this time.', 'edds' );
+		return wp_send_json_error( array(
+			'message' => __( 'This feature is not available at this time.', 'edds' ),
+		) );
 	}
 
-	if ( ! isset( $response['success'] ) || false !== $response['success'] ) {
-		$stripe_customer_id = edds_get_stripe_customer_id( $data['user_id'] );
-		if ( ! empty( $stripe_customer_id ) ) {
-			$secret_key = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) ) ;
+	// Source can't be found.
+	$payment_method = isset( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
 
-			\Stripe\Stripe::setApiKey( $secret_key );
-			$stripe_customer = \Stripe\Customer::retrieve( $stripe_customer_id );
-			$stripe_customer->default_source = $card_id;
-			$stripe_customer->save();
-
-			$response['success'] = true;
-			$response['message'] = __( 'Default card updated successfully.', 'edds' );
-		}
+	if ( empty ( $payment_method ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
 	}
 
-	echo json_encode( $response );
-	die();
+	// Nonce failed.
+	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], $payment_method . '_update' ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
+	}
+
+	// Customer can't be found.
+	$stripe_customer_id = edds_get_stripe_customer_id( get_current_user_id() );
+
+	if ( empty( $stripe_customer_id ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
+	}
+
+	try {
+
+		edds_api_request( 'Customer', 'update', $stripe_customer_id, array(
+			'invoice_settings' => array(
+				'default_payment_method' => $payment_method,
+			),
+		) );
+
+		return wp_send_json_success( array(
+			'message' =>	esc_html__( 'Card successfully set as default.', 'edds' ),
+		) );
+	} catch( \Exception $e ) {
+		return wp_send_json_error( array(
+			'message' => esc_html( $e->getMessage() ),
+		) );
+	}
 }
-add_action( 'edd_set_default_card', 'edd_stripe_process_card_default', 10, 1 );
+add_action( 'wp_ajax_edds_set_payment_method_default', 'edd_stripe_process_card_default' );
 
 /**
  * Process the delete card action from the manage card form.
@@ -105,102 +173,147 @@ add_action( 'edd_set_default_card', 'edd_stripe_process_card_default', 10, 1 );
  * @return void
  */
 function edd_stripe_process_card_delete( $data ) {
-	$response = array();
-
-	$card_id  = isset( $data['card_id'] ) ? sanitize_text_field( $data['card_id'] ) : '';
-	if ( ! isset( $data['nonce'] ) || ! wp_verify_nonce( $data['nonce'], $card_id . '_update' ) ) {
-		$response['success'] = false;
-		$response['message'] = __( 'Error removing card.', 'edds' );
-	} elseif ( empty ( $card_id ) || empty( $data['user_id'] ) ) {
-		$response['success'] = false;
-		$response['message'] = __( 'Missing card or user ID.', 'edds' );
-	}
-
 	$enabled = edd_stripe_existing_cards_enabled();
+
+	// Feature not enabled.
 	if ( ! $enabled ) {
-		$response['success'] = false;
-		$response['message'] = __( 'This feature is not available at this time.', 'edds' );
+		return wp_send_json_error( array(
+			'message' => __( 'This feature is not available at this time.', 'edds' ),
+		) );
 	}
 
-	if ( ! isset( $response['success'] ) || false !== $response['success'] ) {
-		$stripe_customer_id = edds_get_stripe_customer_id( $data['user_id'] );
-		if ( ! empty( $stripe_customer_id ) ) {
-			$secret_key = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) ) ;
+	// Source can't be found.
+	$payment_method = isset( $_POST['payment_method'] ) ? sanitize_text_field( $_POST['payment_method'] ) : '';
 
-			\Stripe\Stripe::setApiKey( $secret_key );
-			$stripe_customer = \Stripe\Customer::retrieve( $stripe_customer_id );
-			$deleted = $stripe_customer->sources->retrieve( $card_id )->delete();
-			if ( $deleted->deleted ) {
-				$response['success'] = true;
-				$response['message'] = __( 'Card successfully removed.', 'edds' );
-			} else {
-				$response['success'] = false;
-				$response['message'] = __( 'Error removing card.', 'edds' );
-			}
+	if ( empty ( $payment_method ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
+	}
+
+	// Nonce failed.
+	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], $payment_method . '_update' ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
+	}
+
+	// Customer can't be found.
+	$stripe_customer_id = edds_get_stripe_customer_id( get_current_user_id() );
+
+	if ( empty( $stripe_customer_id ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error updating card.', 'edds' ),
+		) );
+	}
+
+	// Removal is disabled for this card.
+	$should_remove = apply_filters(
+		'edd_stripe_should_remove_card',
+		array(
+			'remove' => true,
+			'message' => ''
+		),
+		$payment_method,
+		$stripe_customer_id,
+		$data
+	);
+
+	if ( ! $should_remove['remove'] ) {
+		return wp_send_json_error( array(
+			'message' => esc_html__( 'This feature is not available at this time.', 'edds' ),
+		) );
+	}
+
+	try {
+		// Detach a PaymentMethod.
+		if ( 'pm_' === substr( $payment_method, 0, 3 ) ) {
+			$payment_method = edds_api_request( 'PaymentMethod', 'retrieve', $payment_method );
+			$payment_method->detach();
+
+		// Delete a Card.
+		} else {
+			edds_api_request( 'Customer', 'deleteSource', $stripe_customer_id, $payment_method );
 		}
-	}
 
-	echo json_encode( $response );
-	die();
+		return wp_send_json_success( array(
+			'message' =>	esc_html__( 'Card successfully removed.', 'edds' ),
+		) );
+	} catch( \Exception $e ) {
+		return wp_send_json_error( array(
+			'message' => esc_html( $e->getMessage() ),
+		) );
+	}
 }
-add_action( 'edd_delete_stripe_card', 'edd_stripe_process_card_delete', 10, 1 );
+add_action( 'wp_ajax_edds_delete_payment_method', 'edd_stripe_process_card_delete' );
 
 /**
- * Process the add card action from the manage card form.
+ * Handles adding a new PaymentMethod (via AJAX).
  *
  * @since 2.6
  * @param $data
  * @return void
  */
-function edd_stripe_process_card_add( $data ) {
-	$response = array();
-
-	$token  = isset( $data['token'] ) ? sanitize_text_field( $data['token'] ) : '';
-	if ( ! isset( $data['nonce'] ) || ! wp_verify_nonce( $data['nonce'], 'edd-stripe-add-card' ) ) {
-		$response['success'] = false;
-		$response['message'] = __( 'Error adding card.', 'edds' );
-	} elseif ( empty ( $token ) || empty( $data['user_id'] ) ) {
-		$response['success'] = false;
-		$response['message'] = __( 'Missing token or user ID.', 'edds' );
-	}
-
+function edds_add_payment_method() {
 	$enabled = edd_stripe_existing_cards_enabled();
+
+	// Feature not enabled.
 	if ( ! $enabled ) {
-		$response['success'] = false;
-		$response['message'] = __( 'This feature is not available at this time.', 'edds' );
+		return wp_send_json_error( array(
+			'message' => __( 'This feature is not available at this time.', 'edds' ),
+		) );
 	}
 
-	if ( ! isset( $response['success'] ) || false !== $response['success'] ) {
-		$stripe_customer_id = edds_get_stripe_customer_id( $data['user_id'] );
-		if ( ! empty( $stripe_customer_id ) ) {
-			$secret_key = edd_is_test_mode() ? trim( edd_get_option( 'test_secret_key' ) ) : trim( edd_get_option( 'live_secret_key' ) ) ;
+	if ( edd_stripe()->rate_limiting->has_hit_card_error_limit()  ) {
+		// Increase the card error count.
+		edd_stripe()->rate_limiting->increment_card_error_count();
 
-			\Stripe\Stripe::setApiKey( $secret_key );
-
-			try {
-
-				$stripe_customer = \Stripe\Customer::retrieve( $stripe_customer_id );
-
-				$added = $stripe_customer->sources->create( array( 'source' => $token ) );
-				if ( $added->id ) {
-					$response['success'] = true;
-					$response['message'] = __( 'Card successfully added.', 'edds' );
-				} else {
-					$response['success'] = false;
-					$response['message'] = __( 'Error adding card.', 'edds' );
-				}
-
-			} catch ( Exception $e ) {
-
-				$response['success'] = false;
-				$response['message'] = $e->getMessage();
-
-			}
-
-		}
+		return wp_send_json_error( array(
+			'message' => __( 'Unable to update your account at this time, please try again later', 'edds' ),
+		) );
 	}
 
-	echo json_encode( $response );
-	die();
+	// PaymetnMethod can't be found.
+	$payment_method_id = isset( $_POST['payment_method_id'] ) ? sanitize_text_field( $_POST['payment_method_id'] ) : false;
+
+	if ( ! $payment_method_id ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Missing card ID.', 'edds' ),
+		) );
+	}
+
+	// Nonce failed.
+	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'edd-stripe-add-card' ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Error adding card.', 'edds' ),
+		) );
+	}
+
+	// Customer can't be found.
+	$stripe_customer_id = edds_get_stripe_customer_id( get_current_user_id() );
+
+	if ( empty( $stripe_customer_id ) ) {
+		return wp_send_json_error( array(
+			'message' => __( 'Unable to find user.', 'edds' ),
+		) );
+	}
+
+	try {
+		$payment_method = edds_api_request( 'PaymentMethod', 'retrieve', $payment_method_id );
+		$payment_method->attach( array(
+			'customer' => $stripe_customer_id,
+		) );
+
+		return wp_send_json_success( array(
+			'message' => esc_html__( 'Card successfully added.', 'edds' ),
+		) );
+	} catch( \Exception $e ) {
+		// Increase the card error count.
+		edd_stripe()->rate_limiting->increment_card_error_count();
+
+		return wp_send_json_error( array(
+			'message' => esc_html( $e->getMessage() ),
+		) );
+	}
 }
-add_action( 'edd_add_stripe_card', 'edd_stripe_process_card_add', 10, 1 );
+add_action( 'wp_ajax_edds_add_payment_method', 'edds_add_payment_method' );

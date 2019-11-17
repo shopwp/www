@@ -1,7 +1,9 @@
 <?php
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * The Recurring Reminders Class
@@ -15,7 +17,7 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Returns if renewals are enabled
+	* Returns if renewals are enabled.
 	*
 	* @return array Array of defined reminders.
 	*/
@@ -29,7 +31,7 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Retrieve reminder notices periods
+	* Retrieve reminder notices periods.
 	*
 	* @since 2.4
 	* @return array reminder notice periods
@@ -58,10 +60,10 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Retrieve the reminder label for a notice
+	* Retrieve the reminder label for a notice.
 	*
 	* @since 2.4
-	* @return String
+	* @return string
 	*/
 	public function get_notice_period_label( $notice_id = 0 ) {
 
@@ -73,7 +75,7 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Retrieve reminder notices types
+	* Retrieve reminder notices types.
 	*
 	* @since 2.4
 	* @return array reminder notice types
@@ -87,7 +89,7 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Retrieve the reminder type label for a notice
+	* Retrieve the reminder type label for a notice.
 	*
 	* @since 2.4
 	* @return String
@@ -102,7 +104,7 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Retrieve a reminder notice
+	* Retrieve a reminder notice.
 	*
 	* @since 2.4
 	* @return array Reminder notice details
@@ -117,7 +119,7 @@ class EDD_Recurring_Reminders {
 			'message'      => 'Hello {name},
 
 			Your subscription for {subscription_name} will renew on {expiration}.',
-			'type'		   => 'renewal',
+			'type'         => 'renewal',
 		);
 
 		$notice   = isset( $notices[ $notice_id ] ) ? $notices[ $notice_id ] : $notices[0];
@@ -129,7 +131,7 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Retrieve reminder notice periods
+	* Retrieve reminder notice periods.
 	*
 	* @since 2.4
 	* @return array Reminder notices defined in settings
@@ -137,7 +139,7 @@ class EDD_Recurring_Reminders {
 	public function get_notices( $type = 'all' ) {
 		$notices = get_option( 'edd_recurring_reminder_notices', array() );
 
-		if( empty( $notices ) ) {
+		if ( empty( $notices ) ) {
 
 			$message = 'Hello {name},
 
@@ -147,7 +149,7 @@ class EDD_Recurring_Reminders {
 				'send_period' => '+1month',
 				'subject'     => __( 'Your Subscription is About to Renew', 'edd-recurring' ),
 				'message'     => $message,
-				'type'		  => 'renewal'
+				'type'        => 'renewal',
 			);
 
 			$message = 'Hello {name},
@@ -158,11 +160,11 @@ class EDD_Recurring_Reminders {
 				'send_period' => '+1month',
 				'subject'     => __( 'Your Subscription is About to Expire', 'edd-recurring' ),
 				'message'     => $message,
-				'type'	  	  => 'expiration'
+				'type'        => 'expiration',
 			);
 		}
 
-		if ( $type != 'all' ) {
+		if ( 'all' !== $type ) {
 
 			$notices_hold = array();
 
@@ -183,18 +185,18 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Send reminder emails
+	* Send reminder emails.
 	*
 	* @since 2.4
 	* @return void
 	*/
 	public function scheduled_reminders() {
 
-		$edd_recurring_emails = new EDD_Recurring_Emails;
+		$edd_recurring_emails = new EDD_Recurring_Emails();
 
 		$reminders_enabled = $this->reminders_enabled();
 
-		edd_debug_log( 'Running EDD_Recurring_Reminders::scheduled_reminders.', true );
+		edd_debug_log( 'Running EDD_Recurring_Reminders::scheduled_reminders.' );
 
 		foreach ( $reminders_enabled as $type => $enabled ) {
 
@@ -204,39 +206,39 @@ class EDD_Recurring_Reminders {
 
 			$notices = $this->get_notices( $type );
 
-			edd_debug_log( 'Beginning reminder processing. Found ' . count( $notices ) . ' reminder templates.', true );
+			edd_debug_log( 'Beginning reminder processing. Found ' . count( $notices ) . ' reminder templates.' );
 
-			foreach( $notices as $notice_id => $notice ) {
+			foreach ( $notices as $notice_id => $notice ) {
 
-				edd_debug_log( 'Processing ' . $notice['send_period'] . ' reminder template.', true );
+				edd_debug_log( 'Processing ' . $notice['send_period'] . ' reminder template.' );
 
 				$subscriptions = $this->get_reminder_subscriptions( $notice['send_period'], $type );
 
-				edd_debug_log( 'Found ' . count( $subscriptions ) . ' subscriptions to send reminders for.', true );
+				edd_debug_log( 'Found ' . count( $subscriptions ) . ' subscriptions to send reminders for.' );
 
-				if( ! $subscriptions ) {
+				if ( ! $subscriptions ) {
 					continue;
 				}
 
 				$processed_subscriptions = 0;
 
-				foreach( $subscriptions as $subscription ) {
+				foreach ( $subscriptions as $subscription ) {
 
-					// Ensure the subscription should renew based on payments made and bill times
-					if ( $type == 'renewal' && $subscription->bill_times != 0 && $subscription->get_total_payments() >= $subscription->bill_times ) {
-						edd_debug_log( 'Ignored renewal notice for subscription ID ' . $subscription->id . ' due being billing times being complete.', true );
+					// Ensure the subscription should renew based on payments made and bill times.
+					if ( 'renewal' == $type && 0 != $subscription->bill_times && $subscription->get_total_payments() >= $subscription->bill_times ) {
+						edd_debug_log( 'Ignored renewal notice for subscription ID ' . $subscription->id . ' due being billing times being complete.' );
 						continue;
 					}
 
-					// Ensure an expiration notice isn't sent to an auto-renew subscription
-					if ( $type == 'expiration' && $subscription->get_status() == 'active' && ( $subscription->get_total_payments() < $subscription->bill_times || $subscription->bill_times == 0 ) ) {
-						edd_debug_log( 'Ignored expiration notice for subscription ID ' . $subscription->id . ' due to subscription being active.', true );
+					// Ensure an expiration notice isn't sent to an auto-renew subscription.
+					if ( 'expiration' == $type && 'active' == $subscription->get_status() && ( $subscription->get_total_payments() < $subscription->bill_times || 0 == $subscription->bill_times ) ) {
+						edd_debug_log( 'Ignored expiration notice for subscription ID ' . $subscription->id . ' due to subscription being active.' );
 						continue;
 					}
 
-					// Ensure an expiration notice isn't sent to a still-trialling subscription
-					if ( $type == 'expiration' && $subscription->get_status() == 'trialling' ) {
-						edd_debug_log( 'Ignored expiration notice for subscription ID ' . $subscription->id . ' due subscription still trialling.', true );
+					// Ensure an expiration notice isn't sent to a still-trialling subscription.
+					if ( 'expiration' == $type && $subscription->get_status() == 'trialling' ) {
+						edd_debug_log( 'Ignored expiration notice for subscription ID ' . $subscription->id . ' due subscription still trialling.' );
 						continue;
 					}
 
@@ -247,27 +249,27 @@ class EDD_Recurring_Reminders {
 						continue;
 					}
 
-					edd_debug_log( 'Renewal reminder not previously sent for subscription ID ' . $subscription->id . ' for reminder ' . $notice['send_period'], true );
+					edd_debug_log( 'Renewal reminder not previously sent for subscription ID ' . $subscription->id . ' for reminder ' . $notice['send_period'] );
 
 					$edd_recurring_emails->send_reminder( $subscription->id, $notice_id );
 					$processed_subscriptions++;
 
 				}
 
-				edd_debug_log( 'Finished processing ' . $processed_subscriptions . ' for ' . $notice['send_period'] . ' reminder template.', true );
+				edd_debug_log( 'Finished processing ' . $processed_subscriptions . ' for ' . $notice['send_period'] . ' reminder template.' );
 
 			}
 		}
 
-		edd_debug_log( 'Finished EDD_Recurring_Reminders::scheduled_reminders.', true );
+		edd_debug_log( 'Finished EDD_Recurring_Reminders::scheduled_reminders.' );
 
 	}
 
 	/**
-	* Retrieve reminder notice periods
+	* Retrieve reminder notice periods.
 	*
 	* @since 2.4
-	* @return array Subscribers whose subscriptions are renewing or expiring within the defined period
+	* @return array|boolean Subscribers whose subscriptions are renewing or expiring within the defined period.
 	*/
 	public function get_reminder_subscriptions( $period = '+1month', $type = false ) {
 
@@ -278,8 +280,8 @@ class EDD_Recurring_Reminders {
 		$args = array();
 
 		switch ( $type ) {
-			case "renewal":
-				// Doesn't make sense to give someone a notice of an autorenewal if it has already expired
+			case 'renewal':
+				// Doesn't make sense to give someone a notice of an auto-renewal if it has already expired.
 				if ( stristr( $period, '-' ) === true ) {
 					return false;
 				}
@@ -294,8 +296,8 @@ class EDD_Recurring_Reminders {
 				);
 				break;
 
-			case "expiration":
-				// If we are looking at expired subscriptions then we need to swap our start and end period checks
+			case 'expiration':
+				// If we are looking at expired subscriptions then we need to swap our start and end period checks.
 				if ( stristr( $period, '-' ) === true ) {
 
 					$start = date( 'Y-m-d H:i:s', strtotime( $period . ' midnight' ) + ( DAY_IN_SECONDS - 1 ) );
@@ -308,11 +310,11 @@ class EDD_Recurring_Reminders {
 
 				}
 
-				$args[ 'expiration' ] = array(
+				$args['expiration'] = array(
 					'number'        => 99999,
 					'expiration'    => array(
 						'start'     => $start,
-						'end'       => $end
+						'end'       => $end,
 					),
 				);
 				break;
@@ -331,50 +333,44 @@ class EDD_Recurring_Reminders {
 	}
 
 	/**
-	* Setup and send test email for a reminder
+	* Setup and send test email for a reminder.
 	*
 	* @since 2.4
 	* @return void
 	*/
 	function send_test_notice( $notice_id = 0 ) {
-		global $edd_options;
-
-		$edd_recurring_emails = new EDD_Recurring_Emails;
 
 		$notice = $this->get_notice( $notice_id );
 
 		$email_to   = function_exists( 'edd_get_admin_notice_emails' ) ? edd_get_admin_notice_emails() : get_bloginfo( 'admin_email' );
-		$message    = ! empty( $notice['message'] ) ? $notice['message'] : __( "**THIS IS A DEFAULT TEST MESSAGE - Notice message was not retrieved.**\n\nHello {name},\n\nYour subscription for {subscription_name} will renew or expire on {expiration}.", 'edd-recurring');
-        $message 	= $this->filter_test_notice( $message );
+		$message    = ! empty( $notice['message'] ) ? $notice['message'] : __( "**THIS IS A DEFAULT TEST MESSAGE - Notice message was not retrieved.**\n\nHello {name},\n\nYour subscription for {subscription_name} will renew or expire on {expiration}.", 'edd-recurring' );
+		$message    = $this->filter_test_notice( $message );
 		$subject    = ! empty( $notice['subject'] ) ? $notice['subject'] : __( 'Default Subject Message - Your Subscription is About to Renew or Expire', 'edd-recurring' );
-        $subject	= $this->filter_test_notice( $subject );
+		$subject    = $this->filter_test_notice( $subject );
 
-        if( class_exists( 'EDD_Emails' ) ) {
+		if ( class_exists( 'EDD_Emails' ) ) {
+			EDD()->emails->send( $email_to, $subject, $message );
+		} else {
+			$from_name  = get_bloginfo( 'name' );
+			$from_email = get_bloginfo( 'admin_email' );
+			$headers    = 'From: ' . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
+			$headers   .= 'Reply-To: '. $from_email . "\r\n";
 
-            EDD()->emails->send( $email_to, $subject, $message );
+			wp_mail( $email_to, $subject, $message, $headers );
 
-        } else {
-
-            $from_name  = get_bloginfo( 'name' );
-            $from_email = get_bloginfo( 'admin_email' );
-            $headers    = "From: " . stripslashes_deep( html_entity_decode( $from_name, ENT_COMPAT, 'UTF-8' ) ) . " <$from_email>\r\n";
-            $headers   .= "Reply-To: ". $from_email . "\r\n";
-
-            wp_mail( $email_to, $subject, $message, $headers );
-
-        }
+		}
 	}
 
 	/**
-	* Filter fields for test email for a reminder
+	* Filter fields for test email for a reminder.
 	*
 	* @since 2.4
-	* @return void
+	* @return string
 	*/
 	function filter_test_notice( $text = null ) {
 		$text = str_replace( '{name}', 'NAME GOES HERE', $text );
-        $text = str_replace( '{subscription_name}', 'SUBSCRIPTION NAME', $text );
-        $text = str_replace( '{expiration}', date('F j, Y', strtotime( 'today' ) ), $text );
+		$text = str_replace( '{subscription_name}', 'SUBSCRIPTION NAME', $text );
+		$text = str_replace( '{expiration}', date( 'F j, Y', strtotime( 'today' ) ), $text );
 
 		return $text;
 	}
