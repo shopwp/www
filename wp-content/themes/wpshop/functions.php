@@ -148,6 +148,10 @@ function is_admin_user($user) {
 
 function is_affiliate_only($user) {
 
+   if (empty($user) || !isset($user->ID)) {
+      return false;
+   }
+
    $affiliate_id = affwp_get_affiliate_id( $user->ID );
    $customer = new EDD_Customer($user->ID, true );
 
@@ -267,3 +271,59 @@ function add_script_attributes($tag, $handle) {
 }
 
 add_filter('script_loader_tag', 'add_script_attributes', 10, 2);
+
+
+
+
+function pw_edd_payment_icon($icons) {
+
+   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-mastercard.png'] = 'Mastercard (custom)';
+   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-visa.png'] = 'Visa (custom)';
+   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-ae.png'] = 'American Express (custom)';
+   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-discover.png'] = 'Discover (custom)';
+   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-paypal.png'] = 'PayPal (custom)';
+
+   return $icons;
+
+}
+
+add_filter('edd_accepted_payment_icons', 'pw_edd_payment_icon', 99, 1);
+
+
+function asasd() {
+   $chosen_gateway = edd_get_chosen_gateway();
+
+   // if ($chosen_gateway === 'stripe') {
+   //    echo '<p class="edd-legend-support">Fill in your credit card details below</p>';
+   // }
+
+   if ($chosen_gateway === 'paypalexpress') {
+      echo '<p class="edd-legend-support">Once you click "Purchase" a PayPal dialog will appear to finish the process.</p>';
+   }
+
+}
+
+add_action('edd_purchase_form_before_email', 'asasd');
+
+function asddasd($one, $label) {
+
+   $chosen_gateway = edd_get_chosen_gateway();
+   
+
+   if ($chosen_gateway === 'paypalexpress') {
+      return '✨ Purchase with PayPal ✨';
+   }
+
+   return $label;
+
+}
+
+add_filter('edd_get_checkout_button_purchase_label', 'asddasd', 10, 2);
+
+
+function asasdsadsd() {
+   echo '<p>Loading ...</p>';
+}
+
+// add_action('edd_purchase_form_before_cc_form', 'asasdsadsd');
+

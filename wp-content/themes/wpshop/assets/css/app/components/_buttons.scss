@@ -8,208 +8,210 @@ a.button.edd-slg-social-unlink-profile,
 .menu-item-back a,
 #edd-purchase-button,
 #edd-recurring-update-submit {
-   padding: calc(#{$space-m} - 8px) calc(#{$space-xxl} - 3px) calc(#{$space-m} - 6px);
-   color: color(white);
-   background-color: color(primary);
-   border: none;
-   position: relative;
-   text-decoration: none;
-   font-weight: 500;
-   font-size: 17px;
-   font-family: $font-primary;
-   display: inline-block;
-   line-height: 1;
-   border-radius: 0.4em;
-   outline: none;
-   z-index: 2;
-   text-align: center;
-   margin: 0;
-   margin-top: $space-s;
-   transition: all 0.18s ease;
+  padding: calc(#{$space-m} - 8px) calc(#{$space-xxl} - 3px)
+    calc(#{$space-m} - 6px);
+  color: color(white);
+  background-color: color(primary);
+  border: none;
+  position: relative;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 17px;
+  font-family: $font-primary;
+  display: inline-block;
+  line-height: 1;
+  border-radius: 0.4em;
+  outline: none;
+  z-index: 2;
+  text-align: center;
+  margin: 0;
+  margin-top: $space-s;
+  transition: all 0.18s ease;
+  opacity: 1;
 
-   // @include bob();
-   // @include shadow();
-   // @include shrink();
-   // @include grow();
+  // @include bob();
+  // @include shadow();
+  // @include shrink();
+  // @include grow();
 
-   @include device(500, 'max') {
-      font-size: 1.3em;
-   }
+  @include device(500, "max") {
+    font-size: 1.3em;
+  }
 
-   &:hover {
-      // @include shadow();
-      text-decoration: none;
-      transform: scale(0.97);
+  &:hover {
+    // @include shadow();
+    text-decoration: none;
+    // transform: scale(0.97);
+    opacity: 1;
+    color: rgba(255, 255, 255, 0.79);
+    // @include dim($opacity-soft);
+    // box-shadow: none;
+    // background-color: darken(color(primary), 62);
+    // background-color: #2d4be2;
+  }
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
+
+  &[disabled],
+  &.is-disabled {
+    background-color: #ececec;
+
+    &:hover {
       opacity: 1;
-      color: rgba(255, 255, 255, 0.89);
-      // @include dim($opacity-soft);
-      // box-shadow: none;
-      // background-color: darken(color(primary), 62);
-      // background-color: #2d4be2;
-   }
-
-   &:focus {
-      border: none;
-      outline: none;
-   }
-
-   &[disabled],
-   &.is-disabled {
       background-color: #ececec;
+      transform: scale(1);
+    }
+  }
 
-      &:hover {
-         opacity: 1;
-         background-color: #ececec;
-         transform: scale(1);
-      }
-   }
+  &.is-loading {
+    position: relative;
+    padding: $space-m $space-xl $space-m $space-xl * 2;
 
-   &.is-loading {
-      position: relative;
-      padding: $space-m $space-xl $space-m $space-xl * 2;
+    &:before {
+      display: block;
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      width: 1.3em;
+      height: 1.3em;
+      left: 1.5em;
+      top: 1.1em;
+      border: 0.15em solid color(white);
+      border-top-color: transparent;
+      animation: spin $speed-slow infinite linear;
+    }
+  }
 
-      &:before {
-         display: block;
-         content: '';
-         position: absolute;
-         border-radius: 50%;
-         width: 1.3em;
-         height: 1.3em;
-         left: 1.5em;
-         top: 1.1em;
-         border: 0.15em solid color(white);
-         border-top-color: transparent;
-         animation: spin $speed-slow infinite linear;
-      }
-   }
+  .fa {
+    margin-right: $space-xxxs;
+    // opacity: $opacity-soft;
+  }
 
-   .fa {
-      margin-right: $space-xxxs;
-      // opacity: $opacity-soft;
-   }
-
-   .svg-inline--fa {
-      box-sizing: border-box;
-      font-variant-caps: normal;
-      font-variant-ligatures: normal;
-      text-rendering: auto;
-      margin-right: 8px;
-   }
+  .svg-inline--fa {
+    box-sizing: border-box;
+    font-variant-caps: normal;
+    font-variant-ligatures: normal;
+    text-rendering: auto;
+    margin-right: 8px;
+  }
 }
 
 .btn-secondary {
-   font-size: 1.2em;
-   background-color: color(secondary);
+  font-size: 1.2em;
+  background-color: color(secondary);
 
-   // &:hover {
-   //    background-color: darken(color(secondary), 6);
-   // }
+  // &:hover {
+  //    background-color: darken(color(secondary), 6);
+  // }
 }
 
-input[type='submit'],
+input[type="submit"],
 .edd-submit {
-   font-size: 1.44em;
+  font-size: 1.44em;
 
-   @include device(600, 'max') {
-      font-size: 1.2em;
-      width: 100%;
-      margin-top: 0;
-   }
+  @include device(600, "max") {
+    font-size: 1.2em;
+    width: 100%;
+    margin-top: 0;
+  }
 }
 
 .btn-group {
-   position: relative;
-   overflow: visible;
+  position: relative;
+  overflow: visible;
 
-   .btn {
-      margin-right: $space-m;
-   }
+  .btn {
+    margin-right: $space-m;
+  }
 
-   @include device(600, 'max') {
-      flex-direction: column;
+  @include device(600, "max") {
+    flex-direction: column;
 
-      .btn {
-         margin-right: 0;
-         width: 100%;
-      }
-   }
+    .btn {
+      margin-right: 0;
+      width: 100%;
+    }
+  }
 }
 
 .btn-l,
 #edd-purchase-button {
-   font-size: $font-xl;
+  font-size: $font-xl;
 }
 
 .edd-add-to-cart-label {
-   font-size: $font-m;
+  font-size: $font-m;
 }
 
 .btn-s {
-   font-size: $font-m;
+  font-size: $font-m;
 }
 
 .btn-wrap {
-   position: relative;
+  position: relative;
 
-   .spinner {
-      top: 5px;
-   }
+  .spinner {
+    top: 5px;
+  }
 }
 
 .btn-wrap-center {
-   text-align: center;
+  text-align: center;
 }
 
 .edd_download_file_link {
-   margin: 0;
+  margin: 0;
 
-   &:before {
-      content: '\f019';
-      font-family: 'FontAwesome';
-      font-size: 20px;
-      display: inline-block;
-      margin-right: 10px;
-   }
+  &:before {
+    content: "\f019";
+    font-family: "FontAwesome";
+    font-size: 20px;
+    display: inline-block;
+    margin-right: 10px;
+  }
 }
 
 .edd-add-to-cart {
-   &:hover {
-      opacity: 1;
-   }
+  &:hover {
+    opacity: 1;
+  }
 
-   + input.edd-add-to-cart {
+  + input.edd-add-to-cart {
+    display: none;
+  }
+
+  span.edd-add-to-cart-label {
+    &:after {
+      font-family: "FontAwesome";
+      content: "\f217";
+      display: inline-block;
+      margin-left: $space-s;
       display: none;
-   }
+    }
+  }
 
-   span.edd-add-to-cart-label {
-      &:after {
-         font-family: 'FontAwesome';
-         content: '\f217';
-         display: inline-block;
-         margin-left: $space-s;
-         display: none;
-      }
-   }
-
-   @include device(600, 'max') {
-      font-size: 26px;
-   }
+  @include device(600, "max") {
+    font-size: 26px;
+  }
 }
 
 .receipt-account-wrapper .btn {
-   &:after {
-      content: '\f178';
-      font-family: 'FontAwesome';
-      display: inline-block;
-      margin-left: $space-s;
-   }
+  &:after {
+    content: "\f178";
+    font-family: "FontAwesome";
+    display: inline-block;
+    margin-left: $space-s;
+  }
 }
 
 .btn-copy {
-   background: color(base);
-   color: #fff;
-   display: inline;
-   padding: 5px 10px;
-   font-size: 14px;
-   border-radius: 5px;
+  background: color(base);
+  color: #fff;
+  display: inline;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 5px;
 }

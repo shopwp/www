@@ -115,30 +115,33 @@ Theme assets
 */
 function assets()
 {
-
-   wp_enqueue_style('Animate CSS', '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);
+   
    wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Open+Sans:400,700|Noto+Sans|Bitter:400,700|IBM+Plex+Sans:400,700|Catamaran:400,700|Suez+One&display=swap', false, null);
 
-   wp_enqueue_script('Anime JS', Assets\asset_path('js/vendor/anime.min.js'), [], null, false);
-   wp_enqueue_script('modernizr-js', Assets\asset_path('js/vendor/modernizr.min.js'), [], null, false);
-
-   if (is_single() && comments_open() && get_option('thread_comments')) {
-      wp_enqueue_script('comment-reply');
-   }
-
-
-   wp_enqueue_script('fitvids', '//cdnjs.cloudflare.com/ajax/libs/fitvids/1.2.0/jquery.fitvids.min.js', ['jquery'], null, false);
-
-   wp_enqueue_script('WPS Vendor Commons', Assets\asset_path('prod/js/vendor.min.js'), [], null, true);
-
-   wp_enqueue_script('jQuery Validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js', [], null, true);
-   wp_enqueue_script('jQuery Validate Additional Methods', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/additional-methods.min.js', ['jQuery Validate'], null, true);
-
-   
    wp_enqueue_style('WP Shopify CSS', Assets\asset_path('prod/app.min.css?v=10'), false, filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.css'));
 
+   if (!is_page('checkout')) {
+      
+      wp_enqueue_style('Animate CSS', '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);
+      wp_enqueue_script('Anime JS', Assets\asset_path('js/vendor/anime.min.js'), [], null, false);
+      wp_enqueue_script('modernizr-js', Assets\asset_path('js/vendor/modernizr.min.js'), [], null, false);
 
-   wp_enqueue_script('WP Shopify JS', Assets\asset_path('prod/app.min.js?v=10'), [], filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.js'), true);
+      if (is_single() && comments_open() && get_option('thread_comments')) {
+         wp_enqueue_script('comment-reply');
+      }
+
+
+      wp_enqueue_script('fitvids', '//cdnjs.cloudflare.com/ajax/libs/fitvids/1.2.0/jquery.fitvids.min.js', ['jquery'], null, false);
+
+      wp_enqueue_script('WPS Vendor Commons', Assets\asset_path('prod/js/vendor.min.js'), [], null, true);
+
+      wp_enqueue_script('jQuery Validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js', [], null, true);
+      wp_enqueue_script('jQuery Validate Additional Methods', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/additional-methods.min.js', ['jQuery Validate'], null, true);
+
+      wp_enqueue_script('WP Shopify JS', Assets\asset_path('prod/app.min.js?v=10'), [], filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.js'), true);
+
+   }
+   
 }
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\assets', 100);

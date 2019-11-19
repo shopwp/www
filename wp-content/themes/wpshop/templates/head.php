@@ -1,5 +1,7 @@
 <head>
 
+<?php if (!is_page('checkout')) { ?>
+   
 <script src="https://kit.fontawesome.com/4b023c7b57.js" crossorigin="anonymous"></script>
 
   <!--
@@ -31,6 +33,9 @@
     drift.load('gddyshwbu3yh');
     </script>
     <!-- End of Async Drift Code -->
+    
+<?php } ?>
+
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -54,6 +59,8 @@
    <link rel="manifest" href="<?php echo get_template_directory_uri() ?>/assets/imgs/favicons/site.webmanifest">
     <meta name="mobile-web-app-capable" content="yes">
 
-<script src="https://unpkg.com/headroom.js"></script>
+<?php if (!is_page('checkout')) { ?>
+   <script src="https://unpkg.com/headroom.js"></script>
+<?php } ?>
 
 </head>

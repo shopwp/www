@@ -1,0 +1,175 @@
+.edd-payment-icons {
+  margin-top: 6em;
+  position: absolute;
+  top: 38px;
+  right: 0;
+
+  .payment-icon {
+    max-width: 50px;
+    margin: 0 5px;
+  }
+}
+
+#edd_payment_mode_select {
+  margin-top: 5em;
+}
+
+#edd_payment_mode_select,
+#edd_purchase_form_wrap {
+  > fieldset {
+    margin-top: 3em;
+  }
+
+  legend {
+    font-size: 1.5em;
+    text-align: left;
+
+    &:after {
+      content: "";
+      margin: 0.49444em auto 0.6em auto;
+      display: block;
+      height: 1px;
+      width: 100%;
+      background-color: #dbdbdb;
+    }
+  }
+
+  .edd_form fieldset p {
+    margin-bottom: 30px;
+  }
+
+  input[type="checkbox"] {
+    + label {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+#edd_secure_site_wrapper {
+  color: #29b871;
+  font-weight: 400;
+
+  .padlock {
+    position: relative;
+    top: 7px;
+    left: -10px;
+  }
+}
+
+.edd-card-selector-radio .edd-stripe-card-radio-item {
+  padding: 15px 20px;
+  margin-top: 10px;
+}
+
+.edd-stripe-card-selector + .edd-stripe-new-card {
+  margin-top: 40px;
+}
+
+#edd_cc_fields .edd-stripe-new-card {
+  margin-top: 0;
+}
+
+.edd-card-selector-radio .edd-stripe-card-radio-item.selected {
+  border: 1px solid #959595;
+}
+
+#edd-stripe-card-element {
+  margin-top: 10px;
+}
+
+.edd-legend-support {
+  text-align: left;
+  font-size: 90%;
+  margin-bottom: 3em;
+}
+
+#edd_checkout_form_wrap
+  fieldset#edd_sl_renewal_fields
+  #edd_sl_show_renewal_form_wrap {
+  margin-bottom: 20px;
+}
+
+#edd-payment-mode-wrap {
+  margin-top: 0;
+  justify-content: flex-start;
+
+  label:hover {
+    cursor: pointer;
+  }
+}
+
+.edd-checkout {
+  .paypal-checkout-sandbox,
+  .paypal-checkout,
+  iframe {
+    margin-top: 0;
+    padding: 0;
+    border: none;
+  }
+
+  #edd_checkout_cart_form {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .component-support {
+    margin-bottom: 0;
+  }
+  .footer-social-links {
+    display: none;
+  }
+
+  @media (max-width: 1300px) {
+    .nav-primary {
+      display: flex;
+      position: relative;
+      top: -15px;
+    }
+    .header-content .icon-mobile-open {
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    #edd_secure_site_wrapper {
+      position: static;
+    }
+    .edd-payment-icons {
+      position: relative;
+      margin: 0;
+      top: 75px;
+      left: 0;
+      right: auto;
+    }
+    #edd-payment-mode-wrap .edd-gateway-option {
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .nav-primary {
+      display: none;
+    }
+
+    .header-content {
+      justify-content: center;
+    }
+
+    .wrap.l-contain-narrow {
+      padding-top: 0;
+    }
+
+    .header {
+      padding-bottom: 0;
+    }
+
+    #edd_payment_mode_select,
+    #edd_purchase_form_wrap {
+      legend {
+        font-size: 1.2em;
+      }
+    }
+  }
+}

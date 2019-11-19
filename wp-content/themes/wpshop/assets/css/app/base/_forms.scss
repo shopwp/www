@@ -202,12 +202,12 @@ input.valid {
 }
 
 form input:read-only {
-   @include validInput();
-   opacity: $opacity-hard;
+   // @include validInput();
+   // opacity: $opacity-hard;
 
    + .is-valid {
       &:after {
-         opacity: $opacity-hard;
+         // opacity: $opacity-hard;
       }
    }
 }

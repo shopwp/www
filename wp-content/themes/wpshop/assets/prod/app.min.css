@@ -1054,7 +1054,7 @@ EDD
   position: relative;
   margin-top: 1.44em; }
   #edd-card-number-wrap:before {
-    content: '';
+    content: "";
     display: block;
     background-image: url("imgs/icon-creditcards.svg");
     background-size: 100%;
@@ -1098,7 +1098,7 @@ EDD
   bottom: 18px; }
 
 .is-valid:after {
-  content: '';
+  content: "";
   display: block;
   position: absolute;
   bottom: 15px;
@@ -1156,7 +1156,7 @@ select + .is-valid:after {
   bottom: -12px;
   left: 35%; }
 
-.edd-label[for='edd-email'] {
+.edd-label[for="edd-email"] {
   margin-bottom: 0; }
 
 .animated {
@@ -1260,14 +1260,29 @@ Gravity Forms
   .gform_fields .gfield {
     margin-bottom: 1.2em; }
 
+#edd_cc_fields {
+  position: relative; }
+
+.edd-stripe-card-selector {
+  margin-top: 0; }
+
+#edd_purchase_form #edd_checkout_user_info {
+  margin-top: 4em; }
+
 #edd_secure_site_wrapper {
   margin-top: 0px;
   text-align: center;
-  margin-bottom: 3em; }
+  margin-bottom: 3em;
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 16px; }
   #edd_secure_site_wrapper .padlock {
     position: relative;
     top: 8px;
     left: -10px; }
+    #edd_secure_site_wrapper .padlock svg {
+      width: 15px; }
 
 #disqus_thread {
   margin-top: 4.1472em;
@@ -1350,11 +1365,11 @@ Affiliate WP
   #affwp-affiliate-dashboard .search-form,
   #affwp-affiliate-dashboard .affwp-form {
     max-width: 100%; }
-  #affwp-affiliate-dashboard input[type='submit'],
+  #affwp-affiliate-dashboard input[type="submit"],
   #affwp-affiliate-dashboard .edd-submit {
     font-size: 1.2em;
     width: auto; }
-  #affwp-affiliate-dashboard input:not([type='checkbox']) {
+  #affwp-affiliate-dashboard input:not([type="checkbox"]) {
     height: 50px; }
   #affwp-affiliate-dashboard .affwp-datepicker,
   #affwp-affiliate-dashboard #affwp-graphs-date-options {
@@ -1407,7 +1422,9 @@ Affiliate WP
 #affwp-affiliate-dashboard-tabs {
   position: relative; }
 
-#affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li.affwp-affiliate-dashboard-tab:last-of-type a {
+#affwp-affiliate-dashboard
+#affwp-affiliate-dashboard-tabs
+li.affwp-affiliate-dashboard-tab:last-of-type a {
   border-bottom: none; }
 
 #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li a {
@@ -1449,7 +1466,7 @@ table.affwp-table td,
 table.affwp-table th {
   color: #181625; }
 
-.edd_price_options li[itemprop='offers'] > label {
+.edd_price_options li[itemprop="offers"] > label {
   margin-top: 1.3em; }
 
 #affwp-affiliate-dashboard-url-generator h5 {
@@ -1469,6 +1486,44 @@ table.affwp-table th.affwp-table-no-data {
 
 #affwp-affiliate-dashboard h4 {
   display: none; }
+
+/*
+
+Checkout icons
+
+*/
+.edd-payment-icons {
+  text-align: center; }
+
+#edd-payment-mode-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
+#edd-payment-mode-wrap .edd-gateway-option {
+  width: 18%;
+  margin-top: 0;
+  text-align: center; }
+
+#edd-payment-mode-wrap .edd-gateway {
+  display: inline-block;
+  width: auto;
+  margin-right: 10px;
+  padding: 1em;
+  position: relative;
+  top: -2px; }
+
+#edd-stripe-update-billing-address {
+  display: inline-block;
+  width: auto; }
+
+#edd-stripe-update-billing-address + label {
+  width: 70%;
+  display: inline-block;
+  margin-left: 10px; }
 
 html[lang='en-US'] {
   margin: 0 !important;
@@ -1858,18 +1913,6 @@ input[type='search'] {
 input.valid {
   -webkit-animation-duration: 2s;
           animation-duration: 2s; }
-
-form input:-moz-read-only {
-  border: 1px solid #29cf98;
-  opacity: 0.4; }
-
-form input:read-only {
-  border: 1px solid #29cf98;
-  opacity: 0.4; }
-  form input:-moz-read-only + .is-valid:after {
-    opacity: 0.4; }
-  form input:read-only + .is-valid:after {
-    opacity: 0.4; }
 
 select[aria-invalid='true'],
 input[aria-invalid='true'] {
@@ -3720,7 +3763,8 @@ a.button.edd-slg-social-unlink-profile,
   margin-top: 0.69444em;
   -webkit-transition: all 0.18s ease;
   -o-transition: all 0.18s ease;
-  transition: all 0.18s ease; }
+  transition: all 0.18s ease;
+  opacity: 1; }
   @media (max-width: 500px) {
     .btn,
     .button,
@@ -3744,10 +3788,8 @@ a.button.edd-slg-social-unlink-profile,
   #edd-purchase-button:hover,
   #edd-recurring-update-submit:hover {
     text-decoration: none;
-    -webkit-transform: scale(0.97);
-            transform: scale(0.97);
     opacity: 1;
-    color: hsla(0, 0%, 100%, 0.89); }
+    color: hsla(0, 0%, 100%, 0.79); }
   .btn:focus,
   .button:focus,
   a.button.edd-slg-social-unlink-profile:focus,
@@ -3826,7 +3868,7 @@ a.button.edd-slg-social-unlink-profile,
     #edd-purchase-button.is-loading:before,
     #edd-recurring-update-submit.is-loading:before {
       display: block;
-      content: '';
+      content: "";
       position: absolute;
       border-radius: 50%;
       width: 1.3em;
@@ -3872,11 +3914,11 @@ a.button.edd-slg-social-unlink-profile,
   font-size: 1.2em;
   background-color: #22c8f4; }
 
-input[type='submit'],
+input[type="submit"],
 .edd-submit {
   font-size: 1.44em; }
   @media (max-width: 600px) {
-    input[type='submit'],
+    input[type="submit"],
     .edd-submit {
       font-size: 1.2em;
       width: 100%;
@@ -3918,8 +3960,8 @@ input[type='submit'],
 .edd_download_file_link {
   margin: 0; }
   .edd_download_file_link:before {
-    content: '\f019';
-    font-family: 'FontAwesome';
+    content: "\f019";
+    font-family: "FontAwesome";
     font-size: 20px;
     display: inline-block;
     margin-right: 10px; }
@@ -3931,8 +3973,8 @@ input[type='submit'],
   display: none; }
 
 .edd-add-to-cart span.edd-add-to-cart-label:after {
-  font-family: 'FontAwesome';
-  content: '\f217';
+  font-family: "FontAwesome";
+  content: "\f217";
   display: inline-block;
   margin-left: 0.69444em;
   display: none; }
@@ -3942,8 +3984,8 @@ input[type='submit'],
     font-size: 26px; } }
 
 .receipt-account-wrapper .btn:after {
-  content: '\f178';
-  font-family: 'FontAwesome';
+  content: "\f178";
+  font-family: "FontAwesome";
   display: inline-block;
   margin-left: 0.69444em; }
 
@@ -5903,6 +5945,139 @@ body.page-template-template-home {
     border-radius: 5px;
     padding: 2px 8px;
     font-size: 18px; }
+
+.edd-payment-icons {
+  margin-top: 6em;
+  position: absolute;
+  top: 38px;
+  right: 0; }
+  .edd-payment-icons .payment-icon {
+    max-width: 50px;
+    margin: 0 5px; }
+
+#edd_payment_mode_select {
+  margin-top: 5em; }
+
+#edd_payment_mode_select > fieldset,
+#edd_purchase_form_wrap > fieldset {
+  margin-top: 3em; }
+
+#edd_payment_mode_select legend,
+#edd_purchase_form_wrap legend {
+  font-size: 1.5em;
+  text-align: left; }
+  #edd_payment_mode_select legend:after,
+  #edd_purchase_form_wrap legend:after {
+    content: "";
+    margin: 0.49444em auto 0.6em auto;
+    display: block;
+    height: 1px;
+    width: 100%;
+    background-color: #dbdbdb; }
+
+#edd_payment_mode_select .edd_form fieldset p,
+#edd_purchase_form_wrap .edd_form fieldset p {
+  margin-bottom: 30px; }
+
+#edd_payment_mode_select input[type="checkbox"] + label:hover,
+#edd_purchase_form_wrap input[type="checkbox"] + label:hover {
+  cursor: pointer; }
+
+#edd_secure_site_wrapper {
+  color: #29b871;
+  font-weight: 400; }
+  #edd_secure_site_wrapper .padlock {
+    position: relative;
+    top: 7px;
+    left: -10px; }
+
+.edd-card-selector-radio .edd-stripe-card-radio-item {
+  padding: 15px 20px;
+  margin-top: 10px; }
+
+.edd-stripe-card-selector + .edd-stripe-new-card {
+  margin-top: 40px; }
+
+#edd_cc_fields .edd-stripe-new-card {
+  margin-top: 0; }
+
+.edd-card-selector-radio .edd-stripe-card-radio-item.selected {
+  border: 1px solid #959595; }
+
+#edd-stripe-card-element {
+  margin-top: 10px; }
+
+.edd-legend-support {
+  text-align: left;
+  font-size: 90%;
+  margin-bottom: 3em; }
+
+#edd_checkout_form_wrap
+fieldset#edd_sl_renewal_fields
+#edd_sl_show_renewal_form_wrap {
+  margin-bottom: 20px; }
+
+#edd-payment-mode-wrap {
+  margin-top: 0;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start; }
+  #edd-payment-mode-wrap label:hover {
+    cursor: pointer; }
+
+.edd-checkout .paypal-checkout-sandbox,
+.edd-checkout .paypal-checkout,
+.edd-checkout iframe {
+  margin-top: 0;
+  padding: 0;
+  border: none; }
+
+.edd-checkout #edd_checkout_cart_form {
+  max-width: 700px;
+  margin: 0 auto; }
+
+.edd-checkout .component-support {
+  margin-bottom: 0; }
+
+.edd-checkout .footer-social-links {
+  display: none; }
+
+@media (max-width: 1300px) {
+  .edd-checkout .nav-primary {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    top: -15px; }
+  .edd-checkout .header-content .icon-mobile-open {
+    display: none; } }
+
+@media (max-width: 600px) {
+  .edd-checkout #edd_secure_site_wrapper {
+    position: static; }
+  .edd-checkout .edd-payment-icons {
+    position: relative;
+    margin: 0;
+    top: 75px;
+    left: 0;
+    right: auto; }
+  .edd-checkout #edd-payment-mode-wrap .edd-gateway-option {
+    width: 50%; } }
+
+@media (max-width: 500px) {
+  .edd-checkout .nav-primary {
+    display: none; }
+  .edd-checkout .header-content {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
+  .edd-checkout .wrap.l-contain-narrow {
+    padding-top: 0; }
+  .edd-checkout .header {
+    padding-bottom: 0; }
+  .edd-checkout #edd_payment_mode_select legend,
+  .edd-checkout #edd_purchase_form_wrap legend {
+    font-size: 1.2em; } }
 
 .is-visible {
   visibility: visible;
