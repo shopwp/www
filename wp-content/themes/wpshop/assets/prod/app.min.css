@@ -1840,9 +1840,9 @@ select {
   textarea:focus,
   select:focus {
     outline: none; }
-  input.valid:not([type='submit']),
-  textarea.valid:not([type='submit']),
-  select.valid:not([type='submit']) {
+  input.valid:not([type="submit"]),
+  textarea.valid:not([type="submit"]),
+  select.valid:not([type="submit"]) {
     border: 1px solid #29cf98; }
   @media (max-width: 900px) {
     input,
@@ -1862,14 +1862,14 @@ select {
       cursor: not-allowed;
       background-color: #ececec; }
 
-.affwp-form input[type='checkbox'] {
+.affwp-form input[type="checkbox"] {
   width: auto;
   margin-right: 10px; }
 
 .affwp-form input {
   border: 1px solid #959595; }
 
-input[type='number'] {
+input[type="number"] {
   max-width: 50px;
   text-align: center; }
 
@@ -1882,11 +1882,11 @@ input[type='number'] {
   .edd-stripe-card-radio-item > label:hover {
     cursor: pointer; }
 
-.edd-stripe-card-radio-item input[type='radio'] {
+.edd-stripe-card-radio-item input[type="radio"] {
   width: auto;
   margin-top: 5px;
   margin-right: 10px; }
-  .edd-stripe-card-radio-item input[type='radio']:hover {
+  .edd-stripe-card-radio-item input[type="radio"]:hover {
     cursor: pointer; }
 
 .edd-stripe-card-radio-item.new-card-wrapper {
@@ -1898,28 +1898,28 @@ input[type='number'] {
         -ms-flex: 1;
             flex: 1; }
 
-input[type='submit'] {
+input[type="submit"] {
   width: auto;
   border: none;
   height: auto; }
 
-#form-account-profile-general input[type='submit'],
-#form-account-profile-password input[type='submit'] {
+#form-account-profile-general input[type="submit"],
+#form-account-profile-password input[type="submit"] {
   font-size: 1.2em; }
 
-input[type='search'] {
+input[type="search"] {
   border-radius: 10px; }
 
 input.valid {
   -webkit-animation-duration: 2s;
           animation-duration: 2s; }
 
-select[aria-invalid='true'],
-input[aria-invalid='true'] {
+select[aria-invalid="true"],
+input[aria-invalid="true"] {
   border: 1px solid #f03131; }
 
-select[aria-invalid='false'],
-input[aria-invalid='false'] {
+select[aria-invalid="false"],
+input[aria-invalid="false"] {
   border: 1px solid #29cf98; }
 
 label {
@@ -1931,7 +1931,7 @@ label {
     display: block;
     margin-top: 0; }
 
-label[for='wps_customer_password_new'] {
+label[for="wps_customer_password_new"] {
   margin-top: 2.48832em; }
 
 .notice-inline {
@@ -1984,7 +1984,7 @@ label.error {
   .edd-alert-error:after,
   .edd_errors:after,
   label.error:after {
-    content: '';
+    content: "";
     display: block; }
   .msg-error a,
   .edd-alert-error a,
@@ -2006,7 +2006,7 @@ legend {
     font-size: 0.48225em;
     font-style: italic; }
   legend:after {
-    content: '';
+    content: "";
     margin: 0.69444em auto 0 auto;
     display: block;
     height: 1px;
@@ -2085,7 +2085,7 @@ select {
   margin-bottom: 0;
   font-weight: normal; }
 
-.edd-login-remember input[type='checkbox'] {
+.edd-login-remember input[type="checkbox"] {
   width: 22px;
   height: 22px;
   padding: 0;
@@ -2171,9 +2171,33 @@ select {
         -ms-flex-direction: column;
             flex-direction: column; } }
 
-#edd-discount-code-wrap label {
-  margin-top: 2em;
-  font-size: 18px; }
+#edd-discount-code-wrap {
+  display: block !important; }
+  #edd-discount-code-wrap label {
+    margin-top: 2em;
+    font-size: 18px; }
+  #edd-discount-code-wrap .edd-discount-code-field-wrap {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 10px; }
+    @media (max-width: 600px) {
+      #edd-discount-code-wrap .edd-discount-code-field-wrap {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column; } }
+    #edd-discount-code-wrap .edd-discount-code-field-wrap #edd-discount {
+      font-size: 16px; }
+    #edd-discount-code-wrap .edd-discount-code-field-wrap .edd-apply-discount {
+      margin-top: 0;
+      margin-left: 1em; }
+      @media (max-width: 600px) {
+        #edd-discount-code-wrap .edd-discount-code-field-wrap .edd-apply-discount {
+          margin: 0;
+          margin-top: 1em; } }
+  #edd-discount-code-wrap .edd-description {
+    display: none; }
 
 .affwp-errors,
 .affwp-notice {
@@ -5248,8 +5272,7 @@ body.page-template-template-home {
   padding: 0;
   top: 0;
   width: 100%;
-  background: #fedb85;
-  color: #761901;
+  background: #1d144f;
   color: #fff;
   font-size: 17px;
   font-weight: bold;
@@ -5259,18 +5282,18 @@ body.page-template-template-home {
   z-index: 999999; }
   .component-notice p {
     margin: 0;
-    color: #761901; }
+    color: #fff; }
   .component-notice a {
-    color: #761901; }
+    color: #fff; }
     .component-notice a:hover {
       opacity: 0.5; }
   .component-notice code {
     font-family: monospace !important;
-    background: #761901;
+    background: #415aff;
     padding: 3px 10px 5px 10px;
     margin: 0 5px;
     border-radius: 3px;
-    color: #fedb85;
+    color: #fff;
     font-size: 18px; }
 
 .notice-inner {
@@ -5288,7 +5311,7 @@ body.page-template-template-home {
 
 .edd_cart_discount .edd_discount {
   display: block;
-  text-align: center; }
+  text-align: left; }
 
 .edd_cart_discount .edd_discount_rate {
   background: #fedb85;
@@ -5304,7 +5327,7 @@ body.page-template-template-home {
 #edd_purchase_form #edd_show_discount {
   border-radius: 10px;
   text-align: left;
-  display: none; }
+  display: none !important; }
 
 #edd_checkout_form_wrap fieldset#edd_sl_renewal_fields {
   padding: 0;
@@ -5312,8 +5335,11 @@ body.page-template-template-home {
   text-align: left;
   background: none; }
 
-#edd_checkout_form_wrap fieldset#edd_sl_renewal_fields #edd_sl_show_renewal_form_wrap {
-  text-align: left; }
+#edd_checkout_form_wrap
+fieldset#edd_sl_renewal_fields
+#edd_sl_show_renewal_form_wrap {
+  text-align: center;
+  font-size: 16px; }
 
 .component-screenshots {
   background: #fff;
@@ -5949,7 +5975,7 @@ body.page-template-template-home {
 .edd-payment-icons {
   margin-top: 6em;
   position: absolute;
-  top: 38px;
+  top: 150px;
   right: 0; }
   .edd-payment-icons .payment-icon {
     max-width: 50px;
@@ -6025,6 +6051,32 @@ fieldset#edd_sl_renewal_fields
   #edd-payment-mode-wrap label:hover {
     cursor: pointer; }
 
+.edd_cart_discount .edd_discount {
+  position: relative;
+  margin-bottom: 1em; }
+
+.edd_discount_remove {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 4px;
+  left: 160px;
+  margin: 0;
+  right: auto; }
+  .edd_discount_remove:before, .edd_discount_remove:after {
+    position: absolute;
+    left: 10px;
+    content: " ";
+    height: 20px;
+    width: 2px;
+    background-color: #333; }
+  .edd_discount_remove:before {
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg); }
+  .edd_discount_remove:after {
+    -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg); }
+
 .edd-checkout .paypal-checkout-sandbox,
 .edd-checkout .paypal-checkout,
 .edd-checkout iframe {
@@ -6060,7 +6112,10 @@ fieldset#edd_sl_renewal_fields
     margin: 0;
     top: 75px;
     left: 0;
-    right: auto; }
+    right: auto;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex; }
   .edd-checkout #edd-payment-mode-wrap .edd-gateway-option {
     width: 50%; } }
 

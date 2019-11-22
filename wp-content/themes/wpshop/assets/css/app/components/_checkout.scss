@@ -1,7 +1,7 @@
 .edd-payment-icons {
   margin-top: 6em;
   position: absolute;
-  top: 38px;
+  top: 150px;
   right: 0;
 
   .payment-icon {
@@ -100,6 +100,39 @@
   }
 }
 
+.edd_cart_discount .edd_discount {
+  position: relative;
+  margin-bottom: 1em;
+}
+
+.edd_discount_remove {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 4px;
+  left: 160px;
+  margin: 0;
+  right: auto;
+
+  &:before,
+  &:after {
+    position: absolute;
+    left: 10px;
+    content: " ";
+    height: 20px;
+    width: 2px;
+    background-color: #333;
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+}
+
 .edd-checkout {
   .paypal-checkout-sandbox,
   .paypal-checkout,
@@ -142,7 +175,9 @@
       top: 75px;
       left: 0;
       right: auto;
+      display: flex;
     }
+
     #edd-payment-mode-wrap .edd-gateway-option {
       width: 50%;
     }
