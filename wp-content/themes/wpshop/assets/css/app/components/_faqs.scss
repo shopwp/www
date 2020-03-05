@@ -1,88 +1,121 @@
 .component.component-faq {
-   margin-bottom: $space-xxxl;
-   background: transparent;
+  margin-bottom: $space-xxxl;
+  background: transparent;
 }
 
-
 .faqs {
-   margin-left: 0;
+  margin-left: 0;
 }
 
 .faq-question {
-   padding: $space-l 0;
-   font-size: $font-l;
-   border-bottom: 1px solid color(medium-grey);
+  padding: $space-l 0;
+  font-size: $font-l;
+  border-bottom: 1px solid color(medium-grey);
 
-   > div {
-      width: 100%;
-      position: relative;
-   }
+  > div {
+    width: 100%;
+    position: relative;
+    font-weight: bold;
+  }
 
-   .fa-plus-square,
-   .fa-minus-square {
-      font-size: $font-l;
-          position: absolute;
+  .fa-plus-square,
+  .fa-minus-square {
+    font-size: $font-l;
+    position: absolute;
     top: 5px;
     right: 0;
-      // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
-   }
+    // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
+  }
 
-   &:hover {
-      cursor: pointer;
-      text-decoration: underline;
-   }
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
 
-   @include device(700, 'max') {
-      font-size: $font-m;
-      position: relative;
-      padding-right: 4em;
+  @include device(700, 'max') {
+    font-size: $font-m;
+    position: relative;
+    padding-right: 4em;
 
-      .fa-plus-square,
-      .fa-minus-square {
-         position: absolute;
-         right: 0;
-         top: calc(50% - 10px);
-      }
-   }
+    .fa-plus-square,
+    .fa-minus-square {
+      position: absolute;
+      right: 0;
+      top: calc(50% - 10px);
+    }
+  }
 }
 
 .faq-answer {
-   margin-left: 0;
-   margin-top: 0;
-   padding-top: $space-l;
-   display: none;
-   font-size: 16px;
-   opacity: 0;
+  margin-left: 0;
+  margin-top: 0;
+  padding-top: $space-l;
+  display: none;
+  font-size: 16px;
+  opacity: 0;
 
-   ol {
-      margin-left: $space-l * 2;
-   }
+  ol {
+    margin-left: $space-l * 2;
+  }
 
-   &.is-open {
-      display: block;
-      margin-bottom: $space-xxl;
-      background: #f8f8f8;
-      padding: 30px 40px;
-      opacity: 1;
+  &.is-open {
+    display: block;
+    margin-bottom: $space-xxl;
+    background: color(off-white);
+    padding: 30px 40px;
+    opacity: 1;
 
-      @include device(700, 'max') {
-         padding: 20px;
-         word-break: break-word;
-      }
-   }
+    @include device(700, 'max') {
+      padding: 20px;
+      word-break: break-word;
+    }
+  }
 }
 
 .faqs-group {
-   margin-bottom: $space-xl * 2;
+  margin-bottom: $space-xl * 2;
 }
 
 .faqs-heading {
-   &:before {
-      display: block;
-      content: ' ';
-      margin-top: -30px;
-      height: 30px;
-      visibility: hidden;
-      pointer-events: none;
-   }
+  &:before {
+    display: block;
+    content: ' ';
+    margin-top: -30px;
+    height: 30px;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.component-faq-secondary {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+
+  img {
+    width: 400px;
+  }
+
+  .l-row {
+    align-items: flex-start;
+  }
+
+  .faqs-wrap,
+  .faqs {
+    flex: 1;
+    padding-left: 6em;
+  }
+
+  .faqs-wrap {
+    p {
+      max-width: 700px;
+    }
+    .faqs {
+      padding-left: 0;
+    }
+  }
+}
+
+.component-marquee + .component-faq-secondary {
+  padding-top: 16em;
 }

@@ -90,7 +90,8 @@ if (is_page('faq')) {
 
   <body <?php body_class($mobileBodyClass); ?>>
 
-
+   <?php include(locate_template('components/getting-started/view.php')); ?>
+   
     <!--[if IE]>
       <div class="alert alert-warning">
         <?php _e('You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.', 'sage'); ?>
@@ -204,6 +205,9 @@ if ( get_field('theme_notice_enable', 'option') ) {
     </script>
 
 <?php } ?>
+
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
 
   </body>
 </html>

@@ -123,7 +123,8 @@ function mailinglist_signup() {
         ],
         'json' => [
           'email_address' => $email,
-          "status" => "pending",
+          "status" => "subscribed",
+          'tags'  => ['Getting Started'],
         ]
       ]);
 
@@ -131,6 +132,10 @@ function mailinglist_signup() {
 
       $resp['code'] = $statusCode;
       $resp['message'] = json_decode($response->getBody());
+
+      error_log('----- $resp -----');
+      error_log(print_r($resp, true));
+      error_log('----- /$resp -----');
 
       echo json_encode($resp);
       die();

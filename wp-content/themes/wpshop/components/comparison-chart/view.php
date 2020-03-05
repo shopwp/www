@@ -135,7 +135,7 @@
          <tfoot>
             <tr>
                <td></td>
-               <td class="cell-center"><a href="https://wordpress.org/plugins/wpshopify/" target="_blank" class="btn btn-primary">Download <i class="far fa-external-link-square-alt"></i></a></td>
+               <td class="cell-center"><a href="https://wordpress.org/plugins/wpshopify/" target="_blank" class="btn btn-primary">Download <i class="fal fa-external-link"></i></a></td>
                <td class="cell-center"><a href="https://wpshop.io/purchase" class="btn btn-primary">✨ Purchase ✨</a></td>
             </tr>
          </tfoot>

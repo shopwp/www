@@ -28,24 +28,24 @@ Main Config Object
 
 */
 var config = {
-   files: {
-      js: './assets/js/**/*.js',
-      css: './assets/css/**/*.scss',
-      jsEntry: './assets/js/app/app.js',
-      cssEntry: './assets/css/app/app.scss'
-   },
-   folders: {
-      plugin: './',
-      dist: './assets/prod',
-      cache: './node_modules/.cache'
-   },
-   names: {
-      css: 'app.min.css',
-      js: 'app.min.js'
-   },
-   bs: browserSync.create(),
-   serverName: 'wpshop.test',
-   isBuilding: false
+  files: {
+    js: './assets/js/**/*.js',
+    css: './assets/css/**/*.scss',
+    jsEntry: './assets/js/app/app.js',
+    cssEntry: './assets/css/app/app.scss'
+  },
+  folders: {
+    plugin: './',
+    dist: './assets/prod',
+    cache: './node_modules/.cache'
+  },
+  names: {
+    css: 'app.min.css',
+    js: 'app.min.js'
+  },
+  bs: browserSync.create(),
+  serverName: 'wpshop.test',
+  isBuilding: false
 }
 
 /*
@@ -54,85 +54,85 @@ Webpack Config
 
 */
 function webpackConfig(outputFinalname) {
-   var webpackConfigObj = {
-      watch: false,
-      mode: config.isBuilding ? 'production' : 'development',
-      cache: true,
+  var webpackConfigObj = {
+    watch: false,
+    mode: config.isBuilding ? 'production' : 'development',
+    cache: true,
 
-      // IMPORTANT: This entry will override an entry set within webpack stream
-      entry: {
-         app: config.files.jsEntry
+    // IMPORTANT: This entry will override an entry set within webpack stream
+    entry: {
+      app: config.files.jsEntry
+    },
+    output: {
+      filename: '[name].min.js',
+      path: __dirname + '/assets/prod',
+      chunkFilename: '[name].min.js'
+    },
+    resolve: {
+      extensions: ['.js']
+    },
+    plugins: [new webpack.optimize.ModuleConcatenationPlugin(), new ProgressBarPlugin()],
+    optimization: {
+      splitChunks: {
+        name: true,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'vendor',
+            chunks: 'all'
+          }
+        }
       },
-      output: {
-         filename: '[name].min.js',
-         path: __dirname + '/assets/prod',
-         chunkFilename: '[name].min.js'
-      },
-      resolve: {
-         extensions: ['.js']
-      },
-      plugins: [new webpack.optimize.ModuleConcatenationPlugin(), new ProgressBarPlugin()],
-      optimization: {
-         splitChunks: {
-            name: true,
-            cacheGroups: {
-               vendor: {
-                  test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-                  name: 'vendor',
-                  chunks: 'all'
-               }
-            }
-         },
-         minimizer: [
-            new UglifyJsPlugin({
-               parallel: true,
-               cache: true,
-               parallel: true,
-               extractComments: config.isBuilding ? true : false,
-               uglifyOptions: {
-                  compress: config.isBuilding ? true : false,
-                  ecma: 6,
-                  mangle: config.isBuilding ? true : false,
-                  safari10: true
-               },
-               sourceMap: config.isBuilding ? false : true
-            }),
-            new OptimizeCSSAssetsPlugin({})
-         ]
-      },
-      module: {
-         rules: [
+      minimizer: [
+        new UglifyJsPlugin({
+          parallel: true,
+          cache: true,
+          parallel: true,
+          extractComments: config.isBuilding ? true : false,
+          uglifyOptions: {
+            compress: config.isBuilding ? true : false,
+            ecma: 6,
+            mangle: config.isBuilding ? true : false,
+            safari10: true
+          },
+          sourceMap: config.isBuilding ? false : true
+        }),
+        new OptimizeCSSAssetsPlugin({})
+      ]
+    },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
+        },
+        {
+          test: /\.(js|jsx)$/i,
+          exclude: /node_modules/,
+          enforce: 'pre',
+          use: [
             {
-               test: /\.css$/,
-               use: [MiniCssExtractPlugin.loader, 'css-loader']
-            },
-            {
-               test: /\.(js|jsx)$/i,
-               exclude: /node_modules/,
-               enforce: 'pre',
-               use: [
-                  {
-                     loader: 'babel-loader',
-                     options: {
-                        babelrcRoots: ['.', './_tmp/*'],
-                        presets: ['@babel/preset-env', '@babel/preset-react']
-                     }
-                  }
-               ]
+              loader: 'babel-loader',
+              options: {
+                babelrcRoots: ['.', './_tmp/*'],
+                presets: ['@babel/preset-env', '@babel/preset-react']
+              }
             }
-         ]
-      }
-   }
+          ]
+        }
+      ]
+    }
+  }
 
-   if (config.isBuilding) {
-      webpackConfigObj.plugins.push(
-         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('production')
-         })
-      )
-   }
+  if (config.isBuilding) {
+    webpackConfigObj.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify('production')
+      })
+    )
+  }
 
-   return webpackConfigObj
+  return webpackConfigObj
 }
 
 /*
@@ -141,22 +141,22 @@ Postcss Config
 
 */
 function postCSSPlugins() {
-   var plugins = [
-      willChangeTransition,
-      willChange,
-      autoprefixer({ browsers: ['last 6 version'] }),
-      presetEnv(), // Allows usage of future CSS
-      colormin({
-         legacy: true
-      })
-   ]
+  var plugins = [
+    willChangeTransition,
+    willChange,
+    autoprefixer(),
+    presetEnv(), // Allows usage of future CSS
+    colormin({
+      legacy: true
+    })
+  ]
 
-   // Only run if npm run gulp --build
-   if (config.isBuilding) {
-      plugins.push(cssnano({ zindex: false }))
-   }
+  // Only run if npm run gulp --build
+  if (config.isBuilding) {
+    plugins.push(cssnano({ zindex: false }))
+  }
 
-   return plugins
+  return plugins
 }
 
 /*
@@ -165,18 +165,18 @@ Style Lint Config
 
 */
 function stylelintConfig() {
-   return {
-      config: {
-         rules: {
-            'declaration-block-no-duplicate-properties': true,
-            'block-no-empty': true,
-            'no-extra-semicolons': true,
-            'font-family-no-duplicate-names': true
-         }
-      },
-      debug: true,
-      reporters: [{ formatter: 'string', console: true }]
-   }
+  return {
+    config: {
+      rules: {
+        'declaration-block-no-duplicate-properties': true,
+        'block-no-empty': true,
+        'no-extra-semicolons': true,
+        'font-family-no-duplicate-names': true
+      }
+    },
+    debug: true,
+    reporters: [{ formatter: 'string', console: true }]
+  }
 }
 
 config.postCSSPlugins = postCSSPlugins

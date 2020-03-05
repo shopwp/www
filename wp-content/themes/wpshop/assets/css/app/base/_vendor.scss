@@ -42,7 +42,7 @@ EDD
 #edd_checkout_cart {
   width: 100%;
 
-  @include device(600, "max") {
+  @include device(600, 'max') {
     thead {
       display: none;
     }
@@ -85,7 +85,7 @@ EDD
   text-align: center;
   margin-bottom: $space-xxxl;
 
-  @include device(600, "max") {
+  @include device(600, 'max') {
     margin-bottom: $space-l * 2;
   }
 }
@@ -283,7 +283,7 @@ EDD
     display: flex;
     justify-content: space-between;
 
-    @include device(900, "max") {
+    @include device(900, 'max') {
       flex-direction: column;
     }
 
@@ -295,7 +295,7 @@ EDD
 
       @include card();
 
-      @include device(900, "max") {
+      @include device(900, 'max') {
         width: 100%;
         margin-bottom: $space-xl;
       }
@@ -348,7 +348,7 @@ EDD
   font-weight: bold;
   margin-top: 0;
 
-  @include device(600, "max") {
+  @include device(600, 'max') {
     font-size: 28px;
   }
 }
@@ -386,7 +386,7 @@ EDD
     font-size: 30px;
     font-family: $font-secondary;
 
-    @include device(600, "max") {
+    @include device(600, 'max') {
       padding: $space-s;
     }
   }
@@ -438,7 +438,7 @@ EDD
     width: calc(100% / 3);
     text-align: center;
 
-    @include device(600, "max") {
+    @include device(600, 'max') {
       width: 100%;
       margin-top: 0;
       text-align: left;
@@ -490,7 +490,7 @@ EDD
     display: none;
   }
 
-  @include device(500, "max") {
+  @include device(500, 'max') {
     width: 100%;
   }
 }
@@ -506,7 +506,7 @@ EDD
     display: none;
   }
 
-  @include device(500, "max") {
+  @include device(500, 'max') {
     width: 100%;
   }
 }
@@ -689,9 +689,9 @@ EDD
   margin-top: $space-l;
 
   &:before {
-    content: "";
+    content: '';
     display: block;
-    background-image: url("imgs/icon-creditcards.svg");
+    background-image: url('imgs/icon-creditcards.svg');
     background-size: 100%;
     background-position: 50% 50%;
     width: 300px;
@@ -702,12 +702,12 @@ EDD
     top: 7px;
     right: 0;
 
-    @include device(700, "max") {
+    @include device(700, 'max') {
       position: static;
       margin: -1em auto 2em auto;
     }
 
-    @include device(400, "max") {
+    @include device(400, 'max') {
       width: 250px;
     }
   }
@@ -747,14 +747,14 @@ EDD
 
 .is-valid {
   &:after {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     bottom: 15px;
     right: 1em;
     width: 30px;
     height: 30px;
-    background: url("imgs/icon-check.svg");
+    background: url('imgs/icon-check.svg');
     background-size: cover;
     background-position: 50% 50%;
     opacity: $opacity-hard;
@@ -812,7 +812,7 @@ select + .is-valid:after {
   left: 35%;
 }
 
-.edd-label[for="edd-email"] {
+.edd-label[for='edd-email'] {
   margin-bottom: 0;
 }
 
@@ -870,7 +870,7 @@ form input:-moz-read-only.edd-submit {
   em {
     background-color: color(light-grey);
     padding: 5px 15px;
-    border-radius: 5px;
+    border-radius: 0.4em;
     font-size: 13px;
     margin-bottom: 10px;
     display: inline-block;
@@ -1016,7 +1016,7 @@ Gravity Forms
 #edd_sl_license_keys .edd_sl_license_row .edd_sl_type {
   width: 330px;
 
-  @include device(600, "max") {
+  @include device(600, 'max') {
     width: 100%;
   }
 }
@@ -1094,13 +1094,13 @@ Affiliate WP
     max-width: 100%;
   }
 
-  input[type="submit"],
+  input[type='submit'],
   .edd-submit {
     font-size: 1.2em;
     width: auto;
   }
 
-  input:not([type="checkbox"]) {
+  input:not([type='checkbox']) {
     height: 50px;
   }
 
@@ -1233,7 +1233,7 @@ table.affwp-table th {
   color: #181625;
 }
 
-.edd_price_options li[itemprop="offers"] > label {
+.edd_price_options li[itemprop='offers'] > label {
   margin-top: 1.3em;
 }
 
@@ -1298,4 +1298,67 @@ Checkout icons
   width: 70%;
   display: inline-block;
   margin-left: 10px;
+}
+
+/*
+
+Tippy js 
+
+*/
+
+.tippy-box {
+  @include popover();
+
+  border-radius: 1em;
+
+  h3 {
+    font-size: 1.5em;
+    text-align: left;
+    width: 100%;
+  }
+
+  .mailinglist-copy,
+  p {
+    text-align: left;
+  }
+
+  .btn-group {
+    margin: 0;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .mailinglist-email {
+    padding: 0.8em 1.2em;
+  }
+
+  .mailinglist-copy {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+}
+
+.tippy-content {
+  padding: 0;
+  margin: 0;
+}
+
+.getting-started-mailinglist-form {
+  //   display: none;
+}
+
+.btn-getting-started-wrapper {
+  [data-tippy-root] {
+    border-radius: 1em;
+  }
+}
+
+#getting-started-wrapper {
+  display: none;
+}
+
+[data-tippy-root] #getting-started-wrapper {
+  display: block;
 }

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
+class ComposerStaticInit351a271634bea800cd6352de81e8dc78
 {
     public static $prefixLengthsPsr4 = array (
         'C' => 
@@ -17,16 +17,6 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'Composer\\Installers\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
-        ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'x' => 
-        array (
-            'xrstf\\Composer52' => 
-            array (
-                0 => __DIR__ . '/..' . '/xrstf/composer-php52/lib',
-            ),
         ),
     );
 
@@ -135,7 +125,6 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'WPSEO_Admin_Asset_Manager' => __DIR__ . '/../..' . '/admin/class-admin-asset-manager.php',
         'WPSEO_Admin_Asset_SEO_Location' => __DIR__ . '/../..' . '/admin/class-admin-asset-seo-location.php',
         'WPSEO_Admin_Asset_Yoast_Components_L10n' => __DIR__ . '/../..' . '/admin/class-admin-asset-yoast-components-l10n.php',
-        'WPSEO_Admin_Banner' => __DIR__ . '/../..' . '/admin/class-admin-banner.php',
         'WPSEO_Admin_Bar_Menu' => __DIR__ . '/../..' . '/inc/class-wpseo-admin-bar-menu.php',
         'WPSEO_Admin_Editor_Specific_Replace_Vars' => __DIR__ . '/../..' . '/admin/class-admin-editor-specific-replace-vars.php',
         'WPSEO_Admin_Gutenberg_Compatibility_Notification' => __DIR__ . '/../..' . '/admin/class-admin-gutenberg-compatibility-notification.php',
@@ -217,13 +206,14 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'WPSEO_Custom_Taxonomies' => __DIR__ . '/../..' . '/inc/class-wpseo-custom-taxonomies.php',
         'WPSEO_Customizer' => __DIR__ . '/../..' . '/admin/class-customizer.php',
         'WPSEO_Database_Proxy' => __DIR__ . '/../..' . '/admin/class-database-proxy.php',
+        'WPSEO_Date_Helper' => __DIR__ . '/../..' . '/inc/date-helper.php',
         'WPSEO_Dismissible_Notification' => __DIR__ . '/../..' . '/admin/notifiers/dismissible-notification.php',
         'WPSEO_Endpoint' => __DIR__ . '/../..' . '/admin/endpoints/class-endpoint.php',
         'WPSEO_Endpoint_Factory' => __DIR__ . '/../..' . '/inc/class-wpseo-endpoint-factory.php',
         'WPSEO_Endpoint_File_Size' => __DIR__ . '/../..' . '/admin/endpoints/class-endpoint-file-size.php',
         'WPSEO_Endpoint_Indexable' => __DIR__ . '/../..' . '/admin/endpoints/class-endpoint-indexable.php',
         'WPSEO_Endpoint_MyYoast_Connect' => __DIR__ . '/../..' . '/inc/endpoints/class-myyoast-connect.php',
-        'WPSEO_Endpoint_Ryte' => __DIR__ . '/../..' . '/admin/endpoints/class-endpoint-ryte.php',
+        'WPSEO_Endpoint_Ryte' => __DIR__ . '/../..' . '/deprecated/admin/endpoints/class-endpoint-ryte.php',
         'WPSEO_Endpoint_Statistics' => __DIR__ . '/../..' . '/admin/endpoints/class-endpoint-statistics.php',
         'WPSEO_Endpoint_Storable' => __DIR__ . '/../..' . '/admin/endpoints/interface-endpoint-storable.php',
         'WPSEO_Endpoint_Validator' => __DIR__ . '/../..' . '/inc/indexables/validators/class-endpoint-validator.php',
@@ -257,9 +247,12 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'WPSEO_Gutenberg_Compatibility' => __DIR__ . '/../..' . '/admin/class-gutenberg-compatibility.php',
         'WPSEO_Handle_404' => __DIR__ . '/../..' . '/frontend/class-handle-404.php',
         'WPSEO_Health_Check' => __DIR__ . '/../..' . '/inc/health-check.php',
-        'WPSEO_Help_Center' => __DIR__ . '/../..' . '/admin/class-help-center.php',
-        'WPSEO_Help_Center_Item' => __DIR__ . '/../..' . '/admin/class-help-center-item.php',
-        'WPSEO_Help_Center_Template_Variables_Tab' => __DIR__ . '/../..' . '/admin/help_center/class-template-variables-tab.php',
+        'WPSEO_Health_Check_Curl_Version' => __DIR__ . '/../..' . '/inc/health-check-curl-version.php',
+        'WPSEO_Health_Check_Default_Tagline' => __DIR__ . '/../..' . '/inc/health-check-default-tagline.php',
+        'WPSEO_Health_Check_Page_Comments' => __DIR__ . '/../..' . '/inc/health-check-page-comments.php',
+        'WPSEO_Health_Check_Postname_Permalink' => __DIR__ . '/../..' . '/inc/health-check-postname-permalink.php',
+        'WPSEO_Health_Check_Ryte' => __DIR__ . '/../..' . '/inc/health-check-ryte.php',
+        'WPSEO_HelpScout' => __DIR__ . '/../..' . '/admin/class-helpscout.php',
         'WPSEO_Image_Utils' => __DIR__ . '/../..' . '/inc/class-wpseo-image-utils.php',
         'WPSEO_Import_AIOSEO' => __DIR__ . '/../..' . '/admin/import/plugins/class-import-aioseo.php',
         'WPSEO_Import_Greg_SEO' => __DIR__ . '/../..' . '/admin/import/plugins/class-import-greg-high-performance-seo.php',
@@ -298,7 +291,7 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'WPSEO_Link_Cleanup_Transient' => __DIR__ . '/../..' . '/admin/links/class-link-cleanup-transient.php',
         'WPSEO_Link_Column_Count' => __DIR__ . '/../..' . '/admin/links/class-link-column-count.php',
         'WPSEO_Link_Columns' => __DIR__ . '/../..' . '/admin/links/class-link-columns.php',
-        'WPSEO_Link_Compatibility_Notifier' => __DIR__ . '/../..' . '/admin/links/class-link-compatibility-notifier.php',
+        'WPSEO_Link_Compatibility_Notifier' => __DIR__ . '/../..' . '/deprecated/admin/links/class-link-compatibility-notifier.php',
         'WPSEO_Link_Content_Processor' => __DIR__ . '/../..' . '/admin/links/class-link-content-processor.php',
         'WPSEO_Link_Extractor' => __DIR__ . '/../..' . '/admin/links/class-link-extractor.php',
         'WPSEO_Link_Factory' => __DIR__ . '/../..' . '/admin/links/class-link-factory.php',
@@ -354,9 +347,9 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'WPSEO_Notification_Handler' => __DIR__ . '/../..' . '/admin/notifiers/interface-notification-handler.php',
         'WPSEO_Object_Type' => __DIR__ . '/../..' . '/inc/indexables/class-object-type.php',
         'WPSEO_Object_Type_Validator' => __DIR__ . '/../..' . '/inc/indexables/validators/class-object-type-validator.php',
-        'WPSEO_OnPage' => __DIR__ . '/../..' . '/admin/onpage/class-onpage.php',
-        'WPSEO_OnPage_Option' => __DIR__ . '/../..' . '/admin/onpage/class-onpage-option.php',
-        'WPSEO_OnPage_Request' => __DIR__ . '/../..' . '/admin/onpage/class-onpage-request.php',
+        'WPSEO_OnPage' => __DIR__ . '/../..' . '/deprecated/admin/onpage/class-onpage.php',
+        'WPSEO_OnPage_Option' => __DIR__ . '/../..' . '/deprecated/admin/onpage/class-onpage-option.php',
+        'WPSEO_OnPage_Request' => __DIR__ . '/../..' . '/deprecated/admin/onpage/class-onpage-request.php',
         'WPSEO_OpenGraph' => __DIR__ . '/../..' . '/frontend/class-opengraph.php',
         'WPSEO_OpenGraph_Image' => __DIR__ . '/../..' . '/frontend/class-opengraph-image.php',
         'WPSEO_OpenGraph_OEmbed' => __DIR__ . '/../..' . '/frontend/class-opengraph-oembed.php',
@@ -372,7 +365,6 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'WPSEO_Option_Titles' => __DIR__ . '/../..' . '/inc/options/class-wpseo-option-titles.php',
         'WPSEO_Option_Wpseo' => __DIR__ . '/../..' . '/inc/options/class-wpseo-option-wpseo.php',
         'WPSEO_Options' => __DIR__ . '/../..' . '/inc/options/class-wpseo-options.php',
-        'WPSEO_Options_Backfill' => __DIR__ . '/../..' . '/inc/options/class-wpseo-options-backfill.php',
         'WPSEO_Paper_Presenter' => __DIR__ . '/../..' . '/admin/class-paper-presenter.php',
         'WPSEO_Plugin_Availability' => __DIR__ . '/../..' . '/admin/class-plugin-availability.php',
         'WPSEO_Plugin_Compatibility' => __DIR__ . '/../..' . '/admin/class-plugin-compatibility.php',
@@ -413,7 +405,10 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'WPSEO_Role_Manager_Factory' => __DIR__ . '/../..' . '/admin/roles/class-role-manager-factory.php',
         'WPSEO_Role_Manager_VIP' => __DIR__ . '/../..' . '/admin/roles/class-role-manager-vip.php',
         'WPSEO_Role_Manager_WP' => __DIR__ . '/../..' . '/admin/roles/class-role-manager-wp.php',
-        'WPSEO_Ryte_Service' => __DIR__ . '/../..' . '/admin/onpage/class-ryte-service.php',
+        'WPSEO_Ryte' => __DIR__ . '/../..' . '/admin/ryte/class-ryte.php',
+        'WPSEO_Ryte_Option' => __DIR__ . '/../..' . '/admin/ryte/class-ryte-option.php',
+        'WPSEO_Ryte_Request' => __DIR__ . '/../..' . '/admin/ryte/class-ryte-request.php',
+        'WPSEO_Ryte_Service' => __DIR__ . '/../..' . '/deprecated/admin/onpage/class-ryte-service.php',
         'WPSEO_Schema' => __DIR__ . '/../..' . '/frontend/schema/class-schema.php',
         'WPSEO_Schema_Article' => __DIR__ . '/../..' . '/frontend/schema/class-schema-article.php',
         'WPSEO_Schema_Author' => __DIR__ . '/../..' . '/frontend/schema/class-schema-author.php',
@@ -438,7 +433,7 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'WPSEO_Sitemap_Cache_Data_Interface' => __DIR__ . '/../..' . '/inc/sitemaps/interface-sitemap-cache-data.php',
         'WPSEO_Sitemap_Image_Parser' => __DIR__ . '/../..' . '/inc/sitemaps/class-sitemap-image-parser.php',
         'WPSEO_Sitemap_Provider' => __DIR__ . '/../..' . '/inc/sitemaps/interface-sitemap-provider.php',
-        'WPSEO_Sitemap_Timezone' => __DIR__ . '/../..' . '/inc/sitemaps/class-sitemap-timezone.php',
+        'WPSEO_Sitemap_Timezone' => __DIR__ . '/../..' . '/deprecated/inc/sitemaps/class-sitemap-timezone.php',
         'WPSEO_Sitemaps' => __DIR__ . '/../..' . '/inc/sitemaps/class-sitemaps.php',
         'WPSEO_Sitemaps_Admin' => __DIR__ . '/../..' . '/inc/sitemaps/class-sitemaps-admin.php',
         'WPSEO_Sitemaps_Cache' => __DIR__ . '/../..' . '/inc/sitemaps/class-sitemaps-cache.php',
@@ -643,43 +638,45 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'YoastSEO_Vendor\\Task_Db_Setup' => __DIR__ . '/../..' . '/vendor_prefixed/ruckusing/lib/Task/Db/Setup.php',
         'YoastSEO_Vendor\\Task_Db_Status' => __DIR__ . '/../..' . '/vendor_prefixed/ruckusing/lib/Task/Db/Status.php',
         'YoastSEO_Vendor\\Task_Db_Version' => __DIR__ . '/../..' . '/vendor_prefixed/ruckusing/lib/Task/Db/Version.php',
-        'Yoast\\WP\\Free\\Builders\\Indexable_Author_Builder' => __DIR__ . '/../..' . '/src/builders/indexable-author-builder.php',
-        'Yoast\\WP\\Free\\Builders\\Indexable_Post_Builder' => __DIR__ . '/../..' . '/src/builders/indexable-post-builder.php',
-        'Yoast\\WP\\Free\\Builders\\Indexable_Term_Builder' => __DIR__ . '/../..' . '/src/builders/indexable-term-builder.php',
-        'Yoast\\WP\\Free\\Conditionals\\Admin_Conditional' => __DIR__ . '/../..' . '/src/conditionals/admin-conditional.php',
-        'Yoast\\WP\\Free\\Conditionals\\Conditional' => __DIR__ . '/../..' . '/src/conditionals/conditional.php',
-        'Yoast\\WP\\Free\\Conditionals\\Feature_Flag_Conditional' => __DIR__ . '/../..' . '/src/conditionals/feature-flag-conditional.php',
-        'Yoast\\WP\\Free\\Conditionals\\Indexables_Feature_Flag_Conditional' => __DIR__ . '/../..' . '/src/conditionals/indexables-feature-flag-conditional.php',
-        'Yoast\\WP\\Free\\Conditionals\\No_Conditionals' => __DIR__ . '/../..' . '/src/conditionals/no-conditionals.php',
-        'Yoast\\WP\\Free\\Config\\Dependency_Management' => __DIR__ . '/../..' . '/src/config/dependency-management.php',
-        'Yoast\\WP\\Free\\Database\\Database_Setup' => __DIR__ . '/../..' . '/src/database/database-setup.php',
-        'Yoast\\WP\\Free\\Database\\Migration_Runner' => __DIR__ . '/../..' . '/src/database/migration-runner.php',
-        'Yoast\\WP\\Free\\Database\\Ruckusing_Framework' => __DIR__ . '/../..' . '/src/database/ruckusing-framework.php',
-        'Yoast\\WP\\Free\\Exceptions\\Missing_Method' => __DIR__ . '/../..' . '/src/exceptions/missing-method.php',
-        'Yoast\\WP\\Free\\Generated\\Cached_Container' => __DIR__ . '/../..' . '/src/generated/container.php',
-        'Yoast\\WP\\Free\\Loader' => __DIR__ . '/../..' . '/src/loader.php',
-        'Yoast\\WP\\Free\\Loggers\\Logger' => __DIR__ . '/../..' . '/src/loggers/logger.php',
-        'Yoast\\WP\\Free\\Loggers\\Migration_Logger' => __DIR__ . '/../..' . '/src/loggers/migration-logger.php',
-        'Yoast\\WP\\Free\\Models\\Indexable' => __DIR__ . '/../..' . '/src/models/indexable.php',
-        'Yoast\\WP\\Free\\Models\\Indexable_Extension' => __DIR__ . '/../..' . '/src/models/indexable-extension.php',
-        'Yoast\\WP\\Free\\Models\\Primary_Term' => __DIR__ . '/../..' . '/src/models/primary-term.php',
-        'Yoast\\WP\\Free\\Models\\SEO_Links' => __DIR__ . '/../..' . '/src/models/seo-links.php',
-        'Yoast\\WP\\Free\\Models\\SEO_Meta' => __DIR__ . '/../..' . '/src/models/seo-meta.php',
-        'Yoast\\WP\\Free\\ORM\\ORMWrapper' => __DIR__ . '/../..' . '/src/orm/yoast-orm-wrapper.php',
-        'Yoast\\WP\\Free\\ORM\\Yoast_Model' => __DIR__ . '/../..' . '/src/orm/yoast-model.php',
-        'Yoast\\WP\\Free\\Oauth\\Client' => __DIR__ . '/../..' . '/src/oauth/client.php',
-        'Yoast\\WP\\Free\\Repositories\\Indexable_Repository' => __DIR__ . '/../..' . '/src/repositories/indexable-repository.php',
-        'Yoast\\WP\\Free\\Repositories\\Primary_Term_Repository' => __DIR__ . '/../..' . '/src/repositories/primary-term-repository.php',
-        'Yoast\\WP\\Free\\Repositories\\SEO_Links_Repository' => __DIR__ . '/../..' . '/src/repositories/seo-links-repository.php',
-        'Yoast\\WP\\Free\\Repositories\\SEO_Meta_Repository' => __DIR__ . '/../..' . '/src/repositories/seo-meta-repository.php',
-        'Yoast\\WP\\Free\\Watchers\\Indexable_Author_Watcher' => __DIR__ . '/../..' . '/src/watchers/indexable-author-watcher.php',
-        'Yoast\\WP\\Free\\Watchers\\Indexable_Post_Watcher' => __DIR__ . '/../..' . '/src/watchers/indexable-post-watcher.php',
-        'Yoast\\WP\\Free\\Watchers\\Indexable_Term_Watcher' => __DIR__ . '/../..' . '/src/watchers/indexable-term-watcher.php',
-        'Yoast\\WP\\Free\\Watchers\\Primary_Term_Watcher' => __DIR__ . '/../..' . '/src/watchers/primary-term-watcher.php',
-        'Yoast\\WP\\Free\\WordPress\\Initializer' => __DIR__ . '/../..' . '/src/wordpress/initializer.php',
-        'Yoast\\WP\\Free\\WordPress\\Integration' => __DIR__ . '/../..' . '/src/wordpress/integration.php',
-        'Yoast\\WP\\Free\\WordPress\\Loadable' => __DIR__ . '/../..' . '/src/wordpress/loadable.php',
-        'Yoast\\WP\\Free\\WordPress\\Wrapper' => __DIR__ . '/../..' . '/src/wordpress/wrapper.php',
+        'Yoast\\WP\\SEO\\Builders\\Indexable_Author_Builder' => __DIR__ . '/../..' . '/src/builders/indexable-author-builder.php',
+        'Yoast\\WP\\SEO\\Builders\\Indexable_Post_Builder' => __DIR__ . '/../..' . '/src/builders/indexable-post-builder.php',
+        'Yoast\\WP\\SEO\\Builders\\Indexable_Term_Builder' => __DIR__ . '/../..' . '/src/builders/indexable-term-builder.php',
+        'Yoast\\WP\\SEO\\Conditionals\\Admin_Conditional' => __DIR__ . '/../..' . '/src/conditionals/admin-conditional.php',
+        'Yoast\\WP\\SEO\\Conditionals\\Conditional' => __DIR__ . '/../..' . '/src/conditionals/conditional.php',
+        'Yoast\\WP\\SEO\\Conditionals\\Feature_Flag_Conditional' => __DIR__ . '/../..' . '/src/conditionals/feature-flag-conditional.php',
+        'Yoast\\WP\\SEO\\Conditionals\\Indexables_Feature_Flag_Conditional' => __DIR__ . '/../..' . '/src/conditionals/indexables-feature-flag-conditional.php',
+        'Yoast\\WP\\SEO\\Conditionals\\No_Conditionals' => __DIR__ . '/../..' . '/src/conditionals/no-conditionals.php',
+        'Yoast\\WP\\SEO\\Config\\Dependency_Management' => __DIR__ . '/../..' . '/src/config/dependency-management.php',
+        'Yoast\\WP\\SEO\\Database\\Database_Setup' => __DIR__ . '/../..' . '/src/database/database-setup.php',
+        'Yoast\\WP\\SEO\\Database\\Migration_Runner' => __DIR__ . '/../..' . '/src/database/migration-runner.php',
+        'Yoast\\WP\\SEO\\Database\\Ruckusing_Framework' => __DIR__ . '/../..' . '/src/database/ruckusing-framework.php',
+        'Yoast\\WP\\SEO\\Exceptions\\Missing_Method' => __DIR__ . '/../..' . '/src/exceptions/missing-method.php',
+        'Yoast\\WP\\SEO\\Generated\\Cached_Container' => __DIR__ . '/../..' . '/src/generated/container.php',
+        'Yoast\\WP\\SEO\\Helpers\\Author_Archive_Helper' => __DIR__ . '/../..' . '/src/helpers/author-archive-helper.php',
+        'Yoast\\WP\\SEO\\Helpers\\Home_Url_Helper' => __DIR__ . '/../..' . '/src/helpers/home-url-helper.php',
+        'Yoast\\WP\\SEO\\Loader' => __DIR__ . '/../..' . '/src/loader.php',
+        'Yoast\\WP\\SEO\\Loggers\\Logger' => __DIR__ . '/../..' . '/src/loggers/logger.php',
+        'Yoast\\WP\\SEO\\Loggers\\Migration_Logger' => __DIR__ . '/../..' . '/src/loggers/migration-logger.php',
+        'Yoast\\WP\\SEO\\Models\\Indexable' => __DIR__ . '/../..' . '/src/models/indexable.php',
+        'Yoast\\WP\\SEO\\Models\\Indexable_Extension' => __DIR__ . '/../..' . '/src/models/indexable-extension.php',
+        'Yoast\\WP\\SEO\\Models\\Primary_Term' => __DIR__ . '/../..' . '/src/models/primary-term.php',
+        'Yoast\\WP\\SEO\\Models\\SEO_Links' => __DIR__ . '/../..' . '/src/models/seo-links.php',
+        'Yoast\\WP\\SEO\\Models\\SEO_Meta' => __DIR__ . '/../..' . '/src/models/seo-meta.php',
+        'Yoast\\WP\\SEO\\ORM\\ORMWrapper' => __DIR__ . '/../..' . '/src/orm/yoast-orm-wrapper.php',
+        'Yoast\\WP\\SEO\\ORM\\Yoast_Model' => __DIR__ . '/../..' . '/src/orm/yoast-model.php',
+        'Yoast\\WP\\SEO\\Oauth\\Client' => __DIR__ . '/../..' . '/src/oauth/client.php',
+        'Yoast\\WP\\SEO\\Repositories\\Indexable_Repository' => __DIR__ . '/../..' . '/src/repositories/indexable-repository.php',
+        'Yoast\\WP\\SEO\\Repositories\\Primary_Term_Repository' => __DIR__ . '/../..' . '/src/repositories/primary-term-repository.php',
+        'Yoast\\WP\\SEO\\Repositories\\SEO_Links_Repository' => __DIR__ . '/../..' . '/src/repositories/seo-links-repository.php',
+        'Yoast\\WP\\SEO\\Repositories\\SEO_Meta_Repository' => __DIR__ . '/../..' . '/src/repositories/seo-meta-repository.php',
+        'Yoast\\WP\\SEO\\Watchers\\Indexable_Author_Watcher' => __DIR__ . '/../..' . '/src/watchers/indexable-author-watcher.php',
+        'Yoast\\WP\\SEO\\Watchers\\Indexable_Post_Watcher' => __DIR__ . '/../..' . '/src/watchers/indexable-post-watcher.php',
+        'Yoast\\WP\\SEO\\Watchers\\Indexable_Term_Watcher' => __DIR__ . '/../..' . '/src/watchers/indexable-term-watcher.php',
+        'Yoast\\WP\\SEO\\Watchers\\Primary_Term_Watcher' => __DIR__ . '/../..' . '/src/watchers/primary-term-watcher.php',
+        'Yoast\\WP\\SEO\\WordPress\\Initializer' => __DIR__ . '/../..' . '/src/wordpress/initializer.php',
+        'Yoast\\WP\\SEO\\WordPress\\Integration' => __DIR__ . '/../..' . '/src/wordpress/integration.php',
+        'Yoast\\WP\\SEO\\WordPress\\Loadable' => __DIR__ . '/../..' . '/src/wordpress/loadable.php',
+        'Yoast\\WP\\SEO\\WordPress\\Wrapper' => __DIR__ . '/../..' . '/src/wordpress/wrapper.php',
         'Yoast_API_Request' => __DIR__ . '/..' . '/yoast/license-manager/class-api-request.php',
         'Yoast_Alerts' => __DIR__ . '/../..' . '/admin/class-yoast-alerts.php',
         'Yoast_Dashboard_Widget' => __DIR__ . '/../..' . '/admin/class-yoast-dashboard-widget.php',
@@ -699,7 +696,7 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'Yoast_Network_Settings_API' => __DIR__ . '/../..' . '/admin/class-yoast-network-settings-api.php',
         'Yoast_Notification' => __DIR__ . '/../..' . '/admin/class-yoast-notification.php',
         'Yoast_Notification_Center' => __DIR__ . '/../..' . '/admin/class-yoast-notification-center.php',
-        'Yoast_OnPage_Ajax' => __DIR__ . '/../..' . '/admin/ajax/class-yoast-onpage-ajax.php',
+        'Yoast_OnPage_Ajax' => __DIR__ . '/../..' . '/deprecated/admin/ajax/class-yoast-onpage-ajax.php',
         'Yoast_Plugin_Conflict' => __DIR__ . '/../..' . '/admin/class-yoast-plugin-conflict.php',
         'Yoast_Plugin_Conflict_Ajax' => __DIR__ . '/../..' . '/admin/ajax/class-yoast-plugin-conflict-ajax.php',
         'Yoast_Plugin_License_Manager' => __DIR__ . '/..' . '/yoast/license-manager/class-plugin-license-manager.php',
@@ -710,17 +707,14 @@ class ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4
         'Yoast_Update_Manager' => __DIR__ . '/..' . '/yoast/license-manager/class-update-manager.php',
         'Yoast_View_Utils' => __DIR__ . '/../..' . '/admin/views/class-view-utils.php',
         'iYoast_License_Manager' => __DIR__ . '/..' . '/yoast/license-manager/class-license-manager.php',
-        'xrstf\\Composer52\\AutoloadGenerator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/AutoloadGenerator.php',
-        'xrstf\\Composer52\\Generator' => __DIR__ . '/..' . '/xrstf/composer-php52/lib/xrstf/Composer52/Generator.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitf7309e5dcd4e2843e8a5c77b6db497d4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit351a271634bea800cd6352de81e8dc78::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit351a271634bea800cd6352de81e8dc78::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit351a271634bea800cd6352de81e8dc78::$classMap;
 
         }, null, ClassLoader::class);
     }

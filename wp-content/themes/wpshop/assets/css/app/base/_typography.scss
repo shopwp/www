@@ -4,86 +4,86 @@ h3,
 h4,
 h5,
 h6 {
-   font-family: $font-secondary;
-   line-height: 1.1;
-   color: color(base);
-   margin: 0 0 $space-xxs;
+  font-family: $font-secondary;
+  line-height: 1.1;
+  color: #0f0728;
+  margin: 0 0 $space-xxs;
 
-   a {
-      text-decoration: none;
-   }
+  a {
+    text-decoration: none;
+  }
 }
 
 h1 {
-   font-size: $heading-1;
-   font-weight: bold;
+  font-size: $heading-1;
+  font-weight: bold;
 
-   @include device(700, 'max') {
-      font-size: $font-xxxl;
-   }
+  @include device(700, 'max') {
+    font-size: $font-xxxl;
+  }
 }
 
 h2 {
-   font-size: 1.85em;
-   font-weight: bold;
+  font-size: 1.85em;
+  font-weight: bold;
 
-   @include device(700, 'max') {
-      font-size: $heading-3;
-   }
+  @include device(700, 'max') {
+    font-size: $heading-3;
+  }
 }
 
 h3 {
-   font-size: $heading-3;
-   font-weight: bold;
+  font-size: $heading-3;
+  font-weight: bold;
 
-   @include device(700, 'max') {
-      font-size: $heading-4;
-   }
+  @include device(700, 'max') {
+    font-size: $heading-4;
+  }
 }
 
 h4 {
-   font-size: $heading-4;
+  font-size: $heading-4;
 }
 
 h5 {
-   font-size: $heading-5;
+  font-size: $heading-5;
 }
 
 h6 {
-   font-size: $heading-6;
+  font-size: $heading-6;
 }
 
 a {
-   color: color(primary);
+  color: color(primary);
 
-   &:hover {
-      opacity: $opacity-soft;
-   }
+  &:hover {
+    opacity: $opacity-soft;
+  }
 }
 
 p {
-   font-size: 1em;
-   margin-top: 0;
-   width: 100%;
+  font-size: 1em;
+  margin-top: 0;
+  width: 100%;
 
-   + h1,
-   + h2,
-   + h3,
-   + h4,
-   + h5,
-   + h6 {
-      margin-top: $space-m;
-   }
+  + h1,
+  + h2,
+  + h3,
+  + h4,
+  + h5,
+  + h6 {
+    margin-top: $space-m;
+  }
 
-   @include device(1500, 'max') {
-      font-size: 1em;
-   }
+  @include device(1500, 'max') {
+    font-size: 1em;
+  }
 
-   @include device(600, 'max') {
-      font-size: 1em;
-   }
+  @include device(600, 'max') {
+    font-size: 1em;
+  }
 }
 
 .heading-center {
-   text-align: center;
+  text-align: center;
 }

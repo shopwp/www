@@ -4,20 +4,20 @@ Responsive generator
 
 */
 @mixin device($breakpoint, $size) {
-   @if map-has-key($breakpoints, $breakpoint) {
-      @if ($size == 'max') {
-         @media (max-width: #{map-get($breakpoints, $breakpoint)}) {
-            @content;
-         }
-      } @else {
-         @media (min-width: #{map-get($breakpoints, $breakpoint)}) {
-            @content;
-         }
+  @if map-has-key($breakpoints, $breakpoint) {
+    @if ($size == 'max') {
+      @media (max-width: #{map-get($breakpoints, $breakpoint)}) {
+        @content;
       }
-   } @else {
-      @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+    } @else {
+      @media (min-width: #{map-get($breakpoints, $breakpoint)}) {
+        @content;
+      }
+    }
+  } @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
         + "Please make sure it is defined in `$breakpoints` map.";
-   }
+  }
 }
 
 /*
@@ -26,15 +26,15 @@ Grid generator
 
 */
 @mixin row($cols) {
-   @if ($cols == 1) {
-      flex: 0 0 100%;
-      max-width: 100%;
-      width: 100%;
-   } @else {
-      flex: 0 0 calc((100% / #{$cols}));
-      max-width: calc((100% / #{$cols}));
-      width: calc((100% / #{$cols}));
-   }
+  @if ($cols == 1) {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
+  } @else {
+    flex: 0 0 calc((100% / #{$cols}));
+    max-width: calc((100% / #{$cols}));
+    width: calc((100% / #{$cols}));
+  }
 }
 
 /*
@@ -43,13 +43,13 @@ Grow
 
 */
 @mixin grow() {
-   transition: all $speed-fast linear;
+  transition: all $speed-fast linear;
 
-   &:hover {
-      transform: scale(1.08);
-      box-shadow: 0 3px 35px -10px rgba(0, 0, 0, 0.25);
-      cursor: pointer;
-   }
+  &:hover {
+    transform: scale(1.08);
+    box-shadow: 0 3px 35px -10px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+  }
 }
 
 /*
@@ -58,11 +58,11 @@ Shrink
 
 */
 @mixin shrink() {
-   transition: transform $speed-fast ease-in-out;
+  transition: transform $speed-fast ease-in-out;
 
-   &:hover {
-      transform: scale(0.95);
-   }
+  &:hover {
+    transform: scale(0.95);
+  }
 }
 
 /*
@@ -71,7 +71,7 @@ Drop Shadow
 
 */
 @mixin drop-shadow() {
-   box-shadow: 0 2px 14px -3px rgba(0, 0, 0, 0.33);
+  box-shadow: 0 2px 14px -3px rgba(0, 0, 0, 0.33);
 }
 
 /*
@@ -80,7 +80,7 @@ Dim
 
 */
 @mixin dim($opacity) {
-   opacity: $opacity;
+  opacity: $opacity;
 }
 
 /*
@@ -89,8 +89,8 @@ Dim
 
 */
 @mixin validInput() {
-   // box-shadow: 0px 0px 0px 1px color(success);
-   border: 1px solid #29cf98;
+  // box-shadow: 0px 0px 0px 1px color(success);
+  border: 1px solid #29cf98;
 }
 
 /*
@@ -99,8 +99,8 @@ Dim
 
 */
 @mixin invalidInput() {
-   // box-shadow: 0 0 0 2px #ffd3d3;
-   border: 1px solid #f03131;
+  // box-shadow: 0 0 0 2px #ffd3d3;
+  border: 1px solid #f03131;
 }
 
 /*
@@ -109,53 +109,62 @@ Shadow
 
 */
 @mixin shadow() {
-   //   box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);
-   box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
+  //   box-shadow: 0 5px 15px 0 rgba(0,0,0,0.15);
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
 }
 
 @mixin card() {
-   border-radius: 10px;
-   border: 1px solid #cbcbcb;
-   // box-shadow: 0 2px 14px -3px #dadada;
-   // border: 1px solid #dedede;
+  border-radius: 10px;
+  border: 1px solid #cbcbcb;
+  // box-shadow: 0 2px 14px -3px #dadada;
+  // border: 1px solid #dedede;
 }
 
 @keyframes hvr-bob {
-   0% {
-      -webkit-transform: translateY(-8px);
-      transform: translateY(-8px);
-   }
-   50% {
-      -webkit-transform: translateY(-4px);
-      transform: translateY(-4px);
-   }
-   100% {
-      -webkit-transform: translateY(-8px);
-      transform: translateY(-8px);
-   }
+  0% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px);
+  }
+  50% {
+    -webkit-transform: translateY(-4px);
+    transform: translateY(-4px);
+  }
+  100% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px);
+  }
 }
 
 @keyframes hvr-bob-float {
-   100% {
-      -webkit-transform: translateY(-8px);
-      transform: translateY(-8px);
-   }
+  100% {
+    -webkit-transform: translateY(-8px);
+    transform: translateY(-8px);
+  }
 }
 
 @mixin bob() {
-   display: inline-block;
-   vertical-align: middle;
-   transform: perspective(1px) translateZ(0);
-   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-   &:hover,
-   &:focus,
-   &:active {
-      animation-name: hvr-bob-float, hvr-bob;
-      animation-duration: 0.3s, 1.5s;
-      animation-delay: 0s, 0.3s;
-      animation-timing-function: ease-out, ease-in-out;
-      animation-iteration-count: 1, infinite;
-      animation-fill-mode: forwards;
-      animation-direction: normal, alternate;
-   }
+  display: inline-block;
+  vertical-align: middle;
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  &:hover,
+  &:focus,
+  &:active {
+    animation-name: hvr-bob-float, hvr-bob;
+    animation-duration: 0.3s, 1.5s;
+    animation-delay: 0s, 0.3s;
+    animation-timing-function: ease-out, ease-in-out;
+    animation-iteration-count: 1, infinite;
+    animation-fill-mode: forwards;
+    animation-direction: normal, alternate;
+  }
+}
+
+@mixin popover() {
+  background-color: white;
+  padding: 1.3em;
+  border-radius: 0.6em;
+  margin: 0;
+  box-shadow: 0 0 21px -13px rgba(0, 0, 0, 0.42);
+  border: 1px solid #ddd;
 }

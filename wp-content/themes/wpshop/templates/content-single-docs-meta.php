@@ -18,7 +18,7 @@
 
 
   <?php if ($source && $type[0]->slug !== 'getting-started') { ?>
-    <p class="doc-meta-item doc-source doc-meta-item-last"><a href="<?= $source; ?>" class="doc-source-link" target="_blank">Source: <i class="fas fa-external-link-square-alt"></i></a></p>
+    <p class="doc-meta-item doc-source doc-meta-item-last"><a href="<?= $source; ?>" class="doc-source-link" target="_blank">Source: <i class="fal fa-external-link"></i></a></p>
   <?php } ?>
 
 

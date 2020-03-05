@@ -167,8 +167,59 @@ function custom_post_type_faqs() {
 }
 
 
+
+
+
+
+
+/*
+
+CPT: FAQs
+
+*/
+function custom_post_type_testimonials() {
+
+  $labels = [
+    'name'                => _x('Testimonials', 'Post Type General Name', 'wpshop'),
+    'singular_name'       => _x('Testimonial', 'Post Type Singular Name', 'wpshop'),
+    'menu_name'           => __('Testimonials', 'wpshop'),
+    'parent_item_colon'   => __('Parent Testimonial:', 'wpshop'),
+    'new_item'            => __('Add New Testimonial', 'wpshop'),
+    'edit_item'           => __('Edit Testimonial', 'wpshop'),
+    'not_found'           => __('No Testimonials found', 'wpshop'),
+    'not_found_in_trash'  => __('No Testimonials found in trash', 'wpshop')
+  ];
+
+  $args = [
+    'label'               => __('post_type_testimonials', 'wpshop'),
+    'description'         => __('Custom Post Type for Testimonials', 'wpshop'),
+    'labels'              => $labels,
+    'supports'            => ['title', 'category'],
+    'taxonomies'          => [],
+    'hierarchical'        => false,
+    'public'              => true,
+    'show_ui'             => true,
+    'show_in_menu'        => true,
+    'menu_position'       => 100,
+    'menu_icon'           => 'dashicons-format-quote',
+    'show_in_admin_bar'   => true,
+    'show_in_nav_menus'   => true,
+    'can_export'          => true,
+    'has_archive'         => true,
+    'exclude_from_search' => false,
+    'publicly_queryable'  => true,
+    'capability_type'     => 'post',
+    'rewrite'             => [ 'with_front' => false ]
+  ];
+
+  register_post_type('testimonials', $args);
+
+}
+
+
 // Hookin, yo
 add_action('init', 'custom_post_type_faqs', 0);
+add_action('init', 'custom_post_type_testimonials', 0);
 
 
 ?>

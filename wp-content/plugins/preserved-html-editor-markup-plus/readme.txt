@@ -1,10 +1,10 @@
 === Preserved HTML Editor Markup Plus ===
-Contributors: marcuspope, j-ro
+Contributors: marcuspope, j-ro, Azragh
 Donate link: http://www.marcuspope.com/wordpress
 Tags: wpautop, editor, markup, html, white space, HTML5, WYSIWYG, visual, developer
 Requires at least: 3.2.1
-Tested up to: 4.5
-Stable tag: 1.5.3
+Tested up to: 5.3
+Stable tag: 1.5.4
 License: GPLv2 or later
 
 

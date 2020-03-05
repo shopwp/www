@@ -246,7 +246,7 @@
             edButtons[1] = new edButton('ed_em','i','<i>','</i>','i');
         }
 
-        $('body').bind('afterPreWpautop', function(e, o) {
+        $('body:not(.widgets-php)').bind('afterPreWpautop', function(e, o) {
             //On Switch to HTML & On save/update from Visual tab
             //Now we replace all those temporary html comments with spaces and newlines
             o.data = o.unfiltered;

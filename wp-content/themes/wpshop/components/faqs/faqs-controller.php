@@ -1,32 +1,51 @@
 <?php
 
-  $args2 = array(
-    'type'                     => 'post',
-    'taxonomy'                 => 'faq-category',
-    'pad_counts'               => false
-  );
 
-  $categories = get_categories( $args2 );
-  $faqs = [];
+$faqs_type = get_sub_field('faqs_type');
 
-  foreach ( $categories as $cat ) {
+error_log('----- $faqs_type -----');
+error_log(print_r($faqs_type, true));
+error_log('----- /$faqs_type -----');
 
-  $args = array(
-  'posts_per_page' => -1,
-  'post_type' => 'faqs',
-  'tax_query' => array(
-      array(
-    		'taxonomy' => 'faq-category',
-        'field' => 'name',
-        'terms' => $cat->name
-  	   )
-     )
-   );
+  
+  
+  if ($faqs_type === 'primary') {
 
-  $faqs[$cat->name] = get_posts($args);
+         $args2 = array(
+         'type'                     => 'post',
+         'taxonomy'                 => 'faq-category',
+         'pad_counts'               => false
+      );
 
+      $categories = get_categories( $args2 );
+      $faqs = [];
+
+      foreach ( $categories as $cat ) {
+
+      $args = array(
+         'posts_per_page' => -1,
+         'post_type' => 'faqs',
+         'tax_query' => array(
+               array(
+                  'taxonomy' => 'faq-category',
+               'field' => 'name',
+               'terms' => $cat->name
+               )
+            )
+            );
+
+         $faqs[$cat->name] = get_posts($args);
+
+      }
+
+      include(locate_template('components/faqs/faqs-view.php'));
+
+  } else {
+
+      $faqs_selected = get_sub_field('faqs');
+
+     include(locate_template('components/faqs/secondary.php'));
   }
-
-  include(locate_template('components/faqs/faqs-view.php'));
+  
 
 ?>

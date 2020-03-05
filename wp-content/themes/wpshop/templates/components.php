@@ -89,6 +89,11 @@
 
         get_template_part('components/comparison-chart/controller');
 
+      // Testimonials
+      } else if(get_row_layout() == 'component_testimonials') {
+
+        get_template_part('components/testimonials/controller');
+
       }
       
     endwhile;

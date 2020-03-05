@@ -28,7 +28,7 @@
 
   input {
     margin: 0;
-    border-radius: 10px;
+    border-radius: 0.4em;
   }
 }
 
@@ -40,7 +40,7 @@
   opacity: $opacity-hard;
   transition: all 0.2s ease;
 
-  @include device(900, "max") {
+  @include device(900, 'max') {
     top: 15px;
   }
 
@@ -52,7 +52,7 @@
 .form-label-l {
   font-size: $font-l;
 
-  @include device(900, "max") {
+  @include device(900, 'max') {
     font-size: $font-m;
   }
 }
@@ -65,10 +65,10 @@
     font-size: 0.6em;
     color: color(white);
     padding: 10px 15px;
-    border-radius: 5px;
+    border-radius: 0.4em;
     font-weight: 100;
 
-    @include device(800, "max") {
+    @include device(800, 'max') {
       left: -10px;
       top: -40px;
       font-size: 16px;
@@ -98,7 +98,7 @@ textarea,
 select {
   width: 100%;
   padding: $space-m;
-  border-radius: 5px;
+  border-radius: 0.4em;
   font-size: $font-m;
   border: none;
   background: color(white);
@@ -111,11 +111,11 @@ select {
     outline: none;
   }
 
-  &.valid:not([type="submit"]) {
+  &.valid:not([type='submit']) {
     @include validInput();
   }
 
-  @include device(900, "max") {
+  @include device(900, 'max') {
     font-size: 1em;
   }
 
@@ -134,7 +134,7 @@ select {
   }
 }
 
-.affwp-form input[type="checkbox"] {
+.affwp-form input[type='checkbox'] {
   width: auto;
   margin-right: 10px;
 }
@@ -143,7 +143,7 @@ select {
   border: 1px solid #959595;
 }
 
-input[type="number"] {
+input[type='number'] {
   max-width: 50px;
   text-align: center;
 }
@@ -161,7 +161,7 @@ input[type="number"] {
     }
   }
 
-  input[type="radio"] {
+  input[type='radio'] {
     width: auto;
     margin-top: 5px;
     margin-right: 10px;
@@ -180,7 +180,7 @@ input[type="number"] {
   }
 }
 
-input[type="submit"] {
+input[type='submit'] {
   width: auto;
   border: none;
   height: auto;
@@ -188,13 +188,13 @@ input[type="submit"] {
 
 #form-account-profile-general,
 #form-account-profile-password {
-  input[type="submit"] {
+  input[type='submit'] {
     font-size: 1.2em;
   }
 }
 
-input[type="search"] {
-  border-radius: 10px;
+input[type='search'] {
+  border-radius: 0.4em;
 }
 
 input.valid {
@@ -212,13 +212,13 @@ form input:read-only {
   }
 }
 
-select[aria-invalid="true"],
-input[aria-invalid="true"] {
+select[aria-invalid='true'],
+input[aria-invalid='true'] {
   @include invalidInput();
 }
 
-select[aria-invalid="false"],
-input[aria-invalid="false"] {
+select[aria-invalid='false'],
+input[aria-invalid='false'] {
   @include validInput();
 }
 
@@ -234,7 +234,7 @@ label {
   }
 }
 
-label[for="wps_customer_password_new"] {
+label[for='wps_customer_password_new'] {
   margin-top: $space-xxxl;
 }
 
@@ -285,28 +285,32 @@ label[for="wps_customer_password_new"] {
 .edd_errors,
 label.error {
   background: color(error);
-  display: inline-block;
+  display: inline-block !important;
   color: color(base);
   // font-size: 13px;
   padding: 0.59444em 2.4em;
-  border-radius: 10px;
+  border-radius: 0.4em;
   font-weight: normal;
   // animation-duration: 0.1s;
   // animation-delay: 0.1s;
   // animation-fill-mode: both;
   // animation-name: zoomIn;
   text-align: center;
-  margin-bottom: $space-xl;
-  margin-top: $space-m;
+  margin: 0;
   position: relative;
 
   &:after {
-    content: "";
+    content: '';
     display: block;
   }
 
   a {
     color: color(base);
+  }
+
+  &:empty {
+    padding: 0;
+    display: none !important;
   }
 }
 
@@ -327,7 +331,7 @@ legend {
   }
 
   &:after {
-    content: "";
+    content: '';
     margin: $space-s auto 0 auto;
     display: block;
     height: 1px;
@@ -335,7 +339,7 @@ legend {
     background-color: color(base);
   }
 
-  @include device(600, "max") {
+  @include device(600, 'max') {
     font-size: $heading-4;
   }
 }
@@ -348,7 +352,7 @@ select {
 .form-input-l {
   font-size: $font-l;
 
-  @include device(900, "max") {
+  @include device(900, 'max') {
     font-size: $font-m;
   }
 }
@@ -359,8 +363,9 @@ select {
   margin-bottom: 1em;
 }
 
+.mailinglist-form,
 #mailinglist-form {
-  margin-top: 1em;
+  margin-top: 0;
   width: 100%;
   max-width: 100%;
 
@@ -381,9 +386,14 @@ select {
 .form-message {
   text-align: center;
 
+  &:empty {
+    margin: 0;
+  }
+
   &.is-visible {
-    padding: 0 0.5em 1em 0.5em;
-    border-radius: 40px;
+    padding: 0;
+    text-align: left;
+    margin: 10px 0 5px 0;
   }
 }
 
@@ -401,6 +411,10 @@ select {
 
 .form-success {
   color: green;
+}
+
+.form-messages {
+  margin: 0;
 }
 
 .is-submitted {
@@ -445,7 +459,7 @@ select {
     font-weight: normal;
   }
 
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     width: 22px;
     height: 22px;
     padding: 0;
@@ -515,7 +529,7 @@ select {
 #edd_checkout_form_wrap {
   margin-top: 1.1em;
 
-  @include device(500, "max") {
+  @include device(500, 'max') {
     padding: 0 20px;
   }
 }
@@ -537,7 +551,7 @@ select {
 // }
 
 #edd_sl_license_keys2 {
-  @include device(600, "max") {
+  @include device(600, 'max') {
     display: flex;
     flex-direction: column;
   }
@@ -548,7 +562,7 @@ select {
   // border-top-right-radius: 0;
   // border-top: 0;
 
-  @include device(600, "max") {
+  @include device(600, 'max') {
     display: flex;
     flex-direction: column;
   }
@@ -570,7 +584,7 @@ select {
     display: flex;
     margin-top: 10px;
 
-    @include device(600, "max") {
+    @include device(600, 'max') {
       flex-direction: column;
     }
 
@@ -582,7 +596,7 @@ select {
       margin-top: 0;
       margin-left: 1em;
 
-      @include device(600, "max") {
+      @include device(600, 'max') {
         margin: 0;
         margin-top: 1em;
       }

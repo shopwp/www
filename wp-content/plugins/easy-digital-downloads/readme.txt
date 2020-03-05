@@ -6,7 +6,8 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
 Tested up to: 5.3
-Stable Tag: 2.9.20
+Requires PHP: 5.3
+Stable Tag: 2.9.21
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -188,11 +189,18 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.21, March 2, 2020 =
+* Fix: Corrected a reporting issue with earnings when using negative fees, such as Discounts Pro.
+* Fix: Only count the number of downloads for a purchase when download counts are not unlimited.
+* Fix: Fixed a typo in the settings text.
+* Dev: Added a supported PHP Version to the plugin headers.
+* New: Added information about the Jilt integration into the email settings.
+
 = 2.9.20, November 14, 2019 =
 * Fix: CSV download import issues with file to price assignments and AmazonS3 files.
 * Fix: The edd_after_payment_actions action fired via cron was missing attributes.
 * Fix: The SendWP connection link was visited if enter/return was pressed to update settings.
-* Added: Promo elements added to EDD admin screens.
+* New: Promotional elements added to EDD admin screens.
 
 = 2.9.19, October 28, 2019 =
 * Fix: Limit register_meta calls to be for the download post type only, in preparation for WordPress 5.3 compatibility.

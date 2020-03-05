@@ -28,19 +28,6 @@
       <i class="fab fa-instagram" aria-hidden="true"></i>
     </a>
 
-    
-
-    
-
-    
-    
-   
-    <a href="https://www.shopify.com/?ref=wps" target="_blank" class="footer-link footer-free-trial">👉 Shopify Free Trial</a>
-
-    <!-- <a href="https://instagram.com/simpleblend" class="footer-social-link">
-      <i class="fa fa-instagram"></i>
-    </a> -->
-
   </section>
   <section class="footer-attr">
      <a class="logo-link" href="<?= esc_url(home_url('/purchase')); ?>">
@@ -50,23 +37,5 @@
 
 </div>
 
-
-
-
-      <div class="shape shape1"></div>
-      <div class="shape shape2"></div>
-      <div class="shape shape3"></div>
-      <div class="shape shape4"></div>
-      <div class="shape shape5"></div>
-      <div class="shape shape6"></div>
-      <div class="shape shape7"></div>
-      <div class="shape shape8"></div>
-      <div class="shape shape9"></div>
-      <div class="shape shape10"></div>
-      <div class="shape shape11"></div>
-      <div class="shape shape12"></div>
-      <div class="shape shape13"></div>
-      <div class="shape shape14"></div>
-      <div class="shape shape15"></div>
 
 </footer>

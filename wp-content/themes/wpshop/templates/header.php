@@ -1,9 +1,9 @@
 
   <header class="header">
 
-    <div class="header-content l-row l-row-justify l-contain">
+    <div class="header-content l-row l-row-justify l-contain-wide">
 
-      <a class="logo-link" href="<?= esc_url(home_url('/')); ?>">
+      <a class="logo-link l-col l-col-left l-row-center" href="<?= esc_url(home_url('/')); ?>">
         <img src="<?php the_field('theme_logo_primary', 'option'); ?>" alt="WP Shopify" class="logo-header">
       </a>
 
@@ -18,20 +18,20 @@
       <?php } else { ?>
 
         <?php if (has_nav_menu('primary_navigation')) : ?>
-          <nav class="nav-primary l-row l-row-right l-fill l-col-center">
+          <nav class="nav-primary l-row l-row-center l-fill l-col-center">
             <?php wp_nav_menu(['theme_location' => 'primary_navigation', 'menu_class' => 'nav l-row']); ?>
           </nav>
         <?php endif; ?>
 
         <?php if (has_nav_menu('primary_sub')) : ?>
-         <div class="sub-nav-wrapper">
+         <!-- <div class="sub-nav-wrapper">
             
 
           <nav class="nav-primary-sub l-row l-row-right l-fill l-col-center">
             <?php wp_nav_menu(['theme_location' => 'primary_sub', 'menu_class' => 'nav l-row']); ?>
           </nav>
           <i class="fal fa-ellipsis-v"></i>
-          </div>
+          </div> -->
         <?php endif; ?>
 
       <?php } ?>
@@ -74,7 +74,7 @@
             <a href="<?php echo wp_logout_url($login_link); ?>" class="link-account">Logout</a>
 
           <?php } else { ?>
-            <a href="/purchase" class="btn btn-account">Purchase</a>
+            <span class="btn btn-download-free getting-started-trigger" target="_blank">Start for free</span>
             <a href="/login" class="menu-item-manual">Log In</a>
           <?php } ?>
 

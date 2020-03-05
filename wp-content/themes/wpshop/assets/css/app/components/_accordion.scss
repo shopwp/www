@@ -1,63 +1,59 @@
-.faqs {
-   margin-left: 0;
-}
-
 .accordions {
-   margin-top: 0;
+  margin-top: 0;
 }
 
 .accordion-heading {
-   padding: $space-m 0;
-   font-size: $font-m;
-   border-bottom: 1px solid color(medium-grey);
+  padding: $space-m 0;
+  font-size: $font-m;
+  border-bottom: 1px solid color(medium-grey);
 
-   .fa-plus-square,
-   .fa-minus-square {
-      font-size: $font-l;
-      position: relative;
-      top: 3px;
-      margin-right: $space-s;
-      // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
-   }
+  .fa-plus-square,
+  .fa-minus-square {
+    font-size: $font-l;
+    position: relative;
+    top: 3px;
+    margin-right: $space-s;
+    // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
+  }
 
-   &:hover {
-      cursor: pointer;
-   }
+  &:hover {
+    cursor: pointer;
+  }
 
-   @include device(700, 'max') {
-      font-size: $font-m;
-   }
+  @include device(700, 'max') {
+    font-size: $font-m;
+  }
 }
 
 .accordion-content {
-   margin-left: 0;
-   margin-top: 0;
-   margin-bottom: $space-xxl;
-   padding-top: $space-l;
-   display: none;
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: $space-xxl;
+  padding-top: $space-l;
+  display: none;
 
-   ol {
-      margin-left: $space-l * 2;
-   }
+  ol {
+    margin-left: $space-l * 2;
+  }
 
-   &.is-open {
-      margin-bottom: $space-xxl;
-   }
+  &.is-open {
+    margin-bottom: $space-xxl;
+  }
 }
 
 .faqs-group {
-   margin-bottom: $space-xl * 2;
+  margin-bottom: $space-xl * 2;
 }
 
 .accordion {
-   margin: 0;
+  margin: 0;
 }
 
 .accordion-heading {
-   margin-bottom: 0;
-   margin-left: 3px;
+  margin-bottom: 0;
+  margin-left: 3px;
 
-   &:hover {
-      opacity: $opacity-soft;
-   }
+  &:hover {
+    opacity: $opacity-soft;
+  }
 }

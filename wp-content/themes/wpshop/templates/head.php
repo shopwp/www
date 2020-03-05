@@ -1,7 +1,10 @@
 <head>
 
 <?php if (!is_page('checkout')) { ?>
-   
+
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light-border.css" />   
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-toward.css" />
+
 <script src="https://kit.fontawesome.com/4b023c7b57.js" crossorigin="anonymous"></script>
 
   <!--

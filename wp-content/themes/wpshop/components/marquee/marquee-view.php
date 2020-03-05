@@ -1,127 +1,45 @@
-<section class="component component-marquee l-col l-col-center">
+<section class="component component-marquee l-col">
 
-  <div class="marquee-content">
+  <div class="marquee-content l-row">
 
-   <div class="shape shape1"></div>
-   <div class="shape shape2"></div>
-   <div class="shape shape3"></div>
-   <div class="shape shape4"></div>
-   <div class="shape shape5"></div>
-   <div class="shape shape6"></div>
-   <div class="shape shape7"></div>
-   <div class="shape shape8"></div>
-   <div class="shape shape9"></div>
-   <div class="shape shape10"></div>
-   <div class="shape shape11"></div>
-   <div class="shape shape12"></div>
-   <div class="shape shape13"></div>
-   <div class="shape shape14"></div>
-   <div class="shape shape15"></div>
-   <!-- <div class="shape shape16"></div> -->
+  <div class="marquee-left">
+         
+         <div class="logos-wrapper">
+            
+            <a class="logos" target="_blank" href="https://www.shopify.com/?ref=wps">
+               <img class="logo wordpress-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-wp.svg" alt="WordPress Logo">
+               <img class="logo shopify-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify.svg" alt="Shopify Logo">
+            </a>
 
-   <a class="logos" target="_blank" href="https://www.shopify.com/?ref=wps">
+            <?php include(locate_template('components/current-version/view.php')); ?>
 
-      <img class="logo wordpress-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-wp.svg" alt="WordPress Logo">
-      <img class="logo shopify-logo" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify.svg" alt="Shopify Logo">
+         </div>
 
-    </a>
+         <h1><?php the_sub_field('short_description'); ?></h1>
+         
+         <p class="marquee-short-blurb">A killer WordPress plugin that empowers creators, businesses, and developers to sell Shopify products on any WordPress site.</p>
 
-   <h1><?php the_sub_field('short_description'); ?></h1>
-   
-    <!-- <h1 class="marquee-heading"></h1>
+         <div class="btn-group l-row l-row-left">
+            <span class="btn btn-download-free getting-started-trigger" target="_blank">Start for free</span>
+            <a href="https://demo.wpshop.io" class="btn btn-l btn-secondary" target="_blank">View the demo <i class="fal fa-external-link"></i></a>
+         </div>
 
-    <div class="marquee-short-desc">
-      <?php the_sub_field('short_description'); ?>
-    </div> -->
+      </div>
 
-    <div class="btn-group l-row l-row-center">
-      <a href="https://demo.wpshop.io" class="btn btn-l btn-secondary btn-download-free" target="_blank">See the demo 🚀</a>
-    </div>
+      <div class="marquee-right">
 
-   <a href="https://www.shopify.com/?ref=wps" target="_blank" class="callout">
-   <img class="logo-partner" src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-shopify-green.svg" alt="Shopify Partner Logo"> <span>Start your free Shopify 14 day trial <i class="far fa-external-link-square-alt"></i></span>
-   </a>
+      <img class="screen-one" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-one.jpg" alt="Sup">
 
+      <img class="screen-two" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-two.jpg" alt="Sup">
+      <div class="stage"></div>
+      </div>
   </div>
-   <style>
 
-      @keyframes MoveUpDown {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(40px);
-  }
-}
+  
 
-   .icon-test {
-      max-width: 40px;
-      position: absolute;
-      filter: grayscale(1);
-      /* filter: sepia(1); */
-      opacity: 0.2;
-      /* transform: rotate(-30deg); */
-      /* filter: drop-shadow(6px 7px 2px rgba(0,0,0,0.15)); */
-      /* animation: MoveUpDown 7s linear infinite; */
+</div>
 
-      display: none;
 
-   }
-
-   .icon-test-1 {
-    top: 15vh;
-    left: 5vw;
-    transform: rotate(-45deg);
-   }
-
-   .icon-test-2 {
-    top: 7vh;
-    right: 9vw;
-    transform: rotate(-18deg);
-   }
-   .icon-test-3 {
-        top: -10px;
-    left: 32vw;
-    transform: rotate(-28deg);
-   }
-   .icon-test-4 {
-    bottom: 111px;
-    left: 11vw;
-
-    transform: rotate(15deg);
-   }
-
-   .icon-test-5 {
-        bottom: 80px;
-    right: 46vw;
-    transform: rotate(-15deg);
-   }
-    
-      .icon-test-6 {
-    right: 7vw;
-    bottom: 58px;
-    transform: rotate(14deg);
-   }
-      .icon-test-7 {
-      bottom: 17vh;
-      right: 22vw;
-      transform: rotate(34deg);
-   }
-   
-
-   </style>
-  <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-1.svg" class="icon-test-1 icon-test">
-<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-2.svg" class="icon-test-2 icon-test">
-
-<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-3.svg" class="icon-test-3 icon-test">
-
-<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-4.svg" class="icon-test-4 icon-test">
-
-<!-- <img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-5.svg" class="icon-test-5 icon-test"> -->
-
-<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-6.svg" class="icon-test-6 icon-test">
-
-<img src="<?php echo get_template_directory_uri() ?>/assets/imgs/icon-test-7.svg" class="icon-test-7 icon-test">
 </section>
 
 <!-- 

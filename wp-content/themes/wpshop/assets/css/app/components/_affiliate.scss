@@ -1,111 +1,141 @@
 .component-affiliate {
-   background: white;
-   padding: 1em 0 7em 0;
-   position: relative;
+  background: white;
+  padding: 3em 0 4em 0;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0;
 
-   @include device(700, 'max') {
-      margin-bottom: 0;
-      padding-bottom: 5em;
-   }
+  .illustration {
+    display: block;
+    width: 320px;
+    margin-right: 4em;
+  }
 
-   .description {
-      text-align: left;
-      margin-top: 10px;
-      font-size: 1.1em;
+  .inner {
+    display: flex;
+    justify-content: center;
+    max-width: 80vw;
+    margin: 0 auto;
+    padding: 3em 4em;
+    border: 1px solid #bcbcbc;
+    border-radius: 0.4em;
+  }
 
-      @include device(1000, 'max') {
-         font-size: 16px;
-      }
-   }
+  @include device(700, 'max') {
+    margin-bottom: 0;
+    padding-bottom: 5em;
+  }
 
-   .heading {
+  .description {
+    text-align: left;
+    margin-top: 10px;
+    font-size: 1.1em;
+
+    @include device(1000, 'max') {
+      font-size: 16px;
+    }
+  }
+
+  .heading {
+    width: 100%;
+    text-align: left;
+    font-size: 2.2em;
+
+    @include device(1000, 'max') {
+      font-size: 2em;
+    }
+  }
+
+  .btn {
+    margin: 2em 0 0;
+
+    svg {
+      margin-left: 8px;
+      font-size: 16px;
+      position: relative;
+      top: -2px;
+    }
+
+    @include device(600, 'max') {
+      font-size: 20px;
       width: 100%;
-      text-align: center;
-      font-size: 2.5em;
-
-      @include device(1000, 'max') {
-         font-size: 2em;
-      }
-   }
-
-   .btn {
-      margin: 1em auto 0px;
+      margin-left: 0;
+      margin-right: 0;
+      max-width: 100%;
 
       svg {
-         margin-left: 10px;
+        display: none;
       }
+    }
 
-      @include device(600, 'max') {
-         font-size: 20px;
-         width: 100%;
-         margin-left: 0;
-         margin-right: 0;
-         max-width: 100%;
+    @include device(400, 'max') {
+      font-size: 17px;
+    }
+  }
 
-         svg {
-            display: none;
-         }
-      }
+  .link {
+    display: block;
+    text-align: left;
+  }
 
-      @include device(400, 'max') {
-         font-size: 17px;
-      }
-   }
+  .logo-shopify {
+    width: 200px;
+    max-width: 100%;
+    opacity: 1;
+    margin: 0em auto 0 auto;
+    width: 150px;
+  }
 
-   .link {
-      display: block;
-      text-align: center;
-      width: 100%;
-   }
-
-   .logo-shopify {
-      width: 200px;
-      max-width: 100%;
-      opacity: 1;
-      margin: 0em auto 2em auto;
-      width: 200px;
-   }
+  .content {
+    max-width: 650px;
+    margin: 0;
+  }
 }
 
 .component-mailinglist + .component-affiliate {
-   margin-top: 4em;
-   padding-bottom: 4em;
+  margin-top: 4em;
+  padding-bottom: 4em;
 }
 
 .component-affiliate-register {
-   background: transparent;
-   position: relative;
-   padding-top: 5em;
+  background: transparent;
+  position: relative;
+  padding-top: 5em;
 
-   .design-widget {
-      width: 141%;
-      height: 800px;
-      position: absolute;
-      top: -5px;
-      left: -12%;
-      background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(239, 246, 249, 1) 0%, rgba(206, 239, 253, 1) 90%);
-      transform: rotate(-4deg);
-      z-index: -1;
-   }
+  .design-widget {
+    width: 141%;
+    height: 800px;
+    position: absolute;
+    top: -5px;
+    left: -12%;
+    background-image: radial-gradient(
+      circle farthest-corner at 10% 20%,
+      rgba(239, 246, 249, 1) 0%,
+      rgba(206, 239, 253, 1) 90%
+    );
+    transform: rotate(-4deg);
+    z-index: -1;
+  }
 
-   @include device(800, 'max') {
-      max-width: 100vw;
+  @include device(800, 'max') {
+    max-width: 100vw;
 
-      .l-box-2 {
-         width: 100%;
-         max-width: 100%;
-         flex: 1 1 100%;
-      }
-   }
+    .l-box-2 {
+      width: 100%;
+      max-width: 100%;
+      flex: 1 1 100%;
+    }
+  }
 }
 
 #affwp-register-form legend {
-   display: none;
+  display: none;
 }
 
 .affiliate-register-content {
-   h2 {
-      color: #415aff;
-      margin-bottom: 1.4em;
-   }
+  h2 {
+    color: #415aff;
+    margin-bottom: 1.4em;
+  }
 }
