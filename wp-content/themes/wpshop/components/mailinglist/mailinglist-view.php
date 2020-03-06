@@ -8,7 +8,7 @@
     <p class="mailinglist-copy">Enter your email for the latest plugin developments, beta invites, and discounts.</p>
   </div>
 
-  <form class="mailinglist-form" id="mailinglist-form" class="form form-lg l-row-center" action="" method="post" data-nonce="<?php echo wp_create_nonce('mailinglist'); ?>">
+  <form class="mailinglist-form" id="mailinglist-form" data-type="Normal" class="form form-lg l-row-center" action="" method="post" data-nonce="<?php echo wp_create_nonce('mailinglist'); ?>">
 
     <div class="form-control l-row">
       <label for="email" class="form-label">Email Address</label>

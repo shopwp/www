@@ -105,6 +105,15 @@ function mailinglist_signup() {
 
   $email = $_POST['email'];
   $nonce = $_POST['nonce'];
+  $type = $_POST['type'];
+
+  error_log('----- $email -----');
+  error_log(print_r($email, true));
+  error_log('----- /$email -----');
+
+  error_log('----- $type -----');
+  error_log(print_r($type, true));
+  error_log('----- /$type -----');
 
   if (wp_verify_nonce($nonce, 'mailinglist_signup')) {
 
@@ -115,27 +124,33 @@ function mailinglist_signup() {
     try {
 
       $client = new GuzzleHttp\Client(['base_uri' => 'https://us11.api.mailchimp.com/3.0/']);
+      $subscriber_hash = md5(strtolower($email));
+
+      $body = [
+          'email_address' => $email,
+          "status" => "subscribed"
+      ];
+
+      if ($type === 'Getting Started') {
+         $body['tags'] = ['Getting Started'];
+      }
+
+      error_log('----- $body -----');
+      error_log(print_r($body, true));
+      error_log('----- /$body -----');
 
       $response = $client->request('POST', 'lists/5c6bd183d4/members', [
         'auth' => [
           'arobbins',
           $apiKey
         ],
-        'json' => [
-          'email_address' => $email,
-          "status" => "subscribed",
-          'tags'  => ['Getting Started'],
-        ]
+        'json' => $body
       ]);
 
       $statusCode = $response->getStatusCode();
 
       $resp['code'] = $statusCode;
       $resp['message'] = json_decode($response->getBody());
-
-      error_log('----- $resp -----');
-      error_log(print_r($resp, true));
-      error_log('----- /$resp -----');
 
       echo json_encode($resp);
       die();
@@ -156,7 +171,7 @@ function mailinglist_signup() {
 
   } else {
 
-    echo 'Invalid Nonce';
+    echo 'Invalid Nonce. Reload the browser and try again.';
     die();
 
   }

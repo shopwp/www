@@ -125,21 +125,24 @@
   }
 
   .screen-one {
-    max-width: 327px;
+    max-width: 350px;
     position: absolute;
     top: 60px;
     left: 7vw;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
+    box-shadow: 0px -29px 115px -92px #000000de;
   }
+
   .screen-two {
     max-width: 250px;
     position: absolute;
     top: 60px;
-    left: 29vw;
+    left: 30vw;
     margin: 0;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
+    box-shadow: 0px -29px 115px -92px #000000de;
   }
 }
 

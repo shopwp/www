@@ -238,7 +238,6 @@ function initResetPasswordForm($) {
         var passwordReset = await resetPassword(formData)
 
         if (passwordReset) {
-          // insertMessage('Success! Your password has been reset.', 'success');
           window.location.href = '/account?password-reset=true'
         } else {
           enableForm($form)

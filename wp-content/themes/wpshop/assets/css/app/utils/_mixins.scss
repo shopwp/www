@@ -89,8 +89,8 @@ Dim
 
 */
 @mixin validInput() {
-  // box-shadow: 0px 0px 0px 1px color(success);
-  border: 1px solid #29cf98;
+  border-color: #29cf98;
+  box-shadow: 0 0 2px 1px #29cf98;
 }
 
 /*
@@ -99,8 +99,8 @@ Dim
 
 */
 @mixin invalidInput() {
-  // box-shadow: 0 0 0 2px #ffd3d3;
-  border: 1px solid #f03131;
+  box-shadow: 0 0 2px 1px #f03131;
+  border-color: #f03131;
 }
 
 /*

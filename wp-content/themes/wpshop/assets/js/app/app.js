@@ -61,5 +61,7 @@ import { initFAQs } from './faqs/faqs'
       percentPosition: true,
       gutter: 20
     })
+
+    initMailinglist(jQuery('.mailinglist-form-inline'))
   })
 })(jQuery)

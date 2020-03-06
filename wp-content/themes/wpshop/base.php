@@ -90,6 +90,12 @@ if (is_page('faq')) {
 
   <body <?php body_class($mobileBodyClass); ?>>
 
+
+  <?php  if (is_page('purchase-confirmation')) { ?>
+
+   <canvas id="confetti-holder" style="position: absolute;top: 0;left: 0;"></canvas>
+
+  <?php } ?>
    <?php include(locate_template('components/getting-started/view.php')); ?>
    
     <!--[if IE]>
@@ -205,6 +211,17 @@ if ( get_field('theme_notice_enable', 'option') ) {
     </script>
 
 <?php } ?>
+
+<?php  if (is_page('purchase-confirmation')) { ?>
+
+   <script>
+      
+      var confetti = new ConfettiGenerator({"target":"confetti-holder","max":"100","size":"1","animate":true,"props":["circle","square","triangle","line"],"colors":[[165,104,246],[230,61,135],[0,199,228],[253,214,126]],"clock":"50","rotate":false,"width":"1680","height":"947","start_from_edge":true,"respawn":false});
+      confetti.render();
+
+   </script>
+
+  <?php } ?>
 
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>

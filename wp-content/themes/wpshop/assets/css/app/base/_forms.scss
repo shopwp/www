@@ -109,6 +109,8 @@ select {
 
   &:focus {
     outline: none;
+    box-shadow: 0 0 2px 1px #bed0ff;
+    border-color: #bed0ff;
   }
 
   &.valid:not([type='submit']) {
@@ -298,6 +300,7 @@ label.error {
   text-align: center;
   margin: 0;
   position: relative;
+  width: 100%;
 
   &:after {
     content: '';
@@ -372,15 +375,6 @@ select {
   .form-control {
     margin-right: 0;
   }
-
-  .spinner {
-    margin: 0;
-    top: calc(37% - 12px);
-    right: calc(50% - 20px);
-    width: 40px;
-    height: 40px;
-    border-width: 3px;
-  }
 }
 
 .form-message {
@@ -388,10 +382,10 @@ select {
 
   &:empty {
     margin: 0;
+    padding: 0;
   }
 
   &.is-visible {
-    padding: 0;
     text-align: left;
     margin: 10px 0 5px 0;
   }
@@ -409,8 +403,30 @@ select {
   }
 }
 
+.form-error,
 .form-success {
-  color: green;
+  background: color(success);
+  //   padding: 10px 25px;
+  border-radius: 0.4em;
+  text-align: center;
+  color: black;
+
+  svg {
+    margin-right: 6px;
+    margin-top: 0;
+  }
+
+  label,
+  .error,
+  label.error {
+    padding: 10px 25px;
+    font-weight: normal;
+    font-size: 15px;
+  }
+}
+
+.form-error {
+  background: color(error);
 }
 
 .form-messages {

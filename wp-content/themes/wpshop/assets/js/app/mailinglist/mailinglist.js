@@ -13,92 +13,103 @@ function validateMailingListForm($form) {
       console.log('form ::::::: ', form)
 
       e.preventDefault()
-
+      $form.find('.form-message').empty()
       console.log('form', form)
 
-      jQuery(form).addClass('is-submitting')
-      jQuery(form)
+      $form.addClass('is-submitting')
+      $form
         .find('input, button[type="submit"]')
         .addClass('is-disabled')
         .prop('disabled', true)
-      jQuery(form)
-        .find('.spinner')
-        .addClass('is-visible')
+      $form.find('.spinner').addClass('is-visible')
 
-      getMailchimpListById($)
+      getMailchimpListById($form)
         .done(function(data) {
           console.log('...... data ', data)
 
-          jQuery(form)
-            .find('input, button[type="submit"]')
-            .prop('disabled', false)
+          $form.find('input, button[type="submit"]').prop('disabled', false)
 
-          jQuery(form)
+          $form
             .find('.mailinglist-email')
             .focus()
             .select()
 
           if (data.code !== 200) {
-            jQuery(form)
-              .find('.form-error')
-              .addClass('is-visible')
-            jQuery(form)
-              .find('.mailinglist-email-error')
+            var type = $form.data('type')
+            var message = data.message.detail
+
+            if (message.includes('is already a list member')) {
+              if (type === 'Getting Started') {
+                message =
+                  '<label class="success">It looks like you already requested the download link. <a href="https://wordpress.org/plugins/wpshopify/" target="_blank">Here it is again.</a></label>'
+
+                $form.find('.form-message.form-error').empty()
+                $form.removeClass('is-submitting')
+                $form.find('.spinner').removeClass('is-visible')
+                $form.find('input, button[type="submit"]').removeClass('is-disabled')
+                $form.find('.form-success').addClass('is-visible')
+                $form
+                  .find('.form-success')
+                  .empty()
+                  .append(message)
+                $form.addClass('is-submitted')
+                return
+              } else {
+                message = 'That email is already signed up, thanks!'
+              }
+            }
+
+            // }
+            $form.find('.form-message.form-success').empty()
+            $form.find('.form-error').addClass('is-visible')
+            $form
+              .find('.form-message.form-error')
+              .empty()
               .append(
-                '<i class="fa fa-times-circle" aria-hidden="true"></i> ' + data.message.detail
+                '<label class="error"><i class="fa fa-times-circle" aria-hidden="true"></i> ' +
+                  message +
+                  '</label>'
               )
-            jQuery(form)
-              .find('.spinner')
-              .removeClass('is-visible')
-            jQuery(form)
-              .find('input, button[type="submit"]')
-              .removeClass('is-disabled')
-            jQuery(form).removeClass('is-submitting')
+            $form.find('.spinner').removeClass('is-visible')
+            $form.find('input, button[type="submit"]').removeClass('is-disabled')
+            $form.removeClass('is-submitting')
           } else {
-            jQuery(form).removeClass('is-submitting')
-            jQuery(form)
-              .find('.spinner')
-              .removeClass('is-visible')
-            jQuery(form)
-              .find('input, button[type="submit"]')
-              .removeClass('is-disabled')
-            jQuery(form)
+            var type = $form.data('type')
+
+            if (type === 'Getting Started') {
+              var message =
+                '<label class="success"><i class="fa fa-check-circle" aria-hidden="true"></i> Success! Please check your email to download</label>'
+            } else {
+              var message =
+                '<label class="success"><i class="fa fa-check-circle" aria-hidden="true"></i> Success! Thanks for signing up</label>'
+            }
+            $form.find('.form-message.form-error').empty()
+            $form.removeClass('is-submitting')
+            $form.find('.spinner').removeClass('is-visible')
+            $form.find('input, button[type="submit"]').removeClass('is-disabled')
+            $form.find('.form-success').addClass('is-visible')
+            $form
               .find('.form-success')
-              .addClass('is-visible')
-            jQuery(form)
-              .find('.form-success')
-              .append(
-                '<i class="fa fa-check-circle" aria-hidden="true"></i> Success! Please check your email to finish signing up.'
-              )
-            jQuery(form).addClass('is-submitted')
+              .empty()
+              .append(message)
+            $form.addClass('is-submitted')
 
             initMailinglistTracking()
-
-            jQuery(form)
-              .find('.mailinglist-email')
-              .val('')
-              .blur()
           }
         })
         .fail(function(jqXHR, textStatus) {
-          jQuery(form)
-            .find('.form-error')
-            .addClass('is-visible')
-          jQuery(form)
-            .find('.mailinglist-email-error')
-            .append('Error! ' + textStatus)
+          $form.find('.form-message.form-success').empty()
+          $form.find('.form-error').addClass('is-visible')
+          $form
+            .find('.form-message.form-error')
+            .empty()
+            .append('<label class="error">Error! ' + textStatus + '</label>')
 
-          jQuery(form)
-            .find('.spinner')
-            .removeClass('is-visible')
-          jQuery(form)
-            .find('input, button[type="submit"]')
-            .removeClass('is-disabled')
-          jQuery(form).removeClass('is-submitting')
+          $form.find('.spinner').removeClass('is-visible')
+          $form.find('input, button[type="submit"]').removeClass('is-disabled')
+          $form.removeClass('is-submitting')
 
-          jQuery(form)
-            .find('.mailinglist-email')
-            .prop('disabled', false)
+          $form.find('.mailinglist-email').prop('disabled', false)
         })
     },
 
@@ -128,12 +139,17 @@ function validateMailingListForm($form) {
         .removeClass('is-visible')
     },
     success: function(label) {
+      console.log('success')
+
+      $form.find('.form-error').removeClass('is-visible')
+
       jQuery(label)
         .parent()
         .addClass('form-valid')
     },
     errorPlacement: function(error, element) {
       console.log('errorPlacement :: element', element)
+
       error.appendTo(
         jQuery(element)
           .closest('.mailinglist-form')

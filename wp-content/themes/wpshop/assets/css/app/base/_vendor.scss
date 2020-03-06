@@ -1308,7 +1308,6 @@ Tippy js
 
 .tippy-box {
   @include popover();
-
   border-radius: 1em;
 
   h3 {
@@ -1331,13 +1330,22 @@ Tippy js
   }
 
   .mailinglist-email {
-    padding: 0.8em 1.2em;
+    padding: 0.7em 1.2em;
   }
 
   .mailinglist-copy {
     margin-top: 10px;
     font-weight: bold;
   }
+
+  .mailinglist-form .spinner {
+    top: calc(70% - 8px);
+    right: calc(55% - 120px);
+  }
+}
+
+.tippy-box[data-theme~='light-border'] {
+  box-shadow: 0 0px 57px -16px rgba(0, 8, 16, 0.36);
 }
 
 .tippy-content {
@@ -1353,6 +1361,10 @@ Tippy js
   [data-tippy-root] {
     border-radius: 1em;
   }
+}
+
+.header [data-tippy-root] {
+  top: 38px !important;
 }
 
 #getting-started-wrapper {

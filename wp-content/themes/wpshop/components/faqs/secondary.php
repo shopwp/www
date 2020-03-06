@@ -17,7 +17,7 @@
 
          ?>
 
-         <a href="/faq" class="btn btn-secondary">See more FAQs <i class="fal fa-long-arrow-right"></i></a>
+         <a href="/faq" class="btn btn-secondary">Read more FAQs <i class="fal fa-long-arrow-right"></i></a>
 
       </div>
 

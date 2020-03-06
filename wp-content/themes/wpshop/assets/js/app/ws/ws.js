@@ -62,9 +62,10 @@ MC: Get list by ID
 Returns promise
 
 */
-function getMailchimpListById($) {
-  var emailVal = $('.mailinglist-email').val(),
-    emailnonce = $('.mailinglist-form #_wpnonce').val()
+function getMailchimpListById($form) {
+  var emailVal = $form.find('.mailinglist-email').val(),
+    emailnonce = $form.find('#_wpnonce').val(),
+    type = $form.data('type')
 
   return jQuery.ajax({
     type: 'POST',
@@ -73,7 +74,8 @@ function getMailchimpListById($) {
     data: {
       action: 'mailinglist_signup',
       email: emailVal,
-      nonce: emailnonce
+      nonce: emailnonce,
+      type: type
     }
   })
 }

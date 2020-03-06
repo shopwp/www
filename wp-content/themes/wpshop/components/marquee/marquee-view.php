@@ -28,7 +28,7 @@
 
       <div class="marquee-right">
 
-      <img class="screen-one" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-one.jpg" alt="Sup">
+      <img class="screen-one" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-<?= rand(1, 6) ?>.jpg" alt="Sup">
 
       <img class="screen-two" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-two.jpg" alt="Sup">
       <div class="stage"></div>

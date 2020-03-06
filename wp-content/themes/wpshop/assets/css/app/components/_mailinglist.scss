@@ -54,7 +54,6 @@
   }
 
   label.error {
-    font-size: inherit;
     margin-top: 0;
     position: relative;
     top: 16px;
@@ -64,10 +63,6 @@
     .form-success {
       margin-top: 1em;
       margin-top: 1em;
-      background: #6aa892;
-      color: white;
-      padding: 10px;
-      border-radius: 0;
     }
   }
 
@@ -159,5 +154,72 @@
 
   @include device(1000, 'max') {
     font-size: 16px;
+  }
+}
+
+.mailinglist-form-inline {
+  max-width: 640px;
+  text-align: left;
+  margin: 4em auto;
+
+  .spinner {
+    right: calc(2% - 0px);
+    top: 3px;
+  }
+
+  .form-messages {
+    width: 82%;
+    margin: 1em auto;
+  }
+
+  .mailinglist-group-copy {
+    align-items: flex-start;
+    margin-bottom: 11px;
+    display: flex;
+    flex-direction: row;
+  }
+
+  h4 {
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-size: 18px;
+  }
+
+  .mailinglist-copy {
+    text-align: left;
+    margin: 0;
+    display: inline;
+    margin-left: 10px;
+    width: auto;
+  }
+  .form-control {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .mailinglist-email {
+    width: 270px;
+    padding: 0.7em 1.2em;
+    margin-right: 1em;
+  }
+
+  .btn-group,
+  .btn {
+    margin: 0;
+  }
+}
+
+.footer {
+  .mailinglist-form-inline {
+    .mailinglist-group-copy,
+    .form-control {
+      justify-content: center;
+    }
+
+    .form-message {
+      text-align: center;
+    }
   }
 }

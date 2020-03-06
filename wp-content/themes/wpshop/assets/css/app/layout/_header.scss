@@ -14,10 +14,21 @@
   .btn-account {
     margin-left: 2em;
   }
+
+  .menu-item a {
+    padding: 0.5em 1.5em;
+    transition: all ease 0.2s;
+    border-radius: 0.4em;
+
+    &:hover {
+      background: #f3f2f8;
+      text-decoration: none;
+    }
+  }
 }
 
 .header .btn-account {
-  background: color(base);
+  //   background: color(base);
 }
 
 .home.page .component-marquee {
@@ -93,6 +104,12 @@
   @include device(900, 'max') {
     margin-right: 4em;
     top: -14px;
+  }
+}
+
+.logged-in {
+  .header-account {
+    width: 287px;
   }
 }
 

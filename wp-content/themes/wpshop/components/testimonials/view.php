@@ -1,5 +1,5 @@
 <section class="component component-testimonials">
-  <h2>Over 4,000+ WordPress sites are currently using WP Shopify. Here's what they have to say.</h2>
+  <h2>Over 4,000+ WordPress sites are currently using WP Shopify. Here's what they have to say:</h2>
 
   <div class="testimonials">
      <div class="grid-sizer"></div>

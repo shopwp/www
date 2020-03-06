@@ -120,6 +120,11 @@ function assets()
 
    wp_enqueue_style('WP Shopify CSS', Assets\asset_path('prod/app.min.css'), false, filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.css'));
 
+
+   if (is_page('purchase-confirmation')) {
+      wp_enqueue_script('confetti-js', Assets\asset_path('../node_modules/confetti-js/dist/index.min.js'), [], null, false);
+   }
+
    if (!is_page('checkout')) {
       
       wp_enqueue_style('Animate CSS', '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);

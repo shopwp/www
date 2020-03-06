@@ -1,7 +1,9 @@
-<form class="mailinglist-form getting-started-mailinglist-form" id="getting-started-wrapper" class="form form-lg l-row-center" action="" method="post" data-type="Getting Started" data-nonce="<?php echo wp_create_nonce('mailinglist'); ?>">
+<form class="mailinglist-form mailinglist-form-inline" data-type="Getting Started" class="form form-lg l-row-center" action="" method="post" data-nonce="<?php echo wp_create_nonce('mailinglist'); ?>">
 
+<div class="l-row">
    <div class="mailinglist-group-copy l-col l-col-center">
-      <p class="mailinglist-copy">We'll email you a download link for WP Shopify.</p>
+      <h4>Try now for free</h4>
+      <p class="mailinglist-copy">(We'll email you a download link for WP Shopify)</p>
    </div>
 
    <div class="form-control l-row">
@@ -16,7 +18,7 @@
 
       <div class="spinner"></div>
    </div>
-
+</div>
    <aside class="form-messages">
       <div class="form-message form-error"></div>
       <div class="form-message form-success"></div>

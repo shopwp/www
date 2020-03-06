@@ -10,6 +10,8 @@
 
   <?php endif; ?>
 
+  <?php include(locate_template('components/getting-started-inline/view.php')); ?>
+
   <section class="footer-social-links">
 
    <a href="https://www.youtube.com/c/WPShopify" class="footer-social-link" target="_blank">
