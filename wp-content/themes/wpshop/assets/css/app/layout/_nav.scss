@@ -134,6 +134,17 @@
   display: none;
 }
 
+.sub-menu {
+  display: none;
+}
+
+.menu-item-has-children {
+  > a {
+    svg {
+      margin-left: 10px;
+    }
+  }
+}
 .tippy-popper .menu-primary-sub-container {
   display: block;
 }

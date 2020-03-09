@@ -155,6 +155,7 @@
     max-width: 720px;
     line-height: 1;
     font-size: 72px;
+    margin-bottom: 28px;
 
     @include device(1200, 'max') {
       font-size: 62px;

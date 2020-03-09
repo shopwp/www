@@ -3540,6 +3540,12 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   width: 100%;
   display: none; }
 
+.sub-menu {
+  display: none; }
+
+.menu-item-has-children > a svg {
+  margin-left: 10px; }
+
 .tippy-popper .menu-primary-sub-container {
   display: block; }
 
@@ -4386,7 +4392,8 @@ input[type='submit'],
   .marquee-content h1 {
     max-width: 720px;
     line-height: 1;
-    font-size: 72px; }
+    font-size: 72px;
+    margin-bottom: 28px; }
     @media (max-width: 1200px) {
       .marquee-content h1 {
         font-size: 62px; } }
