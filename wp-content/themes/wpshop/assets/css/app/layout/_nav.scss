@@ -6,7 +6,33 @@
 .menu-mobile-menu-container {
   width: 100%;
 }
+.menu-item-has-children {
+  &.is-active {
+    .sub-menu {
+      transform: translateY(0px);
+      opacity: 1;
+      z-index: 999999;
 
+      .menu-item a:hover {
+        background-color: #8f7bff;
+        box-shadow: none;
+        color: white;
+      }
+
+      .menu-item {
+        transition: none;
+
+        a {
+          border-radius: 0;
+        }
+      }
+    }
+  }
+
+  > a:hover {
+    box-shadow: none !important;
+  }
+}
 .nav-mobile {
   opacity: 0;
   position: absolute;
@@ -131,10 +157,6 @@
 .menu-primary-sub-container {
   margin: 0;
   width: 100%;
-  display: none;
-}
-
-.sub-menu {
   display: none;
 }
 

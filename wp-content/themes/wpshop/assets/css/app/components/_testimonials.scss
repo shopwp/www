@@ -35,7 +35,7 @@
 
 .testimonial-wrapper {
   width: 100%;
-  @include popover();
+  @include popoverShallow();
 
   header {
     display: flex;

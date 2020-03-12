@@ -160,11 +160,21 @@ Shadow
   }
 }
 
-@mixin popover() {
+@mixin popoverShallow() {
   background-color: white;
   padding: 1.3em;
   border-radius: 0.6em;
   margin: 0;
   box-shadow: 0 0 21px -13px rgba(0, 0, 0, 0.42);
   border: 1px solid #ddd;
+}
+
+@mixin popoverDeep() {
+  background-color: white;
+  padding: 1.3em;
+  border-radius: 0.5em;
+  margin: 0;
+  box-shadow: 0 50px 100px -20px rgba(50, 50, 93, 0.25), 0 30px 60px -30px rgba(0, 0, 0, 0.3),
+    1px -6px 20px 3px rgba(0, 0, 0, 0.05);
+  border: none;
 }

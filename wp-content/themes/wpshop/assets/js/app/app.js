@@ -39,7 +39,7 @@ import { initFAQs } from './faqs/faqs'
         interactive: true,
         trigger: 'click',
         animation: 'shift-toward',
-        theme: 'light-border',
+        theme: 'light',
         arrow: true,
         arrowType: 'round',
         distance: 7,

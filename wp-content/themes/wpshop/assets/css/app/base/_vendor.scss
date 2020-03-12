@@ -1306,8 +1306,8 @@ Tippy js
 
 */
 
-.tippy-box {
-  @include popover();
+div[data-tippy-root] div.tippy-box {
+  @include popoverDeep();
   border-radius: 1em;
 
   h3 {
@@ -1344,17 +1344,9 @@ Tippy js
   }
 }
 
-.tippy-box[data-theme~='light-border'] {
-  box-shadow: 0 0px 57px -16px rgba(0, 8, 16, 0.36);
-}
-
 .tippy-content {
   padding: 0;
   margin: 0;
-}
-
-.getting-started-mailinglist-form {
-  //   display: none;
 }
 
 .btn-getting-started-wrapper {

@@ -115,6 +115,21 @@ if (is_page('faq')) {
 
     ?>
 
+    <script>
+   jQuery('.menu-item-has-children')
+      .mouseenter(function() {
+        jQuery(this).addClass('is-active')
+      })
+      .mouseleave(function(event) {
+
+        if (!jQuery(event.relatedTarget).parents('.menu-item-has-children').length) {
+          jQuery(this)
+            .closest('.menu-item-has-children')
+            .removeClass('is-active')
+        }
+      });
+</script>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH&gtm_auth=zEmWFISEpQvchduPXr4jaQ&gtm_preview=env-2&gtm_cookies_win=x"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
