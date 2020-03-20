@@ -32,9 +32,13 @@ function setup()
    register_nav_menus([
       'primary_navigation' => __('Primary Navigation', 'sage'),
       'primary_sub' => __('Primary Sub', 'sage'),
-      'footer_navigation' => __('Footer Navigation', 'sage'),
       'checkout_navigation' => __('Checkout Navigation', 'sage'),
-      'mobile_navigation' => __('Mobile Navigation', 'sage')
+      'mobile_navigation' => __('Mobile Navigation', 'sage'),
+      'footer_1' => __('Footer 1', 'sage'),
+      'footer_2' => __('Footer 2', 'sage'),
+      'footer_3' => __('Footer 3', 'sage'),
+      'footer_4' => __('Footer 4', 'sage'),
+      'footer_5' => __('Footer 5', 'sage')
    ]);
 
    // Enable post thumbnails

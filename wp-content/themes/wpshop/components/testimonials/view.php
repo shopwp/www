@@ -1,4 +1,8 @@
 <section class="component component-testimonials">
+   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 962 115" xml:space="preserve" preserveAspectRatio="none" class="svg replaced-svg">
+   <path class="st0" d="M0,0c0,0,100,94,481,95C862,94,962,0,962,0v115H0V0z"></path>
+   </svg>
+
   <h2>Over 4,000+ WordPress sites are currently using WP Shopify. Here's what they have to say:</h2>
 
   <div class="testimonials">

@@ -14,7 +14,7 @@
       z-index: 999999;
 
       .menu-item a:hover {
-        background-color: #8f7bff;
+        background-color: #415aff;
         box-shadow: none;
         color: white;
       }
@@ -24,6 +24,12 @@
 
         a {
           border-radius: 0;
+        }
+      }
+      .current-menu-item {
+        a {
+          box-shadow: none;
+          text-decoration: none;
         }
       }
     }
@@ -59,10 +65,6 @@
     font-size: 16px;
     text-align: center;
     font-weight: bold;
-  }
-
-  .current-menu-item:after {
-    display: none;
   }
 
   &.is-active {
@@ -117,12 +119,6 @@
 .nav-primary {
   @include device(1300, 'max') {
     display: none;
-  }
-
-  .menu-item {
-    &:last-child {
-      // margin-right: $space-l;
-    }
   }
 }
 
@@ -247,15 +243,9 @@
 .header .current-menu-item {
   position: relative;
 
-  &:after {
-    content: '';
-    width: 35%;
-    height: 1px;
-    background: #898989;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+  a {
+    box-shadow: 0px 0px 0px 1px #0f0433;
+    text-decoration: none;
   }
 }
 

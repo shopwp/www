@@ -1,14 +1,11 @@
 <section class="component component-faq-secondary">
 
-   
    <div class="l-row">
-   
-      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/illustrations/faq.svg" />
 
       <div class="faqs-wrap">
 
-         <h2>You have questions and we have answers!</h2>
-         <p>Below are the most common questions about the plugin. Don't see your question below? <a href="/faq">View the full list</a> or contact us directly.</p>
+         <h2 style="margin-bottom: 1em;">The most common questions</h2>
+
          <?php 
 
          $faq_ids = $faqs_selected;
@@ -17,7 +14,10 @@
 
          ?>
 
-         <a href="/faq" class="btn btn-secondary">Read more FAQs <i class="fal fa-long-arrow-right"></i></a>
+         <div class="l-row l-row-center">
+            <a href="/faq" class="btn btn-l btn-secondary">Read all FAQs <i class="fal fa-long-arrow-right"></i></a>
+         </div>
+         
 
       </div>
 

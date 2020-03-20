@@ -101,6 +101,17 @@
   padding: 3em 1em 0 6em;
   width: calc(44vw - 3em);
 
+  .btn-secondary {
+    padding-right: 2.8em;
+
+    .svg-inline--fa {
+      max-width: 20px;
+      display: inline-block;
+      position: absolute;
+      top: 16px;
+    }
+  }
+
   .getting-started-trigger {
     font-size: $font-xl;
   }

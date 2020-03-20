@@ -9,7 +9,7 @@
   .illustration {
     display: block;
     width: 320px;
-    margin-right: 4em;
+    margin-right: 6em;
   }
 
   .inner {
@@ -40,6 +40,7 @@
     width: 100%;
     text-align: left;
     font-size: 2.2em;
+    margin-bottom: 5px;
 
     @include device(1000, 'max') {
       font-size: 2em;
@@ -84,6 +85,7 @@
     opacity: 1;
     margin: 0em auto 0 auto;
     width: 150px;
+    margin-bottom: 1em;
   }
 
   .content {

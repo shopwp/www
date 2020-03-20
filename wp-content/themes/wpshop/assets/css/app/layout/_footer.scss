@@ -8,8 +8,23 @@
   }
 }
 
+.footer-col {
+  h3 {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+  }
+}
+
 .nav-footer {
   max-width: 1050px;
+  position: relative;
+  left: 50px;
+
+  > div {
+    width: 20%;
+    margin-top: 0;
+  }
 }
 
 #menu-footer {
@@ -54,26 +69,46 @@
   }
 
   .menu-item {
-    width: 25%;
-
-    @include device(800, 'max') {
-      width: 100%;
-    }
+    width: 100%;
 
     a {
       color: color(base);
       width: 100%;
       display: block;
       text-align: left;
-      font-weight: bold;
       font-size: 13px;
+      font-size: 14px;
+      padding-left: 0;
+      padding-top: 5px;
+      position: relative;
+
+      &:hover {
+        text-decoration: none;
+        color: #415aff;
+      }
+
+      &:after {
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 4px;
+        height: 1px;
+        width: 65%;
+        background: #eaeaea;
+      }
+
+      svg {
+        font-size: 11px;
+        position: relative;
+        left: 5px;
+        top: -1px;
+      }
     }
   }
 }
 
 .footer-social-link {
   font-size: 1.7em;
-  color: #b4b4b4;
   padding: 0 $space-xxxs;
   text-decoration: none;
   border: none;
@@ -86,28 +121,18 @@
 .footer-attr {
   margin-top: $space-l;
   padding: 20px;
-  background-color: white;
   color: color(base);
 }
 
 .footer-social-links {
   position: relative;
-  margin-top: 3.1472em;
+  margin-top: 0em;
+  margin-top: 0;
+  margin: 0;
+  left: -45px;
 
   @include device(500, 'max') {
     display: flex;
     flex-direction: column;
-  }
-
-  &:before {
-    bottom: 35px;
-    position: relative;
-    content: '';
-    margin: $space-l auto 0 auto;
-    display: block;
-    height: 1px;
-    width: 100px;
-    background-color: color(white);
-    opacity: 0.3;
   }
 }

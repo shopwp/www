@@ -1,0 +1,36 @@
+.component-getting-started-inline {
+  background-color: #f8f7fc;
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  max-width: 100%;
+  padding: 1px;
+  margin-bottom: 2em;
+
+  .mailinglist-form-inline {
+    margin: 1.9em auto;
+    max-width: 840px;
+
+    .spinner {
+      right: calc(-6% - 0px);
+      top: 4px;
+    }
+  }
+
+  .mailinglist-group-copy {
+    width: auto;
+    margin: 0 15px 0 0;
+  }
+
+  .l-row {
+    align-items: center;
+  }
+
+  .form-control {
+    flex: 1;
+  }
+
+  .mailinglist-email {
+    padding: 0.5em 1.2em;
+  }
+}

@@ -5,12 +5,15 @@
 
 .faqs {
   margin-left: 0;
+  max-width: 780px;
+  margin: 0 auto;
 }
 
 .faq-question {
   padding: $space-l 0;
   font-size: $font-l;
   border-bottom: 1px solid color(medium-grey);
+  transition: all 0.1s ease;
 
   > div {
     width: 100%;
@@ -24,12 +27,16 @@
     position: absolute;
     top: 5px;
     right: 0;
-    // box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 3px 6px -3px rgba(0, 0, 0, 0.65);
+
+    path {
+      fill: #415aff;
+    }
   }
 
   &:hover {
     cursor: pointer;
-    text-decoration: underline;
+    color: #415aff;
   }
 
   @include device(700, 'max') {
@@ -64,6 +71,8 @@
     background: color(off-white);
     padding: 30px 40px;
     opacity: 1;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
 
     @include device(700, 'max') {
       padding: 20px;
@@ -103,7 +112,6 @@
   .faqs-wrap,
   .faqs {
     flex: 1;
-    padding-left: 6em;
   }
 
   .btn {
@@ -117,6 +125,12 @@
     .faqs {
       padding-left: 0;
     }
+  }
+}
+
+.faqs-wrap {
+  h2 {
+    text-align: center;
   }
 }
 

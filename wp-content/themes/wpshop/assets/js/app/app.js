@@ -63,5 +63,23 @@ import { initFAQs } from './faqs/faqs'
     })
 
     initMailinglist(jQuery('.mailinglist-form-inline'))
+
+    jQuery('.screenshots-nav-list li').on('click', function() {
+      var type = jQuery(this).data('type')
+      var $container = jQuery(this).closest('.l-row')
+
+      $container.find('.is-visible').removeClass('is-visible')
+      jQuery(this).addClass('is-visible')
+
+      var $screenshot = $container.find(
+        '.screenshot-images .screenshot-image[data-type="' + type + '"]'
+      )
+      var $screenshotContent = $container.find(
+        '.screenshot-content .screenshot[data-type="' + type + '"]'
+      )
+
+      $screenshot.addClass('is-visible')
+      $screenshotContent.addClass('is-visible')
+    })
   })
 })(jQuery)
