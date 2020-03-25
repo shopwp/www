@@ -817,7 +817,8 @@ EDD
   text-align: center;
   font-size: 42px;
   font-weight: bold;
-  margin-top: 0; }
+  margin: 9px 0;
+  line-height: 1; }
   @media (max-width: 600px) {
     .edd_price_option_price {
       font-size: 28px; } }
@@ -830,7 +831,7 @@ EDD
 .edd_price_option_name {
   display: block;
   text-align: center;
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 100;
   margin-top: -20px; }
 
@@ -1467,7 +1468,9 @@ table.affwp-table th {
   color: #181625; }
 
 .edd_price_options li[itemprop='offers'] > label {
-  margin-top: 1.3em; }
+  margin-top: 1.3em;
+  position: relative;
+  top: -16px; }
 
 #affwp-affiliate-dashboard-url-generator h5 {
   font-weight: bold; }
@@ -3291,7 +3294,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   position: relative; }
   .component-intro:after {
     position: absolute;
-    content: "";
+    content: '';
     display: block;
     width: 40px;
     height: 1px;
@@ -3323,30 +3326,25 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .error404 .wrap.container {
   margin-bottom: 8em; }
 
-#edd_price_option_35_singlesite:before {
-  content: "Personal";
-  display: block; }
-
-#edd_price_option_35_2-5sites:before {
-  content: "Developer";
-  display: block; }
-
-#edd_price_option_35_unlimitedsites:before {
-  content: "Agency";
-  display: block; }
-
-.edd_price_options li[itemprop="offers"] {
-  position: relative; }
+.edd_price_options li[itemprop='offers'] {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column; }
   @media (max-width: 900px) {
-    .edd_price_options li[itemprop="offers"] {
+    .edd_price_options li[itemprop='offers'] {
       padding-bottom: 0; } }
   @media (max-width: 600px) {
-    .edd_price_options li[itemprop="offers"] {
+    .edd_price_options li[itemprop='offers'] {
       padding-right: 1.2em;
       padding-left: 1.2em;
       padding-top: 1.2em;
       border-radius: 5px; } }
-  .edd_price_options li[itemprop="offers"].is-valid:after {
+  .edd_price_options li[itemprop='offers'].is-valid:after {
     top: 9px;
     left: 15px;
     opacity: 1;
@@ -3354,11 +3352,11 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     height: 35px;
     background: url("imgs/icon-check-white.svg"); }
     @media (max-width: 600px) {
-      .edd_price_options li[itemprop="offers"].is-valid:after {
+      .edd_price_options li[itemprop='offers'].is-valid:after {
         top: 10px;
         width: 30px;
         height: 30px; } }
-  .edd_price_options li[itemprop="offers"]:before {
+  .edd_price_options li[itemprop='offers']:before {
     text-align: center;
     font-size: 1.44em;
     font-weight: bold;
@@ -3371,20 +3369,20 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     padding: 10px 0;
     border-bottom: 1px solid #cbcbcb; }
     @media (max-width: 600px) {
-      .edd_price_options li[itemprop="offers"]:before {
+      .edd_price_options li[itemprop='offers']:before {
         font-size: 1.2em;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px; } }
-  .edd_price_options li[itemprop="offers"]:hover {
+  .edd_price_options li[itemprop='offers']:hover {
     cursor: pointer; }
-  .edd_price_options li[itemprop="offers"] label:hover {
+  .edd_price_options li[itemprop='offers'] label:hover {
     cursor: pointer; }
-  .edd_price_options li[itemprop="offers"] .edd_price_option_35,
-  .edd_price_options li[itemprop="offers"] input[type="radio"] {
+  .edd_price_options li[itemprop='offers'] .edd_price_option_35,
+  .edd_price_options li[itemprop='offers'] input[type='radio'] {
     visibility: hidden; }
     @media (max-width: 900px) {
-      .edd_price_options li[itemprop="offers"] .edd_price_option_35,
-      .edd_price_options li[itemprop="offers"] input[type="radio"] {
+      .edd_price_options li[itemprop='offers'] .edd_price_option_35,
+      .edd_price_options li[itemprop='offers'] input[type='radio'] {
         position: absolute; } }
 
 .purchase-confirmation .page-header,
@@ -4963,6 +4961,9 @@ pre[class*="language-"] {
 .search-submit {
   margin-top: 1.728em; }
 
+.component-purchase {
+  background-color: #fff; }
+
 .edd_download_purchase_form {
   width: 100%;
   margin-top: 4em; }
@@ -5500,7 +5501,8 @@ body.page-template-template-home {
     padding-left: 0; }
 
 .faqs-wrap h2 {
-  text-align: center; }
+  text-align: center;
+  font-size: 40px; }
 
 .component-marquee + .component-faq-secondary {
   padding-top: 16em; }
@@ -5649,7 +5651,21 @@ fieldset#edd_sl_renewal_fields
 .component-screenshots {
   background: #fff;
   margin: 18em 0;
-  max-width: 100%; }
+  max-width: 100%;
+  position: relative;
+  overflow: visible; }
+  .component-screenshots > svg {
+    max-width: 800px;
+    position: absolute;
+    top: -100px;
+    left: 100px;
+    z-index: -1;
+    -webkit-transform: rotate(129deg);
+            transform: rotate(129deg); }
+  .component-screenshots .l-row {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
   @media (max-width: 1000px) {
     .component-screenshots .screenshot {
       -webkit-box-orient: vertical;
@@ -5717,16 +5733,20 @@ fieldset#edd_sl_renewal_fields
     -webkit-transform: translateY(0px);
             transform: translateY(0px); }
 
+.screenshot-description {
+  font-size: 18px;
+  margin-top: 10px; }
+
 .screenshot-images {
   -webkit-box-shadow: 0px 6px 81px -38px rgba(32, 37, 41, 0.25);
           box-shadow: 0px 6px 81px -38px rgba(32, 37, 41, 0.25);
-  width: 50%;
-  margin: 0 auto;
-  border-radius: 10px; }
+  width: 51%;
+  border-radius: 10px;
+  margin-right: 3em; }
 
 .screenshot-content {
-  width: 40%;
-  padding: 0 4em 0 0;
+  width: 38%;
+  padding: 0 4em 0 2em;
   margin-top: 0;
   position: relative;
   left: -30px; }
@@ -5751,7 +5771,8 @@ fieldset#edd_sl_renewal_fields
     font-weight: bold;
     padding: 10px 20px;
     border-radius: 10px;
-    display: inline-block !important; }
+    display: inline-block !important;
+    position: relative; }
     .screenshots-nav-list li:hover {
       cursor: pointer;
       color: #415aff; }
@@ -5764,13 +5785,22 @@ fieldset#edd_sl_renewal_fields
       color: #415aff; }
       .screenshots-nav-list li.is-visible:hover {
         cursor: default; }
+    .screenshots-nav-list li[data-type='video'] {
+      padding-left: 3.2em;
+      margin-top: 1em; }
+      .screenshots-nav-list li[data-type='video'] svg {
+        width: 27px;
+        height: 27px;
+        position: absolute;
+        left: 19px;
+        top: 11px; }
 
 .screenshot-image {
   display: none;
   border-radius: 10px;
   max-width: 100%;
   margin: 0 auto;
-  border-radius: 15px;
+  border-radius: 10px;
   -webkit-box-shadow: 0px 28px 34px -10px rgba(36, 47, 78, 0.24);
           box-shadow: 0px 28px 34px -10px rgba(36, 47, 78, 0.24); }
   .screenshot-image.is-visible {
@@ -5810,7 +5840,8 @@ fieldset#edd_sl_renewal_fields
 
 .screenshot-heading {
   font-size: 40px;
-  padding-left: 1.3em; }
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px; }
   .screenshot-heading svg {
     max-width: 45px;
     height: auto;
@@ -5827,6 +5858,13 @@ fieldset#edd_sl_renewal_fields
   @media (max-width: 700px) {
     .screenshot-heading {
       font-size: 24px; } }
+
+[data-type='cart'] .screenshot-heading svg {
+  top: -1px;
+  max-width: 55px; }
+
+[data-type='settings'] .screenshot-heading svg {
+  top: 12px; }
 
 .screenshot-image-description {
   position: absolute;

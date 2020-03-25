@@ -98,6 +98,10 @@
 
         get_template_part('components/getting-started-inline/view');
 
+      } else if(get_row_layout() == 'component_purchase') {
+
+        get_template_part('components/purchase/controller');
+
       }
       
       

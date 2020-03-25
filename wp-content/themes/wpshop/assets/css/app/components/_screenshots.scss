@@ -2,6 +2,21 @@
   background: white;
   margin: 18em 0;
   max-width: 100%;
+  position: relative;
+  overflow: visible;
+
+  > svg {
+    max-width: 800px;
+    position: absolute;
+    top: -100px;
+    left: 100px;
+    z-index: -1;
+    transform: rotate(129deg);
+  }
+
+  .l-row {
+    justify-content: center;
+  }
 
   @include device(1000, 'max') {
     .screenshot {
@@ -71,16 +86,21 @@
   }
 }
 
+.screenshot-description {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
 .screenshot-images {
   box-shadow: 0px 6px 81px -38px rgba(32, 37, 41, 0.25);
-  width: 50%;
-  margin: 0 auto;
+  width: 51%;
   border-radius: 10px;
+  margin-right: 3em;
 }
 
 .screenshot-content {
-  width: 40%;
-  padding: 0 4em 0 0;
+  width: 38%;
+  padding: 0 4em 0 2em;
   margin-top: 0;
   position: relative;
   left: -30px;
@@ -101,6 +121,7 @@
     padding: 10px 20px;
     border-radius: 10px;
     display: inline-block !important;
+    position: relative;
 
     &:hover {
       cursor: pointer;
@@ -118,6 +139,19 @@
         cursor: default;
       }
     }
+
+    &[data-type='video'] {
+      padding-left: 3.2em;
+      margin-top: 1em;
+
+      svg {
+        width: 27px;
+        height: 27px;
+        position: absolute;
+        left: 19px;
+        top: 11px;
+      }
+    }
   }
 }
 
@@ -126,7 +160,7 @@
   border-radius: 10px;
   max-width: 100%;
   margin: 0 auto;
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 0px 28px 34px -10px rgba(36, 47, 78, 0.24);
 
   &.is-visible {
@@ -166,7 +200,8 @@
 
 .screenshot-heading {
   font-size: 40px;
-  padding-left: 1.3em;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
 
   svg {
     max-width: 45px;
@@ -188,6 +223,23 @@
 
   @include device(700, 'max') {
     font-size: 24px;
+  }
+}
+
+[data-type='cart'] {
+  .screenshot-heading {
+    svg {
+      top: -1px;
+      max-width: 55px;
+    }
+  }
+}
+
+[data-type='settings'] {
+  .screenshot-heading {
+    svg {
+      top: 12px;
+    }
   }
 }
 

@@ -1,58 +1,62 @@
+.component-purchase {
+  background-color: white;
+}
+
 .edd_download_purchase_form {
-   width: 100%;
-   margin-top: 4em;
+  width: 100%;
+  margin-top: 4em;
 
-   @include device(1400, 'max') {
-      padding: 0 20px;
-   }
+  @include device(1400, 'max') {
+    padding: 0 20px;
+  }
 
-   @include device(600, 'max') {
-      padding: 0;
-   }
+  @include device(600, 'max') {
+    padding: 0;
+  }
 }
 
 .edd_purchase_submit_wrapper {
-   text-align: center;
-   margin-bottom: $space-xl * 3;
+  text-align: center;
+  margin-bottom: $space-xl * 3;
 }
 
 .purchase-options-note {
-   display: block;
-   margin-top: $space-m;
-   text-align: center;
-   font-style: normal;
+  display: block;
+  margin-top: $space-m;
+  text-align: center;
+  font-style: normal;
 }
 
 .edd_price_options li[itemprop='offers'] {
-   transition: transform 0.2s ease;
+  transition: transform 0.2s ease;
 
-   &:not(.is-highlighted) {
-      &:hover {
-         transform: scale(0.95);
-      }
-   }
+  &:not(.is-highlighted) {
+    &:hover {
+      transform: scale(0.95);
+    }
+  }
 
-   .eddr-notice.variable-prices {
-      display: none;
-   }
+  .eddr-notice.variable-prices {
+    display: none;
+  }
 }
 
 .purchase-confirmation #edd_subscription_receipt {
-   width: 100%;
-   margin-bottom: 3em;
+  width: 100%;
+  margin-bottom: 3em;
 }
 
 #edd_sl_renewal_form {
-   margin-bottom: 1em;
-   text-align: center;
-   max-width: 700px;
-   margin: 0 auto;
+  margin-bottom: 1em;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 .page.purchase {
-   .page-header {
-      margin-bottom: 0;
-      line-height: 1;
-      padding-bottom: 0;
-   }
+  .page-header {
+    margin-bottom: 0;
+    line-height: 1;
+    padding-bottom: 0;
+  }
 }

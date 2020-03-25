@@ -4,7 +4,7 @@
 
       <div class="faqs-wrap">
 
-         <h2 style="margin-bottom: 1em;">The most common questions</h2>
+         <h2 style="margin-bottom: 1em;">Common questions</h2>
 
          <?php 
 

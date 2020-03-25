@@ -1,6 +1,6 @@
 .home {
   .main {
-    @include device(500, "max") {
+    @include device(500, 'max') {
       display: none;
     }
   }
@@ -39,11 +39,11 @@
   margin: $space-l auto;
   position: relative;
 
-  @include device(800, "max") {
+  @include device(800, 'max') {
     padding: 0 $space-m;
   }
 
-  @include device(500, "max") {
+  @include device(500, 'max') {
     padding: 0;
   }
 }
@@ -86,7 +86,7 @@
   border-radius: 20px;
   // border-radius: 10px;
 
-  @include device(700, "max") {
+  @include device(700, 'max') {
     padding: 0 1em;
 
     &.component-mailinglist {
@@ -110,7 +110,7 @@
 
   &:after {
     position: absolute;
-    content: "";
+    content: '';
     display: block;
     width: 40px;
     height: 1px;
@@ -129,7 +129,7 @@
 .purchase .component-pro-features .component-intro h2 {
   font-size: 2.4em;
 
-  @include device(700, "max") {
+  @include device(700, 'max') {
     font-size: 1.9em;
   }
 }
@@ -151,36 +151,38 @@
   }
 }
 
-#edd_price_option_35_singlesite {
-  &:before {
-    content: "Personal";
-    display: block;
-  }
-}
+// #edd_price_option_35_singlesite {
+//   &:before {
+//     content: "Personal";
+//     display: block;
+//   }
+// }
 
-#edd_price_option_35_2-5sites {
-  &:before {
-    content: "Developer";
-    display: block;
-  }
-}
+// #edd_price_option_35_2-5sites {
+//   &:before {
+//     content: "Developer";
+//     display: block;
+//   }
+// }
 
-#edd_price_option_35_unlimitedsites {
-  &:before {
-    content: "Agency";
-    display: block;
-  }
-}
+// #edd_price_option_35_unlimitedsites {
+//   &:before {
+//     content: "Agency";
+//     display: block;
+//   }
+// }
 
 .edd_price_options {
-  li[itemprop="offers"] {
+  li[itemprop='offers'] {
     position: relative;
+    display: flex;
+    flex-direction: column;
 
-    @include device(900, "max") {
+    @include device(900, 'max') {
       padding-bottom: 0;
     }
 
-    @include device(600, "max") {
+    @include device(600, 'max') {
       padding-right: 1.2em;
       padding-left: 1.2em;
       padding-top: 1.2em;
@@ -194,9 +196,9 @@
         opacity: 1;
         width: 35px;
         height: 35px;
-        background: url("imgs/icon-check-white.svg");
+        background: url('imgs/icon-check-white.svg');
 
-        @include device(600, "max") {
+        @include device(600, 'max') {
           top: 10px;
           width: 30px;
           height: 30px;
@@ -217,7 +219,7 @@
       padding: 10px 0;
       border-bottom: 1px solid #cbcbcb;
 
-      @include device(600, "max") {
+      @include device(600, 'max') {
         font-size: 1.2em;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
@@ -235,9 +237,9 @@
     }
 
     .edd_price_option_35,
-    input[type="radio"] {
+    input[type='radio'] {
       visibility: hidden;
-      @include device(900, "max") {
+      @include device(900, 'max') {
         position: absolute;
       }
     }
