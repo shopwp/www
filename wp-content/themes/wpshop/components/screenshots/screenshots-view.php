@@ -1,7 +1,5 @@
 <section class="component component-screenshots l-col l-col-center <?= $has_bg ? 'has-background' : ''; ?>">
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 613.9 539.5"><path d="M609 291.7c0 82.2-48.2 155-122.1 199.3-47.4 28.3-105.4 45-168 45-83.4 0-147-31.5-194.8-79.8C80 411.8 49.3 353.1 28.9 291.7c-91.4-274.2 61.2-349 290-244.4C464.6 113.9 609 156.7 609 291.7z" fill="#f8f7fc"/></svg>
-
    <div class="l-row">
 
       <section class="screenshot-images">

@@ -30,9 +30,18 @@
         a {
           box-shadow: none;
           text-decoration: none;
+          position: relative;
+
+          &:after {
+            display: none;
+          }
         }
       }
     }
+  }
+
+  .sub-menu .current-menu-item a:after {
+    display: none;
   }
 
   > a:hover {
@@ -244,8 +253,24 @@
   position: relative;
 
   a {
-    box-shadow: 0px 0px 0px 1px #0f0433;
+    color: #415aff;
     text-decoration: none;
+
+    &:after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translate(-50%, 0%);
+      display: block;
+      content: '';
+      width: 50px;
+      height: 2px;
+      background-color: #415aff;
+    }
+  }
+
+  .sub-menu a:after {
+    display: none;
   }
 }
 

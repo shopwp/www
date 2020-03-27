@@ -1,18 +1,16 @@
 <head>
+   
 <?php wp_head(); ?>
+
 <?php if (!is_page('checkout')) { ?>
-
-<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css" />   
-<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-toward.css" />
-
-<script src="https://kit.fontawesome.com/4b023c7b57.js" crossorigin="anonymous"></script>
 
   <!--
 
   Only load drift on non-docs related pages
 
   -->
-<!-- Start of Async Drift Code -->
+
+   <!-- Start of Async Drift Code -->
     <script>
     !function() {
       var t;
@@ -38,6 +36,11 @@
     <!-- End of Async Drift Code -->
     
 <?php } ?>
+
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css" />   
+<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-toward.css" />
+
+<script src="https://kit.fontawesome.com/4b023c7b57.js" crossorigin="anonymous"></script>
 
 
   <!-- Google Tag Manager -->

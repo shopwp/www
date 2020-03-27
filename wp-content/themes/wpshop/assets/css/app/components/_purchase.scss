@@ -1,5 +1,72 @@
 .component-purchase {
-  background-color: white;
+  background-color: #f8f7fc;
+  text-align: center;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0;
+  padding: 4em 0;
+
+  h2 {
+    font-size: 2.4em;
+  }
+
+  p {
+    font-size: 18px;
+  }
+}
+
+.purchase .component-purchase {
+  margin: -2em auto 0 auto;
+}
+
+.plans {
+  list-style: none;
+  margin: 3em 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.plan {
+  width: 31.3%;
+  background: white;
+  padding: 30px 20px 50px 20px;
+  border-radius: 0.6em;
+  border: 1px solid #411f67;
+}
+
+.plan-names {
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-name {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.plan-terms {
+  display: block;
+  text-align: center;
+  margin-top: 0px;
+  font-style: italic;
+  color: #636363;
+}
+
+.plan-description {
+  font-size: 19px;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.plan-features {
+  ul {
+    text-align: left;
+    max-width: 315px;
+    margin: 0 auto;
+    padding: 0 0 0 25px;
+  }
 }
 
 .edd_download_purchase_form {
@@ -32,7 +99,7 @@
 
   &:not(.is-highlighted) {
     &:hover {
-      transform: scale(0.95);
+      // transform: scale(0.95);
     }
   }
 

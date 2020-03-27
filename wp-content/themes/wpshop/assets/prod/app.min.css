@@ -2857,8 +2857,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     margin: 0 0.3em;
     border-radius: 0.3em; }
     .header .menu-item a:hover {
-      -webkit-box-shadow: 0px 0px 0px 1px #0f0433;
-              box-shadow: 0px 0px 0px 1px #0f0433;
+      color: #415aff;
       text-decoration: none; }
   .header .sub-menu {
     background-color: #fff;
@@ -3070,6 +3069,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     bottom: -75px; }
 
 .header-cart-link {
+  display: none;
   margin-top: 0;
   margin-left: 1.44em;
   text-decoration: none;
@@ -3108,9 +3108,10 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     height: 35px; }
 
 .footer-col h3 {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: bold;
-  text-align: left; }
+  text-align: left;
+  margin-bottom: -8px; }
 
 .nav-footer {
   max-width: 1050px;
@@ -3159,22 +3160,12 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
       width: 100%;
       display: block;
       text-align: left;
-      font-size: 13px;
-      font-size: 14px;
-      padding-left: 0;
-      padding-top: 5px;
+      font-size: 16px;
+      padding: 0.2em 1.5em 0.2em 0;
       position: relative; }
       .footer-wrapper .menu-item a:hover {
         text-decoration: none;
         color: #415aff; }
-      .footer-wrapper .menu-item a:after {
-        content: '';
-        display: block;
-        position: absolute;
-        bottom: 4px;
-        height: 1px;
-        width: 65%;
-        background: #eaeaea; }
       .footer-wrapper .menu-item a svg {
         font-size: 11px;
         position: relative;
@@ -3199,7 +3190,8 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   margin-top: 0em;
   margin-top: 0;
   margin: 0;
-  left: -45px; }
+  left: -45px;
+  top: 6px; }
   @media (max-width: 500px) {
     .footer-social-links {
       display: -webkit-box;
@@ -3326,65 +3318,6 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .error404 .wrap.container {
   margin-bottom: 8em; }
 
-.edd_price_options li[itemprop='offers'] {
-  position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column; }
-  @media (max-width: 900px) {
-    .edd_price_options li[itemprop='offers'] {
-      padding-bottom: 0; } }
-  @media (max-width: 600px) {
-    .edd_price_options li[itemprop='offers'] {
-      padding-right: 1.2em;
-      padding-left: 1.2em;
-      padding-top: 1.2em;
-      border-radius: 5px; } }
-  .edd_price_options li[itemprop='offers'].is-valid:after {
-    top: 9px;
-    left: 15px;
-    opacity: 1;
-    width: 35px;
-    height: 35px;
-    background: url("imgs/icon-check-white.svg"); }
-    @media (max-width: 600px) {
-      .edd_price_options li[itemprop='offers'].is-valid:after {
-        top: 10px;
-        width: 30px;
-        height: 30px; } }
-  .edd_price_options li[itemprop='offers']:before {
-    text-align: center;
-    font-size: 1.44em;
-    font-weight: bold;
-    background: #f8f7fc;
-    margin-top: -1em;
-    width: calc(100% + 2em);
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    margin-left: -1em;
-    padding: 10px 0;
-    border-bottom: 1px solid #cbcbcb; }
-    @media (max-width: 600px) {
-      .edd_price_options li[itemprop='offers']:before {
-        font-size: 1.2em;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px; } }
-  .edd_price_options li[itemprop='offers']:hover {
-    cursor: pointer; }
-  .edd_price_options li[itemprop='offers'] label:hover {
-    cursor: pointer; }
-  .edd_price_options li[itemprop='offers'] .edd_price_option_35,
-  .edd_price_options li[itemprop='offers'] input[type='radio'] {
-    visibility: hidden; }
-    @media (max-width: 900px) {
-      .edd_price_options li[itemprop='offers'] .edd_price_option_35,
-      .edd_price_options li[itemprop='offers'] input[type='radio'] {
-        position: absolute; } }
-
 .purchase-confirmation .page-header,
 .purchase-confirmation .page-header + span {
   margin-bottom: 0;
@@ -3493,7 +3426,13 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   .menu-item-has-children.is-active .sub-menu .current-menu-item a {
     -webkit-box-shadow: none;
             box-shadow: none;
-    text-decoration: none; }
+    text-decoration: none;
+    position: relative; }
+    .menu-item-has-children.is-active .sub-menu .current-menu-item a:after {
+      display: none; }
+
+.menu-item-has-children .sub-menu .current-menu-item a:after {
+  display: none; }
 
 .menu-item-has-children > a:hover {
   -webkit-box-shadow: none !important;
@@ -3677,9 +3616,21 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .header .current-menu-item {
   position: relative; }
   .header .current-menu-item a {
-    -webkit-box-shadow: 0px 0px 0px 1px #0f0433;
-            box-shadow: 0px 0px 0px 1px #0f0433;
+    color: #415aff;
     text-decoration: none; }
+    .header .current-menu-item a:after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      -webkit-transform: translate(-50%, 0%);
+              transform: translate(-50%, 0%);
+      display: block;
+      content: '';
+      width: 50px;
+      height: 2px;
+      background-color: #415aff; }
+  .header .current-menu-item .sub-menu a:after {
+    display: none; }
 
 @media (max-width: 800px) {
   #menu-footer {
@@ -4114,6 +4065,7 @@ input[type='submit'],
         margin-right: 0;
         width: 100%; } }
 
+.button-l,
 .btn-l {
   font-size: 1.44em; }
 
@@ -4962,7 +4914,69 @@ pre[class*="language-"] {
   margin-top: 1.728em; }
 
 .component-purchase {
-  background-color: #fff; }
+  background-color: #f8f7fc;
+  text-align: center;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0;
+  padding: 4em 0; }
+  .component-purchase h2 {
+    font-size: 2.4em; }
+  .component-purchase p {
+    font-size: 18px; }
+
+.purchase .component-purchase {
+  margin: -2em auto 0 auto; }
+
+.plans {
+  list-style: none;
+  margin: 3em 0;
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between; }
+
+.plan {
+  width: 31.3%;
+  background: #fff;
+  padding: 30px 20px 50px 20px;
+  border-radius: 0.6em;
+  border: 1px solid #411f67; }
+
+.plan-names {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column; }
+
+.plan-name {
+  font-size: 24px;
+  font-weight: bold; }
+
+.plan-terms {
+  display: block;
+  text-align: center;
+  margin-top: 0px;
+  font-style: italic;
+  color: #636363; }
+
+.plan-description {
+  font-size: 19px;
+  margin-top: 0;
+  margin-bottom: 10px; }
+
+.plan-features ul {
+  text-align: left;
+  max-width: 315px;
+  margin: 0 auto;
+  padding: 0 0 0 25px; }
 
 .edd_download_purchase_form {
   width: 100%;
@@ -4993,9 +5007,6 @@ pre[class*="language-"] {
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   will-change: transform; }
-  .edd_price_options li[itemprop='offers']:not(.is-highlighted):hover {
-    -webkit-transform: scale(0.95);
-            transform: scale(0.95); }
   .edd_price_options li[itemprop='offers'] .eddr-notice.variable-prices {
     display: none; }
 
@@ -5654,14 +5665,6 @@ fieldset#edd_sl_renewal_fields
   max-width: 100%;
   position: relative;
   overflow: visible; }
-  .component-screenshots > svg {
-    max-width: 800px;
-    position: absolute;
-    top: -100px;
-    left: 100px;
-    z-index: -1;
-    -webkit-transform: rotate(129deg);
-            transform: rotate(129deg); }
   .component-screenshots .l-row {
     -webkit-box-pack: center;
         -ms-flex-pack: center;
@@ -5840,14 +5843,7 @@ fieldset#edd_sl_renewal_fields
 
 .screenshot-heading {
   font-size: 40px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 15px; }
-  .screenshot-heading svg {
-    max-width: 45px;
-    height: auto;
-    position: absolute;
-    top: -4px;
-    left: 15px; }
+  padding-bottom: 5px; }
   .screenshot-heading .emoji {
     margin-right: 13px !important;
     position: relative;

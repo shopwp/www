@@ -23,7 +23,7 @@
     border-radius: 0.3em;
 
     &:hover {
-      box-shadow: 0px 0px 0px 1px #0f0433;
+      color: #415aff;
       text-decoration: none;
     }
   }
@@ -327,6 +327,7 @@
 }
 
 .header-cart-link {
+  display: none;
   margin-top: 0;
   margin-left: $space-l;
   text-decoration: none;

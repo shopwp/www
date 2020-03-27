@@ -5,15 +5,6 @@
   position: relative;
   overflow: visible;
 
-  > svg {
-    max-width: 800px;
-    position: absolute;
-    top: -100px;
-    left: 100px;
-    z-index: -1;
-    transform: rotate(129deg);
-  }
-
   .l-row {
     justify-content: center;
   }
@@ -200,16 +191,7 @@
 
 .screenshot-heading {
   font-size: 40px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 15px;
-
-  svg {
-    max-width: 45px;
-    height: auto;
-    position: absolute;
-    top: -4px;
-    left: 15px;
-  }
+  padding-bottom: 5px;
 
   .emoji {
     margin-right: 13px !important;
