@@ -812,15 +812,18 @@ EDD
 .edd_price_options .edd-variable-pricing-desc {
   display: none; }
 
-.edd_price_option_price {
+.plan-price-year,
+.plan-price-month {
   display: block;
   text-align: center;
-  font-size: 42px;
+  font-size: 38px;
   font-weight: bold;
-  margin: 9px 0;
-  line-height: 1; }
+  margin: 8px 0 29px 0;
+  line-height: 1;
+  display: block; }
   @media (max-width: 600px) {
-    .edd_price_option_price {
+    .plan-price-year,
+    .plan-price-month {
       font-size: 28px; } }
 
 .edd_price_option_sep {
@@ -3282,19 +3285,9 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   padding: 1em 0 1em; }
 
 .component-intro {
-  margin-bottom: 6em;
+  margin-bottom: 4em;
+  margin-top: 4em;
   position: relative; }
-  .component-intro:after {
-    position: absolute;
-    content: '';
-    display: block;
-    width: 40px;
-    height: 1px;
-    background: #898989;
-    left: 50%;
-    -webkit-transform: translate(-50%, 0);
-            transform: translate(-50%, 0);
-    margin-top: 2em; }
   .component-intro p {
     text-align: center; }
 
@@ -4931,7 +4924,7 @@ pre[class*="language-"] {
 
 .plans {
   list-style: none;
-  margin: 3em 0;
+  margin: 1em 0 3em 0;
   padding: 0;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -4945,7 +4938,9 @@ pre[class*="language-"] {
   background: #fff;
   padding: 30px 20px 50px 20px;
   border-radius: 0.6em;
-  border: 1px solid #411f67; }
+  border: 1px solid #cbcbcb;
+  -webkit-box-shadow: 0px 0px 21px -10px rgba(9, 35, 58, 0.25);
+          box-shadow: 0px 0px 21px -10px rgba(9, 35, 58, 0.25); }
 
 .plan-names {
   display: -webkit-box;
@@ -4960,23 +4955,103 @@ pre[class*="language-"] {
   font-size: 24px;
   font-weight: bold; }
 
-.plan-terms {
+.plan-cta small {
   display: block;
+  margin-top: 5px; }
+
+.plan-pricing {
+  margin-top: 0; }
+
+.plan-terms {
   text-align: center;
   margin-top: 0px;
   font-style: italic;
-  color: #636363; }
+  color: #636363;
+  font-size: 19px;
+  font-weight: 100;
+  margin-left: 0px; }
 
 .plan-description {
-  font-size: 19px;
+  font-size: 17px;
   margin-top: 0;
-  margin-bottom: 10px; }
+  margin-bottom: 15px;
+  color: #313131; }
 
-.plan-features ul {
-  text-align: left;
-  max-width: 315px;
-  margin: 0 auto;
-  padding: 0 0 0 25px; }
+.price-toggle-label-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-top: 3em; }
+  .price-toggle-label-wrapper:hover {
+    cursor: pointer; }
+  .price-toggle-label-wrapper .icon-toggle {
+    height: 28px;
+    font-size: 38px;
+    margin: 0; }
+    .price-toggle-label-wrapper .icon-toggle circle {
+      -webkit-transition: all 0.2s ease;
+      -o-transition: all 0.2s ease;
+      transition: all 0.2s ease;
+      -webkit-transform: translateX(-42%);
+              transform: translateX(-42%); }
+  .price-toggle-label-wrapper .price-toggle-label {
+    margin: 0 10px; }
+
+.plan-cta-link-year,
+.plan-cta-link-month {
+  width: auto;
+  display: inline-block; }
+
+.plan-cta .plan-cta-link-month,
+.plan-cta .plan-cta-notice-month,
+.plan-price-month {
+  display: none; }
+
+.component-purchase.is-monthly .plan-cta-notice-month,
+.component-purchase.is-monthly .plan-price-month {
+  display: block; }
+
+.component-purchase.is-monthly .plan-cta-link-month {
+  display: inline-block; }
+
+.component-purchase.is-monthly .plan-cta-link-year,
+.component-purchase.is-monthly .plan-cta-notice-year,
+.component-purchase.is-monthly .plan-price-year {
+  display: none; }
+
+.component-purchase.is-monthly circle {
+  -webkit-transform: translateX(0%);
+          transform: translateX(0%); }
+
+.plan-features {
+  position: relative;
+  left: -6px; }
+  .plan-features ul {
+    text-align: left;
+    max-width: 315px;
+    margin: 0 auto;
+    padding: 0 0 0 25px;
+    list-style: none; }
+  .plan-features li {
+    margin-top: 2px;
+    font-size: 15px;
+    position: relative;
+    padding-left: 13px; }
+    .plan-features li:before {
+      position: absolute;
+      top: 4px;
+      left: -11px;
+      content: '';
+      background-image: url("../imgs/icon-check-regular.svg");
+      width: 17px;
+      height: 17px;
+      background-size: contain; }
 
 .edd_download_purchase_form {
   width: 100%;
@@ -5660,8 +5735,8 @@ fieldset#edd_sl_renewal_fields
   font-size: 16px; }
 
 .component-screenshots {
-  background: #fff;
-  margin: 18em 0;
+  background: transparent;
+  margin: 20em 0 18em 0;
   max-width: 100%;
   position: relative;
   overflow: visible; }
@@ -5669,6 +5744,16 @@ fieldset#edd_sl_renewal_fields
     -webkit-box-pack: center;
         -ms-flex-pack: center;
             justify-content: center; }
+  .component-screenshots .bg {
+    width: 50%;
+    height: 125%;
+    position: absolute;
+    left: 0;
+    top: -56px;
+    z-index: -1;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 500px;
+    background: #dbcafb; }
   @media (max-width: 1000px) {
     .component-screenshots .screenshot {
       -webkit-box-orient: vertical;
@@ -5741,11 +5826,11 @@ fieldset#edd_sl_renewal_fields
   margin-top: 10px; }
 
 .screenshot-images {
-  -webkit-box-shadow: 0px 6px 81px -38px rgba(32, 37, 41, 0.25);
-          box-shadow: 0px 6px 81px -38px rgba(32, 37, 41, 0.25);
-  width: 51%;
-  border-radius: 10px;
-  margin-right: 3em; }
+  width: 58%;
+  border-radius: 0;
+  margin-right: 3em;
+  -webkit-box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25); }
 
 .screenshot-content {
   width: 38%;
@@ -5776,6 +5861,8 @@ fieldset#edd_sl_renewal_fields
     border-radius: 10px;
     display: inline-block !important;
     position: relative; }
+    .screenshots-nav-list li a {
+      text-decoration: none; }
     .screenshots-nav-list li:hover {
       cursor: pointer;
       color: #415aff; }
@@ -5800,12 +5887,11 @@ fieldset#edd_sl_renewal_fields
 
 .screenshot-image {
   display: none;
-  border-radius: 10px;
+  border-radius: 0;
   max-width: 100%;
   margin: 0 auto;
   border-radius: 10px;
-  -webkit-box-shadow: 0px 28px 34px -10px rgba(36, 47, 78, 0.24);
-          box-shadow: 0px 28px 34px -10px rgba(36, 47, 78, 0.24); }
+  border: 7px solid #fff; }
   .screenshot-image.is-visible {
     display: block; }
 
@@ -5956,7 +6042,7 @@ fieldset#edd_sl_renewal_fields
 
 .component-affiliate {
   background: #fff;
-  padding: 3em 0 4em 0;
+  padding: 2em 0 4em 0;
   position: relative;
   width: 100%;
   max-width: 100%;
@@ -6382,9 +6468,29 @@ fieldset#edd_sl_renewal_fields
   .component-comparison-chart .cell {
     text-align: center; }
   .component-comparison-chart .cell-yes {
-    background: #ebf4eb; }
+    background: #ebf4eb;
+    position: relative; }
+    .component-comparison-chart .cell-yes svg {
+      max-width: 27px;
+      font-size: 27px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+              transform: translate(-50%, -50%); }
   .component-comparison-chart .cell-no {
-    background: #fff4f4; }
+    background: #fff4f4;
+    position: relative; }
+    .component-comparison-chart .cell-no svg {
+      max-width: 23px;
+      font-size: 23px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+              transform: translate(-50%, -50%); }
+      .component-comparison-chart .cell-no svg path {
+        fill: #bb0d0d; }
   .component-comparison-chart .cell-center {
     text-align: center; }
   .component-comparison-chart .pro {
@@ -6733,6 +6839,10 @@ footer .testimonials-author-link .testimonial-author-name {
             flex: 1; }
   .component-getting-started-inline .mailinglist-email {
     padding: 0.5em 1.2em; }
+
+.component-comparison-chart + .component-faq-secondary,
+.component-faq-secondary + .component-getting-started-inline {
+  margin-top: 9em; }
 
 .is-visible {
   visibility: visible;

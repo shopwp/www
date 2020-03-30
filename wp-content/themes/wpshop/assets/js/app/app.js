@@ -66,6 +66,10 @@ import { initFAQs } from './faqs/faqs'
 
     jQuery('.screenshots-nav-list li').on('click', function() {
       var type = jQuery(this).data('type')
+      if (!type) {
+        return
+      }
+
       var $container = jQuery(this).closest('.l-row')
 
       $container.find('.is-visible').removeClass('is-visible')
@@ -80,6 +84,12 @@ import { initFAQs } from './faqs/faqs'
 
       $screenshot.addClass('is-visible')
       $screenshotContent.addClass('is-visible')
+    })
+
+    jQuery('.price-toggle-label-wrapper').on('click', function() {
+      jQuery(this)
+        .closest('.component-purchase')
+        .toggleClass('is-monthly')
     })
   })
 })(jQuery)

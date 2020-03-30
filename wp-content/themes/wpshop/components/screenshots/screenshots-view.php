@@ -1,4 +1,7 @@
 <section class="component component-screenshots l-col l-col-center <?= $has_bg ? 'has-background' : ''; ?>">
+   
+
+   <div class="bg"></div>
 
    <div class="l-row">
 
@@ -36,6 +39,7 @@
                <h2 class="screenshot-heading">Settings & Tools</h2>
                <div class="screenshot-description">We've taken the time to provide easy to configure settings and a number of convenient tools like selective sync and clear data.</div>
             </div>
+
          </section>
 
          <nav class="screenshots-nav">
@@ -45,7 +49,9 @@
                <li data-type="posts">WordPress Posts</li>
                <li data-type="display">Easy Display</li>
                <li data-type="settings">Settings & Tools</li>
-               <li data-type="video"><i class="far fa-play-circle"></i> Watch plugin demo</li>
+               <li>
+                  <a href="https://www.youtube.com/watch/0dmn5Yrzqlw" target="_blank"><i class="far fa-play-circle"></i> Watch plugin demo</a>
+               </li>
             </ul>
          </nav>
       </section>

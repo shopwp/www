@@ -341,13 +341,15 @@ EDD
   }
 }
 
-.edd_price_option_price {
+.plan-price-year,
+.plan-price-month {
   display: block;
   text-align: center;
-  font-size: 42px;
+  font-size: 38px;
   font-weight: bold;
-  margin: 9px 0;
+  margin: 8px 0 29px 0;
   line-height: 1;
+  display: block;
 
   @include device(600, 'max') {
     font-size: 28px;

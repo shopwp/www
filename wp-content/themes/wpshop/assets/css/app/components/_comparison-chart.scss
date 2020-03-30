@@ -53,10 +53,34 @@
 
   .cell-yes {
     background: #ebf4eb;
+    position: relative;
+
+    svg {
+      max-width: 27px;
+      font-size: 27px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 
   .cell-no {
     background: #fff4f4;
+    position: relative;
+
+    svg {
+      max-width: 23px;
+      font-size: 23px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      path {
+        fill: #bb0d0d;
+      }
+    }
   }
 
   .cell-center {

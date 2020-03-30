@@ -22,7 +22,7 @@
 
 .plans {
   list-style: none;
-  margin: 3em 0;
+  margin: 1em 0 3em 0;
   padding: 0;
   display: flex;
   justify-content: space-between;
@@ -33,7 +33,8 @@
   background: white;
   padding: 30px 20px 50px 20px;
   border-radius: 0.6em;
-  border: 1px solid #411f67;
+  border: 1px solid #cbcbcb;
+  box-shadow: 0px 0px 21px -10px rgba(9, 35, 58, 0.25);
 }
 
 .plan-names {
@@ -46,26 +47,120 @@
   font-weight: bold;
 }
 
+.plan-cta {
+  small {
+    display: block;
+    margin-top: 5px;
+  }
+}
+
+.plan-pricing {
+  margin-top: 0;
+}
+
 .plan-terms {
-  display: block;
   text-align: center;
   margin-top: 0px;
   font-style: italic;
   color: #636363;
+  font-size: 19px;
+  font-weight: 100;
+  margin-left: 0px;
 }
 
 .plan-description {
-  font-size: 19px;
+  font-size: 17px;
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  color: #313131;
+}
+
+.price-toggle-label-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3em;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .icon-toggle {
+    height: 28px;
+    font-size: 38px;
+    margin: 0;
+
+    circle {
+      transition: all 0.2s ease;
+      transform: translateX(-42%);
+    }
+  }
+
+  .price-toggle-label {
+    margin: 0 10px;
+  }
+}
+
+.plan-cta-link-year,
+.plan-cta-link-month {
+  width: auto;
+  display: inline-block;
+}
+
+.plan-cta .plan-cta-link-month,
+.plan-cta .plan-cta-notice-month,
+.plan-price-month {
+  display: none;
+}
+
+.component-purchase.is-monthly {
+  .plan-cta-notice-month,
+  .plan-price-month {
+    display: block;
+  }
+
+  .plan-cta-link-month {
+    display: inline-block;
+  }
+
+  .plan-cta-link-year,
+  .plan-cta-notice-year,
+  .plan-price-year {
+    display: none;
+  }
+
+  circle {
+    transform: translateX(0%);
+  }
 }
 
 .plan-features {
+  position: relative;
+  left: -6px;
+
   ul {
     text-align: left;
     max-width: 315px;
     margin: 0 auto;
     padding: 0 0 0 25px;
+    list-style: none;
+  }
+  li {
+    margin-top: 2px;
+    font-size: 15px;
+    position: relative;
+    padding-left: 13px;
+
+    &:before {
+      position: absolute;
+      top: 4px;
+      left: -11px;
+      content: '';
+      background-image: url('../imgs/icon-check-regular.svg');
+      width: 17px;
+      height: 17px;
+      background-size: contain;
+    }
   }
 }
 

@@ -11,9 +11,7 @@
       </a>
       
       <h2 class="heading">Still need a Shopify store?</h2>
-      <div class="description">
-         Start your <a href="https://www.shopify.com/?ref=wps" target="_blank">free 14-day trial of Shopify</a> using our link below and you'll help fund development of WP Shopify!
-      </div>
+      <div class="description">Start your <a href="https://www.shopify.com/?ref=wps" target="_blank">free 14-day trial of Shopify</a> using our link to help fund development of WP Shopify!</div>
 
       <a href="https://www.shopify.com/?ref=wps" target="_blank" class="btn btn-m">Free Shopify 14-day Trial <i class="fal fa-external-link"></i></a>   
 

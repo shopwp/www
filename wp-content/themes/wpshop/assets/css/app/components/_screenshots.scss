@@ -1,12 +1,27 @@
 .component-screenshots {
-  background: white;
-  margin: 18em 0;
+  background: transparent;
+  margin: 20em 0 18em 0;
   max-width: 100%;
   position: relative;
   overflow: visible;
 
   .l-row {
     justify-content: center;
+  }
+
+  .bg {
+    width: 50%;
+    height: 125%;
+    position: absolute;
+    left: 0;
+    top: -56px;
+    z-index: -1;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 500px;
+    //  background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+    //  background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+    //  background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);
+    background: #dbcafb;
   }
 
   @include device(1000, 'max') {
@@ -83,10 +98,10 @@
 }
 
 .screenshot-images {
-  box-shadow: 0px 6px 81px -38px rgba(32, 37, 41, 0.25);
-  width: 51%;
-  border-radius: 10px;
+  width: 58%;
+  border-radius: 0;
   margin-right: 3em;
+  box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
 }
 
 .screenshot-content {
@@ -113,6 +128,10 @@
     border-radius: 10px;
     display: inline-block !important;
     position: relative;
+
+    a {
+      text-decoration: none;
+    }
 
     &:hover {
       cursor: pointer;
@@ -148,11 +167,11 @@
 
 .screenshot-image {
   display: none;
-  border-radius: 10px;
+  border-radius: 0;
   max-width: 100%;
   margin: 0 auto;
   border-radius: 10px;
-  box-shadow: 0px 28px 34px -10px rgba(36, 47, 78, 0.24);
+  border: 7px solid white;
 
   &.is-visible {
     display: block;
