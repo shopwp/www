@@ -15,7 +15,7 @@ h6 {
 }
 
 h1 {
-  font-size: $heading-1;
+  font-size: 46px;
   font-weight: bold;
 
   @include device(700, 'max') {

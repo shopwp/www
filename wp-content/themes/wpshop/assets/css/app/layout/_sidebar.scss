@@ -1,18 +1,9 @@
 .sidebar {
-  margin: 0 $space-xxl $space-xxl*2 0;
+  margin: 0 $space-xxl $space-xxl * 2 0;
   width: 400px;
   background: color(white);
   overflow-x: hidden;
   overflow-y: visible;
-
-  &.sidebar-is-docs {
-    overflow-x: hidden;
-
-    .logo-wrapper {
-      margin-top: 0.8em;
-    }
-
-  }
 
   @include device(1200, 'max') {
     width: 100%;
@@ -23,10 +14,7 @@
       opacity: 1;
     }
   }
-
 }
-
-
 
 .sidebar-inner {
   @include card();
@@ -36,51 +24,6 @@
   list-style: none;
   margin: 0;
   border-radius: 0;
-
-}
-
-.is-docs .sidebar {
-  @include card();
-
-  // box-shadow: 0 2px 53px -6px #dadada;
-  // box-shadow: 0 2px 28px -2px #dadada;
-  box-shadow: 0 2px 28px -2px rgba(107, 107, 107, 0.29);
-
-  z-index: 2;
-  width: 470px;
-  margin: 0 $space-xxl $space-xxl*2 0;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  position: fixed;
-  height: 100vh;
-  border-radius: 0;
-  border-top: 0;
-  border-left: 0;
-
-  @include device(1200, 'max') {
-    width: 100%;
-    // margin-right: 0;
-  }
-
-  .logo-wrapper {
-    &:hover {
-      opacity: 1;
-    }
-  }
-
-}
-
-.is-docs .sidebar-inner {
-  background: color(white);
-  padding: $space-l;
-  width: inherit;
-  list-style: none;
-  margin: 0;
-  border-radius: 0;
-  border: none;
-  padding-top: $space-xxs;
-  z-index: 2;
-
 }
 
 .sidebar-account {
@@ -91,9 +34,7 @@
   + .content {
     margin-top: 2.4em;
   }
-
 }
-
 
 .account .l-contain {
   @include device(1300, 'max') {

@@ -107,14 +107,6 @@ function mailinglist_signup() {
   $nonce = $_POST['nonce'];
   $type = $_POST['type'];
 
-  error_log('----- $email -----');
-  error_log(print_r($email, true));
-  error_log('----- /$email -----');
-
-  error_log('----- $type -----');
-  error_log(print_r($type, true));
-  error_log('----- /$type -----');
-
   if (wp_verify_nonce($nonce, 'mailinglist_signup')) {
 
     $resp = [];

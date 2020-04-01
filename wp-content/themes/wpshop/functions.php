@@ -114,7 +114,7 @@ add_action('edd_after_price_option', function () {
 function new_excerpt_more($more)
 {
    global $post;
-   return '... <a class="moretag" href="' . get_permalink($post->ID) . '">Read more →</a>';
+   return '... <div class="moretag-wrapper"><a class="moretag" href="' . get_permalink($post->ID) . '">Read more →</a></div>';
 }
 add_filter('excerpt_more', 'new_excerpt_more');
 

@@ -4,7 +4,7 @@
 
    <div class="l-row">
       <div class="mailinglist-group-copy l-col l-col-center">
-         <h4>Try for free</h4>
+         <h4>Try the plugin for free</h4>
       </div>
 
       <div class="form-control l-row">

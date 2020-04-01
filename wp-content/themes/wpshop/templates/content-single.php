@@ -1,33 +1,38 @@
-<?php while (have_posts()) : the_post(); ?>
+<?php 
 
-  <article <?php post_class(); ?>>
+global $post;
 
-   <header>
+?>
+   <?php while (have_posts()) : the_post(); ?>
 
-      
-      <h1 class="entry-title"><?php the_title(); ?></h1>
+   <article <?php post_class(); ?>>
 
-      <?php get_template_part('templates/entry-meta'); ?>
+      <header>
 
-      <?php echo get_the_post_thumbnail( $post_id, 'large', array( 'class' => 'alignleft' ) ); ?>
-      
-   </header>
+         
+         <h1 class="entry-title"><?php the_title(); ?></h1>
 
-    <div class="entry-content">
-      <?php the_content(); ?>
-    </div>
-    <footer>
-      <?php wp_link_pages(['before' => '<nav class="page-nav"><p>' . __('Pages:', 'sage'), 'after' => '</p></nav>']); ?>
-    </footer>
+         <?php get_template_part('templates/entry-meta'); ?>
 
-    <?php comments_template('/templates/comments.php'); ?>
+         <?php echo get_the_post_thumbnail( $post->ID, 'large', array( 'class' => 'alignleft' ) ); ?>
+         
+      </header>
 
-  </article>
+      <div class="entry-content">
+         <?php the_content(); ?>
+      </div>
+      <footer>
+         <?php wp_link_pages(['before' => '<nav class="page-nav"><p>' . __('Pages:', 'sage'), 'after' => '</p></nav>']); ?>
+      </footer>
 
-  <div class="article-footer">
-    <a href="<?= esc_url(home_url('/purchase')); ?>" rel="author" class="fn post-logo-link" target="_blank">
-      <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header">
-    </a>
-  </div>
+      <?php comments_template('/templates/comments.php'); ?>
 
-<?php endwhile; ?>
+   </article>
+
+   <div class="article-footer">
+      <a href="<?= esc_url(home_url('/purchase')); ?>" rel="author" class="fn post-logo-link" target="_blank">
+         <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header">
+      </a>
+   </div>
+
+   <?php endwhile; ?>

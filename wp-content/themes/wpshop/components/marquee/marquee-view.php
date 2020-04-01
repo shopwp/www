@@ -17,7 +17,7 @@
 
          <h1><?php the_sub_field('short_description'); ?></h1>
          
-         <p class="marquee-short-blurb">A killer WordPress plugin that empowers creators, businesses, and developers to sell Shopify products on any WordPress site.</p>
+         <p class="marquee-short-blurb">A powerful WordPress plugin that enables creators, businesses, and developers to sell Shopify products on any WordPress site.</p>
 
          <div class="btn-group l-row l-row-left">
             <span class="btn btn-download-free getting-started-trigger" target="_blank">Start for free</span>

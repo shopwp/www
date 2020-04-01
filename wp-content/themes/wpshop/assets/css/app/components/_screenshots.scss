@@ -1,6 +1,6 @@
 .component-screenshots {
   background: transparent;
-  margin: 20em 0 18em 0;
+  margin: 16em 0 8em 0;
   max-width: 100%;
   position: relative;
   overflow: visible;
@@ -10,18 +10,16 @@
   }
 
   .bg {
-    width: 50%;
+    display: none;
+    width: 30%;
     height: 125%;
     position: absolute;
     left: 0;
-    top: -56px;
+    top: -156px;
     z-index: -1;
-    border-top-right-radius: 15px;
+    border-top-right-radius: 154px;
     border-bottom-right-radius: 500px;
-    //  background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
-    //  background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
-    //  background-image: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);
-    background: #dbcafb;
+    background: #dffffb;
   }
 
   @include device(1000, 'max') {
@@ -98,18 +96,17 @@
 }
 
 .screenshot-images {
-  width: 58%;
+  width: 53%;
   border-radius: 0;
   margin-right: 3em;
-  box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
 }
 
 .screenshot-content {
-  width: 38%;
+  width: 40%;
   padding: 0 4em 0 2em;
   margin-top: 0;
   position: relative;
-  left: -30px;
+  left: -90px;
 }
 
 .screenshots-nav-list {
@@ -171,7 +168,14 @@
   max-width: 100%;
   margin: 0 auto;
   border-radius: 10px;
-  border: 7px solid white;
+  width: 600px;
+  height: 750px;
+  background: transparent;
+  position: relative;
+  left: 36px;
+  top: -50px;
+  box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
+  //   border: 1px solid #ddd;
 
   &.is-visible {
     display: block;

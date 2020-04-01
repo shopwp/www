@@ -1,3 +1,7 @@
+.nav-primary {
+  padding-left: 165px;
+}
+
 .nav,
 .nav-primary {
   margin: 0;
@@ -11,7 +15,7 @@
     .sub-menu {
       transform: translateY(0px);
       opacity: 1;
-      z-index: 999999;
+      height: auto;
 
       .menu-item a:hover {
         background-color: #415aff;

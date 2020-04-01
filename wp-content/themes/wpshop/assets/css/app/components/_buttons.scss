@@ -7,8 +7,10 @@ a.button.edd-slg-social-unlink-profile,
 .search-submit,
 .menu-item-back a,
 #edd-purchase-button,
-#edd-recurring-update-submit {
-  padding: 0.6em 1.5em;
+#edd-recurring-update-submit,
+.nav-links a,
+.moretag {
+  padding: 0.6em 1.5em 0.7em 1.5em;
   color: color(white);
   background-color: color(primary);
   border: none;
@@ -106,23 +108,29 @@ a.button.edd-slg-social-unlink-profile,
   .fa-long-arrow-right {
     margin-left: 5px;
   }
+}
 
-  &.btn-secondary {
+.moretag,
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid color(primary);
+  color: color(primary);
+
+  &:hover:not([disabled]) {
     background-color: transparent;
     border: 1px solid color(primary);
     color: color(primary);
+    opacity: 1;
+    box-shadow: 0px 0px 0px 0.24em #e4eaff;
+  }
 
-    &:hover:not([disabled]) {
-      background-color: transparent;
-      border: 1px solid color(primary);
-      color: color(primary);
-      opacity: 1;
-      box-shadow: 0px 0px 0px 0.24em #e4eaff;
-    }
+  &:hover[disabled] {
+    background-color: transparent;
+  }
 
-    &:hover[disabled] {
-      background-color: transparent;
-    }
+  &:focus {
+    border: 1px solid color(primary);
+    outline: none;
   }
 }
 
@@ -163,6 +171,7 @@ input[type='submit'],
 .btn-m,
 #edd-purchase-button {
   font-size: 1.3em;
+  padding: 0.6em 1.5em 0.6em 1.5em;
 }
 
 .edd-add-to-cart-label {

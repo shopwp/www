@@ -1,15 +1,63 @@
-.home {
-  .main {
-    @include device(500, 'max') {
-      display: none;
-    }
-  }
+.main {
+  width: 100%;
+  margin: 120px 0 0 0;
+}
+
+.how .main,
+.contact .main,
+.faq .main,
+.examples .main,
+.pro-features .main,
+.changelog .main,
+.blog .main {
+  margin-top: 180px;
+}
+
+.pro-features .page-header h1 {
+  max-width: 910px;
+  margin-bottom: -10px;
+}
+
+.pro-features .page-header + .page-content {
+  margin-top: 0;
+  margin: 0 auto;
+}
+
+.page-content + .component-comparison-chart {
+  margin-top: 4em;
+}
+
+.contact .component.component-faq-secondary,
+.faq .component.component-faq {
+  margin-top: 3em;
+  margin-bottom: 7em;
+}
+
+.contact .component.component-faq-secondary h2 {
+  font-size: 34px;
+}
+
+.examples .page-content {
+  max-width: 915px;
+  margin: 0 auto;
+}
+
+.examples .page-header h1 {
+  max-width: 900px;
 }
 
 .page-content {
   width: 100%;
   font-size: 18px;
   text-align: center;
+
+  p:first-of-type {
+    font-size: 20px;
+  }
+}
+
+.page-content:empty {
+  display: none;
 }
 
 .page-id-159 .page-content,
@@ -22,44 +70,18 @@
   text-align: left;
 }
 
+.l-contain-narrow {
+  max-width: 760px;
+  margin: 0 auto 0 auto;
+}
+
+.single .main-inner.l-contain-narrow {
+  margin-top: 180px;
+}
+
 .blog {
   .main {
     margin-bottom: $space-xxl * 2;
-  }
-
-  .page-header {
-    display: none;
-    margin-bottom: 3em;
-  }
-}
-
-.main {
-  width: 100%;
-  margin-bottom: 3em;
-  margin: $space-l auto;
-  position: relative;
-
-  @include device(800, 'max') {
-    padding: 0 $space-m;
-  }
-
-  @include device(500, 'max') {
-    padding: 0;
-  }
-}
-
-.is-docs {
-  .main {
-    width: calc(100% - 520px);
-    margin-left: 520px;
-    margin-right: 0;
-    margin-top: 3em;
-    margin-bottom: 10em;
-    padding-right: 5em;
-  }
-
-  + .footer {
-    display: none;
   }
 }
 
@@ -105,12 +127,13 @@
 }
 
 .component-intro {
-  margin-bottom: 4em;
+  margin-bottom: 2em;
   margin-top: 4em;
   position: relative;
 
   p {
     text-align: center;
+    font-size: 18px;
   }
 }
 
@@ -135,7 +158,7 @@
     font-size: 18px;
   }
 
-  .wrap.container {
+  .main {
     margin-bottom: 8em;
   }
 }

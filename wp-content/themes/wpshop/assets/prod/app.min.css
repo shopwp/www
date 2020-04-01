@@ -1673,7 +1673,7 @@ h6 {
     text-decoration: none; }
 
 h1 {
-  font-size: 2.48832em;
+  font-size: 46px;
   font-weight: bold; }
   @media (max-width: 700px) {
     h1 {
@@ -2350,7 +2350,7 @@ select {
 
 .l-contain-narrow {
   max-width: 810px;
-  margin: 0 auto; }
+  margin: 180px auto 0 auto; }
   @media (max-width: 1500px) {
     .l-contain-narrow {
       max-width: 680px; } }
@@ -2846,13 +2846,25 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .header {
   margin: 0;
   padding: 0 1.44em;
-  height: 120px; }
+  height: 120px;
+  width: 100%;
+  background: #fff;
+  -webkit-transform: translateY(0%);
+          transform: translateY(0%);
+  position: fixed;
+  top: 0;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  will-change: transform;
+  z-index: 3; }
   .header .btn {
     margin-top: 0; }
   .header .getting-started-mailinglist-form .btn {
     margin-top: 0.69444em; }
   .header .btn-account {
     margin-left: 2em; }
+  .header #menu-primary-navigation > .menu-item {
+    padding: 10px 0; }
   .header .menu-item a {
     border-radius: 0.4em;
     width: 100%;
@@ -2870,7 +2882,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     -webkit-box-shadow: 0 50px 100px -20px rgba(50, 50, 93, 0.25), 0 30px 60px -30px rgba(0, 0, 0, 0.3), 1px -6px 20px 3px rgba(0, 0, 0, 0.05);
             box-shadow: 0 50px 100px -20px rgba(50, 50, 93, 0.25), 0 30px 60px -30px rgba(0, 0, 0, 0.3), 1px -6px 20px 3px rgba(0, 0, 0, 0.05);
     border: none;
-    z-index: -1;
+    height: 0;
     overflow: hidden;
     position: absolute;
     top: 90px;
@@ -2898,6 +2910,9 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   .header .menu-item.is-active > a {
     background: none;
     text-decoration: none; }
+
+.is-showing-sub-menu .header {
+  z-index: 3; }
 
 .home.page .component-marquee {
   max-width: 100%;
@@ -2992,6 +3007,10 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
     top: 3px;
     left: -2px; }
 
+.page-header h1 {
+  max-width: 700px;
+  margin: 0 auto; }
+
 .page .page-header + p {
   font-size: 18px;
   max-width: 770px;
@@ -3037,11 +3056,17 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 
 .logo-header {
   width: auto;
-  height: 50px; }
+  height: 50px;
+  -webkit-transition: height 0.2s ease;
+  -o-transition: height 0.2s ease;
+  transition: height 0.2s ease;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  will-change: height; }
 
 .logo-link {
   border: none;
-  width: 250px; }
+  width: 70px; }
   @media (max-width: 1300px) {
     .logo-link {
       top: 0; } }
@@ -3058,11 +3083,6 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .logo-header-auth {
   margin: 2.0736em 0;
   width: 90px; }
-
-.is-docs .logo-header {
-  top: 0;
-  height: 45px;
-  margin-top: 0; }
 
 .logo-header-auth-wrapper {
   text-align: center;
@@ -3205,14 +3225,54 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
           -ms-flex-direction: column;
               flex-direction: column; } }
 
-@media (max-width: 500px) {
-  .home .main {
-    display: none; } }
+.main {
+  width: 100%;
+  margin: 120px 0 0 0; }
+
+.how .main,
+.contact .main,
+.faq .main,
+.examples .main,
+.pro-features .main,
+.changelog .main,
+.blog .main {
+  margin-top: 180px; }
+
+.pro-features .page-header h1 {
+  max-width: 910px;
+  margin-bottom: -10px; }
+
+.pro-features .page-header + .page-content {
+  margin-top: 0;
+  margin: 0 auto; }
+
+.page-content + .component-comparison-chart {
+  margin-top: 4em; }
+
+.contact .component.component-faq-secondary,
+.faq .component.component-faq {
+  margin-top: 3em;
+  margin-bottom: 7em; }
+
+.contact .component.component-faq-secondary h2 {
+  font-size: 34px; }
+
+.examples .page-content {
+  max-width: 915px;
+  margin: 0 auto; }
+
+.examples .page-header h1 {
+  max-width: 900px; }
 
 .page-content {
   width: 100%;
   font-size: 18px;
   text-align: center; }
+  .page-content p:first-of-type {
+    font-size: 20px; }
+
+.page-content:empty {
+  display: none; }
 
 .page-id-159 .page-content,
 .page-id-199033 .page-content {
@@ -3222,35 +3282,15 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .page-id-199033 .page-content {
   text-align: left; }
 
+.l-contain-narrow {
+  max-width: 760px;
+  margin: 0 auto 0 auto; }
+
+.single .main-inner.l-contain-narrow {
+  margin-top: 180px; }
+
 .blog .main {
   margin-bottom: 4.1472em; }
-
-.blog .page-header {
-  display: none;
-  margin-bottom: 3em; }
-
-.main {
-  width: 100%;
-  margin-bottom: 3em;
-  margin: 1.44em auto;
-  position: relative; }
-  @media (max-width: 800px) {
-    .main {
-      padding: 0 1.2em; } }
-  @media (max-width: 500px) {
-    .main {
-      padding: 0; } }
-
-.is-docs .main {
-  width: calc(100% - 520px);
-  margin-left: 520px;
-  margin-right: 0;
-  margin-top: 3em;
-  margin-bottom: 10em;
-  padding-right: 5em; }
-
-.is-docs + .footer {
-  display: none; }
 
 .wrap {
   margin-top: 0; }
@@ -3285,11 +3325,12 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   padding: 1em 0 1em; }
 
 .component-intro {
-  margin-bottom: 4em;
+  margin-bottom: 2em;
   margin-top: 4em;
   position: relative; }
   .component-intro p {
-    text-align: center; }
+    text-align: center;
+    font-size: 18px; }
 
 .purchase .component-comparison-chart .component-intro h2,
 .purchase .component-pro-features .component-intro h2 {
@@ -3308,7 +3349,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   text-align: left;
   font-size: 18px; }
 
-.error404 .wrap.container {
+.error404 .main {
   margin-bottom: 8em; }
 
 .purchase-confirmation .page-header,
@@ -3322,10 +3363,6 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   background: #fff;
   overflow-x: hidden;
   overflow-y: visible; }
-  .sidebar.sidebar-is-docs {
-    overflow-x: hidden; }
-    .sidebar.sidebar-is-docs .logo-wrapper {
-      margin-top: 0.8em; }
   @media (max-width: 1200px) {
     .sidebar {
       width: 100%; } }
@@ -3340,38 +3377,6 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   list-style: none;
   margin: 0;
   border-radius: 0; }
-
-.is-docs .sidebar {
-  border-radius: 10px;
-  border: 1px solid #cbcbcb;
-  -webkit-box-shadow: 0 2px 28px -2px hsla(0, 0%, 42%, 0.29);
-          box-shadow: 0 2px 28px -2px hsla(0, 0%, 42%, 0.29);
-  z-index: 2;
-  width: 470px;
-  margin: 0 2.0736em 4.1472em 0;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  position: fixed;
-  height: 100vh;
-  border-radius: 0;
-  border-top: 0;
-  border-left: 0; }
-  @media (max-width: 1200px) {
-    .is-docs .sidebar {
-      width: 100%; } }
-  .is-docs .sidebar .logo-wrapper:hover {
-    opacity: 1; }
-
-.is-docs .sidebar-inner {
-  background: #fff;
-  padding: 1.44em;
-  width: inherit;
-  list-style: none;
-  margin: 0;
-  border-radius: 0;
-  border: none;
-  padding-top: 0.48225em;
-  z-index: 2; }
 
 .sidebar-account {
   margin-top: 0;
@@ -3393,6 +3398,9 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
         -ms-flex-direction: column;
             flex-direction: column; } }
 
+.nav-primary {
+  padding-left: 165px; }
+
 .nav,
 .nav-primary {
   margin: 0; }
@@ -3404,7 +3412,7 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
   -webkit-transform: translateY(0px);
           transform: translateY(0px);
   opacity: 1;
-  z-index: 999999; }
+  height: auto; }
   .menu-item-has-children.is-active .sub-menu .menu-item a:hover {
     background-color: #415aff;
     -webkit-box-shadow: none;
@@ -3714,9 +3722,16 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .post-link:hover {
   opacity: 1; }
 
+.post-thumb {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  min-height: 200px; }
+
 .post-link,
 .post-link .entry-title {
-  text-decoration: none; }
+  text-decoration: none;
+  display: block; }
 
 .entry-title {
   margin-top: 1em; }
@@ -3750,16 +3765,46 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 
 .entry-summary {
   font-size: 1.1em; }
+  .entry-summary .moretag-wrapper {
+    width: 100%; }
   .entry-summary .moretag {
-    font-size: 20px;
     margin-bottom: 2em;
-    margin-top: 16px;
-    text-decoration: none;
-    font-weight: bold;
-    display: block; }
+    margin-top: 5px;
+    display: inline-block; }
 
 .blog .post {
-  margin-bottom: 5em; }
+  margin-bottom: 1em;
+  max-width: 33.3%;
+  padding: 0 1em;
+  margin-top: 1em; }
+  .blog .post .entry-title {
+    font-size: 22px; }
+
+.articles-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto; }
+
+.blog article.post:first-of-type {
+  max-width: 100%;
+  width: 100%;
+  margin-top: 2em;
+  margin-bottom: 1.3em; }
+  .blog article.post:first-of-type .entry-title {
+    font-size: 32px; }
+  .blog article.post:first-of-type .post-thumb {
+    min-height: 400px; }
+
+.navigation.posts-navigation .nav-links {
+  width: 400px;
+  text-align: center;
+  margin: 0 auto; }
+  .navigation.posts-navigation .nav-links a {
+    font-size: 1.4em; }
 
 .article-footer {
   text-align: center;
@@ -3795,8 +3840,10 @@ a.button.edd-slg-social-unlink-profile,
 .search-submit,
 .menu-item-back a,
 #edd-purchase-button,
-#edd-recurring-update-submit {
-  padding: 0.6em 1.5em;
+#edd-recurring-update-submit,
+.nav-links a,
+.moretag {
+  padding: 0.6em 1.5em 0.7em 1.5em;
   color: #fff;
   background-color: #415aff;
   border: none;
@@ -3827,7 +3874,9 @@ a.button.edd-slg-social-unlink-profile,
     .search-submit,
     .menu-item-back a,
     #edd-purchase-button,
-    #edd-recurring-update-submit {
+    #edd-recurring-update-submit,
+    .nav-links a,
+    .moretag {
       font-size: 1.3em; } }
   .btn:hover:not([disabled]),
   .button:hover:not([disabled]),
@@ -3838,7 +3887,9 @@ a.button.edd-slg-social-unlink-profile,
   .search-submit:hover:not([disabled]),
   .menu-item-back a:hover:not([disabled]),
   #edd-purchase-button:hover:not([disabled]),
-  #edd-recurring-update-submit:hover:not([disabled]) {
+  #edd-recurring-update-submit:hover:not([disabled]),
+  .nav-links a:hover:not([disabled]),
+  .moretag:hover:not([disabled]) {
     cursor: pointer;
     text-decoration: none;
     opacity: 1;
@@ -3855,7 +3906,9 @@ a.button.edd-slg-social-unlink-profile,
   .search-submit:focus,
   .menu-item-back a:focus,
   #edd-purchase-button:focus,
-  #edd-recurring-update-submit:focus {
+  #edd-recurring-update-submit:focus,
+  .nav-links a:focus,
+  .moretag:focus {
     border: none;
     outline: none; }
   .btn[disabled], .btn.is-disabled,
@@ -3876,7 +3929,11 @@ a.button.edd-slg-social-unlink-profile,
   #edd-purchase-button[disabled],
   #edd-purchase-button.is-disabled,
   #edd-recurring-update-submit[disabled],
-  #edd-recurring-update-submit.is-disabled {
+  #edd-recurring-update-submit.is-disabled,
+  .nav-links a[disabled],
+  .nav-links a.is-disabled,
+  .moretag[disabled],
+  .moretag.is-disabled {
     background-color: #ececec; }
     .btn[disabled]:hover, .btn.is-disabled:hover,
     .button[disabled]:hover,
@@ -3896,7 +3953,11 @@ a.button.edd-slg-social-unlink-profile,
     #edd-purchase-button[disabled]:hover,
     #edd-purchase-button.is-disabled:hover,
     #edd-recurring-update-submit[disabled]:hover,
-    #edd-recurring-update-submit.is-disabled:hover {
+    #edd-recurring-update-submit.is-disabled:hover,
+    .nav-links a[disabled]:hover,
+    .nav-links a.is-disabled:hover,
+    .moretag[disabled]:hover,
+    .moretag.is-disabled:hover {
       opacity: 0.4;
       background-color: #ececec;
       -webkit-transform: scale(1);
@@ -3912,7 +3973,9 @@ a.button.edd-slg-social-unlink-profile,
   .search-submit.is-loading,
   .menu-item-back a.is-loading,
   #edd-purchase-button.is-loading,
-  #edd-recurring-update-submit.is-loading {
+  #edd-recurring-update-submit.is-loading,
+  .nav-links a.is-loading,
+  .moretag.is-loading {
     position: relative;
     padding: 1.2em 1.728em 1.2em 3.456em; }
     .btn.is-loading:before,
@@ -3924,7 +3987,9 @@ a.button.edd-slg-social-unlink-profile,
     .search-submit.is-loading:before,
     .menu-item-back a.is-loading:before,
     #edd-purchase-button.is-loading:before,
-    #edd-recurring-update-submit.is-loading:before {
+    #edd-recurring-update-submit.is-loading:before,
+    .nav-links a.is-loading:before,
+    .moretag.is-loading:before {
       display: block;
       content: '';
       position: absolute;
@@ -3946,7 +4011,9 @@ a.button.edd-slg-social-unlink-profile,
   .search-submit .fa,
   .menu-item-back a .fa,
   #edd-purchase-button .fa,
-  #edd-recurring-update-submit .fa {
+  #edd-recurring-update-submit .fa,
+  .nav-links a .fa,
+  .moretag .fa {
     margin-right: 0.40188em; }
   .btn .svg-inline--fa,
   .button .svg-inline--fa,
@@ -3957,7 +4024,9 @@ a.button.edd-slg-social-unlink-profile,
   .search-submit .svg-inline--fa,
   .menu-item-back a .svg-inline--fa,
   #edd-purchase-button .svg-inline--fa,
-  #edd-recurring-update-submit .svg-inline--fa {
+  #edd-recurring-update-submit .svg-inline--fa,
+  .nav-links a .svg-inline--fa,
+  .moretag .svg-inline--fa {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
     -webkit-font-feature-settings: normal;
@@ -3976,7 +4045,9 @@ a.button.edd-slg-social-unlink-profile,
   .search-submit .fa-external-link,
   .menu-item-back a .fa-external-link,
   #edd-purchase-button .fa-external-link,
-  #edd-recurring-update-submit .fa-external-link {
+  #edd-recurring-update-submit .fa-external-link,
+  .nav-links a .fa-external-link,
+  .moretag .fa-external-link {
     margin-left: 8px;
     font-size: 20px;
     position: relative;
@@ -3990,48 +4061,31 @@ a.button.edd-slg-social-unlink-profile,
   .search-submit .fa-long-arrow-right,
   .menu-item-back a .fa-long-arrow-right,
   #edd-purchase-button .fa-long-arrow-right,
-  #edd-recurring-update-submit .fa-long-arrow-right {
+  #edd-recurring-update-submit .fa-long-arrow-right,
+  .nav-links a .fa-long-arrow-right,
+  .moretag .fa-long-arrow-right {
     margin-left: 5px; }
-  .btn.btn-secondary,
-  .button.btn-secondary,
-  a.button.edd-slg-social-unlink-profile.btn-secondary,
-  .edd_download_file_link.btn-secondary,
-  .edd_submit.btn-secondary,
-  .edd-submit.btn-secondary,
-  .search-submit.btn-secondary,
-  .menu-item-back a.btn-secondary,
-  #edd-purchase-button.btn-secondary,
-  #edd-recurring-update-submit.btn-secondary {
+
+.moretag,
+.btn-secondary {
+  background-color: transparent;
+  border: 1px solid #415aff;
+  color: #415aff; }
+  .moretag:hover:not([disabled]),
+  .btn-secondary:hover:not([disabled]) {
     background-color: transparent;
     border: 1px solid #415aff;
-    color: #415aff; }
-    .btn.btn-secondary:hover:not([disabled]),
-    .button.btn-secondary:hover:not([disabled]),
-    a.button.edd-slg-social-unlink-profile.btn-secondary:hover:not([disabled]),
-    .edd_download_file_link.btn-secondary:hover:not([disabled]),
-    .edd_submit.btn-secondary:hover:not([disabled]),
-    .edd-submit.btn-secondary:hover:not([disabled]),
-    .search-submit.btn-secondary:hover:not([disabled]),
-    .menu-item-back a.btn-secondary:hover:not([disabled]),
-    #edd-purchase-button.btn-secondary:hover:not([disabled]),
-    #edd-recurring-update-submit.btn-secondary:hover:not([disabled]) {
-      background-color: transparent;
-      border: 1px solid #415aff;
-      color: #415aff;
-      opacity: 1;
-      -webkit-box-shadow: 0px 0px 0px 0.24em #e4eaff;
-              box-shadow: 0px 0px 0px 0.24em #e4eaff; }
-    .btn.btn-secondary:hover[disabled],
-    .button.btn-secondary:hover[disabled],
-    a.button.edd-slg-social-unlink-profile.btn-secondary:hover[disabled],
-    .edd_download_file_link.btn-secondary:hover[disabled],
-    .edd_submit.btn-secondary:hover[disabled],
-    .edd-submit.btn-secondary:hover[disabled],
-    .search-submit.btn-secondary:hover[disabled],
-    .menu-item-back a.btn-secondary:hover[disabled],
-    #edd-purchase-button.btn-secondary:hover[disabled],
-    #edd-recurring-update-submit.btn-secondary:hover[disabled] {
-      background-color: transparent; }
+    color: #415aff;
+    opacity: 1;
+    -webkit-box-shadow: 0px 0px 0px 0.24em #e4eaff;
+            box-shadow: 0px 0px 0px 0.24em #e4eaff; }
+  .moretag:hover[disabled],
+  .btn-secondary:hover[disabled] {
+    background-color: transparent; }
+  .moretag:focus,
+  .btn-secondary:focus {
+    border: 1px solid #415aff;
+    outline: none; }
 
 input[type='submit'],
 .edd-submit {
@@ -4064,7 +4118,8 @@ input[type='submit'],
 
 .btn-m,
 #edd-purchase-button {
-  font-size: 1.3em; }
+  font-size: 1.3em;
+  padding: 0.6em 1.5em 0.6em 1.5em; }
 
 .edd-add-to-cart-label {
   font-size: 1em; }
@@ -4273,11 +4328,9 @@ input[type='submit'],
 
 .component-marquee {
   width: 100%;
-  position: relative;
   height: calc(100vh - 20px);
   padding: 0;
-  background: transparent;
-  z-index: 1; }
+  background: transparent; }
   @media (max-width: 700px) {
     .component-marquee {
       max-width: 92vw;
@@ -4350,7 +4403,10 @@ input[type='submit'],
       max-width: 20px;
       display: inline-block;
       position: absolute;
-      top: 16px; }
+      right: 26px;
+      top: 50%;
+      -webkit-transform: translate(0, -50%);
+              transform: translate(0, -50%); }
   .marquee-left .getting-started-trigger {
     font-size: 1.44em; }
 
@@ -4920,7 +4976,11 @@ pre[class*="language-"] {
     font-size: 18px; }
 
 .purchase .component-purchase {
-  margin: -2em auto 0 auto; }
+  margin: -2em auto 0 auto;
+  padding: 7em 0 4em 0; }
+
+.purchase .component-faq-secondary {
+  margin-bottom: 7em; }
 
 .plans {
   list-style: none;
@@ -5497,7 +5557,7 @@ body.page-template-template-home {
 
 .faq-question {
   padding: 1.44em 0;
-  font-size: 1.2em;
+  font-size: 1.1em;
   border-bottom: 1px solid #cbcbcb;
   -webkit-transition: all 0.1s ease;
   -o-transition: all 0.1s ease;
@@ -5610,7 +5670,8 @@ body.page-template-template-home {
     .component-changelog > ul li {
       margin: 0; }
   .component-changelog > h2 {
-    margin: 2em 0 15px 0; }
+    margin: 1em 0 15px 0;
+    font-size: 22px; }
     .component-changelog > h2:first-child {
       margin-top: 0; }
 
@@ -5646,15 +5707,33 @@ body.page-template-template-home {
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   will-change: transform;
-  -webkit-transition: -webkit-transform 200ms linear;
-  transition: -webkit-transform 200ms linear;
-  -o-transition: transform 200ms linear;
-  transition: transform 200ms linear;
-  transition: transform 200ms linear, -webkit-transform 200ms linear; }
+  -webkit-transition: all 200ms linear;
+  -o-transition: all 200ms linear;
+  transition: all 200ms linear; }
 
 .headroom--pinned {
   -webkit-transform: translateY(0%);
-          transform: translateY(0%); }
+          transform: translateY(0%);
+  height: 70px;
+  border-bottom: 1px solid #ddd; }
+  .headroom--pinned.headroom--top {
+    height: 120px;
+    border: none; }
+
+.headroom--not-top.headroom--pinned.header .sub-menu {
+  top: 65px; }
+
+.headroom--not-top.headroom--pinned .nav-primary {
+  padding-left: 136px; }
+
+.headroom--not-top.headroom--pinned .logo-header {
+  height: 40px; }
+
+.headroom--not-top.headroom--pinned.header .current-menu-item a:after {
+  top: 82%; }
+
+.headroom--not-top.headroom--pinned #menu-primary-navigation > .menu-item > a {
+  font-size: 19px; }
 
 .headroom--unpinned {
   -webkit-transform: translateY(-100%);
@@ -5728,15 +5807,13 @@ body.page-template-template-home {
   text-align: left;
   background: none; }
 
-#edd_checkout_form_wrap
-fieldset#edd_sl_renewal_fields
-#edd_sl_show_renewal_form_wrap {
+#edd_checkout_form_wrap fieldset#edd_sl_renewal_fields #edd_sl_show_renewal_form_wrap {
   text-align: center;
   font-size: 16px; }
 
 .component-screenshots {
   background: transparent;
-  margin: 20em 0 18em 0;
+  margin: 16em 0 8em 0;
   max-width: 100%;
   position: relative;
   overflow: visible; }
@@ -5745,15 +5822,16 @@ fieldset#edd_sl_renewal_fields
         -ms-flex-pack: center;
             justify-content: center; }
   .component-screenshots .bg {
-    width: 50%;
+    display: none;
+    width: 30%;
     height: 125%;
     position: absolute;
     left: 0;
-    top: -56px;
+    top: -156px;
     z-index: -1;
-    border-top-right-radius: 15px;
+    border-top-right-radius: 154px;
     border-bottom-right-radius: 500px;
-    background: #dbcafb; }
+    background: #dffffb; }
   @media (max-width: 1000px) {
     .component-screenshots .screenshot {
       -webkit-box-orient: vertical;
@@ -5826,18 +5904,16 @@ fieldset#edd_sl_renewal_fields
   margin-top: 10px; }
 
 .screenshot-images {
-  width: 58%;
+  width: 53%;
   border-radius: 0;
-  margin-right: 3em;
-  -webkit-box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
-          box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25); }
+  margin-right: 3em; }
 
 .screenshot-content {
-  width: 38%;
+  width: 40%;
   padding: 0 4em 0 2em;
   margin-top: 0;
   position: relative;
-  left: -30px; }
+  left: -90px; }
 
 .screenshots-nav-list {
   list-style: none;
@@ -5891,7 +5967,14 @@ fieldset#edd_sl_renewal_fields
   max-width: 100%;
   margin: 0 auto;
   border-radius: 10px;
-  border: 7px solid #fff; }
+  width: 600px;
+  height: 750px;
+  background: transparent;
+  position: relative;
+  left: 36px;
+  top: -50px;
+  -webkit-box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
+          box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25); }
   .screenshot-image.is-visible {
     display: block; }
 
@@ -6213,10 +6296,14 @@ fieldset#edd_sl_renewal_fields
   padding: 5.04em 0;
   background: none;
   margin-bottom: 3em;
-  padding-top: 0; }
+  padding-top: 0;
+  margin-top: 4em; }
   @media (max-width: 700px) {
     .component-how-it-works {
       max-width: 90vw; } }
+
+.page-content + .component-how-it-works {
+  margin-top: 4em; }
 
 .video-wrapper {
   background: #f3f3f3;
@@ -6380,11 +6467,6 @@ fieldset#edd_sl_renewal_fields
           filter: brightness(0.8);
   z-index: -1; }
 
-.page.pro-features .component-pro-features,
-.page.examples .component-pro-features,
-.page.pro .component-pro-features {
-  margin-top: 1em; }
-
 .component-screenshots .screenshots-secondary-list .screenshot-single {
   max-height: 430px; }
 
@@ -6400,7 +6482,7 @@ fieldset#edd_sl_renewal_fields
   background: none;
   margin-bottom: 3em;
   padding-top: 0;
-  margin-top: 4em; }
+  margin-top: 5em; }
   .component-pro-features h2 {
     font-size: 2.01em; }
   .component-pro-features p {
@@ -6414,11 +6496,6 @@ fieldset#edd_sl_renewal_fields
         font-size: 1.8em; }
       .component-pro-features .how-content h2 {
         font-size: 1.4em; } }
-
-.page.pro-features .component-pro-features,
-.page.examples .component-pro-features,
-.page.pro .component-pro-features {
-  margin-top: 1em; }
 
 .page.examples .how-wrapper {
   margin-bottom: 4em; }
@@ -6440,7 +6517,9 @@ fieldset#edd_sl_renewal_fields
     margin-top: 0; } }
 
 .component-comparison-chart {
-  background-color: transparent; }
+  background-color: transparent;
+  margin-bottom: 6em;
+  margin-top: 4em; }
   .component-comparison-chart table {
     width: 100%; }
   .component-comparison-chart td {
@@ -6895,9 +6974,6 @@ footer .testimonials-author-link .testimonial-author-name {
 @media (max-width: 500px) {
   .is-angled-up:after, .is-angled-up:before {
     border-top: calc(50px / 3) solid #f8f7fc; } }
-
-.marquee-content .logo {
-  opacity: 1; }
 
 .marquee-content h1 .letter {
   display: inline-block;

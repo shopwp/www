@@ -35,13 +35,6 @@ if (is_page('faq')) {
 
   <?php
 
-//   if (is_front_page()) {
-//     $stuff = "background-image: url('" . get_template_directory_uri() . "/assets/prod/imgs/bg-stuff-2.png')";
-
-//   } else {
-//     $stuff = '';
-//   }
-
   if ( is_page('purchase-confirmation') ) {
 
     $purchaseData = Extras\wps_get_recent_receipt_data();
@@ -90,6 +83,12 @@ if (is_page('faq')) {
 
   <body <?php body_class($mobileBodyClass); ?>>
 
+  
+
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH&gtm_auth=zEmWFISEpQvchduPXr4jaQ&gtm_preview=env-2&gtm_cookies_win=x"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
 
   <?php  if (is_page('purchase-confirmation')) { ?>
 
@@ -97,12 +96,6 @@ if (is_page('faq')) {
 
   <?php } ?>
    <?php include(locate_template('components/getting-started/view.php')); ?>
-   
-    <!--[if IE]>
-      <div class="alert alert-warning">
-        <?php _e('You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.', 'sage'); ?>
-      </div>
-    <![endif]-->
 
     <?php
 
@@ -119,72 +112,40 @@ if (is_page('faq')) {
    jQuery('.menu-item-has-children')
       .mouseenter(function() {
         jQuery(this).addClass('is-active')
+        jQuery('body').addClass('is-showing-sub-menu')
       })
       .mouseleave(function(event) {
 
-        if (!jQuery(event.relatedTarget).parents('.menu-item-has-children').length) {
+         var $relatedElement = jQuery(event.relatedTarget);
+
+        if (!$relatedElement.parents('.menu-item-has-children').length) {
           jQuery(this)
             .closest('.menu-item-has-children')
             .removeClass('is-active')
+
+            jQuery('body').removeClass('is-showing-sub-menu')
         }
+
       });
 </script>
+      
+      <main class="main l-fill <?php echo isRegisteredAndPurchasing() ? ' is-registered-and-purchasing' : ''; ?>" role="document">
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH&gtm_auth=zEmWFISEpQvchduPXr4jaQ&gtm_preview=env-2&gtm_cookies_win=x"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+         <div class="main-inner <?php echo is_singular('post') ? 'l-contain-narrow' : ''; ?>">
+            <?php include Wrapper\template_path(); ?>
+         </div>
 
-    <?php if (is_front_page()) { ?>
-      <div class="wrap container l-fill l-row <?php echo isRegisteredAndPurchasing() ? 'is-registered-and-purchasing' : ''; ?>" role="document">
+        <?php get_template_part('templates/components'); ?>
 
-    <?php } else { ?>
-
-      <div class="wrap container l-fill l-row<?php echo is_page_template('template-narrow.php') ? ' l-contain-narrow' : ' l-contain'; ?><?php echo isRegisteredAndPurchasing() ? ' is-registered-and-purchasing' : ''; ?>" role="document">
-
-    <?php } ?>
-
-      <?php
-
-      if (is_page('docs') || get_post_type( get_the_ID() ) === 'docs' ) : ?>
-        <aside class="sidebar sidebar-docs sidebar-is-docs">
-          <?php get_template_part('templates/sidebar', 'docs'); ?>
-        </aside>
-      <?php endif; ?>
-
-      <?php if (!is_front_page()) { ?>
-      <main class="main l-fill <?php echo is_home() || is_singular('post') ? 'l-contain-narrow' : ''; ?>">
-
-        <?php include Wrapper\template_path(); ?>
-
-        <?php if (is_page('docs')) {
-
-          get_template_part('templates/docs');
-
-        } ?>
 
       </main>
 
-      <?php
-      }
-
-      if (get_post_type( get_the_ID() ) === 'docs' ) : ?>
-        <div class="docs-content-loader"><i class="fal fa-cog fa-spin"></i></div>
-        <small class="notice-copy notice-inline"><i class="fal fa-thumbs-up"></i> Copied!</small>
-      <?php endif; ?>
-
-    </div>
-
-    <?php get_template_part('templates/components'); ?>
-
+      
     <?php
 
       do_action('get_footer');
 
-      if (!is_page('auth')) {
-        get_template_part('templates/footer');
-      }
-
+      get_template_part('templates/footer');
       wp_footer();
 
     ?>
@@ -207,25 +168,6 @@ if ( get_field('theme_notice_enable', 'option') ) {
 
     </script>
 
-
-<?php if (!is_page('checkout')) { ?>
-
-    <script>
-
-      var myElement = document.querySelector(".component-notice");
-
-
-      if (myElement) {
-         // construct an instance of Headroom, passing the element
-         var headroom = new Headroom(myElement)
-         // initialise
-         headroom.init()
-      }
-
-
-    </script>
-
-<?php } ?>
 
 <?php  if (is_page('purchase-confirmation')) { ?>
 

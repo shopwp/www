@@ -47,7 +47,7 @@
 
 .l-contain-narrow {
   max-width: $container-width-narrow;
-  margin: 0 auto;
+  margin: 180px auto 0 auto;
 
   @include device(1500, 'max') {
     max-width: 680px;

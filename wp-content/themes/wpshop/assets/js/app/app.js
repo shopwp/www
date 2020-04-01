@@ -23,7 +23,7 @@ import { initFAQs } from './faqs/faqs'
       .fitVids()
 
     // grab an element
-    var myElement = document.querySelector('.component-notice')
+    var myElement = document.querySelector('.header')
 
     if (myElement) {
       var headroom = new Headroom(myElement)
