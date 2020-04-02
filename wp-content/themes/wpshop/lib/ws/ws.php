@@ -98,9 +98,6 @@ add_action('wp_ajax_mailinglist_get_list_id', 'mailinglist_get_list_id');
 add_action('wp_ajax_nopriv_mailinglist_get_list_id', 'mailinglist_get_list_id');
 
 
-//
-// Fetching Mailchimp List
-//
 function mailinglist_signup() {
 
   $email = $_POST['email'];

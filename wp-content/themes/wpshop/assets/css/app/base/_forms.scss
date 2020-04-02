@@ -97,7 +97,7 @@ input,
 textarea,
 select {
   width: 100%;
-  padding: $space-m;
+  padding: 0.8em 1.2em;
   border-radius: 0.4em;
   font-size: $font-m;
   border: none;
@@ -348,7 +348,7 @@ legend {
 }
 
 select {
-  height: 60px;
+  height: 55px;
   text-indent: 10px;
 }
 

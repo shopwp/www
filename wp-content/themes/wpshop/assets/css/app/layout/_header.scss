@@ -76,6 +76,52 @@
   }
 }
 
+.checkout {
+  .header .menu-item a {
+    padding: 0.6em 1.5em 0.7em 1.5em;
+  }
+  .page-header h1 {
+    font-size: 38px;
+  }
+
+  .page-content p:first-of-type {
+    font-size: inherit;
+  }
+
+  .edd_cart_actions,
+  .edd_cart_item_price {
+    vertical-align: initial;
+    padding-top: 12px;
+  }
+
+  .eddr-cart-item-notice {
+    font-size: 14px;
+    background: #c8f9e3;
+    padding: 4px 20px;
+    display: block;
+    width: auto;
+    margin: 11px 0;
+    float: left;
+    border-radius: 5px;
+    line-height: 1.6;
+  }
+
+  .edd-alert-error {
+    font-size: 15px;
+  }
+
+  #edd_secure_site_wrapper span {
+    font-weight: bold;
+  }
+
+  #edd-card-city-wrap,
+  #edd-card-zip-wrap,
+  #edd-card-address-wrap,
+  #edd-card-address-2-wrap {
+    margin-bottom: 2em;
+  }
+}
+
 .is-showing-sub-menu .header {
   z-index: 3;
 }
@@ -199,7 +245,6 @@
 
   &:after {
     content: '';
-    // margin: $space-l auto 0 auto;
     display: block;
     // height: 1px;
     // width: 80px;
@@ -225,7 +270,7 @@
   // }
 
   .has-icon {
-    margin-left: -$space-xs;
+    //  margin-left: -$space-xs;
   }
 
   .icon-small {
