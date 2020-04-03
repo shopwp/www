@@ -78,10 +78,6 @@
       cursor: text;
     }
   }
-
-  // .form-input {
-  //    border: none;
-  // }
 }
 
 .form-input {
@@ -95,22 +91,29 @@
 
 input,
 textarea,
-select {
+select,
+.form-input,
+.affwp-form input[type="text"],
+.affwp-form input[type="password"] {
   width: 100%;
-  padding: 0.8em 1.2em;
+  padding: 16px 24px;
   border-radius: 0.4em;
-  font-size: $font-m;
+   font-size: 20px;
   border: none;
   background: color(white);
   color: color(base);
   margin-top: 0;
-  border: 1px solid #959595;
+  border: 1px solid #415aff;
   font-weight: normal;
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 2px 1px #bed0ff;
-    border-color: #bed0ff;
+  &:focus:not([type='checkbox']):not([type='radio']) {
+   outline: none;
+   border-color: #0f0433;
+   box-shadow: 0px 0px 0px 1px #0f0433;
+  }
+
+   &[type='submit']:focus {
+    box-shadow: 0 0 0 0.24em #e4eaff;
   }
 
   &.valid:not([type='submit']) {
@@ -126,6 +129,7 @@ select {
     // @include dim($opacity-hard);
     opacity: 1;
     box-shadow: none;
+    border-color: #415aff;
 
     &:hover {
       // opacity: $opacity-hard;
@@ -180,6 +184,10 @@ input[type='number'] {
       flex: 1;
     }
   }
+}
+
+.StripeElement--complete.StripeElement {
+   @include validInput();
 }
 
 input[type='submit'] {
@@ -516,7 +524,26 @@ select {
 }
 #edd-cancel-license-renewal {
   margin-left: 10px;
-  color: color(primary);
+      color: #0f0728;
+    text-decoration: underline;
+    font-size: 15px;
+}
+
+.edd-sl-renewal-actions {
+   margin-bottom: 1.6em;
+}
+
+#edd-discount-error-wrap {
+   margin-top: 10px;
+}
+
+#affwp-login-form {
+   fieldset {
+      p:nth-of-type(4) {
+         text-align: center;
+         margin-bottom: 3px;
+      }
+   }
 }
 
 #edd_login_form {
@@ -534,12 +561,21 @@ select {
   }
 }
 
+.affwp-lost-password a,
 .edd-lost-password a,
 #edd-user-login-submit + a {
-  width: 100%;
-  text-align: center;
-  display: inline-block;
-  margin-top: 10px;
+   width: 100%;
+   text-align: center;
+   display: inline-block;
+   margin-top: 10px;
+   color: #0f0433;
+   font-size: 16px;
+   text-decoration: none;
+
+   &:hover {
+      text-decoration: underline;
+      opacity: 1;
+   }
 }
 
 #edd_checkout_form_wrap {

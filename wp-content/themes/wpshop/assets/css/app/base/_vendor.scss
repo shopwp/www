@@ -7,18 +7,14 @@ EDD
 .edd_sl_table,
 #edd_checkout_cart_form,
 #edd_user_history {
-  width: 100%;
-  background: color(white);
-  vertical-align: top;
-  margin: 0 0 1em 0;
+   width: 100%;
+   background: color(white);
+   vertical-align: top;
+   margin: 0 0 1em 0;
 
-  @include card();
+   @include card();
 
-  th,
-  td {
-    // padding: 1em;
-    // vertical-align: top;
-  }
+   border: 1px solid #415aff;
 
   input {
     background: color(light-grey);
@@ -49,6 +45,7 @@ EDD
 
     .eddr-cart-item-notice {
       text-align: center;
+      float: none;
     }
   }
 }
@@ -114,6 +111,11 @@ EDD
       display: none;
     }
   }
+
+    @include device(800, 'max') {
+    max-width: 95%;
+  }
+
 }
 
 .component-account-downloads {
@@ -378,7 +380,9 @@ EDD
   text-align: center;
   font-size: $font-xl;
   padding: 1em 1em;
-  background: #f6f6f6;
+   background: #f8f7fc;
+   border-bottom-right-radius: 8px;
+   border-bottom-left-radius: 8px;
 }
 
 #edd_checkout_cart_form {
@@ -479,7 +483,8 @@ EDD
 
 #edd_final_total_wrap {
   text-align: center;
-  margin-bottom: $space-xs;
+  margin-bottom: -0.2787em;
+  font-size: 90%;
 }
 
 #edd-card-country-wrap,
@@ -538,6 +543,11 @@ EDD
   }
 }
 
+.checkout #edd_checkout_wrap .msg-notice {
+   background: #eae3ff;
+   max-width: 400px;
+}
+
 .is-registered-and-purchasing {
   #edd_checkout_user_info,
   #edd_purchase_submit {
@@ -545,13 +555,6 @@ EDD
   }
 
   #edd_checkout_user_info {
-    // input:not([type="submit"]) {
-    //   opacity: $opacity-hard;
-    //
-    //   &:hover {
-    //     background-color: color(white);
-    //   }
-    // }
 
     .edd-required-indicator {
       display: none;
@@ -575,18 +578,11 @@ EDD
 
 #edd_checkout_login_register,
 #edd_checkout_user_info {
-  // display: none;
-  margin-top: $space-s * 4;
-  // max-width: $content-width-narrow;
-  // margin: 0 auto;
+  margin-top: 2em;
 
   &.zoomIn {
     display: block;
   }
-}
-
-#edd_purchase_form #edd_checkout_user_info {
-  margin-top: $space-l * 4;
 }
 
 #edd_checkout_login_register {
@@ -819,6 +815,51 @@ select + .is-valid:after {
   margin-bottom: 0;
 }
 
+.edd-discount-loader.edd-loading,
+.edd-loading-ajax.edd-loading {
+   position: relative;
+   padding: 0;
+    width: 50px;
+    height: 50px;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+
+    &:before {
+      display: block;
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      border: 0.15em solid black;
+      border-top-color: transparent;
+      animation: spin $speed-slow infinite linear;
+    }
+  
+}
+
+.edd-discount-loader.edd-loading {
+    margin: 0 0 0 auto;
+    top: 55%;
+    left: auto;
+    right: -45px;
+    z-index: 9;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+
+    &:before {
+    width: 30px;
+    height: 30px;       
+    }        
+}
+
+#edd-purchase-button + .edd-loading {
+   top: 20px;
+}
+
 .animated {
   animation-duration: 0.3s;
 }
@@ -861,7 +902,6 @@ form input:-moz-read-only.edd-submit {
 
   #edd_checkout_user_info,
   #edd_checkout_login_register {
-    // position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -878,6 +918,13 @@ form input:-moz-read-only.edd-submit {
     margin-bottom: 10px;
     display: inline-block;
     font-style: normal;
+  }
+
+}
+
+#edd_checkout_cart_form .edd_cart_item .edd_cart_item_price {
+  @include device(600, 'max') {
+    display: none;
   }
 }
 
@@ -955,10 +1002,6 @@ Gravity Forms
 
 .edd-stripe-card-selector {
   margin-top: 0;
-}
-
-#edd_purchase_form #edd_checkout_user_info {
-  margin-top: 4em;
 }
 
 #edd_secure_site_wrapper {
@@ -1251,10 +1294,6 @@ table.affwp-table th.affwp-table-no-data {
   padding: 1em;
 }
 
-.affwp-form label {
-  font-size: 1em;
-}
-
 .affwp-wrap.affwp-payment-email-wrap,
 #affwp-affiliate-dashboard h4,
 #affwp-graphs-filter {
@@ -1277,12 +1316,17 @@ Checkout icons
 #edd-payment-mode-wrap {
   display: flex;
   justify-content: center;
+    position: relative;
+    top: -30px;
+    left: -6px;  
 }
 
 #edd-payment-mode-wrap .edd-gateway-option {
-  width: 18%;
-  margin-top: 0;
-  text-align: center;
+    width: 20%;
+    margin-top: 0;
+    text-align: center;
+    margin: 0;
+    padding: 1em 10px 1em 0;
 }
 
 #edd-payment-mode-wrap .edd-gateway {
@@ -1336,6 +1380,7 @@ div[data-tippy-root] div.tippy-box {
 
   .mailinglist-email {
     padding: 0.7em 1.2em;
+    font-size: 15px;
   }
 
   .mailinglist-copy {

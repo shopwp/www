@@ -34,14 +34,14 @@
     drift.load('gddyshwbu3yh');
     </script>
     <!-- End of Async Drift Code -->
-    
-<?php } ?>
 
-<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css" />   
+
+      <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light.css" />   
 <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/shift-toward.css" />
 
 <script src="https://kit.fontawesome.com/4b023c7b57.js" crossorigin="anonymous"></script>
 
+<?php } ?>
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -55,8 +55,6 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="tVVy_2muFLUdxErUb-Qi0BppnJRngpqGaiYoskxqtcc" />
-
-  
 
       <link rel="apple-touch-icon" sizes="152x152" href="<?php echo get_template_directory_uri() ?>/assets/imgs/favicons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="16x16" href="<?php echo get_template_directory_uri() ?>/assets/imgs/favicons/favicon-16x16.png">

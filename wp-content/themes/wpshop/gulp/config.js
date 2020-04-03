@@ -148,13 +148,14 @@ function postCSSPlugins() {
     presetEnv(), // Allows usage of future CSS
     colormin({
       legacy: true
-    })
+    }),
+    cssnano()
   ]
 
   // Only run if npm run gulp --build
-  if (config.isBuilding) {
-    plugins.push(cssnano({ zindex: false }))
-  }
+//   if (config.isBuilding) {
+//     plugins.push(cssnano({ zindex: false }))
+//   }
 
   return plugins
 }

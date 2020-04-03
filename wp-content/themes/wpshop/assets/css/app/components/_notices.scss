@@ -58,6 +58,10 @@
     top: 65px;
   }
 
+  .logo-link {
+     width: 40px;
+  }
+
   .nav-primary {
     padding-left: 136px;
   }
@@ -92,7 +96,6 @@
   border-radius: 0;
   max-width: 100%;
   z-index: 999999;
-  // display: none;
 
   p {
     margin: 0;
@@ -159,10 +162,7 @@
 }
 
 #edd_purchase_form #edd_show_discount {
-  // background: #fafafa;
-  // padding: 1em;
   border-radius: 10px;
-  // border: 1px solid #cbcbcb;
   text-align: left;
   display: none !important;
 }
@@ -170,12 +170,12 @@
 #edd_checkout_form_wrap fieldset#edd_sl_renewal_fields {
   padding: 0;
   border-radius: 10px;
-  // border: 1px solid #cbcbcb;
   text-align: left;
   background: none;
 }
 
 #edd_checkout_form_wrap fieldset#edd_sl_renewal_fields #edd_sl_show_renewal_form_wrap {
   text-align: center;
-  font-size: 16px;
+  font-size: 14px;
+  margin-bottom: 20px;
 }

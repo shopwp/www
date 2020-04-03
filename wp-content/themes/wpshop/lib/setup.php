@@ -152,11 +152,17 @@ function assets()
 
       wp_enqueue_script('WP Shopify JS', Assets\asset_path('prod/app.min.js'), [], filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.js'), true);
 
+   } else {
+
+      // Removing on checkout page ...
+      wp_dequeue_style( 'wp-block-library' );
    }
    
 }
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\assets', 100);
+
+
 
 /*
 
@@ -173,3 +179,19 @@ if (function_exists('acf_add_options_page')) {
       'redirect' => false
    ));
 }
+
+
+function my_deregister_scripts() {
+
+   if ( !is_admin() && is_page('checkout') ) {
+      wp_dequeue_script( 'wp-embed' );
+   }
+   
+}
+
+add_action( 'wp_footer', __NAMESPACE__ . '\\my_deregister_scripts' );
+
+
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+remove_action('wp_print_styles', 'print_emoji_styles');
+add_filter('show_admin_bar', '__return_false');

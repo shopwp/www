@@ -27,9 +27,6 @@ if (is_page('faq')) {
 
 ?>
 
-
-
-
 <!doctype html>
 <html <?php language_attributes(); ?> <?= $props; ?>>
 
@@ -95,7 +92,11 @@ if (is_page('faq')) {
    <canvas id="confetti-holder" style="position: absolute;top: 0;left: 0;"></canvas>
 
   <?php } ?>
-   <?php include(locate_template('components/getting-started/view.php')); ?>
+
+
+   <?php if (!is_page('checkout')) { ?>
+      <?php include(locate_template('components/getting-started/view.php')); ?>
+   <?php } ?>
 
     <?php
 
@@ -108,27 +109,29 @@ if (is_page('faq')) {
 
     ?>
 
-    <script>
-   jQuery('.menu-item-has-children')
-      .mouseenter(function() {
-        jQuery(this).addClass('is-active')
-        jQuery('body').addClass('is-showing-sub-menu')
-      })
-      .mouseleave(function(event) {
+      <?php if (!is_page('checkout')) { ?>
+         <script>
+            jQuery('.menu-item-has-children')
+               .mouseenter(function() {
+                  jQuery(this).addClass('is-active')
+                  jQuery('body').addClass('is-showing-sub-menu')
+               })
+               .mouseleave(function(event) {
 
-         var $relatedElement = jQuery(event.relatedTarget);
+                  var $relatedElement = jQuery(event.relatedTarget);
 
-        if (!$relatedElement.parents('.menu-item-has-children').length) {
-          jQuery(this)
-            .closest('.menu-item-has-children')
-            .removeClass('is-active')
+                  if (!$relatedElement.parents('.menu-item-has-children').length) {
+                     jQuery(this)
+                     .closest('.menu-item-has-children')
+                     .removeClass('is-active')
 
-            jQuery('body').removeClass('is-showing-sub-menu')
-        }
+                     jQuery('body').removeClass('is-showing-sub-menu')
+                  }
 
-      });
-</script>
-      
+               });
+         </script>
+      <?php } ?>
+
       <main class="main l-fill <?php echo isRegisteredAndPurchasing() ? ' is-registered-and-purchasing' : ''; ?>" role="document">
 
          <div class="main-inner <?php echo is_singular('post') ? 'l-contain-narrow' : ''; ?>">
@@ -180,8 +183,10 @@ if ( get_field('theme_notice_enable', 'option') ) {
 
   <?php } ?>
 
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://unpkg.com/tippy.js@6"></script>
+   <?php if (!is_page('checkout')) { ?>
+      <script src="https://unpkg.com/@popperjs/core@2"></script>
+      <script src="https://unpkg.com/tippy.js@6"></script>
+   <?php } ?>
 
   </body>
 </html>

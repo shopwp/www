@@ -290,20 +290,20 @@ function pw_edd_payment_icon($icons) {
 add_filter('edd_accepted_payment_icons', 'pw_edd_payment_icon', 99, 1);
 
 
-function asasd() {
-   $chosen_gateway = edd_get_chosen_gateway();
+// function asasd() {
+//    $chosen_gateway = edd_get_chosen_gateway();
 
-   // if ($chosen_gateway === 'stripe') {
-   //    echo '<p class="edd-legend-support">Fill in your credit card details below</p>';
-   // }
+//    // if ($chosen_gateway === 'stripe') {
+//    //    echo '<p class="edd-legend-support">Fill in your credit card details below</p>';
+//    // }
 
-   if ($chosen_gateway === 'paypalexpress') {
-      echo '<p class="edd-legend-support">Once you click "Purchase" a PayPal dialog will appear to finish the process.</p>';
-   }
+//    if ($chosen_gateway === 'paypalexpress') {
+//       echo '<p class="edd-legend-support">Once you click "Purchase" a PayPal dialog will appear to finish the process.</p>';
+//    }
 
-}
+// }
 
-add_action('edd_purchase_form_before_email', 'asasd');
+// add_action('edd_purchase_form_before_email', 'asasd');
 
 function asddasd($one, $label) {
 

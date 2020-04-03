@@ -26,6 +26,34 @@
     width: 20%;
     margin-top: 0;
   }
+
+   @include device(900, 'max') {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;      
+      left: 0;
+
+      .footer-col {
+         width: 60%;
+         margin-top: 0;
+         text-align: center;
+         justify-content: center;
+         display: flex;
+         flex-direction: column;
+         align-items: center; 
+         margin-bottom: 3em;
+
+         div {
+            width: 100%;
+
+            a {
+            text-align: center;
+            padding-right: 0;
+            }
+         }
+      }
+  }
 }
 
 #menu-footer {

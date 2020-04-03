@@ -44,9 +44,6 @@
     }
   }
 
-  .form-input {
-  }
-
   .is-focused {
     .form-label {
       color: color(base);
@@ -204,6 +201,7 @@
     padding: 0.7em 1.2em;
     margin-right: 1em;
     flex: 1;
+    font-size: 17px;
   }
 
   .btn-group,

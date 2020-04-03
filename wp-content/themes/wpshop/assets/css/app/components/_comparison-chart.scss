@@ -6,7 +6,13 @@
   table {
     width: 100%;
   }
+   tr {
+          border-bottom: 1px solid #cbcbcb;
 
+          &:last-of-type {
+             border-bottom: none;
+          }
+   }
   td {
     border-right: 1px solid #cbcbcb;
 
@@ -25,6 +31,7 @@
   }
 
   thead {
+         border-bottom: 1px solid #cbcbcb;
     .btn {
       margin-top: 0;
       background-color: #181625;
@@ -90,7 +97,7 @@
   }
 
   .pro {
-    background: #181625;
+    background: #415aff;
     color: white;
     border-radius: 5px;
     padding: 2px 8px;

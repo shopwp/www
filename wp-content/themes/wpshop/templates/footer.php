@@ -1,4 +1,10 @@
-<?php include(locate_template('components/getting-started-inline/view.php')); ?>
+<?php 
+
+if (!is_page('checkout')) {
+   include(locate_template('components/getting-started-inline/view.php'));
+}
+
+?>
 
 <footer class="footer">
   <div class="footer-wrapper">

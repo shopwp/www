@@ -111,7 +111,8 @@ a.button.edd-slg-social-unlink-profile,
 }
 
 .moretag,
-.btn-secondary {
+.btn-secondary,
+#edd-discount-code-wrap .edd-discount-code-field-wrap .edd-apply-discount {
   background-color: transparent;
   border: 1px solid color(primary);
   color: color(primary);
@@ -136,10 +137,9 @@ a.button.edd-slg-social-unlink-profile,
 
 input[type='submit'],
 .edd-submit {
-  font-size: 1.44em;
+   font-size: 21px;
 
   @include device(600, 'max') {
-    font-size: 1.2em;
     width: 100%;
     margin-top: 0;
   }
@@ -172,6 +172,10 @@ input[type='submit'],
 #edd-purchase-button {
   font-size: 1.3em;
   padding: 0.6em 1.5em 0.6em 1.5em;
+
+@include device(600, 'max') {
+  font-size: 1em;
+  }
 }
 
 .edd-add-to-cart-label {
@@ -246,4 +250,10 @@ input[type='submit'],
   padding: 5px 10px;
   font-size: 14px;
   border-radius: 5px;
+}
+.menu-item-back svg {
+       width: 15px;
+    position: relative;
+    top: 1px;
+    left: -1px;
 }
