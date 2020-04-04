@@ -7,6 +7,26 @@
   padding: 1px;
   margin-bottom: 2em;
 
+  .btn-group {
+    width: 40%;     
+  }
+
+  .btn {
+      width: 100%;
+      padding-left: 0px;     
+
+      svg {
+         max-width: 17px;
+         display: inline-block;
+         position: absolute;
+         right: 22px;
+         top: 49%;
+         transform: translateY(-50%);
+      }
+  }
+  
+  
+
   .mailinglist-form-inline {
     margin: 1.9em auto;
     max-width: 840px;

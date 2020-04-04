@@ -13,8 +13,15 @@
 .login .main,
 .account .main,
 .affiliate-login .main,
-.forgot-password .main {
+.forgot-password .main,
+.become-an-affiliate .main,
+.affiliates .main {
   margin-top: 180px;
+}
+
+.affiliates .page-content p:first-of-type,
+.affiliates .page-content {
+   font-size: 15px;
 }
 
 .pro-features .page-header h1 {

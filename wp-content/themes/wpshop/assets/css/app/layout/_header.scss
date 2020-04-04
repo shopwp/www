@@ -16,6 +16,10 @@
 
   .getting-started-mailinglist-form .btn {
     margin-top: 0.69444em;
+
+    svg {
+       max-width: 20px;
+    }
   }
 
   .btn-account {
@@ -76,11 +80,11 @@
   }
 }
 
-.checkout {
+.footer-wrapper .menu-item a svg {
+   max-width: 11px;
+}
 
-   .footer-wrapper .menu-item a svg {
-      max-width: 11px;
-   }
+.checkout {
 
    .has-icon svg {
       width: 30px;

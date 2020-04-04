@@ -74,11 +74,48 @@
    .edd_sl_expiration {
       width: 45%;
    }
-
-   table .edd_sl_license_row td:first-child {
-      width: 45%;
-   }
 }
+
+#edd_sl_license_keys .edd_sl_license_row td:nth-of-type(1) {
+   width: 50%;
+}
+
+#edd_sl_license_keys .edd_sl_license_row td:nth-of-type(2) {
+   width: 50%;
+}
+
+#edd_sl_license_keys2 th.edd_sl_status {
+   width: 50%;
+}
+
+#edd_sl_license_keys2 th.edd_sl_limit {
+   width: 20%;
+}
+
+#edd_sl_license_keys2 th.edd_sl_expiration {
+   width: 30%;
+}
+
+#edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
+   width: 50%;
+}
+
+#edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
+   width: 20%;
+}
+
+#edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
+   width: 30%;
+}
+
+
+
+
+
+
+
+
+
 
 .component-account-sub {
    margin-bottom: $space-xl * 2;
@@ -86,11 +123,29 @@
 
 .component-account-profile {
    .component-account-sub {
-      margin-bottom: 10px;
+      margin-bottom: 0;
+      margin-top: 0;
+
+      label + small {
+         font-size: 14px;
+      }
 
       .accordion-heading {
-         padding: 1em 0;
+         padding: 0.7em 0 1em 0;
          font-size: 20px;
+      }
+
+      .form-input {
+         border: none;
+         padding-bottom: 5px;
+      }
+
+      input {
+         font-size: 16px;
+      }
+
+      .btn-wrap {
+         padding-left: 25px;         
       }
    }
 }
@@ -185,23 +240,19 @@
 }
 
 .account-nav-list-item-link {
-   // padding: 10px 20px;
-   // background-color: color(base);
    text-decoration: none;
-   color: color(primary);
+   color: #0f0433;
    display: inline-block;
    width: 100%;
    text-align: left;
-   // border-radius: 7px 7px 0 0;
    font-size: 16px;
    width: 100%;
    display: block;
-   border-bottom: 1px solid #ddd;
+   border-bottom: 1px solid #415aff;
    padding-bottom: 10px;
    padding-top: 10px;
    padding-left: 10px;
    margin: 0;
-   // font-weight: bold;
    transition: color ease 0.14s;
 
    &:hover {
@@ -210,9 +261,7 @@
    }
 
    &.is-active {
-      background: #f6f6f6;
-      // border: 1px solid color(medium-grey);
-      color: color(base);
+      color: #415aff;
       font-weight: bold;
 
       &:hover {
@@ -242,12 +291,10 @@
    .edd_subscription_name + br {
       display: none;
    }
-   .edd_subscription_billing_cycle {
-      // margin-left: 10px;
-   }
 
    td:nth-child(1) {
-      width: 18%;
+      width: 23%;
+      font-size: 13px;
    }
 
    td:nth-child(2) {

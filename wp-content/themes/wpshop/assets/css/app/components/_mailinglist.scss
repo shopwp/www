@@ -159,6 +159,10 @@
   text-align: left;
   margin: 4em auto;
 
+   #email-error {
+      margin-top: 0;
+   }
+   
   .spinner {
     right: calc(2% - 0px);
     top: 3px;

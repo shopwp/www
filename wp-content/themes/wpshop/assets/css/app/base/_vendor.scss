@@ -23,17 +23,44 @@ EDD
   }
 }
 
+.account {
+   .edd-table,
+   .edd_sl_table,
+   #edd_checkout_cart_form,
+   #edd_user_history,
+   tr,
+   thead,
+   table,
+   #edd_sl_license_keys,
+   .account-nav-list-item-link {
+      border-color: #ddd;
+   }
+}
+
+
 #edd_sl_license_keys {
   @include card();
+   border: 1px solid #415aff;
 
   > tr > td:first-child {
     width: 35%;
   }
+
+  .fa-key {
+    margin-top: 0;
+    margin-left: $space-m;
+  }
+
+  .edd_sl_license_row .edd_sl_type {
+      width: 330px;
+
+      @include device(600, 'max') {
+         width: 100%;
+      }
+   }
+
 }
 
-// #edd_sl_license_keys {
-//    border-top: 0;
-// }
 
 #edd_checkout_cart {
   width: 100%;
@@ -135,16 +162,6 @@ EDD
   }
 }
 
-// .edd_cart_item,
-// .edd_sl_license_row,
-// .edd_cart_header_row,
-// .edd_download_history_row,
-// .edd_purchase_row {
-//    td {
-//       padding-top: 0;
-//    }
-// }
-
 .edd_download_history_row {
   &:nth-child(2),
   &:nth-child(3) {
@@ -159,117 +176,10 @@ EDD
 .edd_sl_license_status {
   text-transform: capitalize;
   width: 35%;
-  font-weight: bold;
 }
 
 .code-snippet-inline {
   font-family: monospace;
-}
-
-// #edd_sl_license_keys2 .edd_sl_license_row td {
-//    padding-bottom: 0;
-//    width: auto;
-// }
-
-// #edd_user_history td.edd_download_download_files {
-//    padding-bottom: 2em;
-// }
-
-#edd_sl_license_keys {
-  // .edd_sl_license_row td {
-  //    width: auto;
-
-  //    &:first-child {
-  //       width: 410px;
-  //    }
-  // }
-
-  .fa-key {
-    margin-top: 0;
-    margin-left: $space-m;
-  }
-
-  // .edd_sl_license_row td {
-  //    vertical-align: top;
-  // }
-}
-
-/*
-
-
-
-*/
-.edd_license_key,
-.edd_purchase_details {
-  // display: none;
-}
-
-/*
-
-Pace
-
-*/
-.pace {
-  -webkit-pointer-events: none;
-  pointer-events: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-}
-
-.pace-inactive {
-  display: none;
-}
-
-.pace .pace-progress {
-  background: #005d9d;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  right: 100%;
-  width: 100%;
-  height: 2px;
-}
-
-.pace .pace-progress-inner {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #005d9d, 0 0 5px #005d9d;
-  opacity: 1;
-  -webkit-transform: rotate(3deg) translate(0px, -4px);
-  -moz-transform: rotate(3deg) translate(0px, -4px);
-  -ms-transform: rotate(3deg) translate(0px, -4px);
-  -o-transform: rotate(3deg) translate(0px, -4px);
-  transform: rotate(3deg) translate(0px, -4px);
-}
-
-.pace .pace-activity {
-  display: block;
-  position: fixed;
-  z-index: 2000;
-  top: 12px;
-  right: 30px;
-  width: 25px;
-  height: 25px;
-  border: solid 2px transparent;
-  border-top-color: color(secondary);
-  border-left-color: color(secondary);
-  border-radius: 50%;
-  animation: pace-spinner 400ms linear infinite;
-}
-
-@keyframes pace-spinner {
-  0% {
-    transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
 }
 
 /*
@@ -471,10 +381,6 @@ EDD
 #edd-purchase-button {
   display: block;
   margin: 0 auto;
-}
-
-.edd-sl-inactive {
-  color: #797979;
 }
 
 .edd-sl-active {
@@ -1059,14 +965,6 @@ Gravity Forms
   }
 }
 
-#edd_sl_license_keys .edd_sl_license_row .edd_sl_type {
-  width: 330px;
-
-  @include device(600, 'max') {
-    width: 100%;
-  }
-}
-
 .no-flexboxlegacy.flexboxtweener {
   .logo-header {
     width: 160px;
@@ -1126,8 +1024,11 @@ Affiliate WP
 }
 
 #affwp-affiliate-dashboard {
+   max-width: 1270px;
+   width: 100%;
+   margin: 0 auto;   
   display: flex;
-  margin: 0;
+   margin-bottom: 3em;
 
   .user-info {
     position: absolute;
@@ -1186,7 +1087,7 @@ Affiliate WP
 }
 
 #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li.active a {
-  color: color(base);
+  color: #415aff;
 }
 
 .account-nav-wrapper,
@@ -1198,8 +1099,12 @@ Affiliate WP
   flex-direction: column;
 
   .user-info {
-    position: absolute;
-    top: -70px;
+   background: #f8f7fc;
+   padding: 15px 30px 4px 30px;
+   margin-bottom: 1em;
+   position: static;
+   border-radius: 10px;
+   border: 1px solid #ddd;
   }
 }
 
@@ -1222,8 +1127,8 @@ Affiliate WP
     display: block;
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
-
     transition: color ease 0.14s;
+    color: #0f0433;
 
     &:hover {
       opacity: 1;
@@ -1240,24 +1145,6 @@ Affiliate WP
 
 .affwp-affiliate-dashboard-tab {
   position: relative;
-
-  // .svg-inline--fa {
-  //    opacity: 0;
-  //    position: absolute;
-  // }
-
-  &.active {
-    a {
-      background: #f6f6f6;
-    }
-    // .svg-inline--fa {
-    //    opacity: 1;
-    //    position: absolute;
-    //    right: 50%;
-    //    top: 1px;
-    //    font-size: 22px;
-    // }
-  }
 }
 
 #affwp-affiliate-dashboard #affwp-affiliate-dashboard-tabs li a {

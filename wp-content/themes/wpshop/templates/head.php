@@ -2,7 +2,7 @@
    
 <?php wp_head(); ?>
 
-<?php if (!is_page('checkout')) { ?>
+<?php if (!is_page('checkout') && !is_page('account')) { ?>
 
   <!--
 

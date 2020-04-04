@@ -121,6 +121,11 @@
   font-size: 1.4em;
 }
 
+@keyframes mover {
+   0% { opacity: 0; transform: translateY(30px); }
+   100% { opacity: 1; transform: translateY(0px); }
+}
+
 .marquee-right {
   width: 56vw;
   margin-top: 0.8em;
@@ -143,6 +148,7 @@
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     box-shadow: 0px -29px 115px -92px #000000de;
+    animation: mover 0.4s;
   }
 
   .screen-two {
@@ -154,6 +160,7 @@
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     box-shadow: 0px -29px 115px -92px #000000de;
+    animation: mover 0.7s;
   }
 }
 

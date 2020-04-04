@@ -93,8 +93,7 @@ input,
 textarea,
 select,
 .form-input,
-.affwp-form input[type="text"],
-.affwp-form input[type="password"] {
+.affwp-form input:not([type="checkbox"]):not([type="radio"]) {
   width: 100%;
   padding: 16px 24px;
   border-radius: 0.4em;
@@ -143,10 +142,6 @@ select,
 .affwp-form input[type='checkbox'] {
   width: auto;
   margin-right: 10px;
-}
-
-.affwp-form input {
-  border: 1px solid #959595;
 }
 
 input[type='number'] {
@@ -198,6 +193,8 @@ input[type='submit'] {
 
 #form-account-profile-general,
 #form-account-profile-password {
+   margin-bottom: 2em;
+
   input[type='submit'] {
     font-size: 1.2em;
   }
@@ -245,7 +242,7 @@ label {
 }
 
 label[for='wps_customer_password_new'] {
-  margin-top: $space-xxxl;
+  margin-top: 1.2em;
 }
 
 .notice-inline {
@@ -497,6 +494,17 @@ select {
 
 #form-forgot-pass {
   width: 100%;
+    margin-bottom: 7em;
+
+  > .form-input {
+     border: none;
+  }
+
+  .form-note {
+      font-size: 16px;
+      margin-bottom: -1em;     
+  }
+
 }
 
 #edd-stripe-payment-errors {
@@ -665,6 +673,7 @@ select {
   margin: 0 auto 2em auto;
   max-width: 800px;
   text-align: center;
+  font-size: 18px !important;
 }
 
 .affwp-errors {

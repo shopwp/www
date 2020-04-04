@@ -103,6 +103,7 @@
   background: transparent;
   position: relative;
   padding-top: 5em;
+   margin-top: 6em;
 
   .design-widget {
     width: 141%;
@@ -110,11 +111,7 @@
     position: absolute;
     top: -5px;
     left: -12%;
-    background-image: radial-gradient(
-      circle farthest-corner at 10% 20%,
-      rgba(239, 246, 249, 1) 0%,
-      rgba(206, 239, 253, 1) 90%
-    );
+    background-image: radial-gradient(circle farthest-corner at 10% 20%,#f8f7fc 0,#f8f7fc 90%);
     transform: rotate(-4deg);
     z-index: -1;
   }
@@ -135,6 +132,9 @@
 }
 
 .affiliate-register-content {
+   margin-top: 1em;
+   max-width: 45%;
+
   h2 {
     color: #415aff;
     margin-bottom: 1.4em;
