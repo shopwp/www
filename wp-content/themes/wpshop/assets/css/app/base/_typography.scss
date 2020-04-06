@@ -18,9 +18,18 @@ h1 {
   font-size: 46px;
   font-weight: bold;
 
+  @include device(1500, 'max') {
+    font-size: 42px;
+  }
+
   @include device(700, 'max') {
     font-size: $font-xxxl;
   }
+
+  @include device(500, 'max') {
+   font-size: 26px;
+  }
+
 }
 
 h2 {
@@ -80,7 +89,7 @@ p {
   }
 
   @include device(600, 'max') {
-    font-size: 1em;
+    font-size: 14px;
   }
 }
 

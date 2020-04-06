@@ -263,6 +263,14 @@ EDD
   line-height: 1;
   display: block;
 
+  @include device(1500, 'max') {
+    font-size: 34px;
+  }
+
+  @include device(1000, 'max') {
+    font-size: 30px;
+  }
+
   @include device(600, 'max') {
     font-size: 28px;
   }
@@ -951,18 +959,10 @@ Gravity Forms
     .edd_sl_license_key {
     }
   }
-
-  tr:last-of-type td {
-    padding-bottom: 2em;
-  }
 }
 
 #edd_purchase_receipt_products {
   margin-bottom: 5em;
-
-  tr:last-of-type td {
-    padding-bottom: 0;
-  }
 }
 
 .no-flexboxlegacy.flexboxtweener {
@@ -1026,8 +1026,8 @@ Affiliate WP
 #affwp-affiliate-dashboard {
    max-width: 1270px;
    width: 100%;
-   margin: 0 auto;   
-  display: flex;
+   margin: 4em auto 0 auto;   
+   display: flex;
    margin-bottom: 3em;
 
   .user-info {

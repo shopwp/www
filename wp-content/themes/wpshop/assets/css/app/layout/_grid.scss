@@ -34,7 +34,7 @@
   width: 100%;
   margin: 0 auto;
 
-  @include device(900, 'max') {
+  @include device(1300, 'max') {
     max-width: 94vw;
   }
 }

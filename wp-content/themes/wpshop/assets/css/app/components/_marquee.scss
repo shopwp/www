@@ -99,6 +99,10 @@
   padding: 3em 1em 0 6em;
   width: calc(44vw - 3em);
 
+   @include device(1300, 'max') {
+      padding-left: 3em;
+   }
+
   .btn-secondary {
     padding-right: 2.8em;
 
@@ -109,16 +113,29 @@
       right: 26px;
       top: 50%;
       transform: translate(0, -50%);
+
+         @include device(1500, 'max') {
+      max-width: 16px;
+      right: 23px;
+   }
     }
   }
 
   .getting-started-trigger {
     font-size: $font-xl;
+
+      @include device(1500, 'max') {
+         font-size: 1.2em;
+      }
   }
 }
 
 .marquee-short-blurb {
   font-size: 1.4em;
+
+     @include device(1500, 'max') {
+      font-size: 1.25em;
+   }
 }
 
 @keyframes mover {
@@ -130,6 +147,15 @@
   width: 56vw;
   margin-top: 0.8em;
   position: relative;
+
+     @include device(1500, 'max') {
+      width: 55vw;
+      margin-top: 35px;
+   }
+
+   @include device(1300, 'max') {
+      
+   }
 
   .stage {
     background: #03030f;
@@ -149,6 +175,17 @@
     border-top-right-radius: 15px;
     box-shadow: 0px -29px 115px -92px #000000de;
     animation: mover 0.4s;
+
+      @include device(1500, 'max') {
+         max-width: 310px;
+         left: 6vw;
+         top: 45px;
+      }
+
+      @include device(1300, 'max') {
+         left: 5vw;
+      }
+
   }
 
   .screen-two {
@@ -161,6 +198,17 @@
     border-top-right-radius: 15px;
     box-shadow: 0px -29px 115px -92px #000000de;
     animation: mover 0.7s;
+
+      @include device(1500, 'max') {
+         max-width: 230px;
+         left: 31vw;
+         top: 45px;
+      }    
+
+      @include device(1300, 'max') {
+         left: 33vw;
+      }
+
   }
 }
 
@@ -175,8 +223,12 @@
     font-size: 72px;
     margin-bottom: 28px;
 
-    @include device(1200, 'max') {
+    @include device(1500, 'max') {
       font-size: 62px;
+    }
+
+    @include device(1300, 'max') {
+      font-size: 56px;
     }
 
     @include device(900, 'max') {

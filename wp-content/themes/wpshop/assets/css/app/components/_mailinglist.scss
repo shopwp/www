@@ -212,6 +212,12 @@
   .btn {
     margin: 0;
   }
+
+  > .l-row {
+      @include device(900, 'max') {
+         flex-direction: column;
+      }
+  }
 }
 
 .footer {

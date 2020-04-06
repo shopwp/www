@@ -89,7 +89,7 @@ if (is_page('faq')) {
 
   <?php  if (is_page('purchase-confirmation')) { ?>
 
-   <canvas id="confetti-holder" style="position: absolute;top: 0;left: 0;"></canvas>
+   <canvas id="confetti-holder" style="z-index: 999;position: absolute;top: -180px;left: 0;margin-top: 0;"></canvas>
 
   <?php } ?>
 

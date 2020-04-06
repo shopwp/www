@@ -52,7 +52,7 @@
             <i class="fa fa-twitter"></i>
           </a> -->
 
-          <?php if(is_user_logged_in()) { 
+          <?php if (is_user_logged_in()) { 
 
             $user = wp_get_current_user();
             $affiliate_id = affwp_get_affiliate_id( $user->ID );

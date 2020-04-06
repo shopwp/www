@@ -89,11 +89,23 @@
   padding: 0.9em;
 }
 
+.affwp-payout-service-tos {
+   a {
+      color: #0f0433;
+      font-weight: normal;
+      text-decoration: none;
+
+      &:hover {
+         opacity: 1;
+      }
+   }
+}
+
 input,
 textarea,
 select,
 .form-input,
-.affwp-form input:not([type="checkbox"]):not([type="radio"]) {
+.affwp-form input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]) {
   width: 100%;
   padding: 16px 24px;
   border-radius: 0.4em;
@@ -142,6 +154,7 @@ select,
 .affwp-form input[type='checkbox'] {
   width: auto;
   margin-right: 10px;
+  height: auto !important;
 }
 
 input[type='number'] {

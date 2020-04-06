@@ -8,28 +8,38 @@
   margin-bottom: 2em;
 
   .btn-group {
-    width: 40%;     
+    width: 40%;
+
+@include device(900, 'max') {
+   width: 250px;
+  }
   }
 
   .btn {
-      width: 100%;
-      padding-left: 0px;     
+    width: 100%;
+    padding-left: 0px;
 
-      svg {
-         max-width: 17px;
-         display: inline-block;
-         position: absolute;
-         right: 22px;
-         top: 49%;
-         transform: translateY(-50%);
-      }
+  @include device(900, 'max') {
+   width: 250px;
   }
-  
-  
+
+    svg {
+      max-width: 17px;
+      display: inline-block;
+      position: absolute;
+      right: 22px;
+      top: 49%;
+      transform: translateY(-50%);
+    }
+  }
 
   .mailinglist-form-inline {
     margin: 1.9em auto;
     max-width: 840px;
+
+     @include device(900, 'max') {
+    padding: 0 1em;
+  } 
 
     .spinner {
       right: calc(-6% - 0px);
@@ -40,6 +50,10 @@
   .mailinglist-group-copy {
     width: auto;
     margin: 0 15px 0 0;
+
+   @include device(900, 'max') {
+      margin-bottom: 1em;
+   }
   }
 
   .l-row {
@@ -48,14 +62,44 @@
 
   .form-control {
     flex: 1;
+
+   @include device(600, 'max') {
+      flex-direction: column;
+   }
+
   }
 
   .mailinglist-email {
     padding: 0.5em 1.2em;
+
+    @include device(600, 'max') {
+      width: 100%;
+      margin-bottom: 1em;
+   }
+
   }
 }
 
 .component-comparison-chart + .component-faq-secondary,
 .component-faq-secondary + .component-getting-started-inline {
   margin-top: 9em;
+}
+
+.component-free-download {
+  background-color: transparent;
+  margin-bottom: 7em;
+
+  .mailinglist-form-inline {
+    max-width: 900px;
+  }
+
+  .intro {
+    font-size: 18px;
+    max-width: 680px;
+    margin: -1em auto 2em auto;
+  }
+
+  .form-btn {
+    font-size: 19.5px;
+  }
 }

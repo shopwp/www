@@ -13,7 +13,6 @@
   padding: $space-l 0;
   font-size: 1.1em;
   border-bottom: 1px solid color(medium-grey);
-  transition: all 0.1s ease;
 
   > div {
     width: 100%;
@@ -39,6 +38,10 @@
     color: #415aff;
   }
 
+  @include device(800, 'max') {
+    font-size: 16px;
+  }  
+
   @include device(700, 'max') {
     font-size: $font-m;
     position: relative;
@@ -47,10 +50,15 @@
     .fa-plus-square,
     .fa-minus-square {
       position: absolute;
-      right: 0;
+      right: -3em;
       top: calc(50% - 10px);
     }
   }
+
+  @include device(500, 'max') {
+    font-size: 14px;
+  }
+
 }
 
 .faq-answer {
@@ -60,6 +68,10 @@
   display: none;
   font-size: 16px;
   opacity: 0;
+
+  @include device(600, 'max') {
+    font-size: 14px;
+  }
 
   ol {
     margin-left: $space-l * 2;
@@ -132,6 +144,13 @@
   h2 {
     text-align: center;
     font-size: 40px;
+      @include device(1500, 'max') {
+         font-size: 34px;
+      }    
+
+      @include device(500, 'max') {
+         font-size: 28px;
+      }          
   }
 }
 

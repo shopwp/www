@@ -102,8 +102,11 @@
 
         get_template_part('components/purchase/controller');
 
+      } else if(get_row_layout() == 'component_free_download') {
+
+        get_template_part('components/free-download/controller');
+
       }
-      
       
     endwhile;
 

@@ -47,9 +47,18 @@
   height: 70px;
   border-bottom: 1px solid #ddd;
 
+   
+
   &.headroom--top {
     height: 120px;
     border: none;
+      @include device(1500, 'max') {
+         height: 90px;
+      }
+
+      @include device(1300, 'max') {
+         height: 65px;
+      }      
   }
 }
 
@@ -60,6 +69,9 @@
 
   .logo-link {
      width: 40px;
+      @include device(1300, 'max') {
+         width: 45px;
+      }     
   }
 
   .nav-primary {
