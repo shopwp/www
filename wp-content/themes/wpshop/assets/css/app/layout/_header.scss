@@ -14,9 +14,9 @@
     height: 90px;
   }
 
-   @include device(1300, 'max') {
-      height: 65px;
-   }
+  @include device(1300, 'max') {
+    height: 65px;
+  }
 
   .btn {
     margin-top: 0;
@@ -46,9 +46,13 @@
       margin: 0 0.3em;
       border-radius: 0.3em;
 
-        @include device(1500, 'max') {
-            font-size: 1.14em;
-         }
+      @include device(1500, 'max') {
+        font-size: 1.14em;
+      }
+
+      @include device(1700, 'min') {
+        font-size: 1.44em;
+      }
 
       &:hover {
         color: #415aff;
@@ -72,9 +76,9 @@
     transition: all 0.3s ease;
     opacity: 0;
 
-       @include device(1500, 'max') {
-    top: 70px;
-   }
+    @include device(1500, 'max') {
+      top: 70px;
+    }
 
     a {
       border-radius: 0;
@@ -84,9 +88,9 @@
       padding: 0.9em 2.1em;
       margin: 0;
 
-       @include device(1500, 'max') {
-    font-size: 14px;
-   }      
+      @include device(1500, 'max') {
+        font-size: 14px;
+      }
     }
 
     .menu-item:last-child a {
@@ -101,10 +105,13 @@
 }
 
 .home .header {
-   
-   @include device(1300, 'max') {
-      top: 10px;
-   }      
+  @include device(1300, 'max') {
+    top: 0;
+  }
+
+  @include device(600, 'max') {
+    padding: 0 1em;
+  }
 }
 
 .footer-wrapper .menu-item a svg {
@@ -187,6 +194,10 @@
 .home.page .component-marquee {
   max-width: 100%;
   border-radius: 0;
+
+  @include device(700, 'max') {
+    height: auto;
+  }
 }
 
 .meta-wrapper {
@@ -395,8 +406,8 @@
   }
 
   @include device(1300, 'max') {
-
-     top: 0;
+    position: relative;
+    top: 6px;
     width: 45px;
     margin: 0;
   }

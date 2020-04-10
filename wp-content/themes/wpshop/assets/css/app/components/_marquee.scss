@@ -14,30 +14,33 @@
     height: 30px;
     margin: 0;
 
-    @include device(700, 'max') {
-      width: 28px;
-      height: 28px;
-    }
+    //  @include device(700, 'max') {
+    //    width: 28px;
+    //    height: 28px;
+    //  }
 
-    @include device(500, 'max') {
-      width: 20px;
-      height: 20px;
-    }
+    //  @include device(500, 'max') {
+    //    width: 30px;
+    //    height: 30px;
+    //  }
   }
+
   .logos-wrapper {
     margin: 0 auto 1em auto;
     display: flex;
 
     .logos {
       width: 100px;
+      color: transparent;
 
       &:hover {
         opacity: 1;
       }
     }
+
     @include device(600, 'max') {
       position: relative;
-      top: -17vw;
+      top: -63px;
     }
   }
 
@@ -107,6 +110,19 @@
     padding-left: 3em;
   }
 
+  @include device(1100, 'max') {
+    width: 55vw;
+    padding-left: 32px;
+    padding-top: 5em;
+  }
+
+  @include device(700, 'max') {
+    height: auto;
+    width: 100vw;
+    padding-top: 0;
+    padding-left: 1em;
+  }
+
   .btn {
     margin-right: 0;
   }
@@ -127,6 +143,15 @@
         max-width: 16px;
         right: 23px;
       }
+
+      @include device(700, 'max') {
+        display: none;
+      }
+    }
+
+    @include device(600, 'max') {
+      width: 100%;
+      padding: 12px 30px 14px 30px;
     }
   }
 
@@ -134,17 +159,28 @@
   .getting-started-trigger {
     font-size: 1.44vw;
 
-    @include device(1500, 'max') {
-      // font-size: 1.2em;
+    @include device(1300, 'max') {
+      font-size: 24px;
+      margin-left: 0;
+    }
+
+    @include device(1000, 'max') {
+      width: 100%;
+      margin: 0.4em 0;
     }
   }
 }
 
 .marquee-short-blurb {
   font-size: 1.4em;
+  max-width: 555px;
 
   @include device(1500, 'max') {
     font-size: 1.25em;
+  }
+
+  @include device(600, 'max') {
+    font-size: 1.1em;
   }
 }
 
@@ -169,7 +205,19 @@
     margin-top: 35px;
   }
 
-  @include device(1300, 'max') {
+  @include device(1100, 'max') {
+    width: 45vw;
+    margin-top: 3.5vw;
+    right: -12px;
+    overflow-x: hidden;
+  }
+
+  @include device(700, 'max') {
+    height: auto;
+    width: 100vw;
+    margin-top: 3em;
+    right: 0;
+    overflow: hidden;
   }
 
   .stage {
@@ -179,9 +227,37 @@
     height: calc(100vh - 133px);
     margin: 0;
     border-top-left-radius: 15px;
+    box-shadow: inset 24px -8px 0 -13px rgba(226, 118, 223, 0.16078),
+      inset -7px 24px 0 -13px rgba(226, 118, 223, 0.16078);
+
+    .corner {
+      width: 9px;
+      height: 10px;
+      top: 1px;
+      left: 2px;
+      position: absolute;
+      background: rgba(255, 207, 254, 0.32);
+      border-top-left-radius: 35px;
+
+      @include device(700, 'max') {
+        display: none;
+      }
+    }
 
     @include device(1500, 'max') {
-      height: calc(100vh - 90px);
+      height: calc(100vh - 115px);
+    }
+
+    @include device(1300, 'max') {
+      height: calc(112vh - 60px);
+    }
+
+    @include device(700, 'max') {
+      height: 64vh;
+      width: 93vw;
+      margin: 0 auto;
+      border-top-right-radius: 15px;
+      box-shadow: none;
     }
   }
 
@@ -202,7 +278,23 @@
     }
 
     @include device(1300, 'max') {
-      // left: 5vw;
+      left: 60px;
+      max-width: 335px;
+    }
+
+    @include device(700, 'max') {
+      left: 10vw;
+      max-width: 100%;
+      width: 36vw;
+      min-width: 240px;
+      top: 33px;
+    }
+
+    @include device(500, 'max') {
+      width: 75vw;
+      min-width: auto;
+      left: 50%;
+      transform: translate(-50%, 0%);
     }
   }
 
@@ -224,7 +316,20 @@
     }
 
     @include device(1300, 'max') {
-      // left: 33vw;
+      left: 420px;
+      max-width: 250px;
+    }
+
+    @include device(700, 'max') {
+      left: 55vw;
+      max-width: 100%;
+      width: 36vw;
+      min-width: 190px;
+      top: 33px;
+    }
+
+    @include device(500, 'max') {
+      display: none;
     }
   }
 }
@@ -240,21 +345,22 @@
     font-size: 4.3vw;
     margin-bottom: 28px;
 
-    //  @include device(1500, 'max') {
-    //    font-size: 62px;
-    //  }
-
-    //  @include device(1300, 'max') {
-    //    font-size: 56px;
-    //  }
+    @include device(1100, 'max') {
+      font-size: 56px;
+    }
 
     @include device(900, 'max') {
-      font-size: 52px;
+      font-size: 48px;
     }
 
     @include device(600, 'max') {
-      font-size: 10vw;
-      margin-top: -2em;
+      font-size: 40px;
+      margin-top: -1.4em;
+      line-height: 1.2;
+    }
+
+    @include device(400, 'max') {
+      font-size: 38px;
     }
   }
 
@@ -275,21 +381,21 @@
   @include device(1000, 'max') {
     top: -6vh;
     left: 0;
-    padding: 0 1em;
+    padding: 0;
   }
 
   @include device(700, 'max') {
-    top: -9vh;
+    top: 0;
     padding: 0;
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
   @include device(600, 'max') {
-    top: -2vh;
+    top: 0;
   }
 }
 

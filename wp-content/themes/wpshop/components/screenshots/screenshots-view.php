@@ -6,11 +6,13 @@
    <div class="l-row">
 
       <section class="screenshot-images">
-         <img src="/wp-content/uploads/2019/06/to-compress-min.gif" class="screenshot-image is-visible" data-type="sync" />
-         <img src="/wp-content/uploads/2019/06/single-1.png" class="screenshot-image" data-type="posts" />
-         <img src="/wp-content/uploads/2019/06/single-6.png" class="screenshot-image" data-type="display" />
-         <img src="/wp-content/uploads/2019/07/cart-example-new.png" class="screenshot-image" data-type="cart" />
-         <img src="/wp-content/uploads/2019/06/single-5.png" class="screenshot-image" data-type="settings" />
+      
+         <div class="screenshot-wrapper screenshot-image is-visible" style="background-image:url('/wp-content/uploads/2019/06/to-compress-min.gif');" data-type="sync"></div>
+         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2019/06/single-1.png');" data-type="posts"></div>
+         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2019/06/single-6.png');" data-type="display"></div>
+         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2019/07/cart-example-new.png');" data-type="cart"></div>
+         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2019/06/single-5.png');" data-type="settings"></div>
+
       </section>
 
       <section class="screenshot-content">

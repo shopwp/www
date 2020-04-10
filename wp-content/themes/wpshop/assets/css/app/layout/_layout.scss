@@ -2,13 +2,13 @@
   width: 100%;
   margin: 120px 0 0 0;
 
-   @include device(1500, 'max') {
-      margin-top: 130px;
-   }
+  @include device(1500, 'max') {
+    margin-top: 130px;
+  }
 
-   @include device(1300, 'max') {
-      margin-top: 96px;
-   }   
+  @include device(1300, 'max') {
+    margin-top: 96px;
+  }
 }
 
 .how .main,
@@ -32,15 +32,19 @@
 .try-wp-shopify-for-free .main {
   margin-top: 180px;
 
-   @include device(1500, 'max') {
-      margin-top: 150px;
-   }
+  @include device(1500, 'max') {
+    margin-top: 150px;
+  }
 }
 
 .home .main {
-   @include device(1300, 'max') {
-      margin-top: 150px;
-   }      
+  @include device(1300, 'max') {
+    margin-top: 110px;
+  }
+
+  @include device(600, 'max') {
+    margin-top: 175px;
+  }
 }
 
 .purchase-confirmation .page-content {
@@ -196,10 +200,10 @@
   p {
     text-align: center;
     font-size: 18px;
-  
-      @include device(1500, 'max') {
-         font-size: 17px;
-      }
+
+    @include device(1500, 'max') {
+      font-size: 17px;
+    }
   }
 }
 
@@ -212,7 +216,7 @@
   }
 
   @include device(700, 'max') {
-    font-size: 1.9em;
+    font-size: 28px;
   }
 }
 

@@ -10,18 +10,26 @@
   .btn-group {
     width: 40%;
 
-@include device(900, 'max') {
-   width: 250px;
-  }
+    @include device(900, 'max') {
+      width: 250px;
+    }
+
+    @include device(600, 'max') {
+      width: 100%;
+    }
   }
 
   .btn {
     width: 100%;
     padding-left: 0px;
 
-  @include device(900, 'max') {
-   width: 250px;
-  }
+    @include device(900, 'max') {
+      width: 250px;
+    }
+
+    @include device(600, 'max') {
+      width: 100%;
+    }
 
     svg {
       max-width: 17px;
@@ -37,9 +45,9 @@
     margin: 1.9em auto;
     max-width: 840px;
 
-     @include device(900, 'max') {
-    padding: 0 1em;
-  } 
+    @include device(900, 'max') {
+      padding: 0 1em;
+    }
 
     .spinner {
       right: calc(-6% - 0px);
@@ -51,9 +59,9 @@
     width: auto;
     margin: 0 15px 0 0;
 
-   @include device(900, 'max') {
+    @include device(900, 'max') {
       margin-bottom: 1em;
-   }
+    }
   }
 
   .l-row {
@@ -63,10 +71,9 @@
   .form-control {
     flex: 1;
 
-   @include device(600, 'max') {
+    @include device(600, 'max') {
       flex-direction: column;
-   }
-
+    }
   }
 
   .mailinglist-email {
@@ -75,8 +82,8 @@
     @include device(600, 'max') {
       width: 100%;
       margin-bottom: 1em;
-   }
-
+      margin-right: 0;
+    }
   }
 }
 

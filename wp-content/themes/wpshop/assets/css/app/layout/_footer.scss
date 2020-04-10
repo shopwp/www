@@ -15,9 +15,9 @@
     text-align: left;
     margin-bottom: -8px;
 
-   @include device(1500, 'max') {
-    font-size: 16px;
-   }        
+    @include device(1500, 'max') {
+      font-size: 16px;
+    }
   }
 }
 
@@ -31,32 +31,32 @@
     margin-top: 0;
   }
 
-   @include device(900, 'max') {
-      flex-direction: column;
+  @include device(900, 'max') {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    left: 0;
+
+    .footer-col {
+      width: 60%;
+      margin-top: 0;
+      text-align: center;
       justify-content: center;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      text-align: center;      
-      left: 0;
+      margin-bottom: 3em;
 
-      .footer-col {
-         width: 60%;
-         margin-top: 0;
-         text-align: center;
-         justify-content: center;
-         display: flex;
-         flex-direction: column;
-         align-items: center; 
-         margin-bottom: 3em;
+      div {
+        width: 100%;
 
-         div {
-            width: 100%;
-
-            a {
-            text-align: center;
-            padding-right: 0;
-            }
-         }
+        a {
+          text-align: center;
+          padding-right: 0;
+        }
       }
+    }
   }
 }
 
@@ -73,6 +73,10 @@
 
   @include device(1000, 'max') {
     padding: 4.1em 0 0 0;
+  }
+
+  @include device(600, 'max') {
+    padding: 1.1em 0 0 0;
   }
 
   .footer-link {
@@ -114,7 +118,7 @@
       position: relative;
 
       @include device(1500, 'max') {
-         font-size: 14px;
+        font-size: 14px;
       }
 
       &:hover {
@@ -168,7 +172,9 @@
   top: 6px;
 
   @include device(500, 'max') {
-    display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    margin: 0 auto;
+    display: block;
+    left: 0;
   }
 }

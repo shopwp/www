@@ -2,6 +2,10 @@
   padding: 0;
   background: none;
 
+  @include device(600, 'max') {
+    display: none;
+  }
+
   pre {
     margin: 0;
     padding: 3px;

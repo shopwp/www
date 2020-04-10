@@ -13,6 +13,11 @@
     left: 0;
     height: 115px;
 
+    @include device(600, 'max') {
+      height: 30px;
+      top: 0px;
+    }
+
     path {
       fill: white;
     }
@@ -24,6 +29,12 @@
     padding-top: 4em;
     font-size: 2.4em;
     text-align: center;
+
+    @include device(600, 'max') {
+      margin: 3em auto 2em;
+      padding-top: 2em;
+      font-size: 26px;
+    }
   }
 }
 .testimonials-author-link {
@@ -141,6 +152,10 @@ footer .testimonials-author-link .testimonial-author-name {
 .grid-sizer,
 .grid-item {
   width: 49%;
+
+  @include device(600, 'max') {
+    width: 100%;
+  }
 }
 
 .grid-item {

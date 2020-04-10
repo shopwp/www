@@ -10,6 +10,16 @@
     display: block;
     width: 320px;
     margin-right: 6em;
+
+    @include device(900, 'max') {
+      width: 270px;
+      margin-right: 0;
+    }
+
+    @include device(600, 'max') {
+      width: 200px;
+      margin-right: 0;
+    }
   }
 
   .inner {
@@ -19,11 +29,26 @@
     margin: 0 auto;
     padding: 3em 4em;
     border-radius: 0.4em;
+
+    @include device(1100, 'max') {
+      padding: 3em 0em;
+      max-width: 90vw;
+    }
+
+    @include device(900, 'max') {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   @include device(700, 'max') {
     margin-bottom: 0;
     padding-bottom: 5em;
+  }
+
+  @include device(600, 'max') {
+    padding-bottom: 0;
   }
 
   .description {
@@ -33,6 +58,10 @@
 
     @include device(1000, 'max') {
       font-size: 16px;
+    }
+
+    @include device(900, 'max') {
+      text-align: center;
     }
   }
 
@@ -44,6 +73,14 @@
 
     @include device(1000, 'max') {
       font-size: 2em;
+    }
+
+    @include device(900, 'max') {
+      text-align: center;
+    }
+
+    @include device(600, 'max') {
+      font-size: 24px;
     }
   }
 
@@ -77,6 +114,10 @@
   .link {
     display: block;
     text-align: left;
+
+    @include device(900, 'max') {
+      margin: 0 auto;
+    }
   }
 
   .logo-shopify {
@@ -103,7 +144,7 @@
   background: transparent;
   position: relative;
   padding-top: 5em;
-   margin-top: 6em;
+  margin-top: 6em;
 
   .design-widget {
     width: 141%;
@@ -111,7 +152,7 @@
     position: absolute;
     top: -5px;
     left: -12%;
-    background-image: radial-gradient(circle farthest-corner at 10% 20%,#f8f7fc 0,#f8f7fc 90%);
+    background-image: radial-gradient(circle farthest-corner at 10% 20%, #f8f7fc 0, #f8f7fc 90%);
     transform: rotate(-4deg);
     z-index: -1;
   }
@@ -132,8 +173,8 @@
 }
 
 .affiliate-register-content {
-   margin-top: 1em;
-   max-width: 45%;
+  margin-top: 1em;
+  max-width: 45%;
 
   h2 {
     color: #415aff;

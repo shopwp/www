@@ -13,29 +13,29 @@
 
   p {
     font-size: 18px;
-      @include device(1500, 'max') {
-         font-size: 17px;
-      }    
+    @include device(1500, 'max') {
+      font-size: 17px;
+    }
 
-      @include device(700, 'max') {
-         font-size: 16px;
-         max-width: 80%;
-         margin: 0 auto;
-      }          
+    @include device(700, 'max') {
+      font-size: 16px;
+      max-width: 80%;
+      margin: 0 auto;
+    }
   }
 }
 
 .purchase .component-purchase {
   margin: -2em auto 0 auto;
   padding: 7em 0 4em 0;
-   
-   @include device(1500, 'max') {
-    padding: 4em 0;
-   }      
 
-   @include device(700, 'max') {
+  @include device(1500, 'max') {
+    padding: 4em 0;
+  }
+
+  @include device(700, 'max') {
     padding: 2em 0;
-   }         
+  }
 }
 
 .purchase .component-faq-secondary {
@@ -49,10 +49,13 @@
   display: flex;
   justify-content: space-between;
 
-   @include device(900, 'max') {
+  @include device(900, 'max') {
     flex-direction: column;
-   }
+  }
 
+  @include device(600, 'max') {
+    padding: 0 2em;
+  }
 }
 
 .plan {
@@ -63,11 +66,11 @@
   border: 1px solid #cbcbcb;
   box-shadow: 0px 0px 21px -10px rgba(9, 35, 58, 0.25);
 
-     @include device(900, 'max') {
-      width: 100%;
-      padding: 25px 10px 40px;
-      margin-bottom: 1em;
-   }
+  @include device(900, 'max') {
+    width: 100%;
+    padding: 25px 10px 40px;
+    margin-bottom: 1em;
+  }
 }
 
 .plan-names {
@@ -104,10 +107,9 @@
   font-weight: 100;
   margin-left: 0px;
 
-   @include device(700, 'max') {
+  @include device(700, 'max') {
     font-size: 16px;
-   }
-
+  }
 }
 
 .plan-description {
@@ -123,8 +125,8 @@
   align-items: center;
   margin-top: 3em;
 
-   max-width: 320px;
-   margin: 3em auto 0em auto;  
+  max-width: 320px;
+  margin: 3em auto 0em auto;
 
   &:hover {
     cursor: pointer;

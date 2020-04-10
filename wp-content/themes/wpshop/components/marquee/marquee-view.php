@@ -34,7 +34,7 @@
       <img class="screen-one" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-<?= rand(1, 5) ?>.jpg" alt="Sup">
 
       <img class="screen-two" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-two.jpg" alt="Sup">
-      <div class="stage"></div>
+      <div class="stage"><div class="corner"></div></div>
       </div>
   </div>
 
