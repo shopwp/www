@@ -132,9 +132,26 @@
   }
   .header {
     position: static;
+
+    @media (max-width: 1200px) {
+      margin-bottom: 5em;
+    }
+
+    //  @media (max-width: 600px) {
+    //    margin-bottom: 5em;
+    //  }
   }
   .header .menu-item a {
     padding: 0.6em 1.5em 0.7em 1.5em;
+
+    @media (max-width: 800px) {
+      padding: 0.5em 1.5em 0.7em;
+      font-size: 1em;
+
+      svg {
+        top: 2px;
+      }
+    }
   }
 
   .page-header h1 {
@@ -153,6 +170,12 @@
 
   .edd_cart_actions {
     width: 125px;
+
+    @include device(600, 'max') {
+      margin-top: 0;
+      padding-top: 0;
+      margin-bottom: 1em;
+    }
   }
 
   .edd_cart_item_price {

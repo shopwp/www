@@ -90,26 +90,26 @@
 }
 
 .affwp-payout-service-tos {
-   a {
-      color: #0f0433;
-      font-weight: normal;
-      text-decoration: none;
+  a {
+    color: #0f0433;
+    font-weight: normal;
+    text-decoration: none;
 
-      &:hover {
-         opacity: 1;
-      }
-   }
+    &:hover {
+      opacity: 1;
+    }
+  }
 }
 
 input,
 textarea,
 select,
 .form-input,
-.affwp-form input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]) {
+.affwp-form input:not([type='checkbox']):not([type='radio']):not([type='submit']) {
   width: 100%;
   padding: 16px 24px;
   border-radius: 0.4em;
-   font-size: 20px;
+  font-size: 20px;
   border: none;
   background: color(white);
   color: color(base);
@@ -118,12 +118,12 @@ select,
   font-weight: normal;
 
   &:focus:not([type='checkbox']):not([type='radio']) {
-   outline: none;
-   border-color: #0f0433;
-   box-shadow: 0px 0px 0px 1px #0f0433;
+    outline: none;
+    border-color: #0f0433;
+    box-shadow: 0px 0px 0px 1px #0f0433;
   }
 
-   &[type='submit']:focus {
+  &[type='submit']:focus {
     box-shadow: 0 0 0 0.24em #e4eaff;
   }
 
@@ -131,8 +131,8 @@ select,
     @include validInput();
   }
 
-  @include device(900, 'max') {
-    font-size: 1em;
+  @include device(600, 'max') {
+    font-size: 16px;
   }
 
   &:disabled {
@@ -195,7 +195,7 @@ input[type='number'] {
 }
 
 .StripeElement--complete.StripeElement {
-   @include validInput();
+  @include validInput();
 }
 
 input[type='submit'] {
@@ -206,7 +206,7 @@ input[type='submit'] {
 
 #form-account-profile-general,
 #form-account-profile-password {
-   margin-bottom: 2em;
+  margin-bottom: 2em;
 
   input[type='submit'] {
     font-size: 1.2em;
@@ -507,17 +507,16 @@ select {
 
 #form-forgot-pass {
   width: 100%;
-    margin-bottom: 7em;
+  margin-bottom: 7em;
 
   > .form-input {
-     border: none;
+    border: none;
   }
 
   .form-note {
-      font-size: 16px;
-      margin-bottom: -1em;     
+    font-size: 16px;
+    margin-bottom: -1em;
   }
-
 }
 
 #edd-stripe-payment-errors {
@@ -545,26 +544,26 @@ select {
 }
 #edd-cancel-license-renewal {
   margin-left: 10px;
-      color: #0f0728;
-    text-decoration: underline;
-    font-size: 15px;
+  color: #0f0728;
+  text-decoration: underline;
+  font-size: 15px;
 }
 
 .edd-sl-renewal-actions {
-   margin-bottom: 1.6em;
+  margin-bottom: 1.6em;
 }
 
 #edd-discount-error-wrap {
-   margin-top: 10px;
+  margin-top: 10px;
 }
 
 #affwp-login-form {
-   fieldset {
-      p:nth-of-type(4) {
-         text-align: center;
-         margin-bottom: 3px;
-      }
-   }
+  fieldset {
+    p:nth-of-type(4) {
+      text-align: center;
+      margin-bottom: 3px;
+    }
+  }
 }
 
 #edd_login_form {
@@ -585,18 +584,18 @@ select {
 .affwp-lost-password a,
 .edd-lost-password a,
 #edd-user-login-submit + a {
-   width: 100%;
-   text-align: center;
-   display: inline-block;
-   margin-top: 10px;
-   color: #0f0433;
-   font-size: 16px;
-   text-decoration: none;
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  margin-top: 10px;
+  color: #0f0433;
+  font-size: 16px;
+  text-decoration: none;
 
-   &:hover {
-      text-decoration: underline;
-      opacity: 1;
-   }
+  &:hover {
+    text-decoration: underline;
+    opacity: 1;
+  }
 }
 
 #edd_checkout_form_wrap {

@@ -32,7 +32,7 @@ a.button.edd-slg-social-unlink-profile,
   opacity: 1;
 
   @include device(500, 'max') {
-   //  font-size: 1.3em;
+    //  font-size: 1.3em;
   }
 
   &:hover:not([disabled]) {
@@ -162,9 +162,9 @@ input[type='submit'],
 .btn-l {
   font-size: $font-xl;
 
-   @include device(1500, 'max') {
-      font-size: 1.2em;
-   }  
+  @include device(1500, 'max') {
+    font-size: 1.2em;
+  }
 }
 
 .btn-m,
@@ -234,6 +234,8 @@ input[type='submit'],
 }
 
 .receipt-account-wrapper .btn {
+  font-size: 22px;
+
   &:after {
     content: '\f178';
     font-family: 'FontAwesome';

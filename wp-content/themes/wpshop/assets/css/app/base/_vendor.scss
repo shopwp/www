@@ -7,14 +7,19 @@ EDD
 .edd_sl_table,
 #edd_checkout_cart_form,
 #edd_user_history {
-   width: 100%;
-   background: color(white);
-   vertical-align: top;
-   margin: 0 0 1em 0;
+  width: 100%;
+  background: color(white);
+  vertical-align: top;
+  margin: 0 0 1em 0;
 
-   @include card();
+  @include card();
 
-   border: 1px solid #415aff;
+  border: 1px solid #cccccc;
+
+  thead,
+  tr {
+    border-bottom: 1px solid #cccccc;
+  }
 
   input {
     background: color(light-grey);
@@ -24,23 +29,22 @@ EDD
 }
 
 .account {
-   .edd-table,
-   .edd_sl_table,
-   #edd_checkout_cart_form,
-   #edd_user_history,
-   tr,
-   thead,
-   table,
-   #edd_sl_license_keys,
-   .account-nav-list-item-link {
-      border-color: #ddd;
-   }
+  .edd-table,
+  .edd_sl_table,
+  #edd_checkout_cart_form,
+  #edd_user_history,
+  tr,
+  thead,
+  table,
+  #edd_sl_license_keys,
+  .account-nav-list-item-link {
+    border-color: #ddd;
+  }
 }
-
 
 #edd_sl_license_keys {
   @include card();
-   border: 1px solid #415aff;
+  border: 1px solid #415aff;
 
   > tr > td:first-child {
     width: 35%;
@@ -52,15 +56,19 @@ EDD
   }
 
   .edd_sl_license_row .edd_sl_type {
-      width: 330px;
+    width: 330px;
 
-      @include device(600, 'max') {
-         width: 100%;
-      }
-   }
-
+    @include device(600, 'max') {
+      width: 100%;
+    }
+  }
 }
 
+.edd_checkout_cart_item_title {
+  @include device(600, 'max') {
+    display: block;
+  }
+}
 
 #edd_checkout_cart {
   width: 100%;
@@ -70,9 +78,14 @@ EDD
       display: none;
     }
 
+    tbody {
+      padding-bottom: 0 !important;
+    }
+
     .eddr-cart-item-notice {
       text-align: center;
       float: none;
+      display: inline-block;
     }
   }
 }
@@ -139,10 +152,9 @@ EDD
     }
   }
 
-    @include device(800, 'max') {
+  @include device(800, 'max') {
     max-width: 95%;
   }
-
 }
 
 .component-account-downloads {
@@ -298,9 +310,19 @@ EDD
   text-align: center;
   font-size: $font-xl;
   padding: 1em 1em;
-   background: #f8f7fc;
-   border-bottom-right-radius: 8px;
-   border-bottom-left-radius: 8px;
+  background: #f8f7fc;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+
+  @include device(600, 'max') {
+    margin-top: 0 !important;
+  }
+}
+
+.edd_cart_footer_row {
+  @include device(600, 'max') {
+    margin-top: 0 !important;
+  }
 }
 
 #edd_checkout_cart_form {
@@ -314,6 +336,10 @@ EDD
     @include device(600, 'max') {
       padding: $space-s;
     }
+  }
+
+  @include device(600, 'max') {
+    margin-top: 0;
   }
 }
 
@@ -458,8 +484,8 @@ EDD
 }
 
 .checkout #edd_checkout_wrap .msg-notice {
-   background: #eae3ff;
-   max-width: 400px;
+  background: #eae3ff;
+  max-width: 400px;
 }
 
 .is-registered-and-purchasing {
@@ -469,7 +495,6 @@ EDD
   }
 
   #edd_checkout_user_info {
-
     .edd-required-indicator {
       display: none;
     }
@@ -731,47 +756,57 @@ select + .is-valid:after {
 
 .edd-discount-loader.edd-loading,
 .edd-loading-ajax.edd-loading {
-   position: relative;
-   padding: 0;
+  position: relative;
+  padding: 0;
+  width: 50px;
+  height: 50px;
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+
+  &:before {
+    display: block;
+    content: '';
+    position: absolute;
+    border-radius: 50%;
     width: 50px;
     height: 50px;
-    display: block;
-    text-align: center;
-    margin: 0 auto;
+    border: 0.15em solid black;
+    border-top-color: transparent;
+    animation: spin $speed-slow infinite linear;
+  }
+}
 
-    &:before {
-      display: block;
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      border: 0.15em solid black;
-      border-top-color: transparent;
-      animation: spin $speed-slow infinite linear;
-    }
-  
+#edd_sl_cancel_renewal_form {
+  max-width: 700px;
+  margin: 0 auto;
+  border: none;
 }
 
 .edd-discount-loader.edd-loading {
-    margin: 0 0 0 auto;
-    top: 55%;
-    left: auto;
-    right: -45px;
-    z-index: 9;
-    padding: 0;
+  margin: 0 0 0 auto;
+  top: 55%;
+  left: auto;
+  right: -45px;
+  z-index: 9;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+
+  @include device(600, 'max') {
+    top: 35%;
+    right: 15px;
+  }
+
+  &:before {
     width: 30px;
     height: 30px;
-    position: absolute;
-
-    &:before {
-    width: 30px;
-    height: 30px;       
-    }        
+  }
 }
 
 #edd-purchase-button + .edd-loading {
-   top: 20px;
+  top: 20px;
 }
 
 .animated {
@@ -833,7 +868,6 @@ form input:-moz-read-only.edd-submit {
     display: inline-block;
     font-style: normal;
   }
-
 }
 
 #edd_checkout_cart_form .edd_cart_item .edd_cart_item_price {
@@ -858,8 +892,18 @@ Needed becasue we're showing our own custom success message
 
 */
 .purchase-confirmation {
+  .header {
+    z-index: 6;
+    background: transparent;
+  }
+
   .page-header + p {
     display: none;
+  }
+
+  .page-header .icon {
+    margin-right: 0;
+    top: 2px;
   }
 }
 
@@ -961,8 +1005,17 @@ Gravity Forms
   }
 }
 
+#user_switching_switch_on {
+  text-align: center;
+  margin: 4em 0;
+}
 #edd_purchase_receipt_products {
   margin-bottom: 5em;
+
+  td:first-child,
+  th:first-child {
+    width: 48%;
+  }
 }
 
 .no-flexboxlegacy.flexboxtweener {
@@ -1024,11 +1077,11 @@ Affiliate WP
 }
 
 #affwp-affiliate-dashboard {
-   max-width: 1270px;
-   width: 100%;
-   margin: 4em auto 0 auto;   
-   display: flex;
-   margin-bottom: 3em;
+  max-width: 1270px;
+  width: 100%;
+  margin: 4em auto 0 auto;
+  display: flex;
+  margin-bottom: 3em;
 
   .user-info {
     position: absolute;
@@ -1099,12 +1152,12 @@ Affiliate WP
   flex-direction: column;
 
   .user-info {
-   background: #f8f7fc;
-   padding: 15px 30px 4px 30px;
-   margin-bottom: 1em;
-   position: static;
-   border-radius: 10px;
-   border: 1px solid #ddd;
+    background: #f8f7fc;
+    padding: 15px 30px 4px 30px;
+    margin-bottom: 1em;
+    position: static;
+    border-radius: 10px;
+    border: 1px solid #ddd;
   }
 }
 
@@ -1203,17 +1256,17 @@ Checkout icons
 #edd-payment-mode-wrap {
   display: flex;
   justify-content: center;
-    position: relative;
-    top: -30px;
-    left: -6px;  
+  position: relative;
+  top: -30px;
+  left: -6px;
 }
 
 #edd-payment-mode-wrap .edd-gateway-option {
-    width: 20%;
-    margin-top: 0;
-    text-align: center;
-    margin: 0;
-    padding: 1em 10px 1em 0;
+  width: 20%;
+  margin-top: 0;
+  text-align: center;
+  margin: 0;
+  padding: 1em 10px 1em 0;
 }
 
 #edd-payment-mode-wrap .edd-gateway {

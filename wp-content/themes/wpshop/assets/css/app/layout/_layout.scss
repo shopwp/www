@@ -122,6 +122,12 @@
   }
 }
 
+.purchase-confirmation .page-content {
+  z-index: 5;
+  opacity: 1;
+  position: relative;
+}
+
 .page-content:empty {
   display: none;
 }
