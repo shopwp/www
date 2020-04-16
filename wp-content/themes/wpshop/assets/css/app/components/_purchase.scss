@@ -79,8 +79,8 @@
 }
 
 .plan-name {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 22px;
+  //   font-weight: bold;
 
   @include device(1500, 'max') {
     font-size: 20px;
@@ -116,7 +116,7 @@
   font-size: 17px;
   margin-top: 0;
   margin-bottom: 15px;
-  color: #313131;
+  color: #6b6b6b;
 }
 
 .price-toggle-label-wrapper {
@@ -197,6 +197,7 @@
     font-size: 15px;
     position: relative;
     padding-left: 13px;
+    margin-bottom: 10px;
 
     &:before {
       position: absolute;
@@ -210,6 +211,23 @@
     }
   }
 }
+
+// #edd_price_option_35_singlesite {
+//   border: 3px solid #a7a7ff;
+//   position: relative;
+
+//   &:before {
+//     content: 'Most popular';
+//     display: block;
+//     width: 200px;
+//     height: 20px;
+//     color: white;
+//     background-color: #a7a7ff;
+//     position: absolute;
+//     right: 0;
+//     top: 0;
+//   }
+// }
 
 .edd_download_purchase_form {
   width: 100%;

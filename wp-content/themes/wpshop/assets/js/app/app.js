@@ -5,8 +5,8 @@ import { initAccount } from './account/account'
 import { initMobile } from './mobile/mobile'
 import { initDriftTracking, initDownloadTracking } from './analytics/analytics'
 import { initFAQs } from './faqs/faqs'
-;(function($) {
-  $(function() {
+;(function ($) {
+  $(function () {
     initPlugins($)
     initForms($)
 
@@ -18,9 +18,7 @@ import { initFAQs } from './faqs/faqs'
     initDriftTracking($)
     initDownloadTracking()
 
-    jQuery('iframe[src*="youtube"]')
-      .parent()
-      .fitVids()
+    jQuery('iframe[src*="youtube"]').parent().fitVids()
 
     // grab an element
     var myElement = document.querySelector('.header')
@@ -33,7 +31,13 @@ import { initFAQs } from './faqs/faqs'
     //  var subMenuTrigger = document.querySelector('.sub-nav-wrapper')
     //  var subMenuContent = document.querySelector('.nav-primary-sub')
 
-    jQuery('.getting-started-trigger').each(function() {
+    if (window.innerWidth > 1000) {
+      var placement = 'right'
+    } else {
+      var placement = 'bottom'
+    }
+
+    jQuery('.getting-started-trigger').each(function () {
       tippy(this, {
         content: document.getElementById('getting-started-wrapper').cloneNode(true),
         interactive: true,
@@ -43,15 +47,15 @@ import { initFAQs } from './faqs/faqs'
         arrow: true,
         arrowType: 'round',
         distance: 7,
-        placement: 'right',
+        placement: placement,
         maxWidth: 450,
         duration: [280, 0],
         moveTransition: 'transform 0.2s ease-out',
         offset: [0, 20],
-        onCreate: function(instance) {
+        onCreate: function (instance) {
           var $form = jQuery(instance.popper).find('.mailinglist-form')
           initMailinglist($form)
-        }
+        },
       })
     })
 
@@ -59,12 +63,12 @@ import { initFAQs } from './faqs/faqs'
       itemSelector: '.grid-item',
       columnWidth: '.grid-sizer',
       percentPosition: true,
-      gutter: 20
+      gutter: 20,
     })
 
     initMailinglist(jQuery('.mailinglist-form-inline'))
 
-    jQuery('.screenshots-nav-list li').on('click', function() {
+    jQuery('.screenshots-nav-list li').on('click', function () {
       var type = jQuery(this).data('type')
       if (!type) {
         return
@@ -86,10 +90,8 @@ import { initFAQs } from './faqs/faqs'
       $screenshotContent.addClass('is-visible')
     })
 
-    jQuery('.price-toggle-label-wrapper').on('click', function() {
-      jQuery(this)
-        .closest('.component-purchase')
-        .toggleClass('is-monthly')
+    jQuery('.price-toggle-label-wrapper').on('click', function () {
+      jQuery(this).closest('.component-purchase').toggleClass('is-monthly')
     })
   })
 })(jQuery)

@@ -135,8 +135,8 @@
       max-width: 20px;
       display: inline-block;
       position: absolute;
-      right: 26px;
-      top: 50%;
+      right: 10%;
+      top: 49%;
       transform: translate(0, -50%);
 
       @include device(1500, 'max') {
@@ -167,6 +167,13 @@
     @include device(1000, 'max') {
       width: 100%;
       margin: 0.4em 0;
+    }
+  }
+
+  .mailinglist-form {
+    .btn-secondary {
+      font-size: 17px;
+      margin-left: 0;
     }
   }
 }

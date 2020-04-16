@@ -27,9 +27,8 @@ h1 {
   }
 
   @include device(500, 'max') {
-   font-size: 26px;
+    font-size: 26px;
   }
-
 }
 
 h2 {
@@ -89,7 +88,7 @@ p {
   }
 
   @include device(600, 'max') {
-    font-size: 14px;
+    font-size: 16px;
   }
 }
 

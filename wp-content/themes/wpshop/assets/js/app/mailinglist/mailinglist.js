@@ -9,7 +9,7 @@ On Mailing List Form submission
 */
 function validateMailingListForm($form) {
   $form.validate({
-    submitHandler: function(form, e) {
+    submitHandler: function (form, e) {
       console.log('form ::::::: ', form)
 
       e.preventDefault()
@@ -17,22 +17,16 @@ function validateMailingListForm($form) {
       console.log('form', form)
 
       $form.addClass('is-submitting')
-      $form
-        .find('input, button[type="submit"]')
-        .addClass('is-disabled')
-        .prop('disabled', true)
+      $form.find('input, button[type="submit"]').addClass('is-disabled').prop('disabled', true)
       $form.find('.spinner').addClass('is-visible')
 
       getMailchimpListById($form)
-        .done(function(data) {
+        .done(function (data) {
           console.log('...... data ', data)
 
           $form.find('input, button[type="submit"]').prop('disabled', false)
 
-          $form
-            .find('.mailinglist-email')
-            .focus()
-            .select()
+          $form.find('.mailinglist-email').focus().select()
 
           if (data.code !== 200) {
             var type = $form.data('type')
@@ -48,10 +42,7 @@ function validateMailingListForm($form) {
                 $form.find('.spinner').removeClass('is-visible')
                 $form.find('input, button[type="submit"]').removeClass('is-disabled')
                 $form.find('.form-success').addClass('is-visible')
-                $form
-                  .find('.form-success')
-                  .empty()
-                  .append(message)
+                $form.find('.form-success').empty().append(message)
                 $form.addClass('is-submitted')
                 return
               } else {
@@ -88,16 +79,13 @@ function validateMailingListForm($form) {
             $form.find('.spinner').removeClass('is-visible')
             $form.find('input, button[type="submit"]').removeClass('is-disabled')
             $form.find('.form-success').addClass('is-visible')
-            $form
-              .find('.form-success')
-              .empty()
-              .append(message)
+            $form.find('.form-success').empty().append(message)
             $form.addClass('is-submitted')
 
             initMailinglistTracking()
           }
         })
-        .fail(function(jqXHR, textStatus) {
+        .fail(function (jqXHR, textStatus) {
           $form.find('.form-message.form-success').empty()
           $form.find('.form-error').addClass('is-visible')
           $form
@@ -116,46 +104,34 @@ function validateMailingListForm($form) {
     rules: {
       email: {
         required: true,
-        email: true
-      }
+        email: true,
+      },
     },
 
     errorClass: 'error',
     validClass: 'succes',
 
-    highlight: function(element, errorClass, validClass) {
+    highlight: function (element, errorClass, validClass) {
       console.log('highlight :: element', element)
 
-      jQuery(element)
-        .parent()
-        .removeClass('form-valid')
+      jQuery(element).parent().removeClass('form-valid')
       jQuery('.form-error').addClass('is-visible')
       jQuery('.form-success').removeClass('is-visible')
     },
-    unhighlight: function(element, errorClass, validClass) {
+    unhighlight: function (element, errorClass, validClass) {
       console.log('unhighlight :: element', element)
-      jQuery(element)
-        .find('.form-error')
-        .removeClass('is-visible')
+      jQuery(element).find('.form-error').removeClass('is-visible')
     },
-    success: function(label) {
+    success: function (label) {
       console.log('success')
 
       $form.find('.form-error').removeClass('is-visible')
 
-      jQuery(label)
-        .parent()
-        .addClass('form-valid')
+      jQuery(label).parent().addClass('form-valid')
     },
-    errorPlacement: function(error, element) {
-      console.log('errorPlacement :: element', element)
-
-      error.appendTo(
-        jQuery(element)
-          .closest('.mailinglist-form')
-          .find('.form-error')
-      )
-    }
+    errorPlacement: function (error, element) {
+      error.appendTo(jQuery(element).closest('.mailinglist-form').find('.form-error'))
+    },
   })
 }
 

@@ -29,6 +29,10 @@
     margin: 1em 0 15px 0;
     font-size: 22px;
 
+    + ul {
+      margin-bottom: 2em;
+    }
+
     &:first-child {
       margin-top: 0;
     }

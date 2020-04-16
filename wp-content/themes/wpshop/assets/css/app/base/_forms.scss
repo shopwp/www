@@ -491,6 +491,10 @@ select {
     text-indent: -15px;
     margin-bottom: 0;
     font-weight: normal;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   input[type='checkbox'] {

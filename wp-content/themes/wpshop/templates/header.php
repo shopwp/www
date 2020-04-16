@@ -90,11 +90,13 @@
 
       <?php } ?>
 
-      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-mobile.svg?v=2" class="icon-mobile-open" alt="Mobile WP Shopify Menu Icon" />
-
-
-      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-mobile-close.svg?v=2" class="icon-mobile icon-mobile-close" alt="Mobile WP Shopify Menu Close Icon" />
+      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-mobile.svg" class="icon-mobile-open" alt="Mobile WP Shopify Menu Icon" />
 
     </div>
 
   </header>
+
+<div class="mobile-menu-wrapper">
+   <?php wp_nav_menu(['theme_location' => 'mobile_navigation', 'menu_class' => 'nav-mobile l-row']); ?>
+   <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/icon-mobile-close.svg" class="icon-mobile icon-mobile-close" alt="Mobile WP Shopify Menu Close Icon" />
+</div>

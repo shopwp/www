@@ -104,6 +104,10 @@
   }
 }
 
+.is-mobile-active .header {
+  z-index: -1;
+}
+
 .home .header {
   @include device(1300, 'max') {
     top: 0;
@@ -298,15 +302,6 @@
   position: relative;
   height: 100%;
 
-  &.is-active {
-    .icon-mobile-open {
-      display: none;
-    }
-
-    .icon-mobile-close {
-      display: block;
-    }
-  }
   @include device(1300, 'max') {
     .icon-mobile-open {
       display: block;
@@ -317,6 +312,16 @@
     .header-account {
       display: none;
     }
+  }
+}
+
+.is-mobile-active {
+  .icon-mobile-open {
+    display: none;
+  }
+
+  .icon-mobile-close {
+    display: block;
   }
 }
 
@@ -430,7 +435,7 @@
 
   @include device(1300, 'max') {
     position: relative;
-    top: 6px;
+    top: 0px;
     width: 45px;
     margin: 0;
   }

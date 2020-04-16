@@ -35,6 +35,10 @@
   @include device(1500, 'max') {
     margin-top: 150px;
   }
+
+  @include device(1300, 'max') {
+    margin-top: 100px;
+  }
 }
 
 .home .main {
@@ -119,6 +123,10 @@
 
   p:first-of-type {
     font-size: 20px;
+
+    @media (max-width: 600px) {
+      font-size: 16px;
+    }
   }
 }
 
@@ -148,7 +156,13 @@
 }
 
 .single .main-inner.l-contain-narrow {
-  margin-top: 180px;
+  margin-top: 110px;
+}
+
+.main-inner {
+  @include device(900, 'max') {
+    padding: 0 20px;
+  }
 }
 
 .blog {
