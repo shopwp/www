@@ -327,3 +327,6 @@ function asasdsadsd() {
 
 // add_action('edd_purchase_form_before_cc_form', 'asasdsadsd');
 
+add_filter( 'edd_subscription_can_update', function() {
+    return true;
+});
