@@ -305,17 +305,17 @@
     color: #415aff;
     text-decoration: none;
 
-    &:after {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translate(-50%, 0%);
-      display: block;
-      content: '';
-      width: 20px;
-      height: 2px;
-      background-color: #415aff;
-    }
+    //  &:after {
+    //    position: absolute;
+    //    top: 100%;
+    //    left: 50%;
+    //    transform: translate(-50%, 0%);
+    //    display: block;
+    //    content: '';
+    //    width: 20px;
+    //    height: 2px;
+    //    background-color: #415aff;
+    //  }
   }
 
   .sub-menu a:after {
