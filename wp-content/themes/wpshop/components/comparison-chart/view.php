@@ -18,7 +18,7 @@
 
          <tbody>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=automatic-syncing" target="_blank">Automatic syncing</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=automatic-syncing" target="_blank">Automatic Syncing</a></td>
                <td class="cell cell-yes">
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
@@ -36,7 +36,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=built-in-cart-experience" target="_blank">Built-in cart experience</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=built-in-cart-experience" target="_blank">Cart Experience</a></td>
                <td class="cell cell-yes">
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
@@ -45,7 +45,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=no-iframes" target="_blank">No iframes</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=no-iframes" target="_blank">No iFrames</a></td>
                <td class="cell cell-yes">
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
@@ -54,7 +54,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=product-detail-pages" target="_blank">Product detail pages</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=product-detail-pages" target="_blank">Product Detail Pages</a></td>
                <td class="cell cell-yes">
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
@@ -63,7 +63,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=fixed-cart-icon" target="_blank">Fixed cart icon</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=fixed-cart-icon" target="_blank">Fixed Cart Tab</a></td>
                <td class="cell cell-yes">
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
@@ -72,7 +72,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=image-crop-and-sizing" target="_blank">Image crop and sizing</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=image-crop-and-sizing" target="_blank">Image Crop and Sizing</a></td>
                <td class="cell cell-yes">
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
@@ -92,7 +92,7 @@
             </tr>
 
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=custom-button-colors" target="_blank">Custom button colors</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=custom-button-colors" target="_blank">Custom Button Colors</a></td>
                <td class="cell cell-yes">
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
@@ -102,7 +102,7 @@
             </tr>
 
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=plugin-updates" target="_blank">Plugin updates</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=plugin-updates" target="_blank">Plugin Updates</a></td>
                <td class="cell cell-yes">
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
@@ -110,8 +110,70 @@
                   <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
                </td>
             </tr>
+
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=search-shortcode-pro-only" target="_blank">Search shortcode</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=translations" target="_blank">Translations</a></td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=sale-notice" target="_blank">Sale Notice</a></td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=gutenberg-blocks" target="_blank">Gutenberg Blocks</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=variant-button-style" target="_blank">Variant Button Style</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=conditional-cart-loading" target="_blank">Conditional Cart Loading</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=left-in-stock-notice" target="_blank">"Left in Stock" Notice</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=search-shortcode-pro-only" target="_blank">Search Shortcode</a></td>
                <td class="cell cell-no">
                   <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
                </td>
@@ -120,7 +182,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=storefront-shortcode-pro-only" target="_blank">Storefront shortcode</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=storefront-shortcode-pro-only" target="_blank">Storefront Shortcode</a></td>
                <td class="cell cell-no">
                   <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
                </td>
@@ -129,7 +191,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=image-zoom-pro-only" target="_blank">Image zoom</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=image-zoom-pro-only" target="_blank">Image Zoom</a></td>
                <td class="cell cell-no">
                   <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
                </td>
@@ -138,7 +200,17 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=infinite-scrolling-pro-only" target="_blank">Infinite scrolling</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=infinite-scrolling-pro-only" target="_blank">Infinite Scrolling</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+            
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=cart-notes-pro-only" target="_blank">Cart Notes</a></td>
                <td class="cell cell-no">
                   <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
                </td>
@@ -147,7 +219,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=selective-syncing-pro-only" target="_blank">Selective syncing</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=cart-terms-pro-only" target="_blank">Cart Terms and Conditions</a></td>
                <td class="cell cell-no">
                   <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
                </td>
@@ -156,7 +228,33 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=sync-by-collection-pro-only" target="_blank">Sync by collection</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=cart-attributes-pro-only" target="_blank">Custom Cart Attributes</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            
+
+            
+
+            
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=php-templates-pro-only" target="_blank">PHP Templates</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=selective-syncing-pro-only" target="_blank">Selective Syncing</a></td>
                <td class="cell cell-no">
                   <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
                </td>
@@ -165,7 +263,27 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=cart-notes-pro-only" target="_blank">Cart notes</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=sync-by-collection-pro-only" target="_blank">Sync By Collection</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=webhooks" target="_blank">Webhooks</a></td>
+               <td class="cell cell-no">
+                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
+               </td>
+               <td class="cell cell-yes">
+                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
+               </td>
+            </tr>
+
+            <tr>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=dedicated-support-pro-only" target="_blank">Dedicated Live Support</a></td>
                <td class="cell cell-no">
                   <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
                </td>
@@ -174,43 +292,7 @@
                </td>
             </tr>
             <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=cart-terms-pro-only" target="_blank">Cart terms and conditions</a></td>
-               <td class="cell cell-no">
-                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
-               </td>
-               <td class="cell cell-yes">
-                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
-               </td>
-            </tr>
-            <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=cart-attributes-pro-only" target="_blank">Custom cart attributes</a></td>
-               <td class="cell cell-no">
-                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
-               </td>
-               <td class="cell cell-yes">
-                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
-               </td>
-            </tr>
-            <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=php-templates-pro-only" target="_blank">PHP templates</a></td>
-               <td class="cell cell-no">
-                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
-               </td>
-               <td class="cell cell-yes">
-                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
-               </td>
-            </tr>
-            <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=dedicated-support-pro-only" target="_blank">Dedicated live support</a></td>
-               <td class="cell cell-no">
-                  <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
-               </td>
-               <td class="cell cell-yes">
-                  <?php include(locate_template('components/comparison-chart/icon-check.php')); ?>
-               </td>
-            </tr>
-            <tr>
-               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=cross-domain-tracking-pro-only" target="_blank">Cross-domain tracking</a></td>
+               <td><a href="https://docs.wpshop.io/#/getting-started/features?id=cross-domain-tracking-pro-only" target="_blank">Cross-Domain Tracking</a></td>
                <td class="cell cell-no">
                   <?php include(locate_template('components/comparison-chart/icon-cancel.php')); ?>
                </td>
@@ -227,7 +309,7 @@
                   <span class="btn btn-primary getting-started-trigger">Try for free</span>
                </td>
                <td class="cell-center">
-                  <a href="#component-purchase" class="btn btn-primary">Purchase</a>
+                  <a href="#component-purchase" class="btn btn-primary">Purchase Pro</a>
                </td>
             </tr>
          </tfoot>

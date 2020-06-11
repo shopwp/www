@@ -7,7 +7,7 @@
          <div class="inner">
          <h2><span class="num">1</span><span itemprop="name">Download</span></h2>
          <div itemprop="itemListElement" itemscope itemtype="http://schema.org/HowToDirection">
-            <p itemprop="text">Begin by <a target="_blank" href="https://wordpress.org/plugins/wpshopify">downloading the WP Shopify plugin</a> and installing it on your WordPress site.</p>
+            <p itemprop="text">Begin by <a href="#!" class="getting-started-trigger">downloading the WP Shopify plugin</a> and installing it on your WordPress site.</p>
          </div>
             </div>
       </div>
@@ -75,7 +75,7 @@
    <link itemprop="url" href="/how#step5" />
       <div class="how-content">
          <div class="inner">
-      <h2 itemprop="name"><span class="num">5</span><span itemprop="name">Sell!</span></h2>
+      <h2 itemprop="name"><span class="num">5</span><span itemprop="name">Ready to sell!</span></h2>
 
       <div itemprop="itemListElement" itemscope itemtype="http://schema.org/HowToDirection">
          <p itemprop="text">WP Shopify comes with a <a href="https://demo.wpshop.io/" target="_blank">built-in cart</a> experience. When the user is ready to pay, they're taken to the default Shopify checkout page.</p>

@@ -91,6 +91,7 @@
 .pro-features .page-header + .page-content {
   margin-top: 0;
   margin: 0 auto;
+  max-width: 740px;
 }
 
 .page-content + .component-comparison-chart {
@@ -104,7 +105,7 @@
 }
 
 .contact .component.component-faq-secondary h2 {
-  font-size: 34px;
+  font-size: 36px;
 }
 
 .examples .page-content {
@@ -156,7 +157,7 @@
 }
 
 .single .main-inner.l-contain-narrow {
-  margin-top: 110px;
+  margin-top: 190px;
 }
 
 .main-inner {
@@ -229,10 +230,10 @@
 
 .purchase .component-comparison-chart .component-intro h2,
 .purchase .component-pro-features .component-intro h2 {
-  font-size: 38px;
+  font-size: 36px;
 
   @include device(1500, 'max') {
-    font-size: 34px;
+    font-size: 32px;
   }
 
   @include device(700, 'max') {
@@ -240,8 +241,13 @@
   }
 }
 
+.component-faq-secondary + .component-comparison-chart,
 .component-comparison-chart + .component-pro-features {
   margin-top: 10em;
+}
+
+.component-pro-features.component-examples {
+  padding-bottom: 1em;
 }
 
 .error404 {

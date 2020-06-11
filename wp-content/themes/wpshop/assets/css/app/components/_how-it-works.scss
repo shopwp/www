@@ -43,12 +43,11 @@
 .how-wrapper {
   position: relative;
   align-items: flex-start;
-  margin-bottom: 2em;
   flex-direction: row-reverse;
   justify-content: flex-end;
 
   @include device(1100, 'max') {
-    min-height: 54vw;
+    min-height: 42vw;
   }
 
   @include device(700, 'max') {
@@ -57,11 +56,17 @@
 }
 
 .how-content {
-  max-width: 700px;
+  max-width: 600px;
+  min-width: 50px;
   position: absolute;
-  top: 8vw;
-  right: 0;
+  bottom: -1vw;
+  right: auto;
   border-radius: 10px;
+  right: auto;
+  width: 100%;
+  top: auto;
+  left: 50%;
+  transform: translate(-50%, 25%);
 
   .num {
     display: inline-block;
@@ -81,12 +86,11 @@
     border-radius: 10px;
     background: #fff;
     padding: 2.3em 2em 2em 2em;
-    box-shadow: -61px 34px 77px -18px rgba(0, 0, 0, 0.2);
+    border: 1px solid #9e9e9e;
 
     @include device(1100, 'max') {
-      padding: 2.3em 1em 2em 1em;
-      box-shadow: none;
-      border-top: 4px solid color(base);
+      padding: 1.3em 1em 2em 1em;
+      border: none;
     }
   }
   h3 {
@@ -112,7 +116,6 @@
     }
 
     p {
-      max-width: 60%;
       margin: 0 auto;
     }
   }
@@ -137,57 +140,27 @@
 
 .how-left {
   .how-content {
-    left: 0;
-    right: auto;
-
-    .inner {
-      box-shadow: 61px 56px 125px -45px rgba(0, 0, 0, 0.3);
-    }
-
     @include device(1100, 'max') {
       left: 50%;
       transform: translate(-50%, 0%);
       max-width: 100%;
       width: 100%;
-
-      .inner {
-        box-shadow: 14px 20px 40px -30px rgba(0, 0, 0, 0.3);
-      }
     }
 
     @include device(1100, 'max') {
-      .inner {
-        box-shadow: none;
-        border-top: 4px solid color(base);
-      }
     }
   }
 }
 .how-right {
   .how-content {
-    right: 0;
-    left: auto;
-
-    .inner {
-      box-shadow: -61px 56px 125px -45px rgba(0, 0, 0, 0.3);
-    }
-
     @include device(1100, 'max') {
       left: 50%;
       transform: translate(-50%, 0%);
       max-width: 100%;
       width: 100%;
-
-      .inner {
-        box-shadow: 14px 20px 40px -30px rgba(0, 0, 0, 0.3);
-      }
     }
 
     @include device(1100, 'max') {
-      .inner {
-        box-shadow: none;
-        border-top: 4px solid color(base);
-      }
     }
   }
 }
@@ -196,6 +169,7 @@
   max-width: 55vw;
   margin-top: 0;
   margin: 0 auto;
+  text-align: center;
 
   @include device(1500, 'max') {
     max-width: 75vw;
@@ -207,11 +181,12 @@
 
   img {
     border-radius: 10px 10px 0px 0px;
+    max-width: 70%;
+    margin: 0 auto;
   }
 }
 
 .component-pro-features .how-image {
-  filter: brightness(0.8);
   z-index: -1;
 }
 

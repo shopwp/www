@@ -11,7 +11,7 @@
     position: absolute;
     top: -20px;
     left: 0;
-    height: 115px;
+    height: 180px;
 
     @include device(600, 'max') {
       height: 30px;
@@ -52,10 +52,10 @@
   z-index: 1;
   position: relative;
 
-  &:hover {
-    z-index: 2;
-    transform: scale(1.04);
-  }
+  //   &:hover {
+  //     z-index: 2;
+  //     transform: scale(1.04);
+  //   }
 }
 
 .testimonial-wrapper {

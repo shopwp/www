@@ -87,6 +87,10 @@
   }
 }
 
+.purchase .component-getting-started-inline {
+  display: none;
+}
+
 .component-comparison-chart + .component-faq-secondary,
 .component-faq-secondary + .component-getting-started-inline {
   margin-top: 9em;

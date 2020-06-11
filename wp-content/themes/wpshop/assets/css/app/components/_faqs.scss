@@ -9,6 +9,22 @@
   margin: 0 auto;
 }
 
+.single-faqs {
+  .faqs {
+    margin: 12em auto 6em auto;
+
+    .entry-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #0f0728;
+
+      a {
+        color: #0f0728;
+      }
+    }
+  }
+}
+
 .faq-question {
   padding: $space-l 0;
   font-size: 1.1em;
@@ -24,7 +40,7 @@
   .fa-minus-square {
     font-size: $font-l;
     position: absolute;
-    top: 5px;
+    top: 3px;
     right: 0;
     box-shadow: 0px 3px 6px -3px rgba(0, 0, 0, 0.65);
 
@@ -40,7 +56,7 @@
 
   @include device(800, 'max') {
     font-size: 16px;
-  }  
+  }
 
   @include device(700, 'max') {
     font-size: $font-m;
@@ -58,7 +74,6 @@
   @include device(500, 'max') {
     font-size: 14px;
   }
-
 }
 
 .faq-answer {
@@ -81,7 +96,7 @@
     display: block;
     margin-bottom: $space-xxl;
     background: color(off-white);
-    padding: 30px 40px;
+    padding: 30px 40px 20px 40px;
     opacity: 1;
     border-bottom-right-radius: 15px;
     border-bottom-left-radius: 15px;
@@ -143,17 +158,21 @@
 .faqs-wrap {
   h2 {
     text-align: center;
-    font-size: 40px;
-      @include device(1500, 'max') {
-         font-size: 34px;
-      }    
+    font-size: 36px;
+    @include device(1500, 'max') {
+      font-size: 32px;
+    }
 
-      @include device(500, 'max') {
-         font-size: 28px;
-      }          
+    @include device(500, 'max') {
+      font-size: 28px;
+    }
   }
 }
 
 .component-marquee + .component-faq-secondary {
   padding-top: 16em;
+}
+
+.component-purchase + .component-faq-secondary {
+  margin-top: 4em;
 }

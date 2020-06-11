@@ -1,6 +1,6 @@
 .component-screenshots {
   background: transparent;
-  margin: 16em 0 8em 0;
+  margin: 18em 0 6em 0;
   max-width: 100%;
   position: relative;
   overflow: visible;
@@ -112,7 +112,7 @@
 .screenshot-description {
   font-size: 18px;
   margin-top: 10px;
-  padding-right: 3em;
+  padding-right: 2em;
 
   @include device(1500, 'max') {
     padding-right: 0;
@@ -123,6 +123,16 @@
   width: 53%;
   border-radius: 0;
   margin-right: 3em;
+  position: relative;
+
+  > .stage {
+    position: absolute;
+    width: 80%;
+    height: 96.4%;
+    left: 12.5%;
+    border-radius: 15px;
+    background-image: linear-gradient(0deg, #eeedff, #fff3f6);
+  }
 
   @include device(1500, 'max') {
     margin-right: 5em;
@@ -229,7 +239,6 @@
 
 .screenshot-wrapper {
   display: none;
-  border-radius: 0;
   max-width: 100%;
   margin: 0 auto;
   border-radius: 10px;
@@ -239,10 +248,11 @@
   position: relative;
   left: 36px;
   top: -50px;
-  box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
+  //   box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  border: 1px solid #b2b1b3;
 
   @include device(600, 'max') {
     height: 330px;

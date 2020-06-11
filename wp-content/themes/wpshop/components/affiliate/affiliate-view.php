@@ -11,9 +11,9 @@
       </a>
       
       <h2 class="heading">Still need a Shopify store?</h2>
-      <div class="description">Start your <a href="https://www.shopify.com/?ref=wps" target="_blank">free 90 day trial of Shopify</a> using our link to help fund development of WP Shopify!</div>
+      <div class="description">Start your <a href="https://www.shopify.com/?ref=wps" target="_blank">free 14 day trial of Shopify</a> using our link to help fund development of WP Shopify!</div>
 
-      <a href="https://www.shopify.com/?ref=wps" target="_blank" class="btn btn-m">Start free 90 day Shopify trial <i class="fal fa-external-link"></i></a>   
+      <a href="https://www.shopify.com/?ref=wps" target="_blank" class="btn btn-m">Start free 14 day Shopify trial <i class="fal fa-external-link"></i></a>   
 
    </div>
 
