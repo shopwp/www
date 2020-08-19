@@ -1,9 +1,13 @@
 .component-screenshots {
   background: transparent;
-  margin: 18em 0 6em 0;
+  margin: 13em 0 6em;
   max-width: 100%;
   position: relative;
   overflow: visible;
+
+  .screenshots-secondary-list .screenshot-single {
+    max-height: 430px;
+  }
 
   .l-row {
     justify-content: center;

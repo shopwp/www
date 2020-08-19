@@ -1,9 +1,37 @@
 .post {
+  margin-top: 4em;
+
+  .wp-block-code {
+    padding: 1em;
+  }
+
   .entry-content {
+    .wp-block-image {
+      margin: 0;
+
+      img {
+        border-radius: 0;
+      }
+    }
+
+    a {
+      color: black;
+    }
+
+    li {
+      margin: 1.5em 0 0 0;
+    }
+
     p,
     li {
-      font-size: 1.1em;
       color: black;
+      margin: 1.5em 0;
+      line-height: 1.6;
+      font-size: 1.1em;
+    }
+
+    li + li {
+      margin-top: 5px;
     }
 
     ul {
@@ -37,10 +65,15 @@
     }
 
     code {
-      font-size: 18px;
-      background: color(off-white);
-      padding: 4px 10px 7px 10px;
       border-radius: 5px;
+      font-size: 16px;
+      background: inherit;
+      padding: 0;
+    }
+
+    p code {
+      background: #e3e3e3;
+      padding: 2px 10px;
     }
   }
 
@@ -54,12 +87,23 @@
 
   .meta-wrapper {
     padding-bottom: $space-l;
-    border-bottom: 1px solid #ddd;
     justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+.post .meta-wrapper .single {
+  .l-contain-narrow {
+    max-width: 760px;
   }
 }
 
 .single-post {
+  .component-pro,
+  .component-mailinglist {
+    display: none;
+  }
+
   .post {
     .entry-title {
       text-align: center;
@@ -75,6 +119,11 @@
 
 .post-link:hover {
   opacity: 1;
+
+  h1,
+  h2 {
+    text-decoration: underline;
+  }
 }
 
 .post-thumb {
@@ -92,6 +141,7 @@
 
 .entry-title {
   margin-top: 1em;
+  line-height: 1.4;
 }
 
 .post-logo-link {
@@ -102,16 +152,6 @@
 
 .author-name {
   margin: 0 10px;
-}
-
-// .single-post {
-//    .post {
-//       margin-top: 4em;
-//    }
-// }
-
-.post {
-  margin-top: 4em;
 }
 
 .post-logo {
@@ -126,16 +166,43 @@
   display: flex;
 
   .logo-header {
+    border-radius: 50%;
     max-width: 35px;
     top: 1px;
     height: auto;
     width: 23px;
     margin-right: 10px;
+    border: 1px solid white;
+    box-shadow: 0 0 0 2px #c8cfff;
+  }
+}
+
+.is-latest-post {
+  .byline.author {
+    .logo-header {
+      max-width: 50px;
+      width: 50px;
+      border: 3px solid white;
+      box-shadow: 0 0 0 3px #c8cfff;
+      transition: all ease 0.2s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  .moretag-wrapper {
+    margin-top: 0;
+
+    .btn {
+      font-size: 20px;
+    }
   }
 }
 
 .entry-summary {
-  font-size: 1.1em;
+  font-size: 15px;
 
   .moretag-wrapper {
     width: 100%;
@@ -150,8 +217,8 @@
 
 .blog .post {
   margin-bottom: 1em;
-  max-width: 33.3%;
-  padding: 0 1em;
+  max-width: 31%;
+  padding: 0;
   margin-top: 1em;
 
   .entry-title {
@@ -162,18 +229,30 @@
 .articles-wrapper {
   display: flex;
   flex-wrap: wrap;
-  max-width: 1200px;
+  max-width: 1225px;
   margin: 0 auto;
+  justify-content: space-between;
+
+  .l-box-2 {
+    padding: 0;
+  }
+
+  .latest-post-info {
+    padding-left: 30px;
+  }
 }
 
-.blog article.post:first-of-type {
+.blog .is-latest-post {
   max-width: 100%;
   width: 100%;
   margin-top: 2em;
   margin-bottom: 1.3em;
+  border-bottom: 1px solid #ddd;
+  padding: 0 0 70px;
 
   .entry-title {
-    font-size: 32px;
+    font-size: 42px;
+    margin-top: -9px;
   }
 
   .post-thumb {
@@ -181,14 +260,25 @@
   }
 }
 
+.is-not-latest-post {
+  > header {
+    position: relative;
+  }
+  .post-meta-container {
+    padding-left: 35px;
+    margin-top: 15px;
+  }
+  .meta-wrapper {
+    position: absolute;
+    left: 0;
+    bottom: -31px;
+  }
+}
+
 .navigation.posts-navigation .nav-links {
   width: 400px;
   text-align: center;
   margin: 0 auto;
-
-  a {
-    font-size: 1.4em;
-  }
 }
 
 .article-footer {
@@ -214,7 +304,85 @@
       top: -40px;
       display: block;
       content: '';
-      left: -10px;
+      left: -5px;
     }
+  }
+}
+
+.post-author-about {
+  display: flex;
+  border-top: 1px solid #ddd;
+  margin-top: 4em;
+  padding-top: 2em;
+}
+
+.post-author-about .avatar {
+  border-radius: 50%;
+  width: 90px;
+  height: 90px;
+  margin-right: 2em;
+  margin-top: 1.4em;
+}
+
+.wp-block-quote {
+  font-style: italic;
+  font-size: 22px;
+  text-align: left;
+}
+
+.page-id-197904 .component-comparison-chart,
+.page-id-161 .component-comparison-chart {
+  margin-top: 2em;
+}
+
+.page-id-197904 .component-comparison-chart .component-intro {
+  display: none;
+}
+
+.author-info-wrap {
+  display: flex;
+  flex-direction: column;
+  margin-top: -12px;
+  margin-left: 5px;
+
+  .author-name,
+  .author-bio-short {
+    margin: 0;
+    line-height: 1;
+  }
+
+  .author-name {
+    font-weight: bold;
+    margin-bottom: 6px;
+    font-size: 18px;
+  }
+
+  .author-bio-short {
+    font-size: 15px;
+  }
+}
+
+.post-categories {
+  margin-top: 0;
+  margin-left: 15px;
+  background: #e8e8e8;
+  padding: 5px 10px;
+  font-size: 13px;
+  line-height: 1;
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+}
+
+.post-meta-container {
+  display: flex;
+  margin-bottom: 30px;
+  align-items: center;
+
+  .updated {
+    line-height: 1;
+    font-size: 14px;
   }
 }

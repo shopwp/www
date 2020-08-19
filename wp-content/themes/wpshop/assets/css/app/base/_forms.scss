@@ -5,6 +5,7 @@
   width: 100%;
   max-width: 700px;
   position: relative;
+  text-align: left;
   margin: 0 auto 2em auto;
 
   .description {
@@ -91,7 +92,7 @@
 
 .affwp-payout-service-tos {
   a {
-    color: #0f0433;
+    color: #1f1f23;
     font-weight: normal;
     text-decoration: none;
 
@@ -119,8 +120,8 @@ select,
 
   &:focus:not([type='checkbox']):not([type='radio']) {
     outline: none;
-    border-color: #0f0433;
-    box-shadow: 0px 0px 0px 1px #0f0433;
+    border-color: #1f1f23;
+    box-shadow: 0px 0px 0px 1px #1f1f23;
   }
 
   &[type='submit']:focus {
@@ -592,7 +593,7 @@ select {
   text-align: center;
   display: inline-block;
   margin-top: 10px;
-  color: #0f0433;
+  color: #1f1f23;
   font-size: 16px;
   text-decoration: none;
 
@@ -695,4 +696,27 @@ select {
 .affwp-errors {
   background-color: color(error);
   border-color: color(error);
+}
+
+#password-reset-form .heading-center {
+  display: none;
+}
+
+#form-reset-pass .description {
+  font-size: 14px;
+  max-width: 648px;
+  margin: 0 auto;
+}
+
+#form-forgot-pass .is-valid:after {
+  bottom: 30px;
+  right: 2em;
+}
+
+#form-forgot-pass .btn-wrap .spinner {
+  top: 23px;
+}
+
+#form-reset-pass .form-input {
+  border: none;
 }

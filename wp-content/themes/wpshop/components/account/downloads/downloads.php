@@ -3,6 +3,7 @@
 $download = edd_get_download('wp-shopify');
 $files = edd_get_download_files( $download->ID);
 $latest_version = edd_software_licensing()->get_download_version($download->ID);
+$download = $files[key($files)];
 
 ?>
 
@@ -23,7 +24,7 @@ $latest_version = edd_software_licensing()->get_download_version($download->ID);
                                     <td class="edd_download_download_files">
                      
                               <div class="edd_download_file">
-                                 <a href="<?= $files[0]['file']; ?>" class="edd_download_file_link" target="_blank">Download WP Shopify Pro <?php $latest_version; ?></a>
+                                 <a href="<?= $download['file']; ?>" class="edd_download_file_link" target="_blank">Download WP Shopify Pro <?php $latest_version; ?></a>
                               </div>
 
                                                    </td>

@@ -1,35 +1,32 @@
 .component-comparison-chart {
   background-color: transparent;
   margin-bottom: 6em;
-  margin-top: 4em;
+  margin-top: 6em;
 
-
-   @include device(900, 'max') {
+  @include device(900, 'max') {
     padding: 0;
     max-width: 95vw;
-   }
-
-   
+  }
 
   table {
     width: 100%;
   }
-   tr {
-          border-bottom: 1px solid #cbcbcb;
-      @include device(600, 'max') {
-         display: table;
-         border: none;
-      }
-          &:last-of-type {
-             border-bottom: none;
-          }
-   }
+  tr {
+    border-bottom: 1px solid #cbcbcb;
+    @include device(600, 'max') {
+      display: table;
+      border: none;
+    }
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
   td {
     border-right: 1px solid #cbcbcb;
 
-      @include device(600, 'max') {
-         border: none;
-      }
+    @include device(600, 'max') {
+      border: none;
+    }
 
     a:not(.btn) {
       color: #181625;
@@ -40,57 +37,55 @@
   th {
     font-size: 17px;
 
-      @include device(900, 'max') {
-         font-size: 15px;
-      }   
+    @include device(900, 'max') {
+      font-size: 15px;
+    }
 
-      @include device(600, 'max') {
-         font-size: 14px;
-      }    
-      
+    @include device(600, 'max') {
+      font-size: 14px;
+    }
   }
 
   th {
     font-size: 20px;
 
-      @include device(900, 'max') {
-         font-size: 17px;
-      }        
+    @include device(900, 'max') {
+      font-size: 17px;
+    }
 
-      @include device(600, 'max') {
-         font-size: 14px;
-         padding: 0;
-         text-align: left;
-         width: 33.3%;
-      }
+    @include device(600, 'max') {
+      font-size: 14px;
+      padding: 0;
+      text-align: left;
+      width: 33.3%;
+    }
   }
 
   tbody {
-         
-      @include device(600, 'max') {
-         padding-left: 0;
-         padding-right: 0;
+    @include device(600, 'max') {
+      padding-left: 0;
+      padding-right: 0;
 
-         tr > td:nth-of-type(1) {
-            width: 40%;
-         }
-
-         tr > td:nth-of-type(2) {
-            width: 30%;
-         }
-
-         tr > td:nth-of-type(3) {
-            width: 30%;
-         }                  
+      tr > td:nth-of-type(1) {
+        width: 40%;
       }
+
+      tr > td:nth-of-type(2) {
+        width: 30%;
+      }
+
+      tr > td:nth-of-type(3) {
+        width: 30%;
+      }
+    }
   }
 
   thead {
-         border-bottom: 1px solid #cbcbcb;
+    border-bottom: 1px solid #cbcbcb;
 
-      @include device(600, 'max') {
-         padding: 0 0 10px 0;
-      }      
+    @include device(600, 'max') {
+      padding: 0 0 10px 0;
+    }
 
     .btn {
       margin-top: 0;
@@ -101,8 +96,8 @@
       padding-bottom: 1em;
 
       @include device(600, 'max') {
-         padding-bottom: 0;
-      }            
+        padding-bottom: 0;
+      }
     }
 
     a {
@@ -137,9 +132,9 @@
       transform: translate(-50%, -50%);
 
       @include device(600, 'max') {
-         max-width: 17px;
-         font-size: 17px;
-      }      
+        max-width: 17px;
+        font-size: 17px;
+      }
     }
   }
 
@@ -156,9 +151,9 @@
       transform: translate(-50%, -50%);
 
       @include device(600, 'max') {
-         max-width: 17px;
-         font-size: 17px;
-      }      
+        max-width: 17px;
+        font-size: 17px;
+      }
 
       path {
         fill: #bb0d0d;
@@ -177,26 +172,26 @@
     padding: 2px 8px;
     font-size: 18px;
 
-      @include device(900, 'max') {
-         font-size: 16px;
-      }    
+    @include device(900, 'max') {
+      font-size: 16px;
+    }
 
-      @include device(600, 'max') {
-         font-size: 12px;
-      }
+    @include device(600, 'max') {
+      font-size: 12px;
+    }
   }
 
   tfoot {
-      @include device(600, 'max') {
-         tr > td:nth-of-type(1) {
-            display: none;
-         }
-         tr > td:nth-of-type(2) {
-            width: 50%;
-         }
-         tr > td:nth-of-type(3) {
-            width: 50%;
-         }                  
-      }      
+    @include device(600, 'max') {
+      tr > td:nth-of-type(1) {
+        display: none;
+      }
+      tr > td:nth-of-type(2) {
+        width: 50%;
+      }
+      tr > td:nth-of-type(3) {
+        width: 50%;
+      }
+    }
   }
 }

@@ -1,16 +1,9 @@
 .component-mailinglist {
-  // background: color(light-grey);
-  // padding: $space-l * 3.5 0;
   position: relative;
   margin-bottom: 1em;
   color: color(base);
   border-radius: 20px;
-
   background-color: color(off-white);
-  // background-image: url(imgs/stuff.svg);
-  // background-size: 85%;
-  // background-position: 50% 50%;
-  //   padding: 3em 0 5em 0;
   padding: 0 3em;
   outline: 10px solid #ffffff;
   outline-offset: -2px;
@@ -21,7 +14,7 @@
   }
 
   .component-inner {
-    padding: 3em 0 5em 0;
+    padding: 2em 0 3em 0;
   }
 
   .form-messages {
@@ -30,14 +23,12 @@
     padding: 10px;
   }
 
-  // background-image: url('imgs/bg-stuff-2.png');
-
   .form-label {
     color: color(base);
     font-weight: 100;
     z-index: 99;
     top: 1.2em;
-    font-size: 1.2em;
+    font-size: 1em;
 
     @include device(1000, 'max') {
       top: 18px;
@@ -76,7 +67,7 @@
     #mailinglist-email {
       flex: 1;
       border-radius: 10px 0 0 10px;
-      font-size: 1.2em;
+      font-size: 1em;
       margin: 0;
 
       @include device(1000, 'max') {
@@ -95,7 +86,7 @@
       .btn {
         border-radius: 0 0.4em 0.4em 0;
         width: 100%;
-        font-size: 1.4em;
+        font-size: 1.2em;
         background-color: color(base);
         transform: scale(1) !important;
         margin: 0;
@@ -159,10 +150,10 @@
   text-align: left;
   margin: 4em auto;
 
-   #email-error {
-      margin-top: 0;
-   }
-   
+  #email-error {
+    margin-top: 0;
+  }
+
   .spinner {
     right: calc(2% - 0px);
     top: 3px;
@@ -214,9 +205,9 @@
   }
 
   > .l-row {
-      @include device(900, 'max') {
-         flex-direction: column;
-      }
+    @include device(900, 'max') {
+      flex-direction: column;
+    }
   }
 }
 

@@ -1,203 +1,194 @@
 .account {
-   .main {
-      margin-bottom: 7em;
-   }
+  .main {
+    margin-bottom: 7em;
+  }
 }
 
 .account-cat {
-   font-size: $font-l;
-   // font-weight: bold;
-   margin: 0;
-   padding: $space-s 0;
-   border-bottom: 1px solid color(light-grey);
+  font-size: $font-l;
+  // font-weight: bold;
+  margin: 0;
+  padding: $space-s 0;
+  border-bottom: 1px solid color(light-grey);
 
-   &:first-child {
-      padding-top: 0;
-   }
+  &:first-child {
+    padding-top: 0;
+  }
 
-   &:last-child {
-      padding-bottom: 0;
-      border: none;
-   }
+  &:last-child {
+    padding-bottom: 0;
+    border: none;
+  }
 
-   &:hover {
-      cursor: pointer;
-      opacity: $opacity-hard;
-   }
+  &:hover {
+    cursor: pointer;
+    opacity: $opacity-hard;
+  }
 }
 
 .receipt-account-wrapper {
-   text-align: center;
-   margin-bottom: 3em;
+  text-align: center;
+  margin-bottom: 3em;
 }
 
 .component[class*='component-account'] {
-   animation-duration: 0.5s;
-   margin: 0 auto $space-l auto;
-   padding: 0;
-   width: 100%;
-   max-width: 100%;
-   background: none;
-   display: none;
+  animation-duration: 0.5s;
+  margin: 0 auto $space-l auto;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  background: none;
+  display: none;
 
-   &.is-active {
-      display: block;
-      padding: 2px;
-      border-radius: 0px 0px 7px 7px;
-      width: 100%;
-      padding: 0 2em 1em 2em;
-      border-top: 0;
-   }
+  &.is-active {
+    display: block;
+    padding: 2px;
+    border-radius: 0px 0px 7px 7px;
+    width: 100%;
+    padding: 0 2em 1em 2em;
+    border-top: 0;
+  }
 
-   &.component-account-user-info {
-      display: flex;
-      margin: 2em 0;
-   }
+  &.component-account-user-info {
+    display: flex;
+    margin: 2em 0;
+  }
 }
 
 .account-user-info-image {
-   flex: 0 0 100px;
-   width: 100px;
+  flex: 0 0 100px;
+  width: 100px;
 }
 
 .account-user-info-contact {
-   flex: 1;
-   margin: 0 0 0 1em;
-   padding-top: 4px;
+  flex: 1;
+  margin: 0 0 0 1em;
+  padding-top: 4px;
 }
 
 .component-account-licenses-upgrades {
-   margin-top: 0;
+  margin-top: 0;
 }
 
 .component-account-licenses {
-   .edd_sl_expiration {
-      width: 45%;
-   }
+  .edd_sl_expiration {
+    width: 45%;
+  }
 }
 
 #edd_sl_license_keys .edd_sl_license_row td:nth-of-type(1) {
-   width: 50%;
+  width: 50%;
 }
 
 #edd_sl_license_keys .edd_sl_license_row td:nth-of-type(2) {
-   width: 50%;
+  width: 50%;
 }
 
 #edd_sl_license_keys2 th.edd_sl_status {
-   width: 50%;
+  width: 50%;
 }
 
 #edd_sl_license_keys2 th.edd_sl_limit {
-   width: 20%;
+  width: 20%;
 }
 
 #edd_sl_license_keys2 th.edd_sl_expiration {
-   width: 30%;
+  width: 30%;
 }
 
 #edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
-   width: 50%;
+  width: 50%;
 }
 
 #edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
-   width: 20%;
+  width: 20%;
 }
 
 #edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
-   width: 30%;
+  width: 30%;
 }
-
-
-
-
-
-
-
-
-
 
 .component-account-sub {
-   margin-bottom: $space-xl * 2;
+  margin-bottom: $space-xl * 2;
 }
 
 .component-account-profile {
-   .component-account-sub {
-      margin-bottom: 0;
-      margin-top: 0;
+  .component-account-sub {
+    margin-bottom: 0;
+    margin-top: 0;
 
-      label + small {
-         font-size: 14px;
-      }
+    label + small {
+      font-size: 14px;
+    }
 
-      .accordion-heading {
-         padding: 0.7em 0 1em 0;
-         font-size: 20px;
-      }
+    .accordion-heading {
+      padding: 0.7em 0 1em 0;
+      font-size: 20px;
+    }
 
-      .form-input {
-         border: none;
-         padding-bottom: 5px;
-      }
+    .form-input {
+      border: none;
+      padding-bottom: 5px;
+    }
 
-      input {
-         font-size: 16px;
-      }
+    input {
+      font-size: 16px;
+    }
 
-      .btn-wrap {
-         padding-left: 25px;         
-      }
-   }
+    .btn-wrap {
+      padding-left: 25px;
+    }
+  }
 }
 
 .user-info {
-   // margin-top: $space-m;
-   h5:first-child {
-      font-weight: bold;
-      margin-bottom: 5px;
-   }
+  // margin-top: $space-m;
+  h5:first-child {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
 
-   .link-account {
-      padding: 0;
-      margin: 15px 0 0 0;
-      display: block;
-   }
+  .link-account {
+    padding: 0;
+    margin: 15px 0 0 0;
+    display: block;
+  }
 }
 
 .component-account-user-info {
-   margin-bottom: 3em;
+  margin-bottom: 3em;
 
-   .user-img {
-      border-radius: 50%;
-   }
+  .user-img {
+    border-radius: 50%;
+  }
 }
 
 .view-key-wrapper {
-   // display: flex;
-   // align-items: center;
+  // display: flex;
+  // align-items: center;
 
-   .fa {
-      @include device(1400, 'max') {
-         display: none;
-      }
-   }
+  .fa {
+    @include device(1400, 'max') {
+      display: none;
+    }
+  }
 }
 
 .component-heading {
-   // margin-bottom: $space-xxl;
+  // margin-bottom: $space-xxl;
 }
 
 .component-account-heading {
-   margin-bottom: $space-xs;
-   font-weight: bold;
-   display: none;
+  margin-bottom: $space-xs;
+  font-weight: bold;
+  display: none;
 
-   .fa {
-      font-size: $font-s;
-      margin-right: $space-xxxs;
-      position: relative;
-      top: -1px;
-   }
+  .fa {
+    font-size: $font-s;
+    margin-right: $space-xxxs;
+    position: relative;
+    top: -1px;
+  }
 }
 
 // .edd_download_history_row .edd_download_file_link {
@@ -205,119 +196,119 @@
 // }
 
 .account-nav {
-   margin: 0;
-   justify-content: flex-end;
-   display: flex;
-   flex-direction: column;
+  margin: 0;
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: column;
 }
 
 .account-nav-list {
-   list-style: none;
-   margin: 0;
-   padding: 0;
-   justify-content: space-between;
-   display: flex;
-   flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
 
-   > li:first-child {
-      margin-left: 0;
-   }
+  > li:first-child {
+    margin-left: 0;
+  }
 
-   > li:last-child {
-      margin-right: 0;
-   }
+  > li:last-child {
+    margin-right: 0;
+  }
 }
 
 .account-back-to-wrapper {
-   text-align: center;
-   margin-bottom: 3em;
-   display: block;
-   text-align: center;
-   margin-top: -29px;
+  text-align: center;
+  margin-bottom: 3em;
+  display: block;
+  text-align: center;
+  margin-top: -29px;
 }
 
 .account-back-to {
 }
 
 .account-nav-list-item-link {
-   text-decoration: none;
-   color: #0f0433;
-   display: inline-block;
-   width: 100%;
-   text-align: left;
-   font-size: 16px;
-   width: 100%;
-   display: block;
-   border-bottom: 1px solid #415aff;
-   padding-bottom: 10px;
-   padding-top: 10px;
-   padding-left: 10px;
-   margin: 0;
-   transition: color ease 0.14s;
+  text-decoration: none;
+  color: #1f1f23;
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
+  width: 100%;
+  display: block;
+  border-bottom: 1px solid #415aff;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+  margin: 0;
+  transition: color ease 0.14s;
 
-   &:hover {
+  &:hover {
+    opacity: 1;
+    text-decoration: underline;
+  }
+
+  &.is-active {
+    color: #415aff;
+    font-weight: bold;
+
+    &:hover {
+      text-decoration: none;
       opacity: 1;
-      text-decoration: underline;
-   }
-
-   &.is-active {
-      color: #415aff;
-      font-weight: bold;
-
-      &:hover {
-         text-decoration: none;
-         opacity: 1;
-         cursor: text;
-      }
-   }
+      cursor: text;
+    }
+  }
 }
 
 .account-nav-list-item {
-   flex: 1;
-   display: inline-block;
-   padding: 0;
-   margin: 0;
+  flex: 1;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
 }
 
 .edd_download_download_name {
-   width: 230px;
+  width: 230px;
 }
 
 .component-account-subscriptions {
-   #edd_secure_site_wrapper {
-      display: none;
-   }
+  #edd_secure_site_wrapper {
+    display: none;
+  }
 
-   .edd_subscription_name + br {
-      display: none;
-   }
+  .edd_subscription_name + br {
+    display: none;
+  }
 
-   td:nth-child(1) {
-      width: 23%;
-      font-size: 13px;
-   }
+  td:nth-child(1) {
+    width: 23%;
+    font-size: 13px;
+  }
 
-   td:nth-child(2) {
-      width: 6%;
-   }
+  td:nth-child(2) {
+    width: 6%;
+  }
 
-   td:nth-child(3) {
-      width: 22%;
-   }
+  td:nth-child(3) {
+    width: 22%;
+  }
 
-   td:nth-child(4) {
-      width: 11%;
-   }
+  td:nth-child(4) {
+    width: 11%;
+  }
 
-   td:nth-child(5) {
-      width: 9%;
-   }
+  td:nth-child(5) {
+    width: 9%;
+  }
 
-   td:nth-child(6) {
-      width: 26%;
-   }
+  td:nth-child(6) {
+    width: 26%;
+  }
 
-   #edd_checkout_form_wrap #edd_cc_fields legend {
-      display: none;
-   }
+  #edd_checkout_form_wrap #edd_cc_fields legend {
+    display: none;
+  }
 }

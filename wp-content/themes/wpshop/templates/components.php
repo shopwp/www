@@ -106,6 +106,14 @@
 
         get_template_part('components/free-download/controller');
 
+      } else if(get_row_layout() == 'component_demo') {
+
+        get_template_part('components/demo/view');
+
+      } else if(get_row_layout() == 'component_contact') {
+
+        get_template_part('components/contact/view');
+
       }
       
     endwhile;

@@ -28,9 +28,6 @@ import { initFAQs } from './faqs/faqs'
       headroom.init()
     }
 
-    //  var subMenuTrigger = document.querySelector('.sub-nav-wrapper')
-    //  var subMenuContent = document.querySelector('.nav-primary-sub')
-
     if (window.innerWidth > 1000) {
       var placement = 'right'
     } else {

@@ -8,7 +8,8 @@
 
   .illustration {
     display: block;
-    width: 320px;
+    width: auto;
+    height: 235px;
     margin-right: 6em;
 
     @include device(900, 'max') {
@@ -138,10 +139,6 @@
 .component-mailinglist + .component-affiliate {
   margin-top: 4em;
   padding-bottom: 4em;
-}
-
-.component-faq-secondary + .component-affiliate {
-  margin-top: 4em;
 }
 
 .component-affiliate-register {

@@ -11,6 +11,13 @@
   }
 }
 
+.become-an-affiliate {
+  .page-content {
+    max-width: 60%;
+    margin: 0 auto 3em auto;
+  }
+}
+
 .how .main,
 .contact .main,
 .faq .main,
@@ -78,9 +85,24 @@
   }
 }
 
-.affiliates .page-content p:first-of-type,
-.affiliates .page-content {
-  font-size: 15px;
+.affiliates {
+  .page-content p:first-of-type,
+  .affiliates .page-content {
+    font-size: 15px;
+  }
+
+  .page-content {
+    text-align: left;
+  }
+
+  #affwp-affiliate-dashboard input:not([type='checkbox']) {
+    height: auto;
+  }
+
+  #day-of-birth,
+  #month-of-birth {
+    margin-bottom: 1em;
+  }
 }
 
 .pro-features .page-header h1 {
@@ -147,6 +169,11 @@
   margin: 0 auto;
 }
 
+.page-id-197961 .page-content {
+  max-width: 825px;
+  margin: 0 auto;
+}
+
 .page-id-199033 .page-content {
   text-align: left;
 }
@@ -167,8 +194,18 @@
 }
 
 .blog {
+  .component-affiliate,
+  .component-pro,
+  .component-mailinglist {
+    display: none;
+  }
+
   .main {
     margin-bottom: $space-xxl * 2;
+  }
+
+  .l-contain-narrow {
+    max-width: 760px;
   }
 }
 

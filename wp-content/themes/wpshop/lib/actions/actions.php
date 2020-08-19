@@ -21,6 +21,24 @@ function wps_login_check()
 add_action('wp', 'wps_login_check');
 
 
+
+
+function wps_user_login_redirect( $url, $request, $user ) {
+
+    if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
+        if ( $user->has_cap( 'administrator' ) ) {
+            $url = admin_url();
+        } else {
+            $url = home_url( '/account/' );
+        }
+    }
+    return $url;
+}
+ 
+add_filter( 'login_redirect', 'wps_user_login_redirect', 10, 3 );
+
+
+
 /*
 
 Changing the default Wordpress login logo

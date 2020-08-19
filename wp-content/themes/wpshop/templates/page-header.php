@@ -1,6 +1,12 @@
-<?php use Roots\Sage\Titles; ?>
+<?php use Roots\Sage\Titles; 
 
-<?php if( !get_field('page_settings_hide_title', get_the_ID()) ) { ?>
+if (is_home()) {
+   $post_id = get_option( 'page_for_posts' );
+} else {
+   $post_id = get_the_ID();
+}
+
+if (!get_field('page_settings_hide_title', $post_id) ) { ?>
 
   <div class="page-header">
 

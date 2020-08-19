@@ -212,23 +212,6 @@
   }
 }
 
-// #edd_price_option_35_singlesite {
-//   border: 3px solid #a7a7ff;
-//   position: relative;
-
-//   &:before {
-//     content: 'Most popular';
-//     display: block;
-//     width: 200px;
-//     height: 20px;
-//     color: white;
-//     background-color: #a7a7ff;
-//     position: absolute;
-//     right: 0;
-//     top: 0;
-//   }
-// }
-
 .edd_download_purchase_form {
   width: 100%;
   margin-top: 4em;
@@ -256,12 +239,6 @@
 
 .edd_price_options li[itemprop='offers'] {
   transition: transform 0.2s ease;
-
-  &:not(.is-highlighted) {
-    &:hover {
-      // transform: scale(0.95);
-    }
-  }
 
   .eddr-notice.variable-prices {
     display: none;

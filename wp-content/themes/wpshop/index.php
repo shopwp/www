@@ -13,7 +13,7 @@ get_template_part('templates/page', 'header'); ?>
 
 
 <?php if ($post->post_type === 'post') { ?>
-<div class="articles-wrapper">
+   <div class="articles-wrapper">
 <?php } ?>
 
 <?php while (have_posts()) : the_post(); ?>
@@ -21,7 +21,7 @@ get_template_part('templates/page', 'header'); ?>
 <?php endwhile; ?>
 
 <?php if ($post->post_type === 'post') { ?>
-</div>
+   </div>
 <?php } ?>
 
 <?php the_posts_navigation(); ?>

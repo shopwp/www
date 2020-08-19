@@ -1,9 +1,9 @@
 .nav-primary {
-  padding-left: 236px;
-}
+  padding-left: 180px;
 
-.home .nav-primary {
-  padding-left: 200px;
+  @include device(1300, 'max') {
+    display: none;
+  }
 }
 
 .nav,
@@ -92,6 +92,21 @@
 }
 
 .menu-item-has-children {
+  position: relative;
+  left: 7px;
+  > a {
+    svg {
+      margin-left: 10px !important;
+      opacity: 0.5 !important;
+      width: 13px !important;
+      position: relative !important;
+      top: 2px !important;
+      height: 1em !important;
+      overflow: visible !important;
+      vertical-align: -0.125em !important;
+    }
+  }
+
   &.is-active {
     .sub-menu {
       transform: translateY(0px);
@@ -179,9 +194,6 @@
 }
 
 .nav-primary {
-  @include device(1300, 'max') {
-    display: none;
-  }
 }
 
 .nav-primary-sub {
@@ -218,13 +230,6 @@
   display: none;
 }
 
-.menu-item-has-children {
-  > a {
-    svg {
-      margin-left: 10px;
-    }
-  }
-}
 .tippy-popper .menu-primary-sub-container {
   display: block;
 }

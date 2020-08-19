@@ -99,7 +99,7 @@
 }
 
 .marquee-left {
-  padding: 3em 1em 0 6em;
+  padding: 5em 1em 0 5em;
   width: calc(44vw - 3em);
 
   @include device(1500, 'max') {
@@ -210,6 +210,10 @@
   @include device(1500, 'max') {
     width: 55vw;
     margin-top: 35px;
+
+    .stage {
+      height: calc(100vh - 100px);
+    }
   }
 
   @include device(1100, 'max') {
@@ -345,6 +349,14 @@
   position: relative;
   text-align: left;
   height: 100%;
+
+  a.logos {
+    transition: transform ease 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 
   h1 {
     max-width: 720px;

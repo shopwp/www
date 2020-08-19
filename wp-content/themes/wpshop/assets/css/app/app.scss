@@ -81,6 +81,21 @@ Author URI:     https://simpleblend.net
   line-height: 1em;
 }
 
+.component-demo {
+  + .component-testimonials {
+    margin-top: -2em;
+  }
+
+  .wps-items-wrapper {
+    justify-content: center;
+    display: flex;
+  }
+}
+
+.wps-cart-icon-fixed {
+  display: none !important;
+}
+
 .marquee-content .callout {
   animation-duration: 0.5s;
   animation-iteration-count: 1;
