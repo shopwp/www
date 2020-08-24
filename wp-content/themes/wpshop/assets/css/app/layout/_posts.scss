@@ -7,52 +7,65 @@
 
   .entry-content {
     .wp-block-image {
-      margin: 0;
-
       img {
         border-radius: 0;
       }
     }
 
     a {
-      color: black;
-    }
-
-    li {
-      margin: 1.5em 0 0 0;
+      color: #415aff;
     }
 
     p,
     li {
       color: black;
       margin: 1.5em 0;
-      line-height: 1.6;
-      font-size: 1.1em;
+      line-height: 1.8;
+      font-size: 18px;
+    }
+
+    li {
+      margin: 1.5em 0 0 0;
     }
 
     li + li {
       margin-top: 5px;
     }
 
-    ul {
+    ul,
+    ol {
       margin: $space-xl 0;
       line-height: 1.4;
-      margin: 35px 0 40px 25px;
+      margin: -25px 0 40px 25px;
 
       .emoji {
         margin-left: -26px !important;
       }
     }
 
+    p + ul,
+    p + ol {
+      margin-top: 0;
+    }
+
     h2,
     h3,
-    h4 {
-      margin: 2em 0 0.5em 0;
+    h4,
+    h5 {
+      margin: 2em 0 -7px;
       font-size: 1.6em;
+
+      + ul {
+        margin-top: -10px;
+      }
 
       &:first-child {
         margin-top: 0;
       }
+    }
+
+    h5 {
+      font-size: 1.3em;
     }
 
     img {
@@ -74,6 +87,12 @@
     p code {
       background: #e3e3e3;
       padding: 2px 10px;
+    }
+
+    .post-last-updated {
+      font-size: 14px;
+      font-style: italic;
+      color: #838383;
     }
   }
 
@@ -99,27 +118,50 @@
 }
 
 .single-post {
+  .entry-title {
+    margin-top: 0;
+    font-size: 46px;
+  }
+
   .component-pro,
   .component-mailinglist {
     display: none;
   }
 
   .post {
-    .entry-title {
-      text-align: center;
-    }
-
     .meta-wrapper {
       border: none;
       padding-bottom: 0;
-      justify-content: center;
     }
+  }
+
+  .post-thumb {
+    min-height: 360px;
+  }
+
+  .entry-content h2,
+  .entry-content h3,
+  .entry-content h4 {
+    font-size: 1.6em;
   }
 }
 
 .post-link:hover {
   opacity: 1;
 
+  .post-thumb {
+    transition: all 0.18s ease;
+    box-shadow: 0 0 0 8px #dbe0ff;
+  }
+
+  h1,
+  h2 {
+    text-decoration: underline;
+  }
+}
+
+.latest-post-img:hover + .latest-post-info {
+  transition: all 0.18s ease;
   h1,
   h2 {
     text-decoration: underline;
@@ -161,19 +203,28 @@
   position: relative;
   top: 2px;
 }
-
+.post-affiliate {
+  max-width: 760px;
+  margin: 0 auto;
+}
 .byline.author {
   display: flex;
 
   .logo-header {
     border-radius: 50%;
     max-width: 35px;
-    top: 1px;
+    top: -5px;
     height: auto;
     width: 23px;
     margin-right: 10px;
-    border: 1px solid white;
-    box-shadow: 0 0 0 2px #c8cfff;
+    position: relative;
+  }
+}
+
+.post-single-header .byline.author {
+  .logo-header {
+    max-width: 50px;
+    width: 50px;
   }
 }
 
@@ -182,8 +233,8 @@
     .logo-header {
       max-width: 50px;
       width: 50px;
-      border: 3px solid white;
-      box-shadow: 0 0 0 3px #c8cfff;
+      // border: 3px solid white;
+      // box-shadow: 0 0 0 3px #c8cfff;
       transition: all ease 0.2s;
 
       &:hover {
@@ -271,7 +322,13 @@
   .meta-wrapper {
     position: absolute;
     left: 0;
-    bottom: -31px;
+    bottom: -23px;
+  }
+
+  .post-categories:before {
+    left: -16px;
+    font-size: 12px;
+    top: 4px;
   }
 }
 
@@ -285,7 +342,20 @@
   text-align: center;
   justify-content: center;
   display: flex;
-  margin: 6em 0 3em 0;
+  margin: 3em 0 6em;
+  padding-bottom: 0;
+  border-top: 1px solid #ddd;
+  padding-top: 3em;
+
+  .post-sharing {
+    margin-bottom: 4em;
+  }
+
+  .inner {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+  }
 
   .post-logo {
     width: 40px;
@@ -304,8 +374,12 @@
       top: -40px;
       display: block;
       content: '';
-      left: -5px;
+      left: -15px;
     }
+  }
+
+  .logo-header {
+    height: 35px;
   }
 }
 
@@ -364,11 +438,21 @@
 
 .post-categories {
   margin-top: 0;
-  margin-left: 15px;
+  margin-left: 25px;
   background: #e8e8e8;
   padding: 5px 10px;
   font-size: 13px;
   line-height: 1;
+  position: relative;
+
+  &:before {
+    content: '●';
+    display: block;
+    position: absolute;
+    left: -17px;
+    font-size: 15px;
+    top: 3px;
+  }
 
   a {
     color: black;
@@ -378,11 +462,19 @@
 
 .post-meta-container {
   display: flex;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   align-items: center;
+  margin-top: 5px;
 
   .updated {
     line-height: 1;
     font-size: 14px;
   }
+}
+
+.post-single-header {
+  border-bottom: 1px solid #ddd;
+  margin-top: 10em;
+  padding-bottom: 2em;
+  margin-bottom: 2.5em;
 }

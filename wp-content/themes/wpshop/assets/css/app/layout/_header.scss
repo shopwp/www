@@ -60,6 +60,12 @@
         text-decoration: none;
       }
     }
+
+    &.menu-item-has-children {
+      a:hover {
+        color: #1f1f23;
+      }
+    }
   }
 
   .sub-menu {
@@ -68,7 +74,7 @@
     height: 0;
     overflow: hidden;
     position: absolute;
-    top: 90px;
+    top: 60px;
     margin: 0;
     width: 290px;
     font-size: 14px;
@@ -78,7 +84,7 @@
     opacity: 0;
 
     @include device(1500, 'max') {
-      top: 70px;
+      top: 50px;
     }
 
     a {

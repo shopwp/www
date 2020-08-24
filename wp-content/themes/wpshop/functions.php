@@ -109,12 +109,11 @@ add_action('edd_after_price_option', function () {
    echo '<small style="display:block;text-align:center;margin-top:-10px;">/per year</small>';
 });
 
-
 // Replaces the excerpt "Read More" text by a link
 function new_excerpt_more($more)
 {
    global $post;
-   return '... <div class="moretag-wrapper"><a class="moretag" href="' . get_permalink($post->ID) . '">Read more →</a></div>';
+   return '... <div class="moretag-wrapper"><a class="moretag btn-s" href="' . get_permalink($post->ID) . '">Read more</a></div>';
 }
 add_filter('excerpt_more', 'new_excerpt_more');
 

@@ -134,7 +134,7 @@ if (is_page('faq')) {
 
       <main class="main l-fill <?php echo isRegisteredAndPurchasing() ? ' is-registered-and-purchasing' : ''; ?>" role="document">
 
-         <div class="main-inner <?php echo is_singular('post') ? 'l-contain-narrow' : ''; ?>">
+         <div class="main-inner <?php echo is_singular('post') ? 'l-contain' : ''; ?>">
             <?php include Wrapper\template_path(); ?>
          </div>
 

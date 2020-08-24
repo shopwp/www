@@ -7,32 +7,75 @@ global $post;
 
    <article <?php post_class(); ?>>
 
-      <header>
+      <header class="post-single-header">
 
-         
-         <h1 class="entry-title"><?php the_title(); ?></h1>
+         <div class="l-row">
 
-         <?php get_template_part('templates/entry-meta'); ?>
+            
 
-         <?php echo get_the_post_thumbnail( $post->ID, 'large', array( 'class' => 'alignleft' ) ); ?>
-         
+            <div class="l-box-2 latest-post-info">
+               <h1 class="entry-title">
+                     <?php the_title(); ?>
+                  </h1>
+
+               <div class="post-meta-container">
+
+                  <time class="updated" datetime="<?= get_post_time('c', true); ?>"><?= get_the_date(); ?></time>
+
+                  <div class="post-categories">
+                     <?php 
+                                 
+                     $categories = get_the_category();
+                        if ( ! empty( $categories ) ) {
+                           echo '<a href="' . esc_url( get_category_link( $categories[0]->term_id ) ) . '">' . esc_html( $categories[0]->name ) . '</a>';
+                        }
+                     ?>
+                  </div>
+
+               </div>
+               
+               <?php get_template_part('templates/entry-meta'); ?>
+
+            </div>
+
+            <div class="l-box-2 latest-post-img">
+
+                  <div class="post-thumb" style="background-image: url('<?= get_the_post_thumbnail_url(get_the_ID(), 'full'); ?>');"></div>
+
+            </div>
+
+         </div>
+
       </header>
 
-      <div class="entry-content">
+      <div class="entry-content <?= is_singular('post') ? 'l-contain-narrow' : ''; ?>">
          <?php the_content(); ?>
-      </div>
-      <footer>
-         <?php wp_link_pages(['before' => '<nav class="page-nav"><p>' . __('Pages:', 'sage'), 'after' => '</p></nav>']); ?>
-      </footer>
 
-      <?php comments_template('/templates/comments.php'); ?>
+         <p class="post-last-updated">Last updated on <?php the_modified_time('F jS, Y'); ?></p>
+
+      </div>
 
    </article>
 
+   
+
    <div class="article-footer">
-      <a href="<?= esc_url(home_url('/purchase')); ?>" rel="author" class="fn post-logo-link" target="_blank">
-         <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header">
-      </a>
+   
+      <div class="inner">
+
+      <div class="post-affiliate">
+      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/Sell-online-728x90.png" alt="WP Shopify Pro feature product filtering" />
    </div>
 
+      <div class="post-sharing">
+         <?= do_shortcode('[social_warfare buttons="twitter,facebook,linkedin"]'); ?>
+      </div>
+      
+         <a href="/blog" rel="author" class="btn btn-secondary">Back to blog</a>
+      </div>
+   </div>
+
+   
+
+   
    <?php endwhile; ?>

@@ -1357,3 +1357,59 @@ div[data-tippy-root] div.tippy-box {
 [data-tippy-root] #getting-started-wrapper {
   display: block;
 }
+
+.sw:before {
+  color: color(base);
+}
+
+.swp_social_panel:not(.swp_social_panelSide) {
+  margin-top: 60px !important;
+}
+
+.swp_social_panel .total_shares {
+  margin-top: 0;
+}
+
+.swp_social_panel .sw {
+  height: 40px;
+  width: 30px;
+  font-size: 21px;
+}
+
+.swp_social_panelSide .sw:before,
+.swp_social_panelSide .swp_share {
+  color: #222;
+}
+
+.swp_floating_panel .sw {
+  font-size: 26px;
+}
+
+.swp_social_panel.swp_pill .nc_tweetContainer {
+  border-radius: 8px !important;
+}
+
+.swp_floating_panel.swp_social_panel .swp_share_button .swp_share_link:hover {
+  background: white;
+  opacity: 0.6;
+}
+
+.swp_floating_panel.swp_social_panel .nc_tweetContainer:not(.total_shares):not(.total_sharesalt) {
+  border: none;
+
+  &:hover {
+    border: none;
+  }
+}
+
+html
+  body
+  .swp_floating_panel.swp_social_panel.swp_individual_light_gray_outlines
+  .nc_tweetContainer:hover,
+body .swp_floating_panel.swp_social_panel.swp_other_light_gray_outlines:hover .nc_tweetContainer {
+  border: none;
+}
+
+.swp_social_panelSide[class*='swp_side'] {
+  padding: 0 0 30px 0;
+}

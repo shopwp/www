@@ -3,8 +3,12 @@
   font-size: $font-s;
   margin-top: 0;
   position: relative;
+
   .logo-header {
     height: 35px;
+    filter: grayscale(1) contrast(3.5);
+    max-width: 25px;
+    margin-bottom: -10px;
   }
 }
 
@@ -161,6 +165,13 @@
   margin-top: $space-l;
   padding: 20px;
   color: color(base);
+
+  small {
+    font-style: normal;
+    color: #7b7b7b;
+    margin-top: -5px;
+    display: block;
+  }
 }
 
 .footer-social-links {
@@ -170,6 +181,10 @@
   margin: 0;
   left: -45px;
   top: 6px;
+
+  .svg-inline--fa {
+    color: color(base);
+  }
 
   @include device(500, 'max') {
     flex-direction: row;
