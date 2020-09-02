@@ -158,7 +158,9 @@ class EDD_SL_List_Table extends WP_List_Table {
 			$base = add_query_arg( 's', $_GET['s'], $base );
 		}
 
-		$base    = wp_nonce_url( $base, 'edd_sl_key_nonce' );
+		$base         = wp_nonce_url( $base, 'edd_sl_key_nonce' );
+		$children     = $license->get_child_licenses();
+		$has_children = $this->is_main_view() && $children;
 
 		$title = $item['title'];
 
@@ -194,8 +196,30 @@ class EDD_SL_List_Table extends WP_List_Table {
 
 		$log_html = '<div id="license_log_'. esc_attr( $item['ID'] ) .'" style="display: none;"><p>' . __( 'Loading license log..', 'edd_sl' ) . '</p></div>';
 
+		$title = esc_html( $title );
+		if ( $has_children ) {
+			$link   = add_query_arg(
+				array(
+					'post_type' => 'download',
+					'page'      => 'edd-licenses',
+					's'         => $item['key'],
+				),
+				admin_url( 'edit.php' )
+			);
+			$title .= sprintf(
+				'<br />&#8212; <a href="%s">%s</a>',
+				esc_url( $link ),
+				_n(
+					'View child license',
+					'View child licenses',
+					count( $children ),
+					'edd_sl'
+				)
+			);
+		}
+
 		// Return the title contents
-		return esc_html( $title ) . $this->row_actions( $actions ) . $log_html;
+		return $title . $this->row_actions( $actions ) . $log_html;
 	}
 
 	/**
@@ -220,25 +244,24 @@ class EDD_SL_List_Table extends WP_List_Table {
 	/**
 	 * Setup columns
 	 *
-	 * @access      private
+	 * @access      public
 	 * @since       1.0
 	 * @return      array
 	 */
-
-	function get_columns() {
-
-		$columns = array(
-			'cb'        => '<input type="checkbox"/>',
-			'title'     => __( 'Product', 'edd_sl' ),
-			'key'       => __( 'Key', 'edd_sl' ),
-			'user'      => __( 'Customer', 'edd_sl' ),
-			'limit'     => __( 'Activation Limit', 'edd_sl' ),
-			'expires'   => __( 'Expires', 'edd_sl' ),
-			'purchased' => __( 'Purchased', 'edd_sl' ),
-			'actions'   => __( 'Actions', 'edd_sl' )
+	public function get_columns() {
+		return apply_filters(
+			'eddsl_get_admin_columns',
+			array(
+				'cb'        => '<input type="checkbox"/>',
+				'title'     => __( 'Product', 'edd_sl' ),
+				'key'       => __( 'Key', 'edd_sl' ),
+				'user'      => __( 'Customer', 'edd_sl' ),
+				'limit'     => __( 'Activation Limit', 'edd_sl' ),
+				'expires'   => __( 'Expires', 'edd_sl' ),
+				'purchased' => __( 'Purchased', 'edd_sl' ),
+				'actions'   => __( 'Actions', 'edd_sl' ),
+			)
 		);
-
-		return $columns;
 	}
 
 	/**
@@ -249,9 +272,12 @@ class EDD_SL_List_Table extends WP_List_Table {
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
-		return array(
-			'expires'   => array( 'expires', false ),
-			'purchased' => array( 'purchased', false )
+		return apply_filters(
+			'eddsl_get_sortable_admin_columns',
+			array(
+				'expires'   => array( 'expires', false ),
+				'purchased' => array( 'purchased', false ),
+			)
 		);
 	}
 
@@ -341,11 +367,9 @@ class EDD_SL_List_Table extends WP_List_Table {
 	 * @since       1.3.4
 	 * @return      int
 	 */
-
-	function count_licenses( $status = 'active' ) {
+	private function count_licenses( $status = 'active' ) {
 		$defaults = array(
 			'status' => $status,
-			'parent' => 0,
 		);
 
 		$args = $this->build_search_args( $defaults );
@@ -476,20 +500,21 @@ class EDD_SL_List_Table extends WP_List_Table {
 	 * @since       1.0
 	 * @return      array
 	 */
-	function licenses_data() {
+	private function licenses_data() {
 
 		$licenses_data = array();
 
 		$license_args = array(
 			'number' => $this->per_page,
 			'paged'  => $this->get_paged(),
-			'parent' => 0
+			'parent' => 0,
 		);
 
-		$view = isset( $_GET['view'] ) ? $_GET['view'] : false;
+		$view = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : false;
 
 		if ( $view ) {
 			$license_args['status'] = $view;
+			unset( $license_args['parent'] );
 		}
 
 		$license_args = $this->build_search_args( $license_args );
@@ -517,69 +542,88 @@ class EDD_SL_List_Table extends WP_List_Table {
 
 		$licenses = edd_software_licensing()->licenses_db->get_licenses( $license_args );
 
-		// If searching by Key
-		if ( ! empty( $license_args['license_key'] ) && ! empty( $licenses ) ) {
-
-			$found_license = $licenses[0];
-
-			// And we found a child license
-			if ( ! empty( $found_license->parent ) ) {
-
-				// Swap out the meta query for the parent license to show the entire bundle
-				$parent_license = edd_software_licensing()->get_license( $found_license->parent );
-				if ( false !== $parent_license ) {
-					$licenses = edd_software_licensing()->licenses_db->get_licenses( array( 'parent_license' => $parent_license->ID ) );
-				}
-
+		if ( ! $licenses ) {
+			return $licenses_data;
+		}
+		foreach ( $licenses as $index => $license ) {
+			if ( empty( $license->parent ) ) {
+				continue;
 			}
-
+			$parent_license = edd_software_licensing()->get_license( $license->parent );
+			if ( false !== $parent_license ) {
+				array_splice( $licenses, $index, 1, edd_software_licensing()->licenses_db->get_licenses( array( 'id' => $parent_license->ID ) ) );
+			}
 		}
 
-		if ( $licenses ) {
-			foreach ( $licenses as $license ) {
+		if ( ! $licenses ) {
+			return $licenses_data;
+		}
 
-				$license = edd_software_licensing()->get_license( $license->ID );
+		$is_main_view = $this->is_main_view();
+		foreach ( $licenses as $license ) {
 
-				$licenses_data[] = array(
-					'ID'               => $license->ID,
-					'title'            => $license->get_name( false ),
-					'status'           => $license->status,
-					'key'              => $license->key,
-					'user'             => $license->user_id,
-					'expires'          => $license->expiration,
-					'purchased'        => get_the_time( get_option( 'date_format' ), $license->payment_id ),
-					'download_id'      => $license->download_id,
-				);
+			if ( ! empty( $licenses_data[ $license->ID ] ) ) {
+				continue;
+			}
 
-				$child_licenses = $license->get_child_licenses();
+			$licenses_data[ $license->ID ] = $this->get_licenses_data_args( $license );
 
-				if ( ! empty( $child_licenses ) ) {
+			if ( $is_main_view ) {
+				continue;
+			}
+			$child_licenses = $license->get_child_licenses();
+			if ( ! empty( $child_licenses ) ) {
 
-					foreach ( $child_licenses as $child_license ) {
-
-						if ( ! empty( $_GET['view'] ) && $child_license->status !== $_GET['view'] ) {
-							continue;
-						}
-
-						$licenses_data[] = array(
-							'ID'          => $child_license->ID,
-							'title'       => $child_license->get_name( false ),
-							'status'      => $child_license->status,
-							'key'         => $child_license->key,
-							'user'        => $child_license->user_id,
-							'expires'     => $child_license->expiration,
-							'purchased'   => get_the_time( get_option( 'date_format' ), $license->payment_id ),
-							'download_id' => $child_license->download_id,
-						);
-
+				foreach ( $child_licenses as $child_license ) {
+					if ( ! is_object( $child_license ) ) {
+						continue;
 					}
 
+					if ( $view && $view !== $child_license->status ) {
+						continue;
+					}
+
+					$licenses_data[ $child_license->ID ] = $this->get_licenses_data_args( $child_license, $license );
 				}
 			}
 		}
 
 		return $licenses_data;
+	}
 
+	/**
+	 * Determine if we are in the main view (not a search or filter by status).
+	 *
+	 * @return boolean
+	 */
+	private function is_main_view() {
+		$search = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$view   = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : false;
+
+		return ! $search && ! $view;
+	}
+
+	/**
+	 * Get the array of data parameters to add to the $licenses_data array.
+	 *
+	 * @since 3.6.10
+	 * @param object $license
+	 * @param boolean|mixed $parent
+	 * @return array
+	 */
+	private function get_licenses_data_args( $license, $parent = false ) {
+		$payment_id = $parent ? $parent->payment_id : $license->payment_id;
+
+		return array(
+			'ID'          => $license->ID,
+			'title'       => $license->get_name( false ),
+			'status'      => $license->status,
+			'key'         => $license->key,
+			'user'        => $license->user_id,
+			'expires'     => $license->expiration,
+			'purchased'   => get_the_time( get_option( 'date_format' ), $payment_id ),
+			'download_id' => $license->download_id,
+		);
 	}
 
 	/** ************************************************************************
@@ -636,56 +680,55 @@ class EDD_SL_List_Table extends WP_List_Table {
 	 * @param array $args The existing args
 	 * @return array $args The updated args
 	 */
-	function build_search_args( $args ) {
+	private function build_search_args( $args ) {
+		$search = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
 		// check to see if we are searching
-		if( ! empty( $_GET['s'] ) ) {
+		if ( ! $search ) {
+			return $args;
+		}
+		unset( $args['parent'] );
 
-			$search = sanitize_text_field( trim( $_GET['s'] ) );
+		if ( is_email( $search ) ) {
 
-			if( is_email( $search ) ) {
+			$customer = new EDD_Customer( $search );
 
-				$customer = new EDD_Customer( $search );
+			if ( $customer && $customer->id > 0 ) {
 
-				if( $customer && $customer->id > 0 ) {
+				$args['customer_id'] = $customer->id;
 
-					$args['customer_id'] = $customer->id;
+			} else {
+				$args['number'] = 0;
+			}
+		} else {
 
+			$has_period = strstr( $search, '.' );
+
+			if ( strpos( $search, 'download:' ) !== false ) {
+
+				// Search in the download ID key
+				$args['download_id'] = trim( str_replace( 'download:', '', $search ) );
+
+			} elseif ( strlen( $search ) > 6 && false === $has_period && ! preg_match( '/\s/', $search ) ) {
+
+				$license = edd_software_licensing()->get_license( $search );
+				if ( ! empty( $license->parent ) ) {
+					$license = edd_software_licensing()->get_license( $license->parent );
+					$search  = $license->key;
 				}
+				$args['license_key'] = $search;
+				unset( $args['post_parent'] );
+
+			} elseif ( $has_period ) {
+
+				$args['site'] = edd_software_licensing()->clean_site_url( $search );
 
 			} else {
 
-				$has_period = strstr( $search, '.' );
-
-				if( strpos( $search, 'download:' ) !== false ) {
-
-					// Search in the download ID key
-					$args['download_id'] = trim( str_replace( 'download:', '', $search ) );
-
-				} elseif ( strlen( $search ) > 6 && false === $has_period && ! preg_match( '/\s/', $search ) ) {
-
-					$license = edd_software_licensing()->get_license( $search );
-					if ( ! empty( $license->parent ) ) {
-						$license = edd_software_licensing()->get_license( $license->parent );
-						$search  = $license->key;
-					}
-					$args['license_key'] = $search;
-					unset( $args['post_parent'] );
-
-				} elseif( $has_period ) {
-
-					$args['site'] = edd_software_licensing()->clean_site_url( $search );
-
-				} else {
-
-					$args['search'] = $search;
-
-				}
+				$args['search'] = $search;
 
 			}
-
 		}
 
 		return $args;
 	}
-
 }

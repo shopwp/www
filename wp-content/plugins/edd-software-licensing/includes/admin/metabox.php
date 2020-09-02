@@ -764,12 +764,12 @@ function edd_sl_readme_meta_box_settings( $post_id ) {
 			'title'       => __( 'Download details', 'edd_sl' ),
 			'description' => __( 'Use the following data from the remote readme.txt file . ', 'edd_sl' ),
 			'settings'    => array(
-				'tested_up_to' => __( 'Tested Up To (WordPress Version)', 'edd_sl' ),
-				'stable_tag'   => __( 'Stable Tag', 'edd_sl' ),
-				'contributors' => __( 'Contributors', 'edd_sl' ),
-				'donate_link'  => __( 'Donate Link', 'edd_sl' ),
-				'license'      => __( 'License', 'edd_sl' ),
-				'license_uri'  => __( 'License URI', 'edd_sl' ),
+				'tested_up_to'      => __( 'Tested Up To (WordPress Version)', 'edd_sl' ),
+				'stable_tag'        => __( 'Stable Tag', 'edd_sl' ),
+				'contributors'      => __( 'Contributors', 'edd_sl' ),
+				'donate_link'       => __( 'Donate Link', 'edd_sl' ),
+				'license'           => __( 'License', 'edd_sl' ),
+				'remaining_content' => __( 'Other product details', 'edd_sl' ),
 			)
 		),
 		'readme_sections' => array(
@@ -778,9 +778,9 @@ function edd_sl_readme_meta_box_settings( $post_id ) {
 			'settings'    => array(
 				'description'                => __( 'Description (default: Product content field)', 'edd_sl' ),
 				'installation'               => __( 'Installation', 'edd_sl' ),
-				'frequently_asked_questions' => __( 'FAQ', 'edd_sl' ),
+				'faq'                        => __( 'FAQ', 'edd_sl' ),
 				'changelog'                  => __( 'Changelog (default: "Change Log" field)', 'edd_sl' ),
-				'remaining_content'          => __( 'Other Content', 'edd_sl' )
+				'remaining_content'          => __( 'Other tabs in the readme.txt', 'edd_sl' ),
 			)
 		)
 	);

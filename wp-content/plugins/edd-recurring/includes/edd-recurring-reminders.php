@@ -214,7 +214,8 @@ class EDD_Recurring_Reminders {
 
 				$subscriptions = $this->get_reminder_subscriptions( $notice['send_period'], $type );
 
-				edd_debug_log( 'Found ' . count( $subscriptions ) . ' subscriptions to send reminders for.' );
+				$sub_count = is_countable( $subscriptions ) ? count( $subscriptions ) : 0;
+				edd_debug_log( 'Found ' . $sub_count . ' subscriptions to send reminders for.' );
 
 				if ( ! $subscriptions ) {
 					continue;

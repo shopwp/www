@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Software Licensing
 Plugin URL: https://easydigitaldownloads.com/downloads/software-licensing/
 Description: Adds a software licensing system to Easy Digital Downloads
-Version: 3.6.8
+Version: 3.6.11
 Author: Easy Digital Downloads
 Author URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, cklosows
@@ -24,7 +24,7 @@ if ( ! defined( 'EDD_SL_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_SL_VERSION' ) ) {
-	define( 'EDD_SL_VERSION', '3.6.8' );
+	define( 'EDD_SL_VERSION', '3.6.11' );
 }
 
 class EDD_Software_Licensing {
@@ -1063,7 +1063,7 @@ class EDD_Software_Licensing {
 	 * @return bool
 	 */
 	function can_extend( $license_id = 0 ) {
-		$ret = edd_sl_renewals_allowed() && 'expired' !== $this->get_license_status( $license_id );
+		$ret = edd_sl_renewals_allowed() && ! in_array( $this->get_license_status( $license_id ), array( 'expired', 'disabled', 'revoked' ), true );
 
 		if( $this->is_lifetime_license( $license_id ) ) {
 			$ret = false;
@@ -1296,13 +1296,16 @@ class EDD_Software_Licensing {
 			$item_name = isset( $data['name'] )  ? sanitize_text_field( rawurldecode( $data['name'] ) )      : false;
 		}
 
-
 		$response  = array(
 			'new_version'    => '',
 			'stable_version' => '',
 			'sections'       => '',
 			'license_check'  => '',
 			'msg'            => '',
+			'homepage'       => '',
+			'package'        => '',
+			'icons'          => array(),
+			'banners'        => array(),
 		);
 
 		// set content type of response
@@ -1361,7 +1364,7 @@ class EDD_Software_Licensing {
 		$stable_version = $version = $this->get_latest_version( $item_id );
 		$slug           = ! empty( $slug ) ? $slug : $download->post_name;
 		$description    = ! empty( $download->post_excerpt ) ? $download->post_excerpt : $download->post_content;
-		$changelog      = $download->get_changelog();
+		$changelog      = $download->get_changelog( true );
 
 		$download_beta = false;
 		if ( $beta && $download->has_beta()  ) {
@@ -2299,7 +2302,7 @@ class EDD_Software_Licensing {
 	 * @param string $email
 	*/
 	public function prevent_expired_downloads( $download_id = 0, $email = '', $payment_id, $args ) {
-		$can_download_response = $this->license_can_download( $download_id = 0, $email = '', $payment_id, $args );
+		$can_download_response = $this->license_can_download( $download_id, $email, $payment_id, $args );
 
 		if ( false === $can_download_response['success']  ) {
 			$defaults = array(

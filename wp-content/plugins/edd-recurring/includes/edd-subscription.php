@@ -544,6 +544,11 @@ class EDD_Subscription {
 
 		$expiration  = apply_filters( 'edd_subscription_renewal_expiration', $expiration, $this->id, $this );
 
+		// If a timestamp is passed in here, convert it to a date formatted string.
+		if ( is_numeric( $expiration ) ) {
+			$expiration = date( 'Y-m-d H:i:s', $expiration );
+		}
+
 		do_action( 'edd_subscription_pre_renew', $this->id, $expiration, $this );
 
 		$times_billed = $this->get_times_billed();
@@ -937,11 +942,10 @@ class EDD_Subscription {
 	public function check_expiration() {
 
 		$ret   = false;
-		$class = edd_recurring()->get_gateway_class( $this->gateway );
 
-		if( $class && class_exists( $class ) ) {
+		$gateway = edd_recurring()->get_gateway( $this->gateway );
 
-			$gateway = new $class;
+		if ( $gateway ) {
 
 			if( is_callable( array( $gateway, 'get_expiration' ) ) ) {
 

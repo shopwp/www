@@ -183,6 +183,7 @@ final class EDD_SL_Changelog_Widget extends WP_Widget {
 	 * @return void
 	 */
 	public function form( $instance ) {
+		wp_enqueue_script( 'jquery' );
 		$instance = wp_parse_args( $instance, $this->defaults );
 
 		if ( ! empty( $instance['download_id'] ) ) {
@@ -198,19 +199,21 @@ final class EDD_SL_Changelog_Widget extends WP_Widget {
 		$download_id = isset( $instance['download_id'] ) ? absint( $instance['download_id'] ) : 0;
 		?>
 		<script>
+		( function( $ ) {
 			$( document ).ready(function() {
 				// When the document is loaded, be sure to just trigger the width on the download chosen field so it's ready
 				// when the user asks to view it by expanding the widget form.
-				$('#<?php echo $this->id_base . '_download_id_' . $this->number . '_chosen'; ?>' ).css('width', '100%' );
+				$( '#<?php echo esc_attr( $this->id_base ) . '_download_id_' . esc_attr( $this->number ) . '_chosen'; ?>' ).css( 'width', '100%' );
 
 				// After you 'save' a widget, the input field loses the 'chosen' state, so we have to re-trigger it again.
-				$(document).on( 'widget-updated', function( widget ) {
+				$( document ).on( 'widget-updated', function( widget ) {
 					var save_button = widget.currentTarget.activeElement.id;
-					if ( save_button === 'widget-<?php echo $this->id_base; ?>-<?php echo $this->number; ?>-savewidget') {
-						$('#<?php echo $this->id_base . '_download_id_' . $this->number ; ?>' ).chosen();
+					if ( save_button === 'widget-<?php echo esc_attr( $this->id_base ); ?>-<?php echo esc_attr( $this->number ); ?>-savewidget' ) {
+						$( '#<?php echo esc_attr( $this->id_base ) . '_download_id_' . esc_attr( $this->number ); ?>' ).chosen();
 					}
 				});
 			});
+		}(jQuery) );
 		</script>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'edd_sl' ); ?></label>

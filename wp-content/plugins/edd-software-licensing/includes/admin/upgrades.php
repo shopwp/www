@@ -58,6 +58,9 @@ function edd_sl_show_upgrade_notice() {
 	// See https://github.com/easydigitaldownloads/EDD-Software-Licensing/issues/1499
 	$fix_no_url_check_activation_counts = edd_has_upgrade_completed( 'fix_no_url_check_activation_counts' );
 
+	// See https://github.com/easydigitaldownloads/EDD-Software-Licensing/issues/1456
+	$increase_license_key_column = edd_has_upgrade_completed( 'increase_license_key_column' );
+
 	if ( ! $licenses_migrated ) {
 
 
@@ -134,7 +137,13 @@ function edd_sl_show_upgrade_notice() {
 				esc_url( admin_url( 'index.php?page=edd-sl-upgrades&edd-upgrade=fix_no_url_check_activation_counts' ) )
 			);
 		}
+	}
 
+	if ( ! $increase_license_key_column ) {
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'edd_licenses';
+		$wpdb->query( "ALTER TABLE {$table_name} MODIFY license_key varchar(255) NOT NULL;" );
+		edd_set_upgrade_complete( 'increase_license_key_column' );
 	}
 }
 add_action( 'admin_notices', 'edd_sl_show_upgrade_notice' );

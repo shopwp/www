@@ -839,43 +839,49 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 	 * @access      public
 	 * @since       2.4
 	 *
-	 * @param  EDD_Subscription $subscription The subscription object
-	 * @param bool|mixed $valid If cancellation is valid
-	 *
+	 * @param  EDD_Subscription $subscription The subscription object.
+	 * @param  bool|mixed       $valid        If cancellation is valid.
 	 *
 	 * @return      string
 	 */
 	public function cancel( $subscription, $valid ) {
 
-		if( empty( $valid ) ) {
+		if ( empty( $valid ) ) {
 			return false;
 		}
 
-		// Parts needed from the PayPal Express API for the cancellation
+		// Parts needed from the PayPal Express API for the cancellation.
 		if ( edd_is_test_mode() ) {
 			$api_endpoint = 'https://api-3t.sandbox.paypal.com/nvp';
 		} else {
 			$api_endpoint = 'https://api-3t.paypal.com/nvp';
 		}
 
-		$creds = edd_recurring_get_paypal_api_credentials();
-		if( empty( $creds['username'] ) || empty( $creds['password'] ) || empty( $creds['signature'] ) ) {
+		$credentials = edd_recurring_get_paypal_api_credentials();
+		if ( empty( $credentials['username'] ) || empty( $credentials['password'] ) || empty( $credentials['signature'] ) ) {
 			return false;
 		}
-		// End of PayPal API needs
+		// End of PayPal API needs.
 
 		$args = array(
-			'USER'      => $creds['username'],
-			'PWD'       => $creds['password'],
-			'SIGNATURE' => $creds['signature'],
+			'USER'      => $credentials['username'],
+			'PWD'       => $credentials['password'],
+			'SIGNATURE' => $credentials['signature'],
 			'VERSION'   => '124',
 			'METHOD'    => 'ManageRecurringPaymentsProfileStatus',
 			'PROFILEID' => $subscription->profile_id,
-			'ACTION'    => 'Cancel'
+			'ACTION'    => 'Cancel',
 		);
 
 		$error_msg = '';
-		$request   = wp_remote_post( $api_endpoint, array( 'body' => $args, 'httpversion' => '1.1', 'timeout' => 30 ) );
+		$request   = wp_remote_post(
+			$api_endpoint,
+			array(
+				'body'        => $args,
+				'httpversion' => '1.1',
+				'timeout'     => 30,
+			)
+		);
 
 		if ( is_wp_error( $request ) ) {
 
@@ -888,23 +894,23 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 			$code    = wp_remote_retrieve_response_code( $request );
 			$message = wp_remote_retrieve_response_message( $request );
 
-			if( is_string( $body ) ) {
+			if ( is_string( $body ) ) {
 				wp_parse_str( $body, $body );
 			}
 
-			if( empty( $code ) || 200 !== (int) $code ) {
+			if ( empty( $code ) || 200 !== (int) $code ) {
 				$success = false;
 			}
 
-			if( empty( $message ) || 'OK' !== $message ) {
+			if ( empty( $message ) || 'OK' !== $message ) {
 				$success = false;
 			}
 
-			if( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
+			if ( isset( $body['ACK'] ) && 'success' === strtolower( $body['ACK'] ) ) {
 				$success = true;
 			} else {
 				$success = false;
-				if( isset( $body['L_LONGMESSAGE0'] ) ) {
+				if ( isset( $body['L_LONGMESSAGE0'] ) ) {
 					$error_msg = $body['L_LONGMESSAGE0'];
 				}
 			}
@@ -914,13 +920,13 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 			 * Let's catch those cases and consider the cancellation successful
 			 */
 			$cancelled_codes = array( 11556, 11557, 11531 );
-			if( in_array( $body['L_ERRORCODE0'], $cancelled_codes ) ) {
+			if ( isset( $body['L_ERRORCODE0'] ) && in_array( $body['L_ERRORCODE0'], $cancelled_codes ) ) {
 				$success = true;
 			}
 
 		}
 
-		if( empty( $success ) ) {
+		if ( empty( $success ) ) {
 
 			edd_insert_payment_note( $subscription->parent_payment_id, $error_msg );
 

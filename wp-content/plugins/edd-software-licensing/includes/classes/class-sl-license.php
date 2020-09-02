@@ -900,7 +900,7 @@ class EDD_SL_License {
 	 * @since 3.5
 	 * @return int
 	 */
-	private function get_activation_limit( $force_lookup = false ) {
+	public function get_activation_limit( $force_lookup = false ) {
 		if ( ! is_null( $this->activation_limit ) && ! $force_lookup ) {
 			return $this->activation_limit;
 		} else {
@@ -923,7 +923,7 @@ class EDD_SL_License {
 			$parent_license = edd_software_licensing()->get_license( $this->parent );
 
 			if ( false !== $parent_license ) {
-				$limit = $parent_license->activation_limit;
+				$limit = $parent_license->get_activation_limit();
 			}
 		}
 

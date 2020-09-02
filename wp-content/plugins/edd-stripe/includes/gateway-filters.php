@@ -88,8 +88,13 @@ add_filter( 'edd_purchase_link_args', 'edd_stripe_purchase_link_atts', 10 );
  * @return array
  */
 function edd_stripe_straight_to_gateway_data( $purchase_data ) {
-	$purchase_data['gateway'] = 'stripe';
-	$_REQUEST['edd-gateway']  = 'stripe';
+
+	$gateways = edd_get_enabled_payment_gateways();
+
+	if ( isset( $gateways['stripe'] ) ) {
+		$_REQUEST['edd-gateway']  = 'stripe';
+		$purchase_data['gateway'] = 'stripe';
+	}
 
 	return $purchase_data;
 }

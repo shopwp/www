@@ -262,11 +262,20 @@ class EDD_SL_Download extends EDD_Download {
 	 * Retrieve the changelog for a licensed download.
 	 *
 	 * @since  3.6
-	 *ok time
+	 * @since  3.6.10 Added $truncate varaible to allow supporting the `<!--more-->` tag.
+	 *
+	 * @param boolean $truncate If the changelog should be truncated.
 	 * @return string
 	 */
-	public function get_changelog() {
-		$changelog = get_post_meta( $this->ID, '_edd_sl_changelog', true );
+	public function get_changelog( $truncate = false ) {
+		$changelog    = get_post_meta( $this->ID, '_edd_sl_changelog', true );
+		$has_more_tag = strpos( $changelog, '<!--more-->' );
+
+		if ( $truncate && false !== $has_more_tag ) {
+			$changelog = trim( substr( $changelog, 0, $has_more_tag ) );
+
+			$changelog .= "\n\n" . trailingslashit( get_permalink( $this->ID ) ) . 'changelog';
+		}
 
 		return apply_filters( 'edd_sl_download_changelog', $changelog, $this->ID );
 	}

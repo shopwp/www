@@ -174,7 +174,7 @@ class EDD_Recurring_Gateway {
 	}
 
 	/**
-	 * Cancels a subscription
+	 * Cancels a subscription. If possible, cancel at the period end. If not possible, cancel immediately.
 	 *
 	 * @access      public
 	 * @since       2.4
@@ -183,6 +183,19 @@ class EDD_Recurring_Gateway {
 	 * @return      void
 	 */
 	public function cancel( $subscription, $valid ) {}
+
+	/**
+	 * Cancels a subscription immediately.
+	 *
+	 * @access      public
+	 * @since       2.4
+	 * @param       EDD_Subscription $subscription The EDD_Subscription object for the EDD Subscription being cancelled.
+	 * @return      void
+	 */
+	public function cancel_immediately( $subscription ) {
+		// Fallback to the original cancel method.
+		$this->cancel( $subscription, true );
+	}
 
 	/**
 	 * Determines if a subscription can be reactivated through the gateway
@@ -390,7 +403,8 @@ class EDD_Recurring_Gateway {
 				$recurring_one_time_discounts = false;
 			}
 
-			$prices_include_tax = edd_prices_include_tax();
+			$prices_include_tax         = edd_prices_include_tax();
+			$download_is_tax_exclusive  = edd_download_is_tax_exclusive( $item['id'] );
 
 			// If we should NOT apply the discount to the renewal
 			if( $recurring_one_time_discounts ) {
@@ -398,19 +412,19 @@ class EDD_Recurring_Gateway {
 				// If entered prices do not include tax
 				if ( ! $prices_include_tax ) {
 
+					// Set the tax to be the full amount as well for recurs. Recalculate it using the amount without discounts, which is the subtotal
+					$recurring_tax = $download_is_tax_exclusive ? 0 : edd_calculate_tax( $item['subtotal'] );
+
 					// When prices don't include tax, the $item['subtotal'] is the cost of the item, including quantities, but NOT including discounts or taxes
 					// Set the recurring amount to be the full amount, with no discounts
-					$recurring_amount = $item['subtotal'] + edd_calculate_tax( $item['subtotal'] );
-
-					// Set the tax to be the full amount as well for recurs. Recalculate it using the amount without discounts, which is the subtotal
-					$recurring_tax = edd_calculate_tax( $item['subtotal'] );
+					$recurring_amount = $item['subtotal'] + $recurring_tax;
 
 				} else {
 
 					// If prices include tax, we can't use the $item['subtotal'] like we do above, because it does not include taxes, and we need it to include taxes.
 					// So instead, we use the item_price, which is the entered price of the product, without any discounts, and with taxes included.
 					$recurring_amount = $item['item_price'];
-					$recurring_tax = edd_calculate_tax( $item['item_price'] );
+					$recurring_tax    = $download_is_tax_exclusive ? 0 : edd_calculate_tax( $item['item_price'] );
 
 				}
 
@@ -419,7 +433,7 @@ class EDD_Recurring_Gateway {
 				// The $item['price'] includes all discounts and taxes.
 				// Since discounts are allowed on renewals, we don't need to make any changes at all to the price or the tax.
 				$recurring_amount = $item['price'];
-				$recurring_tax = $item['tax'];
+				$recurring_tax    = $download_is_tax_exclusive ? 0 : $item['tax'];
 
 			}
 
@@ -442,6 +456,7 @@ class EDD_Recurring_Gateway {
 			$fee_tax = $fees > 0 ? edd_calculate_tax( $fees ) : 0;
 
 			$args = array(
+				'cart_index'         => $key,
 				'id'                 => $item['id'],
 				'name'               => $item['name'],
 				'price_id'           => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : false,
@@ -619,6 +634,40 @@ class EDD_Recurring_Gateway {
 			}
 
 			$trial_period = ! empty( $subscription['has_trial'] ) ? $subscription['trial_quantity'] . ' ' . $subscription['trial_unit'] : '';
+			$expiration   = $subscriber->get_new_expiration( $subscription['id'], $subscription['price_id'], $trial_period );
+
+			// Check and see if we have a custom recurring period from the Custom Prices extension.
+			if ( defined( 'EDD_CUSTOM_PRICES' ) ) {
+
+				$cart_item = $this->purchase_data['cart_details'][ $subscription['cart_index'] ];
+
+				if ( isset( $cart_item['item_number']['options']['custom_price'] ) ) {
+					switch( $subscription['period'] ) {
+
+						case 'quarter' :
+
+							$period = '+ 3 months';
+
+							break;
+
+						case 'semi-year' :
+
+							$period = '+ 6 months';
+
+							break;
+
+						default :
+
+							$period = '+ 1 ' . $subscription['period'];
+
+							break;
+
+					}
+
+					$expiration = date( 'Y-m-d H:i:s', strtotime( $period . ' 23:59:59', current_time( 'timestamp' ) ) );
+				}
+
+			}
 
 			$args = array(
 				'product_id'            => $subscription['id'],
@@ -634,7 +683,7 @@ class EDD_Recurring_Gateway {
 				'recurring_tax_rate'    => $subscription['recurring_tax_rate'],
 				'recurring_tax'         => $subscription['recurring_tax'],
 				'bill_times'            => $subscription['bill_times'],
-				'expiration'            => $subscriber->get_new_expiration( $subscription['id'], $subscription['price_id'], $trial_period ),
+				'expiration'            => $expiration,
 				'trial_period'          => $trial_period,
 				'profile_id'            => $subscription['profile_id'],
 				'transaction_id'        => $subscription['transaction_id'],
@@ -740,7 +789,7 @@ class EDD_Recurring_Gateway {
 			// Show an error to switch to the Stripe gateway to complete purchase.
 			} else {
 
-				$gateway_checkout_uri = add_query_arg( 
+				$gateway_checkout_uri = add_query_arg(
 					array(
 						'payment-mode' => 'stripe',
 					),

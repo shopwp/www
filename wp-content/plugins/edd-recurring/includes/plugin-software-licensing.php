@@ -76,7 +76,7 @@ class EDD_Recurring_Software_Licensing {
 		// This is an upgrade.
 		if ( ! empty( $item['item_number']['options']['is_upgrade'] ) || ! empty( $item['item_number']['options']['is_renewal'] ) ) {
 
-			if ( edd_has_variable_prices( $item['id'] ) && 0 !== (int) $item['item_number']['options']['price_id'] ) {
+			if ( edd_has_variable_prices( $item['id'] ) ) {
 
 				$price = edd_get_price_option_amount( $args['id'], $args['price_id'] );
 
@@ -377,7 +377,7 @@ class EDD_Recurring_Software_Licensing {
 		foreach ( $downloads as $download ) {
 
 			// Account for the fact that PayPal Express deals with post-payment creation, which means we have item_number in play.
-			$options = isset( $download['item_number'] ) ? : $download['options'];
+			$options = isset( $download['item_number']['options'] ) ? $download['item_number']['options'] : $download['options'];
 
 			if ( ! isset( $options['is_upgrade'] ) ) {
 				continue;
@@ -387,8 +387,11 @@ class EDD_Recurring_Software_Licensing {
 				continue;
 			}
 
-			if ( isset( $options['price_id'] ) && $price_id != $options['price_id'] ) {
-				continue;
+			// Determine if there is no price_id needed to be checked.
+			if ( isset( $options['price_id'] ) && is_numeric( $options['price_id'] ) ) {
+				if ( $price_id != $options['price_id'] ) {
+					continue;
+				}
 			}
 
 			$license_id = isset( $options['license_id'] ) ? $options['license_id'] : false;
@@ -446,9 +449,11 @@ class EDD_Recurring_Software_Licensing {
 
 			if ( ! empty( $license_expiration ) ) {
 
-				switch( $gateway ) {
+				switch ( $gateway ) {
 
 					case 'stripe':
+						// Instead of using billing_cycle_anchor to offset the start time of the next subscription, use a free trial.
+						unset( $args['billing_cycle_anchor'] );
 						$args['trial_end']      = $license_expiration;
 						$args['needs_one_time'] = true;
 						$args['license_id']     = $license_id;
@@ -623,19 +628,17 @@ class EDD_Recurring_Software_Licensing {
 					continue;
 				}
 
-				$gateway = edd_recurring()->get_gateway_class( $old_sub->gateway );
+				$gateway = edd_recurring()->get_gateway( $old_sub->gateway );
 
-				if( empty( $gateway ) || ! class_exists( $gateway ) ) {
+				if( empty( $gateway ) ) {
 					continue;
 				}
-
-				$gateway = new $gateway;
 
 				$recurring = edd_recurring();
 
 				remove_action( 'edd_subscription_cancelled', array( $recurring::$emails, 'send_subscription_cancelled' ), 10 );
 
-				if( $gateway->cancel( $old_sub, true ) ) {
+				if ( $gateway->cancel_immediately( $old_sub ) ) {
 
 					$note = sprintf( __( 'Subscription #%d cancelled for license upgrade', 'edd-recurring' ), $old_sub->id );
 					edd_insert_payment_note( $old_sub->parent_payment_id, $note );
@@ -683,19 +686,17 @@ class EDD_Recurring_Software_Licensing {
 			return;
 		}
 
-		$gateway = edd_recurring()->get_gateway_class( $sub->gateway );
+		$gateway = edd_recurring()->get_gateway( $sub->gateway );
 
-		if( empty( $gateway ) || ! class_exists( $gateway ) ) {
+		if( empty( $gateway ) ) {
 			return;
 		}
-
-		$gateway = new $gateway;
 
 		$recurring = edd_recurring();
 
 		remove_action( 'edd_subscription_cancelled', array( $recurring::$emails, 'send_subscription_cancelled' ), 10 );
 
-		if( $gateway->cancel( $sub, true ) ) {
+		if ( $gateway->cancel_immediately( $sub ) ) {
 
 			$note = sprintf( __( 'Subscription #%d cancelled for license upgrade', 'edd-recurring' ), $sub->id );
 			edd_insert_payment_note( $sub->parent_payment_id, $note );
@@ -726,19 +727,17 @@ class EDD_Recurring_Software_Licensing {
 					continue;
 				}
 
-				$gateway = edd_recurring()->get_gateway_class( $sub->gateway );
+				$gateway = edd_recurring()->get_gateway( $sub->gateway );
 
-				if( empty( $gateway ) || ! class_exists( $gateway ) ) {
+				if( empty( $gateway ) ) {
 					continue;
 				}
-
-				$gateway = new $gateway;
 
 				$recurring = edd_recurring();
 
 				remove_action( 'edd_subscription_cancelled', array( $recurring::$emails, 'send_subscription_cancelled' ), 10 );
 
-				if( $gateway->cancel( $sub, true ) ) {
+				if ( $gateway->cancel_immediately( $sub ) ) {
 
 					$note = sprintf( __( 'Subscription #%d cancelled for manual license renewal', 'edd-recurring' ), $sub->id );
 					edd_insert_payment_note( $sub->parent_payment_id, $note );
@@ -929,7 +928,7 @@ class EDD_Recurring_Software_Licensing {
 
 			// Only set up a discount if software licensing is enabled for the product.
 			if ( $enabled ) {
-				$discount = edd_sl_get_renewal_discount_percentage();
+				$discount = edd_sl_get_renewal_discount_percentage( 0, $item['id'] );
 			} else {
 				$discount = 0;
 			}

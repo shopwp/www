@@ -1,7 +1,7 @@
 <?php
 
 class EDD_Recurring_Summary_Widget {
-	
+
 	/**
 	 * Get things started
 	 *
@@ -132,39 +132,111 @@ class EDD_Recurring_Summary_Widget {
 	 * Retrieve estimated revenue for the number of days given
 	 *
 	 * @since  2.4.15
+	 *
+	 * @param  int $days Number of days (0 to 365)
+	 *
 	 * @return float
 	 */
 	public function get_estimated_revenue( $days = 0 ) {
 
 		global $wpdb;
 
-		if( empty( $days ) ) {
+		// Cast days to int
+		$days = absint( $days );
 
-			$amount = get_transient( 'edd_recurring_estimated_revenue' );
+		// How long to cache values for
+		$expiration = HOUR_IN_SECONDS;
 
-			if( false === $amount ) {
+		// "Total"
+		if ( empty( $days ) ) {
 
-				$now    = date( 'Y-n-d H:i:s', strtotime( 'now' ) );
-				$amount = $wpdb->get_var( "SELECT sum(recurring_amount) FROM {$wpdb->prefix}edd_subscriptions WHERE expiration >= '$now' AND 1=1 AND status IN( 'active', 'trialling' );" );
+			// Get the transient
+			$key    = 'edd_recurring_estimated_revenue';
+			$amount = get_transient( $key );
 
-				set_transient( 'edd_recurring_estimated_revenue', $amount, HOUR_IN_SECONDS );
+			// No transient
+			if ( false === $amount ) {
 
+				// SQL
+				$query = "SELECT SUM(recurring_amount)
+						  FROM {$wpdb->prefix}edd_subscriptions
+						  WHERE
+							  ( expiration >= %s )
+							  AND status IN( 'active', 'trialling' )";
+
+				// Boundary
+				$now      = date( 'Y-m-d 00:00:00', strtotime( 'now' ) );
+
+				// Query the database
+				$prepared = $wpdb->prepare( $query, $now );
+				$amount   = $wpdb->get_var( $prepared );
+
+				// Cache
+				set_transient( $key, $amount, $expiration );
 			}
 
+		// "Next X Days"
 		} else {
 
-			$amount = get_transient( 'edd_recurring_estimated_revenue_' . $days );
+			// Get the transient
+			$key    = 'edd_recurring_estimated_revenue_' . $days;
+			$amount = get_transient( $key );
 
-			if( false === $amount ) {
+			// No transient
+			if ( false === $amount ) {
 
-				$date   = date( 'Y-n-d H:i:s', strtotime( '+' . absint( $days ) . ' days' ) );
-				$now    = date( 'Y-n-d H:i:s', strtotime( 'now' ) );
-				$amount = $wpdb->get_var( "SELECT sum(recurring_amount) FROM {$wpdb->prefix}edd_subscriptions WHERE expiration >= '$now' AND expiration <= '$date' AND status IN( 'active', 'trialling' );" );
+				// Calculate the ratio based on number of $days
+				$yid   = 365; // Year in days
+				$ratio = ( $yid / $days );
 
-				set_transient( 'edd_recurring_estimated_revenue_' . $days, $amount, HOUR_IN_SECONDS );
+				// Array of period => interval
+				$sum_cases = array(
+					'day'       => 365,
+					'week'      => 52,
+					'month'     => 12,
+					'quarter'   => 4,
+					'semi-year' => 2,
+					'year'      => 1,
+				);
+
+				// Default sums array
+				$sums = array();
+
+				// Loop through sums and combine into array of SQL
+				foreach ( $sum_cases as $period => $interval ) {
+
+					// Adjust the SQL according to the days ratio, rounded up
+					$math   = ceil( $interval / $ratio );
+
+					// Add SUM case to array
+					$sums[] = "SUM( CASE WHEN period='{$period}' THEN recurring_amount * {$math} END ) AS '{$period}'";
+				}
+
+				// Combine SUM() clauses into usable SQL
+				$sum_sql = join( ",\n ", $sums );
+
+				// SQL
+				$query   = "SELECT {$sum_sql}
+							 FROM {$wpdb->prefix}edd_subscriptions
+							 WHERE
+							 ( expiration >= %s AND expiration <= %s )
+							 AND status IN( 'active', 'trialling' )";
+
+				// Boundaries (all day today, all day final day)
+				$now  = date( 'Y-m-d 00:00:00', strtotime( 'now' ) );
+				$date = date( 'Y-m-d 23:59:59', strtotime( "+ {$days} days" ) );
+
+				// Query the database
+				$prepared = $wpdb->prepare( $query, $now, $date );
+				$amounts  = $wpdb->get_results( $prepared, ARRAY_A );
+
+				// Sum the values
+				$amount   = array_sum( reset( $amounts ) );
+
+				// Cache
+				set_transient( $key, $amount, $expiration );
 
 			}
-
 		}
 
 		return edd_currency_filter( edd_format_amount( edd_sanitize_amount( $amount ) ) );

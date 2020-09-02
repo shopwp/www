@@ -150,7 +150,7 @@ function edd_stripe_connect_admin_script( $hook ) {
 		return;
 	}
 
-	wp_enqueue_style( 'edd-stripe-admin-styles', EDDSTRIPE_PLUGIN_URL . 'assets/css/build/admin.css', array(), EDD_STRIPE_VERSION );
+	wp_enqueue_style( 'edd-stripe-admin-styles', EDDSTRIPE_PLUGIN_URL . 'assets/css/build/admin-style.min.css', array(), EDD_STRIPE_VERSION );
 
 	wp_enqueue_script( 'edd-stripe-admin-scripts', EDDSTRIPE_PLUGIN_URL . 'assets/js/build/admin.min.js', array( 'jquery' ), EDD_STRIPE_VERSION );
 

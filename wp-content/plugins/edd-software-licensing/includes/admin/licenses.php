@@ -451,8 +451,8 @@ function edd_sl_licenses_view( $license ) {
 								if( ! $license->parent ) {
 									if ( ! $license->is_lifetime ) {
 
-										if( ! $unsubscribed ) {
-											$actions[ 'renewal_notice' ] = '<a href="#" id="edd_sl_send_renewal_notice" title="' . __( 'Send a renewal notice for this license key', 'edd_sl' ) . '">' . __( 'Send Renewal Notice', 'edd_sl' ) . '</a>';
+										if ( ! $unsubscribed && edd_sl_renewals_allowed() ) {
+											$actions['renewal_notice'] = '<a href="#" id="edd_sl_send_renewal_notice" title="' . esc_attr__( 'Send a renewal notice for this license key', 'edd_sl' ) . '">' . esc_html__( 'Send Renewal Notice', 'edd_sl' ) . '</a>';
 										}
 
 										if ( 'disabled' !== $license->status ) {
@@ -526,9 +526,13 @@ function edd_sl_licenses_view( $license ) {
 	<div id="edd-item-tables-wrapper" class="item-section">
 		<?php do_action( 'edd_sl_license_before_related_licenses', $license->key ); ?>
 
-		<?php if( ! empty( $has_children ) || $parent_has_license = (bool) edd_software_licensing()->get_license_key( $license->parent ) ) : ?>
+		<?php if ( $parent_has_license = (bool) edd_software_licensing()->get_license_key( $license->parent )  || ! empty( $has_children ) ) : ?>
 			<h3>
-				<?php _e( 'Related Licenses:', 'edd_sl' ); ?>
+				<?php if ( ! empty( $has_children ) ) : ?>
+					<?php esc_html_e( 'Child Licenses:', 'edd_sl' ); ?>
+				<?php else : ?>
+					<?php esc_html_e( 'Parent License:', 'edd_sl' ); ?>
+				<?php endif; ?>
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This table shows licenses related to this license, including relevant bundled licenses.', 'edd_sl' ); ?>"></span>
 			</h3>
 			<table class="wp-list-table widefat striped related-licenses">
@@ -539,15 +543,15 @@ function edd_sl_licenses_view( $license ) {
 					</tr>
 				</thead>
 				<tbody>
-					<?php if( isset( $parent_has_license ) ) : ?>
+					<?php if ( isset( $parent_has_license ) && empty( $has_children ) ) : ?>
 						<?php $parent_license = edd_software_licensing()->get_license( $license->parent ); ?>
 						<tr>
 							<td><?php echo $parent_license->get_name( false ); ?></td>
 							<td><a href="<?php echo add_query_arg( 'license_id', $parent_license->ID ); ?>"><?php echo edd_software_licensing()->get_license_key( $parent_license->ID ); ?></a></td>
 						</tr>
 					<?php endif; ?>
-					<?php if( $has_children ) : ?>
-						<?php foreach( $has_children as $child_license ) : ?>
+					<?php if ( $has_children ) : ?>
+						<?php foreach ( $has_children as $child_license ) : ?>
 							<tr>
 								<td><?php echo $child_license->get_name( false ); ?></td>
 								<td><a href="<?php echo add_query_arg( 'license_id', $child_license->ID ); ?>"><?php echo edd_software_licensing()->get_license_key( $child_license->ID ); ?></a></td>

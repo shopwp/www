@@ -319,7 +319,7 @@ function edd_sl_add_renewal_to_cart( $license_id = 0, $by_key = false ) {
 	}
 
 	// Make sure it's not already in the cart
-	$cart_key = edd_get_item_position_in_cart( $license->download_id, $options );
+	$cart_key = edd_sl_get_item_position_in_cart( $license->download_id, $options );
 
 	if ( edd_item_in_cart( $license->download_id, $options ) && false !== $cart_key ) {
 
@@ -329,15 +329,16 @@ function edd_sl_add_renewal_to_cart( $license_id = 0, $by_key = false ) {
 
 	edd_add_to_cart( $license->download_id, $options );
 
-	$success = true;
+	$success                          = true;
+	$options['_edd_sl_renewal_added'] = true;
 
 	// Confirm item was added to cart successfully
-	if( ! edd_item_in_cart( $license->download_id, $options ) ) {
+	if ( ! edd_item_in_cart( $license->download_id, $options ) ) {
 		return new WP_Error( 'not_in_cart', __( 'The download for this license is not in the cart or could not be added', 'edd_sl' ) );
 	}
 
 	// Get updated cart key
-	$cart_key = edd_get_item_position_in_cart( $license->download_id, $options );
+	$cart_key = edd_sl_get_item_position_in_cart( $license->download_id, $options );
 
 	if( true === $success ) {
 
@@ -359,6 +360,66 @@ function edd_sl_add_renewal_to_cart( $license_id = 0, $by_key = false ) {
 
 	return new WP_Error( 'renewal_error', __( 'Something went wrong while attempting to apply the renewal', 'edd_sl' ) );
 
+}
+
+add_filter( 'edd_item_in_cart', 'edd_sl_is_item_in_cart', 10, 3 );
+/**
+ * To allow multiple renewals, we need to modify the check for whether an item is in the cart already.
+ * Instead of just checking the download ID, we are checking for the license key.
+ *
+ * @since 3.6.10
+ * @param boolean $ret
+ * @param integer $download_id
+ * @param array   $options
+ * @return boolean
+ */
+function edd_sl_is_item_in_cart( $ret, $download_id, $options ) {
+	if ( empty( $options['is_renewal'] ) ) {
+		return $ret;
+	}
+	if ( ! empty( $options['_edd_sl_renewal_added'] ) ) {
+		return true;
+	}
+	$keys = edd_sl_get_renewal_keys();
+	if ( empty( $keys ) ) {
+		return $ret;
+	}
+	if ( ! in_array( $options['license_key'], $keys, true ) ) {
+		return false;
+	}
+
+	return $ret;
+}
+
+/**
+ * Check for the cart position of the license being renewed.
+ * Replaces edd_get_item_position_in_cart as that checks for the download/price ID,
+ * and we need to check for the license ID instead.
+ *
+ * @param integer $download_id
+ * @param array $options
+ * @return integer|boolean
+ */
+function edd_sl_get_item_position_in_cart( $download_id = 0, $options = array() ) {
+	$cart = edd_get_cart_contents();
+
+	if ( ! is_array( $cart ) ) {
+		return false;
+	}
+
+	foreach ( $cart as $position => $item ) {
+		if ( $item['id'] != $download_id ) {
+			continue;
+		}
+		if ( ! isset( $item['options']['license_key'] ) ) {
+			return $position;
+		}
+		if ( isset( $options['license_key'] ) && $options['license_key'] === $item['options']['license_key'] ) {
+			return $position;
+		}
+	}
+
+	return false;
 }
 
 /**
@@ -784,14 +845,12 @@ add_action( 'edd_daily_scheduled_events', 'edd_sl_check_for_expired_licenses' );
 function edd_sl_get_renewals_by_date( $day = null, $month = null, $year = null, $hour = null  ) {
 
 	$args = apply_filters( 'edd_get_renewals_by_date', array(
-		'nopaging'    => true,
-		'post_type'   => 'edd_payment',
-		'post_status' => array( 'revoked', 'publish' ),
-		'meta_key'    => '_edd_sl_is_renewal',
-		'meta_value'  => '1',
-		'year'        => $year,
-		'monthnum'    => $month,
-		'fields'      => 'ids'
+		'number'   => -1,
+		'status'   => array( 'revoked', 'publish', 'complete' ),
+		'meta_key' => '_edd_sl_is_renewal',
+		'year'     => $year,
+		'month'    => $month,
+		'fields'   => 'ids',
 	), $day, $month, $year );
 
 	if ( ! empty( $day ) ) {
@@ -802,14 +861,15 @@ function edd_sl_get_renewals_by_date( $day = null, $month = null, $year = null, 
 		$args['hour'] = $hour;
 	}
 
-	$renewals = get_posts( $args );
+	$query    = new EDD_Payments_Query( $args );
+	$renewals = $query->get_payments();
 
 	$return   = array();
 	$return['earnings'] = 0;
 	$return['count']    = count( $renewals );
 	if ( $renewals ) {
 		foreach ( $renewals as $renewal ) {
-			$return['earnings'] += edd_get_payment_amount( $renewal );
+			$return['earnings'] += edd_get_payment_amount( $renewal->ID );
 		}
 	}
 	return $return;

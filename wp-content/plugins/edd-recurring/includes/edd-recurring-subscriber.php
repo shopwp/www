@@ -32,7 +32,7 @@ class EDD_Recurring_Subscriber extends EDD_Customer {
 	 * Determine if the customer has an active subscription for the given product
 	 *
 	 * @since  2.4
-	 * @return void
+	 * @return boolean
 	 */
 	public function has_active_product_subscription( $product_id = 0 ) {
 

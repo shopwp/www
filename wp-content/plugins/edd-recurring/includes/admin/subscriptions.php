@@ -438,7 +438,7 @@ function edd_recurring_subscription_details() {
 											<label for="tablecell"><?php _e( 'Transaction ID:', 'edd-recurring' ); ?></label>
 										</td>
 										<td>
-											<span class="edd-sub-transaction-id"><?php echo $sub->get_transaction_id(); ?></span>
+											<span class="edd-sub-transaction-id"><?php echo esc_html( apply_filters( 'edd_subscription_details_transaction_id_' . $sub->gateway, $sub->get_transaction_id(), $sub ) ); ?></span>
 											<input type="text" name="transaction_id" class="hidden edd-sub-transaction-id" value="<?php echo esc_attr( $sub->get_transaction_id() ); ?>" />
 											<span>&nbsp;&ndash;&nbsp;</span>
 											<a href="#" class="edd-edit-sub-transaction-id"><?php _e( 'Edit', 'edd-recurring' ); ?></a>

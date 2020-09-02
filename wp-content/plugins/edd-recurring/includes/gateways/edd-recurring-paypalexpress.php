@@ -338,7 +338,7 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 							'BUTTONSOURCE'            => 'EasyDigitalDownloads_SP',
 						);
 
-						$args = apply_filters( 'edd_recurring_create_subscription_args', $args, $payment->cart_details, $this->id, $subscription->product_id, false );
+						$args = apply_filters( 'edd_recurring_create_subscription_args', $args, $payment->cart_details, $this->id, $subscription->product_id, $subscription->price_id );
 
 						$request = wp_remote_post( $this->api_endpoint, array( 'timeout' => 45, 'sslverify' => false, 'httpversion' => '1.1', 'body' => $args ) );
 						$body    = wp_remote_retrieve_body( $request );

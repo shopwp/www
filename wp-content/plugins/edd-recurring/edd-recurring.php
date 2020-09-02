@@ -3,9 +3,9 @@
  * Plugin Name: Easy Digital Downloads - Recurring Payments
  * Plugin URI: http://easydigitaldownloads.com/downloads/edd-recurring/
  * Description: Sell subscriptions with Easy Digital Downloads
- * Author: Easy Digital Downloads
- * Author URI: https://easydigitaldownloads.com/
- * Version: 2.9.3
+ * Author: Sandhills Development, LLC
+ * Author URI: https://sandhillsdev.com
+ * Version: 2.9.11
  * Text Domain: edd-recurring
  * Domain Path: languages
  */
@@ -31,7 +31,7 @@ if ( ! defined( 'EDD_RECURRING_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_RECURRING_VERSION' ) ) {
-	define( 'EDD_RECURRING_VERSION', '2.9.3' );
+	define( 'EDD_RECURRING_VERSION', '2.9.11' );
 }
 
 final class EDD_Recurring {
@@ -341,6 +341,11 @@ final class EDD_Recurring {
 
 		add_action( 'init', array( $this, 'add_non_persistent_cache' ) );
 
+		// Ensure Authorize.net 2.0+ is available.
+		if ( defined( 'EDDA_VERSION' ) ) {
+			add_action( 'admin_notices', array( $this, '_require_authnet_20_notice' ) );
+		}
+
 	}
 
 	/**
@@ -389,6 +394,11 @@ final class EDD_Recurring {
 
 		// Add edd_subscription to payment stats in EDD Core
 		add_filter( 'edd_payment_stats_post_statuses', array( $this, 'edd_payment_stats_post_status' ) );
+
+		// Ensure Authorize.net 2.0+ is available.
+		if ( defined( 'EDDA_VERSION' ) ) {
+			add_action( 'edd_enabled_payment_gateways', array( $this, '_require_authnet_20' ) );
+		}
 	}
 
 	/**
@@ -1778,20 +1788,36 @@ final class EDD_Recurring {
 	/**
 	 * Get gateway class
 	 *
-	 * @param $gateway
-	 *
-	 * @return string Gateway class name
+	 * @param  string $gateway The gateway whose class is being retrieved.
+	 * @return string The name of the gateway class.
 	 */
 	public function get_gateway_class( $gateway = '' ) {
 
 		$class = false;
 
-		if( isset( self::$gateways[ $gateway ] ) ) {
+		if ( isset( self::$gateways[ $gateway ] ) ) {
 			$class = self::$gateways[ $gateway ];
 		}
 
 		return $class;
 
+	}
+
+	/**
+	 * Get instantiated gateway class.
+	 *
+	 * @param  string $gateway_id The gateway whose class is being retrieved.
+	 * @return object The instantiated gateway class for the $gateway_id requested.
+	 */
+	public function get_gateway( $gateway_id = '' ) {
+		$gateway = false;
+		$class   = $this->get_gateway_class( $gateway_id );
+
+		if ( $class && class_exists( $class ) ) {
+			$gateway = new $class();
+		}
+
+		return apply_filters( 'edd_recurring_gateway', $gateway, $gateway_id );
 	}
 
 	/** Backwards Compatible Functions for Recurring terms */
@@ -1937,6 +1963,72 @@ final class EDD_Recurring {
 		wp_cache_add_non_persistent_groups( 'edd_subscriptions' );
 	}
 
+	/**
+	 * Conditonally load a notice for Authorize.net 2.0
+	 *
+	 * @since 2.9.6
+	 * @return void
+	 */
+	public function _require_authnet_20_notice() {
+		$enabled_gateways = edd_get_enabled_payment_gateways();
+
+		if (
+			isset( $enabled_gateways['authorize'] ) &&
+			defined( 'EDDA_VERSION' ) &&
+			! version_compare( EDDA_VERSION, '1.1.3', '>' )
+		) {
+			echo '<div class="notice notice-error">';
+
+			echo wpautop( wp_kses(
+				sprintf(
+					/* translators: %1$s Opening strong tag, do not translate. %2$s Closing strong tag, do not translate. */
+					__( '%1$sCredit card payments with Authorize.net are currently disabled.%2$s', 'edd-recurring' ),
+					'<strong>',
+					'</strong>'
+				)
+				. '<br />' .
+				sprintf(
+					/* translators: %1$s Opening code tag, do not translate. %2$s Closing code tag, do not translate. */
+					__( 'To continue accepting recurring credit card payments with Authorize.net please update the Authorize.net Payment Gateway extension to version %1$s2.0%2$s.', 'edd-recurring' ),
+					'<code>',
+					'</code>'
+				),
+				array(
+					'br'     => true,
+					'strong' => true,
+					'code'   => true,
+				)
+			) );
+
+			echo '</div>';
+		}
+	}
+
+	/**
+	 * Conditionally remove the Authorize.net gateway from the active gateways to account for the
+	 * 2.0 release of Authorize.net, where the code is moved into the gateway itself.
+	 *
+	 * @since 2.9.6
+	 *
+	 * @param array $enabled_gateways The list of active gateways
+	 * @return array
+	 */
+	public function _require_authnet_20( $enabled_gateways = array() ) {
+		if ( is_admin() || ( defined( 'EDD_DOING_AJAX' ) && ! EDD_DOING_AJAX ) ) {
+			return $enabled_gateways;
+		}
+
+		if (
+			isset( $enabled_gateways['authorize'] ) &&
+			defined( 'EDDA_VERSION' ) &&
+			! version_compare( EDDA_VERSION, '1.1.3', '>' )
+		) {
+			unset( $enabled_gateways['authorize'] );
+		}
+
+		return $enabled_gateways;
+	}
+
 }
 
 /**
@@ -2014,11 +2106,17 @@ function edd_recurring_install() {
 			edd_set_upgrade_complete( 'recurring_cancel_subs_if_times_met' );
 			edd_set_upgrade_complete( 'recurring_add_tax_columns_to_subs_table' );
 			edd_set_upgrade_complete( 'recurring_27_subscription_meta' );
+			edd_set_upgrade_complete( 'recurring_increase_transaction_profile_id_cols_and_collate' );
 
 		}
 
 		if ( false === edd_recurring_needs_24_stripe_fix() ) {
 			edd_set_upgrade_complete( 'fix_24_stripe_customers' );
+		}
+
+		if ( ! edd_has_upgrade_completed( 'recurring_increase_transaction_profile_id_cols_and_collate' ) ) {
+			@$db->create_table();
+			edd_set_upgrade_complete( 'recurring_increase_transaction_profile_id_cols_and_collate' );
 		}
 
 		update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );

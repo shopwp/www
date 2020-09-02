@@ -67,12 +67,10 @@ function edd_recurring_customer_profile_ids( $customer ) {
 		<tbody>
 		<?php foreach ( $profiles as $gateway => $profile ) : ?>
 			<?php
-			$gateway_class = EDD_Recurring()->get_gateway_class( $gateway );
-			if ( false === $gateway_class ) {
+			$gateway = EDD_Recurring()->get_gateway( $gateway );
+			if ( false === $gateway ) {
 				continue;
 			}
-
-			$gateway = new $gateway_class();
 			?>
 			<tr>
 				<td><?php echo $gateway->friendly_name; ?></td>
@@ -208,14 +206,11 @@ function edd_recurring_delete_customer_and_subscriptions( $customer_id, $confirm
 
 		if( $sub->can_cancel() ) {
 
+			$gateway = edd_recurring()->get_gateway( $sub->gateway );
+
 			// Attempt to cancel the subscription in the gateway
-			$gateway = edd_recurring()->get_gateway_class( $sub->gateway );
-
 			if( $gateway ) {
-
-				$gateway_obj = new $gateway;
-				$gateway_obj->cancel( $sub, true );
-
+				$gateway->cancel( $sub, true );
 			}
 
 		}

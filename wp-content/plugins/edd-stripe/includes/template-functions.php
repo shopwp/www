@@ -89,16 +89,16 @@ function edd_stripe_new_card_form() {
 
 <p id="edd-card-name-wrap">
 	<label for="card_name" class="edd-label">
-		<?php _e( 'Name on the Card', 'edds' ); ?>
+		<?php esc_html_e( 'Name on the Card', 'edds' ); ?>
 		<span class="edd-required-indicator">*</span>
 	</label>
-	<span class="edd-description"><?php _e( 'The name printed on the front of your credit card.', 'edds' ); ?></span>
-	<input type="text" name="card_name" id="card_name" class="card-name edd-input required" autocomplete="cc-name" />
+	<span class="edd-description"><?php esc_html_e( 'The name printed on the front of your credit card.', 'edds' ); ?></span>
+	<input type="text" name="card_name" id="card_name" class="card-name edd-input required" placeholder="<?php esc_attr_e( 'Card name', 'edds' ); ?>" autocomplete="cc-name" />
 </p>
 
 <div id="edd-card-wrap">
 	<label for="edd-card-element" class="edd-label">
-		<?php _e( 'Credit Card', 'edds' ); ?>
+		<?php esc_html_e( 'Credit Card', 'edds' ); ?>
 		<span class="edd-required-indicator">*</span>
 	</label>
 
@@ -489,9 +489,9 @@ function edd_stripe_manage_cards() {
 							<input
 								type="submit"
 								class="edd-stripe-submit-update"
-								data-loading="<?php echo esc_attr( 'Please Wait…', 'edds' ); ?>"
-								data-submit="<?php echo esc_attr( 'Update Card', 'edds' ); ?>"
-								value="<?php echo esc_attr( 'Update Card', 'edds' ); ?>"
+								data-loading="<?php echo esc_attr__( 'Please Wait…', 'edds' ); ?>"
+								data-submit="<?php echo esc_attr__( 'Update Card', 'edds' ); ?>"
+								value="<?php echo esc_attr__( 'Update Card', 'edds' ); ?>"
 							/>
 
 							<a href="#" class="edd-stripe-cancel-update" data-source="<?php echo esc_attr( $source->id ); ?>"><?php _e( 'Cancel', 'edds' ); ?></a>
@@ -530,9 +530,9 @@ function edd_stripe_manage_cards() {
 					<input
 						type="submit"
 						class="edd-button edd-stripe-add-new"
-						data-loading="<?php echo esc_attr( 'Please Wait…', 'edds' ); ?>"
-						data-submit="<?php echo esc_attr( 'Add new card', 'edds' ); ?>"
-						value="<?php echo esc_attr( 'Add new card', 'edds' ); ?>"
+						data-loading="<?php echo esc_attr__( 'Please Wait…', 'edds' ); ?>"
+						data-submit="<?php echo esc_attr__( 'Add new card', 'edds' ); ?>"
+						value="<?php echo esc_attr__( 'Add new card', 'edds' ); ?>"
 					/>
 					<a href="#" id="edd-stripe-add-new-cancel" style="display: none;"><?php _e( 'Cancel', 'edds' ); ?></a>
 					<?php wp_nonce_field( 'edd-stripe-add-card', 'edd-stripe-add-card-nonce', false, true ); ?>

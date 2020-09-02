@@ -144,7 +144,7 @@ class EDD_Recurring_Content_Restriction {
 			return $is_restricted; // Leave untouched
 		}
 
-		// Check if the product is a variably-priced product
+		// Check if the product is a variably-priced product.
 		if ( $price_id ) {
 			// Check if the variably-riced product is Recurring-enabled or not
 			$is_recurring = EDD_Recurring()->is_price_recurring( $download_id, $price_id );
@@ -191,24 +191,46 @@ class EDD_Recurring_Content_Restriction {
 
 			$has_access = false;
 
-			foreach( $restricted_to as $item ) {
+			foreach ( $restricted_to as $item ) {
 
-				// Check if the product is a variably-priced product
-				if ( isset( $item['price_id'] ) ) {
+				if ( 'any' === $item['download'] ) {
+					$return['status'] = $subscriber->has_active_subscription() ? true : false;
 
-					// Check if the variably-riced product is Recurring-enabled or not
-					$recurring_enabled = EDD_Recurring()->is_price_recurring( $item['download'], $item['price_id'] );
+					return $return;
+				}
+
+				// Get the Download object so we can use it in variable price checks.
+				$download = new EDD_Download( $item['download'] );
+
+				if ( isset( $item['price_id'] ) && $download->has_variable_prices() ) {
+					if ( is_numeric( $item['price_id'] ) ) {
+
+						// Check if the variably-riced product is Recurring-enabled or not.
+						$recurring_enabled = EDD_Recurring()->is_price_recurring( $item['download'], $item['price_id'] );
+
+					} elseif ( 'all' === $item['price_id'] ) {
+
+						foreach ( $download->get_prices() as $price ) {
+
+							if ( 'yes' === strtolower( $price['recurring'] ) ) {
+								$recurring_enabled = true;
+								break;
+							}
+
+						}
+
+					}
 
 				} else {
 
-					// Check if the product is Recurring-enabled or not
+					// Check if the product is Recurring-enabled or not.
 					$recurring_enabled = EDD_Recurring()->is_recurring( $item['download'] );
 
 				}
 
 				if ( $recurring_enabled ) {
 
-					// If this subscriber has an active subscription to the variably-product in question
+					// If this subscriber has an active subscription to the variably-product in question.
 					if ( $subscriber->has_active_product_subscription( $item['download'] ) ) {
 						$has_access = true;
 						break;
@@ -292,9 +314,9 @@ class EDD_Recurring_Content_Restriction {
 
 			} else {
 
-				foreach( $restricted_to as $item ) {
+				foreach ( $restricted_to as $item ) {
 
-					if( $subscriber->has_active_product_subscription( $item['download'] ) ) {
+					if ( $subscriber->has_active_product_subscription( $item['download'] ) ) {
 						$has_access = true;
 						break;
 					}
@@ -303,7 +325,7 @@ class EDD_Recurring_Content_Restriction {
 
 			}
 
-			if( $has_access == false ) {
+			if ( false === $has_access ) {
 				$content = __( 'This content is restricted to buyers.', 'edd-cr' );
 			}
 

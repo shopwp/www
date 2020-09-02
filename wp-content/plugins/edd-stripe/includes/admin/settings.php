@@ -56,25 +56,11 @@ function edds_add_settings( $settings ) {
 
 	$stripe_settings = array(
 		array(
-			'id'   => 'stripe_settings',
-			'name'  => '<strong>' . __( 'Stripe Settings', 'edds' ) . '</strong>',
-			'desc'  => __( 'Configure the Stripe settings', 'edds' ),
-			'type'  => 'header'
-		),
-		array(
 			'id' => 'stripe_connect_button',
 			'name' => __( 'Connection Status', 'edds' ),
 			'desc' => $stripe_connect_desc,
 			'type' => 'descriptive_text',
 			'class' => 'edd-stripe-connect-row',
-		),
-		array(
-			'id'   => 'test_secret_key',
-			'name'  => __( 'Test Secret Key', 'edds' ),
-			'desc'  => __( 'Enter your test secret key, found in your Stripe Account Settings', 'edds' ),
-			'type'  => 'text',
-			'size'  => 'regular',
-			'class' => 'edd-hidden edds-api-key-row',
 		),
 		array(
 			'id'   => 'test_publishable_key',
@@ -85,9 +71,9 @@ function edds_add_settings( $settings ) {
 			'class' => 'edd-hidden edds-api-key-row',
 		),
 		array(
-			'id'   => 'live_secret_key',
-			'name'  => __( 'Live Secret Key', 'edds' ),
-			'desc'  => __( 'Enter your live secret key, found in your Stripe Account Settings', 'edds' ),
+			'id'   => 'test_secret_key',
+			'name'  => __( 'Test Secret Key', 'edds' ),
+			'desc'  => __( 'Enter your test secret key, found in your Stripe Account Settings', 'edds' ),
 			'type'  => 'text',
 			'size'  => 'regular',
 			'class' => 'edd-hidden edds-api-key-row',
@@ -96,6 +82,14 @@ function edds_add_settings( $settings ) {
 			'id'   => 'live_publishable_key',
 			'name'  => __( 'Live Publishable Key', 'edds' ),
 			'desc'  => __( 'Enter your live publishable key, found in your Stripe Account Settings', 'edds' ),
+			'type'  => 'text',
+			'size'  => 'regular',
+			'class' => 'edd-hidden edds-api-key-row',
+		),
+		array(
+			'id'   => 'live_secret_key',
+			'name'  => __( 'Live Secret Key', 'edds' ),
+			'desc'  => __( 'Enter your live secret key, found in your Stripe Account Settings', 'edds' ),
 			'type'  => 'text',
 			'size'  => 'regular',
 			'class' => 'edd-hidden edds-api-key-row',
@@ -122,21 +116,21 @@ function edds_add_settings( $settings ) {
 			'std'   => 'full'
 		),
  		array(
-			'id'   => 'stripe_use_existing_cards',
-			'name'  => __( 'Show previously used cards?', 'edds' ),
-			'desc'  => __( 'When enabled, provides logged in customers with a list of previously used payment methods, for faster checkout.', 'edds' ),
-			'type'  => 'checkbox'
-		),
- 		array(
  			'id'   => 'stripe_statement_descriptor',
  			'name' => __( 'Statement Descriptor', 'edds' ),
  			'desc' => __( 'Choose how charges will appear on customer\'s credit card statements. <em>Max 22 characters</em>', 'edds' ),
  			'type' => 'text',
  		),
+ 		array(
+			'id'   => 'stripe_use_existing_cards',
+			'name' => __( 'Show Previously Used Cards', 'edds' ),
+			'desc' => __( 'Provides logged in customers with a list of previous used payment methods for faster checkout.', 'edds' ),
+			'type' => 'checkbox'
+		),
 		array(
 			'id'   => 'stripe_preapprove_only',
-			'name'  => __( 'Preapprove Only?', 'edds' ),
-			'desc'  => __( 'Check this if you would like to preapprove payments but not charge until a later date.', 'edds' ),
+			'name'  => __( 'Preapproved Payments', 'edds' ),
+			'desc'  => __( 'Authorize payments for processing and collection at a future date.', 'edds' ),
 			'type'  => 'checkbox',
 			'tooltip_title' => __( 'What does checking preapprove do?', 'edds' ),
 			'tooltip_desc'  => __( 'If you choose this option, Stripe will not charge the customer right away after checkout, and the payment status will be set to preapproved in Easy Digital Downloads. You (as the admin) can then manually change the status to Complete by going to Payment History and changing the status of the payment to Complete. Once you change it to Complete, the customer will be charged. Note that most typical stores will not need this option.', 'edds' ),

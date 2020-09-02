@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 /**
  * Parse the ReadMe URL
  *
@@ -143,28 +142,52 @@ function edd_sl_readme_modify_license_response( $original_response = array(), $d
 		// existing sections with the custom readme.txt sections.
 		foreach ( (array) $readme_sections as $section ) {
 			if ( array_key_exists( $section, $readme['sections'] ) ) {
-				$response['sections'][ $section ] = $readme['sections'][ "$section" ];
+				$response['sections'][ $section ] = $readme['sections'][ $section ];
 			}
 		}
 	}
 
 	// Reserialize it
-	$response['sections'] = serialize( $response['sections'] );
+	$response['sections'] = serialize( array_filter( $response['sections'] ) );
 
-	if ( ! empty( $readme['tested_up_to'] ) ) {
-		$response['tested'] = $readme['tested_up_to'];
-	}
+	// The options available to the site owner to pull from the readme.txt file.
+	$readme_items_available = array( 'tested_up_to', 'stable_tag', 'contributors', 'donate_link', 'license', 'license_uri');
+
+	// The options the site owner chose to pull from the readme.txt file for this product.
+	$readme_items_chosen = get_post_meta( $download->ID, '_edd_readme_meta', true );
 
 	// Get the override readme meta settings
-	if ( $readme_meta = get_post_meta( $download->ID, '_edd_readme_meta', true ) ) {
+	if ( $readme_items_chosen ) {
 
 		// We loop through the settings sections and make overwrite the
 		// existing sections with the custom readme.txt sections.
-		foreach ( (array) $readme_meta as $meta ) {
-			if ( array_key_exists( $meta, $readme ) ) {
-				$response[ $meta ] = $readme[ "$meta" ];
+		foreach ( $readme as $item_key => $item_in_readme_txt_file ) {
+
+			// Skip the name, since we will always pull that from the product name in EDD.
+			if ( 'name' === $item_key ) {
+				continue;
+			}
+
+			// If the value is one of the options available to the site owner...
+			if ( in_array( $item_key, $readme_items_available ) ) {
+				// And the site has chosen to include this value...
+				if ( array_key_exists( $item_key, $readme_items_chosen ) ) {
+					// Add the the item from the readme.txt to the actual response.
+					$response[ $item_key ] = $readme[ $item_key ];
+				}
+				// If the value is "remaining_content"
+			} else {
+				// If "remaining_content" has been chosen by the site owner...
+				if ( isset( $readme_items_chosen['remaining_content'] ) ) {
+					$response[ $item_key ] = $readme[ $item_key ];
+				}
 			}
 		}
+
+		if ( isset( $readme_items_chosen['tested_up_to'] ) && isset( $readme['tested'] ) ) {
+			$response['tested'] = $readme['tested'];
+		}
+
 	}
 
 	if ( get_post_meta( $download->ID, '_edd_readme_plugin_added', true ) ) {
@@ -174,9 +197,6 @@ function edd_sl_readme_modify_license_response( $original_response = array(), $d
 	if ( get_post_meta( $download->ID, '_edd_readme_plugin_last_updated', true ) ) {
 		$response['last_updated'] = apply_filters( 'edd_sl_readme_last_updated', human_time_diff( strtotime( $download->post_modified_gmt, current_time( 'timestamp' ) ), current_time( 'timestamp', 1 ) ) . ' ago', $download );
 	}
-
-	// Remove empty items
-	$response = array_filter( $response );
 
 	// Filter this if you want to.
 	return apply_filters( 'edd_sl_license_readme_response', $response, $download, $readme, $download_beta );

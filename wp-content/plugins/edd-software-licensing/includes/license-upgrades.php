@@ -140,7 +140,10 @@ function edd_sl_license_has_upgrades( $license_id = 0 ) {
 		$ret = false;
 	}
 
-	$license    = edd_software_licensing()->get_license( $license_id );
+	$license = edd_software_licensing()->get_license( $license_id );
+	if ( in_array( $license->status, array( 'disabled', 'revoked' ), true ) ) {
+		return $ret;
+	}
 
 	if ( empty( $license->parent ) ) {
 		$download_id   = edd_software_licensing()->get_download_id( $license_id );
@@ -800,7 +803,7 @@ function edd_sl_process_license_upgrade( $download_id = 0, $payment_id = 0, $typ
 		edd_debug_log( sprintf( 'Old downloads: %s', print_r( $old_bundle_downloads, true ) ) );
 
 		$new_bundle_downloads = $new_download->get_bundled_downloads();
-		edd_debug_log( sprintf( 'Old downloads: %s', print_r( $new_bundle_downloads, true ) ) );
+		edd_debug_log( sprintf( 'New downloads: %s', print_r( $new_bundle_downloads, true ) ) );
 
 		// Before we start generating new keys, let's get existing overlap ones to change
 		foreach ( $new_bundle_downloads as $new_d_id ) {
@@ -849,6 +852,15 @@ function edd_sl_process_license_upgrade( $download_id = 0, $payment_id = 0, $typ
 		if ( ! empty( $child_licenses ) ) {
 			foreach ( $child_licenses as $child_license ) {
 				$child_license->add_meta( '_edd_sl_payment_id', $payment_id );
+				$price_id_pos = strpos( $new_d_id, '_' );
+				if ( false !== $price_id_pos ) {
+					$child_license->price_id = substr( $new_d_id, $price_id_pos + 1, strlen( $new_d_id ) );
+					$child_license->add_log(
+						__( 'License Upgraded', 'edd_sl' ),
+						/* translators: the new price ID; payment ID*/
+						sprintf( __( 'Price ID updated to %1$d via Payment ID %2$s', 'edd_sl' ), $child_license->price_id, $payment_id )
+					);
+				}
 			}
 		}
 
@@ -1011,13 +1023,12 @@ add_action( 'edd_view_order_details_payment_meta_after', 'edd_sl_payment_details
 function edd_sl_get_upgrades_by_date( $day = null, $month = null, $year = null, $hour = null  ) {
 
 	$args = apply_filters( 'edd_get_upgrades_by_date', array(
-		'nopaging'    => true,
-		'post_type'   => 'edd_payment',
-		'post_status' => array( 'revoked', 'publish' ),
-		'meta_key'    => '_edd_sl_upgraded_payment_id',
-		'year'        => $year,
-		'monthnum'    => $month,
-		'fields'      => 'ids'
+		'number'   => -1,
+		'status'   => array( 'revoked', 'publish', 'complete' ),
+		'meta_key' => '_edd_sl_upgraded_payment_id',
+		'year'     => $year,
+		'month'    => $month,
+		'fields'   => 'ids',
 	), $day, $month, $year );
 
 	if ( ! empty( $day ) ) {
@@ -1028,14 +1039,15 @@ function edd_sl_get_upgrades_by_date( $day = null, $month = null, $year = null, 
 		$args['hour'] = $hour;
 	}
 
-	$upgrades = get_posts( $args );
+	$query    = new EDD_Payments_Query( $args );
+	$upgrades = $query->get_payments();
 
 	$return   = array();
 	$return['earnings'] = 0;
 	$return['count']    = count( $upgrades );
 	if ( $upgrades ) {
 		foreach ( $upgrades as $upgrade ) {
-			$return['earnings'] += edd_get_payment_amount( $upgrade );
+			$return['earnings'] += edd_get_payment_amount( $upgrade->ID );
 		}
 	}
 	return $return;

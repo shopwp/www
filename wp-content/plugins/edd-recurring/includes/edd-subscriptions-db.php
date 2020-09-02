@@ -1,14 +1,15 @@
 <?php
 
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * The Subscriptions DB Class
  *
  * @since  2.4
  */
-
 class EDD_Subscriptions_DB extends EDD_DB {
 
 	/**
@@ -23,7 +24,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 		$this->table_name  = $wpdb->prefix . 'edd_subscriptions';
 		$this->primary_key = 'id';
-		$this->version     = '1.4';
+		$this->version     = '1.4.1.3';
 
 	}
 
@@ -127,7 +128,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 		}
 
-		// specific customers
+		// specific customers.
 		if( ! empty( $args['id'] ) ) {
 
 			if( is_array( $args['id'] ) ) {
@@ -714,7 +715,22 @@ class EDD_Subscriptions_DB extends EDD_DB {
 	 */
 	public function create_table() {
 
+		global $wpdb;
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+		/**
+		 * For the 1.4.1.2 release, we need to remove some indexes as we are re-typing the columns for
+		 * profile_id and transaction_id.
+		 *
+		 * @todo Remove this if statement for the next major release.
+		 */
+		if ( $this->installed( $this->table_name ) ) {
+			$remove_profile_key = "ALTER TABLE " . $this->table_name . " DROP INDEX profile_id;";
+			@$wpdb->query( $remove_profile_key );
+
+			$remove_transaction_key = "ALTER TABLE " . $this->table_name . " DROP INDEX transaction;";
+			@$wpdb->query( $remove_transaction_key );
+		}
 
 		$sql = "CREATE TABLE " . $this->table_name . " (
 		id bigint(20) NOT NULL AUTO_INCREMENT,
@@ -727,7 +743,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		recurring_tax_rate mediumtext NOT NULL,
 		recurring_tax mediumtext NOT NULL,
 		bill_times bigint(20) NOT NULL,
-		transaction_id varchar(60) NOT NULL,
+		transaction_id varchar(255) NOT NULL COLLATE utf8_bin,
 		parent_payment_id bigint(20) NOT NULL,
 		product_id bigint(20) NOT NULL,
 		price_id bigint(20) DEFAULT '0',
@@ -735,12 +751,12 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		expiration datetime NOT NULL,
 		trial_period varchar(20) NOT NULL,
 		status varchar(20) NOT NULL,
-		profile_id varchar(60) NOT NULL,
+		profile_id varchar(255) NOT NULL COLLATE utf8_bin,
 		notes longtext NOT NULL,
 		PRIMARY KEY  (id),
 		KEY profile_id (profile_id),
-		KEY customer (customer_id),
 		KEY transaction (transaction_id),
+		KEY customer (customer_id),
 		KEY customer_and_status ( customer_id, status),
 		KEY product_id_price_id (product_id,price_id)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;";
