@@ -1,9 +1,11 @@
 .component-testimonials {
-  background: color(off-white);
+  background-image: linear-gradient(0deg, #f0f0ff 0, #fff1f1);
   width: 100%;
   max-width: 100%;
   padding-bottom: 4em;
   position: relative;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 
   > svg {
     transform: rotate(180deg);
@@ -24,10 +26,10 @@
   }
 
   h2 {
-    max-width: 900px;
+    max-width: 850px;
     margin: 3em auto 1em auto;
-    padding-top: 4em;
-    font-size: 2.4em;
+    padding-top: 3em;
+    font-size: 2.2em;
     text-align: center;
 
     @include device(600, 'max') {
@@ -41,7 +43,7 @@
   display: block;
 }
 
-.testimonials {
+.component-testimonials .testimonials {
   max-width: 1000px;
   margin: 0 auto;
 }

@@ -49,6 +49,10 @@
   th {
     font-size: 20px;
 
+    &:first-of-type {
+      font-size: 16px;
+    }
+
     @include device(900, 'max') {
       font-size: 17px;
     }

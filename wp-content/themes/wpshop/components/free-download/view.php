@@ -4,7 +4,7 @@
 
       <div class="l-row">
 
-      <p class="intro">Download WP Shopify by entering your email below. Also after installing be sure to look through our <a href="https://docs.wpshop.io" target="_blank">plugin documention</a> to get started. <br><br>Start using WP Shopify by entering your email below.</p>
+      <p class="intro">Try WP Shopify by entering your email below. You'll be sent a special link to get started.</p>
          <div class="form-control l-row">
 
             <label for="email" class="form-label-modal is-hidden">Email Address</label>

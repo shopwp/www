@@ -72,38 +72,14 @@ function wps_reset_pass_redirect()
 add_action('template_redirect', 'wps_reset_pass_redirect');
 
 
-// function wpse12535_redirect_sample() {
 
-//     if (!is_user_logged_in() && is_page('affiliates')) {
-//       wp_safe_redirect('/forgot-password');
-//       exit();
-//     }
-
-// }
-
-// add_action( 'template_redirect', 'affiliates' );
-
-
-
-function your_function($product_data)
-{
-   // echo '<small class="purchase-options-note">(Your license key will auto-renew each year)</small>';
-}
-
-add_action('edd_purchase_link_top', 'your_function');
-
-function your_function_2($product_data)
+function wps_edd_payment_receipt_before($product_data)
 {
    echo '<div class="receipt-account-wrapper"><a href="/account" class="btn btn-primary">Go to account</a></div>';
 }
 
-add_action('edd_payment_receipt_before', 'your_function_2');
+add_action('edd_payment_receipt_before', 'wps_edd_payment_receipt_before');
 
-// add_action('login_init', function () {
-//    if (!isset($_GET['action'])) {
-//       wp_redirect('/login');
-//    }
-// });
 
 add_action('edd_after_price_option', function () {
    echo '<small style="display:block;text-align:center;margin-top:-10px;">/per year</small>';
@@ -181,7 +157,10 @@ function wps_on_login_redirect($redirect_to, $user_id) {
 
    $user = get_userdata($user_id);
 
-   // return $redirect_to;
+   if (strpos($_SERVER['REQUEST_URI'], '?redirect=checkout') !== false) {
+      return '/checkout';
+   }
+
 
    if (isset($user->roles)) {
 
@@ -248,8 +227,12 @@ function wps_template_redirect() {
       exit();
    }   
 
+   if (!is_page('account')) {
+      return;
+   }
+
    // Only affiliates end here
-   if (is_affiliate_only($user) && is_page('account')) {
+   if (is_affiliate_only($user)) {
       wp_redirect('/affiliates');
       exit();
    }
@@ -289,21 +272,6 @@ function pw_edd_payment_icon($icons) {
 add_filter('edd_accepted_payment_icons', 'pw_edd_payment_icon', 99, 1);
 
 
-// function asasd() {
-//    $chosen_gateway = edd_get_chosen_gateway();
-
-//    // if ($chosen_gateway === 'stripe') {
-//    //    echo '<p class="edd-legend-support">Fill in your credit card details below</p>';
-//    // }
-
-//    if ($chosen_gateway === 'paypalexpress') {
-//       echo '<p class="edd-legend-support">Once you click "Purchase" a PayPal dialog will appear to finish the process.</p>';
-//    }
-
-// }
-
-// add_action('edd_purchase_form_before_email', 'asasd');
-
 function asddasd($one, $label) {
 
    $chosen_gateway = edd_get_chosen_gateway();
@@ -320,12 +288,17 @@ function asddasd($one, $label) {
 add_filter('edd_get_checkout_button_purchase_label', 'asddasd', 10, 2);
 
 
-function asasdsadsd() {
-   echo '<p>Loading ...</p>';
-}
-
-// add_action('edd_purchase_form_before_cc_form', 'asasdsadsd');
-
 add_filter( 'edd_subscription_can_update', function() {
     return true;
+});
+
+add_action('edd_before_checkout_cart', function() {
+
+   if (is_user_logged_in()) {
+      $current_user = wp_get_current_user();
+      echo '<p class="wps-checkout-logged-in-as">👋 Hey, ' . $current_user->user_firstname . ' ' . $current_user->user_lastname . '. <a href="' . wp_logout_url('/login?redirect=checkout') . '">Logout?</a></p>';
+   } else {
+      echo '<p class="wps-checkout-logged-in-as">Already have an account? <a href="/login?redirect=checkout">Log in</a></p>';
+   }
+
 });

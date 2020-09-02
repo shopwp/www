@@ -38,6 +38,7 @@ Template Name: Account
       <div class="user-info">
          <b><?= $user->data->display_name; ?></b>
          <p><?= $user->data->user_email; ?></p>
+         <small><a href="<?= wp_logout_url('/login'); ?>">Logout</a></small>
       </div>
          
 <?php 

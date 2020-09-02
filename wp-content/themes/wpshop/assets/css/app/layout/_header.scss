@@ -125,6 +125,14 @@
   }
 }
 
+.purchase-confirmation .header {
+  position: relative;
+}
+
+.purchase-confirmation .main {
+  margin-top: 60px !important;
+}
+
 .footer-wrapper .menu-item a svg {
   max-width: 11px;
 }
@@ -153,10 +161,12 @@
     //  }
   }
   .header .menu-item a {
-    padding: 0.6em 1.5em 0.7em 1.5em;
+    padding: 0.6em 1.5em 0.6em 1em;
+    font-weight: normal;
+    line-height: 1;
 
     @media (max-width: 800px) {
-      padding: 0.5em 1.5em 0.7em;
+      padding: 0.6em 1.5em 0.7em 1em;
       font-size: 1em;
 
       svg {
@@ -447,6 +457,7 @@
 .logo-link {
   border: none;
   width: 50px;
+  transition: transform 200ms;
 
   @include device(1500, 'max') {
     width: 45px;
@@ -461,6 +472,7 @@
 
   &:hover {
     opacity: 1;
+    transform: scale(1.15);
   }
 }
 

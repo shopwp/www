@@ -15,50 +15,22 @@
       </div>
 
       <ul class="plans">
-         <li id="edd_price_option_35_singlesite" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="plan">
+
+         <li id="edd_price_option_35_1-3sites" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="plan">
 
             <div class="plan-names">
-               <span class="plan-name" itemprop="description">Personal</span>
-               <span class="plan-description" itemprop="description">Single Site</span>
+               <span class="plan-name" itemprop="description">Standard</span>
+               <span class="plan-description" itemprop="description">1-3 Sites</span>
             </div>
 
             <div class="plan-pricing">
-               <span class="plan-price-year">$79.99 <span class="plan-terms">/year</span></span>
-               <span class="plan-price-month">$10 <span class="plan-terms">/month</span></span>
-            </div>
-
-            <div class="plan-features">
-               <ul>
-                  <li>Install on a <strong>single</strong> WordPress site</li>
-                  <li>Access to all <a href="/pro-features" target="_blank">WP Shopify Pro features</a></li>
-               </ul>
-            </div>
-
-            <div class="plan-cta">
-               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=1" class="button button-l plan-cta-link-year">Purchase</a>
-
-               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=4" class="button button-l plan-cta-link-month">Purchase</a>
-
-               <small class="plan-cta-notice-year"><i>Billed yearly until cancelled</i></small>
-               <small class="plan-cta-notice-month"><i>Billed monthly until cancelled</i></small>
-            </div>
-            
-         </li>
-         <li id="edd_price_option_35_2-5sites" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer" class="plan">
-
-            <div class="plan-names">
-               <span class="plan-name" itemprop="description">Developer</span>
-               <span class="plan-description" itemprop="description">2-5 Sites</span>
-            </div>
-
-            <div class="plan-pricing">
-               <span class="plan-price-year">$129.99 <span class="plan-terms">/year</span></span>
+               <span class="plan-price-year">$119.99 <span class="plan-terms">/year</span></span>
                <span class="plan-price-month">$20 <span class="plan-terms">/month</span></span>
             </div>
 
             <div class="plan-features">
                <ul>
-                  <li>Install on up to <strong>five</strong> WordPress sites</li>
+                  <li>Install on up to <strong>three</strong> WordPress sites</li>
                   <li>Access to all <a href="/pro-features" target="_blank">WP Shopify Pro features</a></li>
                </ul>
             </div>

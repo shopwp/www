@@ -13,16 +13,6 @@
     width: 30px;
     height: 30px;
     margin: 0;
-
-    //  @include device(700, 'max') {
-    //    width: 28px;
-    //    height: 28px;
-    //  }
-
-    //  @include device(500, 'max') {
-    //    width: 30px;
-    //    height: 30px;
-    //  }
   }
 
   .logos-wrapper {
@@ -99,12 +89,8 @@
 }
 
 .marquee-left {
-  padding: 5em 1em 0 5em;
+  padding: 4.3em 1em 0 5em;
   width: calc(44vw - 3em);
-
-  @include device(1500, 'max') {
-    padding: 6em 1em 0 5em;
-  }
 
   @include device(1300, 'max') {
     padding-left: 3em;
@@ -256,7 +242,7 @@
     }
 
     @include device(1500, 'max') {
-      height: calc(100vh - 115px);
+      height: calc(100vh - 100px);
     }
 
     @include device(1300, 'max') {

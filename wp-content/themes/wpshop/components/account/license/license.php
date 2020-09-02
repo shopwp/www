@@ -28,10 +28,22 @@ $message = isset($_GET['edd-message']) ? $_GET['edd-message'] : false;
       </tr>
     </thead>
 
-    <?php foreach ( $license_keys as $license ) : ?>
+    <?php foreach ( $license_keys as $license ) : 
+
+         if ($license->download->post_title === 'WP Shopify') {
+            $name = 'WP Shopify Pro';
+
+         } else {
+            $name = $license->download->post_title;
+         }
+      
+      ?>
 
       <tr class="edd_sl_license_row">
-        <td class="edd_sl_license_status edd-sl-<?php echo $sl->get_license_status( $license->ID ); ?>"><?php echo $sl->license_status( $license->ID ); ?></td>
+        <td class="account-license-col edd_sl_license_status edd-sl-<?php echo $sl->get_license_status( $license->ID ); ?>">
+         <p class="account-license-status-name"><?php echo $name; ?></p>
+         <p class="account-license-status"><?php echo $sl->license_status( $license->ID ); ?></p>
+         </td>
         <td><span class="edd_sl_limit_used"><?php echo $sl->get_site_count( $license->ID ); ?></span><span class="edd_sl_limit_sep">&nbsp;/&nbsp;</span><span class="edd_sl_limit_max"><?php echo $sl->license_limit( $license->ID ); ?></span></td>
         <td>
         <?php if ( method_exists( $sl, 'is_lifetime_license' ) && $sl->is_lifetime_license( $license->ID ) ) : ?>
@@ -57,13 +69,25 @@ $message = isset($_GET['edd-message']) ? $_GET['edd-message'] : false;
 	<table id="edd_sl_license_keys" class="edd_sl_table">
 		<thead>
 			<tr class="edd_sl_license_row">
+            <th class="edd_sl_type"><?php _e( 'License', 'edd_sl' ); ?></th>
 				<th class="edd_sl_key"><?php _e( 'License Key', 'edd_sl' ); ?></th>
-				<th class="edd_sl_type"><?php _e( 'License Type', 'edd_sl' ); ?></th>
+				
 			</tr>
 		</thead>
-		<?php foreach ( $license_keys as $license ) : ?>
+      <?php foreach ( $license_keys as $license ) : 
+         
+         ?>
 			<tr class="edd_sl_license_row">
+<td>
+					<?php
+					$download_id = $sl->get_download_id( $license->ID );
+					$price_id    = $sl->get_price_id( $license->ID );
 
+					echo get_the_title( $download_id ); ?>
+					<?php if( '' !== $price_id ) : ?>
+						<span class="edd_sl_license_price_option">&ndash;&nbsp;<?php echo edd_get_price_option_name( $download_id, $price_id ); ?> <?= $license->status === 'expired' ? ' <small>(expired)</small>' : '';?> </span>
+					<?php endif; ?>
+				</td>
         <td>
           <div class="view-key-wrapper">
 
@@ -81,16 +105,7 @@ $message = isset($_GET['edd-message']) ? $_GET['edd-message'] : false;
           </div>
         </td>
 
-        <td>
-					<?php
-					$download_id = $sl->get_download_id( $license->ID );
-					$price_id    = $sl->get_price_id( $license->ID );
-
-					echo get_the_title( $download_id ); ?>
-					<?php if( '' !== $price_id ) : ?>
-						<span class="edd_sl_license_price_option">&ndash;&nbsp;<?php echo edd_get_price_option_name( $download_id, $price_id ); ?></span>
-					<?php endif; ?>
-				</td>
+        
 
 
 			</tr>

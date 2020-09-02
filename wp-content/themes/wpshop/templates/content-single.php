@@ -14,6 +14,11 @@ global $post;
             
 
             <div class="l-box-2 latest-post-info">
+
+            <?php if ( is_single() && $wp_query->current_post == 0 && !is_paged() ) { ?>
+   <a href="/blog" style="margin-top: 0;display: block;color: #323232;font-size: 14px;margin-bottom: 10px;">< Back to blog</a>
+<?php } ?>   
+
                <h1 class="entry-title">
                      <?php the_title(); ?>
                   </h1>
@@ -27,7 +32,7 @@ global $post;
                                  
                      $categories = get_the_category();
                         if ( ! empty( $categories ) ) {
-                           echo '<a href="' . esc_url( get_category_link( $categories[0]->term_id ) ) . '">' . esc_html( $categories[0]->name ) . '</a>';
+                           echo '<a href="/blog">' . esc_html( $categories[0]->name ) . '</a>';
                         }
                      ?>
                   </div>
@@ -63,15 +68,19 @@ global $post;
    
       <div class="inner">
 
-      <div class="post-affiliate">
-      <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/Sell-online-728x90.png" alt="WP Shopify Pro feature product filtering" />
-   </div>
+         <div class="post-sharing">
+            <?= do_shortcode('[social_warfare buttons="twitter,facebook,linkedin"]'); ?>
+         </div>
+         
+         <div class="post-affiliate">
 
-      <div class="post-sharing">
-         <?= do_shortcode('[social_warfare buttons="twitter,facebook,linkedin"]'); ?>
-      </div>
+            <a href="https://www.shopify.com/?ref=wps" target="_blank" class="affiliate-link">
+               <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/imgs/Sell-online-728x90.png" alt="WP Shopify Pro feature product filtering" />
+            </a>
+         </div>
       
          <a href="/blog" rel="author" class="btn btn-secondary">Back to blog</a>
+
       </div>
    </div>
 

@@ -11,7 +11,28 @@
 }
 
 #edd_payment_mode_select {
-  margin-top: 5em;
+  margin-top: 3em;
+}
+
+.edd_cart_item_name .edd_cart_item_image {
+  position: absolute;
+}
+
+.edd_cart_item_image + .edd_checkout_cart_item_title {
+  padding-left: 40px;
+}
+
+#edd_cc_address .edd-stripe-update-billing-address-current {
+  border: 1px solid #415aff;
+  padding: 13px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.edd-stripe-new-card {
+  #edd-card-name-wrap {
+    margin-top: 1em;
+  }
 }
 
 #edd_payment_mode_select,
@@ -103,6 +124,11 @@
 .edd_cart_discount .edd_discount {
   position: relative;
   margin-bottom: 1em;
+}
+
+.checkout .page-content .wps-checkout-logged-in-as:first-of-type {
+  font-size: 15px;
+  margin: -1em 0 3em 0;
 }
 
 .edd_discount_remove {

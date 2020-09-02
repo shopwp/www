@@ -72,6 +72,7 @@ Author URI:     https://simpleblend.net
 @import 'components/testimonials';
 @import 'components/current-version';
 @import 'components/getting-started-inline';
+@import 'components/extensions';
 
 // State
 @import 'state/state';
@@ -90,6 +91,11 @@ Author URI:     https://simpleblend.net
     justify-content: center;
     display: flex;
   }
+}
+
+.component-how-it-works + .component-demo {
+  margin-top: -2em;
+  margin-bottom: 10em;
 }
 
 .wps-cart-icon-fixed {

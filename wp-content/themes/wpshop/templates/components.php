@@ -1,5 +1,9 @@
 <?php
 
+if (is_page('checkout')) {
+   return;
+}
+
   if(have_rows('components')):
 
     while(have_rows('components')) : the_row();
@@ -113,6 +117,10 @@
       } else if(get_row_layout() == 'component_contact') {
 
         get_template_part('components/contact/view');
+
+      } else if(get_row_layout() == 'component_extensions') {
+
+        get_template_part('components/extensions/controller');
 
       }
       

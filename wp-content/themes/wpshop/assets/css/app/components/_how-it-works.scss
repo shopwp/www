@@ -67,6 +67,7 @@
   top: auto;
   left: 50%;
   transform: translate(-50%, 25%);
+  z-index: 2;
 
   .num {
     display: inline-block;
@@ -183,6 +184,8 @@
     border-radius: 10px 10px 0px 0px;
     max-width: 70%;
     margin: 0 auto;
+    filter: brightness(0.5);
+    z-index: -1;
   }
 }
 

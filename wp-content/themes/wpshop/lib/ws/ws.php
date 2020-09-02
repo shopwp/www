@@ -54,36 +54,6 @@ add_action('wp_ajax_nopriv_wps_save_auth_data', 'wps_save_auth_data');
 
 
 
-/*
-
-Return Shopify Settings
-
-*/
-function wps_get_settings() {
-
-  $settings = array(
-    'wps_api_key' => WP_SHOPIFY_API_KEY,
-    'wps_shared_secret' => WP_SHOPIFY_SHARED_SECRET,
-    'wps_scopes' => WP_SHOPIFY_SCOPES,
-    'wps_redirect' => WP_SHOPIFY_REDIRECT
-  );
-
-	return $settings;
-
-}
-
-
-add_action('rest_api_init', function () {
-	register_rest_route('wp-shopify/v1', '/settings', array(
-		'methods' => 'GET',
-		'callback' => 'wps_get_settings'
-	));
-});
-
-
-//
-// Fetching Mailchimp List ID
-//
 function mailinglist_get_list_id() {
 
   // Test list 53f4059701
@@ -123,10 +93,6 @@ function mailinglist_signup() {
       if ($type === 'Getting Started') {
          $body['tags'] = ['Getting Started'];
       }
-
-      error_log('----- $body -----');
-      error_log(print_r($body, true));
-      error_log('----- /$body -----');
 
       $response = $client->request('POST', 'lists/5c6bd183d4/members', [
         'auth' => [
@@ -227,49 +193,6 @@ function get_doc() {
 
 }
 
-
-/*
-
-WP Shopify API
-
-*/
-function register_api_endpoints() {
-
-  register_rest_route('wpshop/v1', '/docs/get', [
-    'methods'     => 'POST',
-    'callback'    => 'get_doc'
-  ]);
-
-}
-
-add_action( 'rest_api_init', 'register_api_endpoints');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-Get Account Cat
-
-*/
 function wps_get_account_cat() {
 
   $customer = new EDD_Customer(get_current_user_id(), true);
@@ -284,11 +207,6 @@ add_action('wp_ajax_nopriv_wps_get_account_cat', 'wps_get_account_cat');
 
 
 
-/*
-
-Get Account Cat
-
-*/
 function wps_get_forgot_pass_form() {
 
   echo get_template_part('components/account/profile/forgot-pass');
@@ -499,8 +417,3 @@ function wps_account_reset_password() {
 
 add_action('wp_ajax_wps_account_reset_password', 'wps_account_reset_password');
 add_action('wp_ajax_nopriv_wps_account_reset_password', 'wps_account_reset_password');
-
-
-
-
-?>

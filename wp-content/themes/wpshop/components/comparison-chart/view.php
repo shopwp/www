@@ -306,10 +306,10 @@
             <tr>
                <td></td>
                <td class="cell-center">
-                  <span class="btn btn-primary getting-started-trigger">Try for free</span>
+                  <span class="btn btn-s btn-primary getting-started-trigger">Try for free</span>
                </td>
                <td class="cell-center">
-                  <a href="#component-purchase" class="btn btn-primary">Purchase Pro</a>
+                  <a href="#component-purchase" class="btn btn-s btn-primary">Purchase Pro</a>
                </td>
             </tr>
          </tfoot>

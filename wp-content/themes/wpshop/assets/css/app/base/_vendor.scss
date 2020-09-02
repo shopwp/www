@@ -133,6 +133,7 @@ EDD
 
 #edd_purchase_form {
   margin-bottom: 7em;
+  max-width: 700px;
 
   .spinner {
     width: 30px;
@@ -187,7 +188,7 @@ EDD
 
 .edd_sl_license_status {
   text-transform: capitalize;
-  width: 35%;
+  width: 100%;
 }
 
 .code-snippet-inline {
@@ -595,6 +596,7 @@ EDD
 
   #edd_checkout_user_info {
     display: block;
+    margin-top: 0;
   }
 
   #edd_checkout_login_register {
@@ -1005,6 +1007,11 @@ Gravity Forms
   }
 }
 
+.edd_purchase_receipt_product_notes {
+  font-size: 14px;
+  margin-top: 15px;
+}
+
 #user_switching_switch_on {
   text-align: center;
   margin: 4em 0;
@@ -1015,6 +1022,10 @@ Gravity Forms
   td:first-child,
   th:first-child {
     width: 48%;
+  }
+
+  td {
+    vertical-align: top;
   }
 }
 
@@ -1262,7 +1273,7 @@ Checkout icons
 }
 
 #edd-payment-mode-wrap .edd-gateway-option {
-  width: 20%;
+  width: 25%;
   margin-top: 0;
   text-align: center;
   margin: 0;
@@ -1287,6 +1298,7 @@ Checkout icons
   width: 70%;
   display: inline-block;
   margin-left: 10px;
+  font-weight: normal;
 }
 
 /*
@@ -1325,7 +1337,7 @@ div[data-tippy-root] div.tippy-box {
   }
 
   .mailinglist-copy {
-    margin-top: 10px;
+    margin-top: 0;
     font-weight: bold;
   }
 
@@ -1364,6 +1376,13 @@ div[data-tippy-root] div.tippy-box {
 
 .swp_social_panel:not(.swp_social_panelSide) {
   margin-top: 60px !important;
+
+  @include device(600, 'max') {
+    left: 0px !important;
+    width: 100% !important;
+    padding: 1px 10px !important;
+    margin: 10px 0 10px 0 !important;
+  }
 }
 
 .swp_social_panel .total_shares {
@@ -1412,4 +1431,21 @@ body .swp_floating_panel.swp_social_panel.swp_other_light_gray_outlines:hover .n
 
 .swp_social_panelSide[class*='swp_side'] {
   padding: 0 0 30px 0;
+}
+
+#fomo-close,
+#someone-purchased {
+  margin-top: 0;
+}
+
+.component-demo .wps-items {
+  left: 8vw;
+}
+
+.checkout.is-showing-notices .main {
+  margin-top: -20px;
+}
+
+.checkout.is-showing-notices > .header {
+  margin-top: 0;
 }

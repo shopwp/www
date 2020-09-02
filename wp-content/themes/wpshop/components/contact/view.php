@@ -1,5 +1,6 @@
-<style>
+<section class="component component-contact">
 
+<style>
 .contact .main-inner {
    display:none;
 }
@@ -59,7 +60,6 @@
    }
 
    .component-contact .content-inner {
-      background: white;
       width: 90%;
       padding: 1em;
       border-radius: 0;
@@ -154,14 +154,8 @@
          padding-right: 15px;
       }
 
-   }
-
-
-
+   }   
 </style>
-
-<section class="component component-contact">
-   
    <div class="component-contact-container">
 
       <div class="l-row inner">
@@ -186,7 +180,7 @@
                
                <p>First, be sure to look through the <a href="https://docs.wpshop.io" target="_blank">plugin documentation</a>. The most common issues can be found here.</p>
                
-               <p>If you need more help, we have a <a href="https://wpshop.io/purchase">Slack channel</a> for customers-only to ask questions. We're online M-F 9am-4pm CST to solve your issues here!</p>
+               <p>If you need more help, we have a <a href="https://wpshop.io/purchase">Slack channel</a> for customers-only to ask questions. We're online M-F 9am-4pm CST to help solve your problems.</p>
 
                <a href="https://wpshop.io/purchase" class="btn">Purchase dedicated support</a>
 

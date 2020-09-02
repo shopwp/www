@@ -38,21 +38,9 @@
 
       <?php if( !is_page('checkout') ) { ?>
 
-        <div class="header-account l-row l-col-center">
+        <div class="header-account l-row l-row-right l-col-center">
 
-          <!-- <a href="https://wpshop.io/purchase" class="header-social-link gtm-link-support" target="_blank">
-            <i class="fab fa-slack gtm-link-support" aria-hidden="true"></i>
-          </a> -->
-
-          <!-- <a href="https://github.com/arobbins/wp-shopify" class="header-social-link" target="_blank">
-            <i class="fa fa-github"></i>
-          </a>
-
-          <a href="https://twitter.com/andrewmrobbins" class="header-social-link" target="_blank">
-            <i class="fa fa-twitter"></i>
-          </a> -->
-
-          <?php if (is_user_logged_in()) { 
+          <?php if (is_user_logged_in() && !current_user_can('administrator') ) { 
 
             $user = wp_get_current_user();
             $affiliate_id = affwp_get_affiliate_id( $user->ID );
@@ -77,14 +65,6 @@
             <span class="btn btn-download-free getting-started-trigger" target="_blank">Start for free</span>
             <a href="/login" class="menu-item-manual">Log In</a>
           <?php } ?>
-
-          <?php if(edd_get_cart_quantity() > 0) { ?>
-            <a href="<?php echo edd_get_checkout_uri(); ?>" class="header-cart-link">
-              <i class="far fa-shopping-cart"></i> <span class="header-cart-quantity"><?php echo edd_get_cart_quantity(); ?></span>
-            </a>
-          <?php } ?>
-
-          <?php // echo do_shortcode('[wps_cart]'); ?>
 
         </div>
 

@@ -186,7 +186,7 @@ input[type='submit'],
 }
 
 .btn-s {
-  font-size: $font-m;
+  font-size: 16px;
 }
 
 .btn-wrap {
@@ -207,7 +207,7 @@ input[type='submit'],
   &:before {
     content: '\f019';
     font-family: 'FontAwesome';
-    font-size: 20px;
+    font-size: 16px;
     display: inline-block;
     margin-right: 10px;
   }
@@ -238,11 +238,10 @@ input[type='submit'],
 }
 
 .receipt-account-wrapper .btn {
-  font-size: 22px;
+  font-size: 18px;
 
   &:after {
-    content: '\f178';
-    font-family: 'FontAwesome';
+    content: ' >';
     display: inline-block;
     margin-left: $space-s;
   }

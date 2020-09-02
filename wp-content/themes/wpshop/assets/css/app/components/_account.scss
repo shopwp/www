@@ -29,6 +29,7 @@
 .receipt-account-wrapper {
   text-align: center;
   margin-bottom: 3em;
+  margin-top: -1em;
 }
 
 .component[class*='component-account'] {
@@ -96,17 +97,17 @@
   width: 30%;
 }
 
-#edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
-  width: 50%;
-}
+// #edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
+//   width: 100%;
+// }
 
-#edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
-  width: 20%;
-}
+// #edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
+//   width: 20%;
+// }
 
-#edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
-  width: 30%;
-}
+// #edd_sl_license_keys2 tbody .edd_sl_license_row td:nth-of-type(1) {
+//   width: 30%;
+// }
 
 .component-account-sub {
   margin-bottom: $space-xl * 2;
@@ -153,6 +154,13 @@
     margin: 15px 0 0 0;
     display: block;
   }
+
+  small {
+    font-style: normal;
+    margin-top: -10px;
+    display: block;
+    margin-bottom: 12px;
+  }
 }
 
 .component-account-user-info {
@@ -190,10 +198,6 @@
     top: -1px;
   }
 }
-
-// .edd_download_history_row .edd_download_file_link {
-//   margin-top: 0;
-// }
 
 .account-nav {
   margin: 0;
@@ -285,7 +289,6 @@
 
   td:nth-child(1) {
     width: 23%;
-    font-size: 13px;
   }
 
   td:nth-child(2) {
@@ -311,4 +314,8 @@
   #edd_checkout_form_wrap #edd_cc_fields legend {
     display: none;
   }
+}
+
+.account-license-col {
+  display: flex;
 }

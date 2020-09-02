@@ -6,7 +6,14 @@ if (is_home()) {
    $post_id = get_the_ID();
 }
 
-if (!get_field('page_settings_hide_title', $post_id) ) { ?>
+if (is_page('checkout') || is_page('purchase-confirmation')) {
+   $hide_title = false;
+
+} else {
+   $hide_title = get_field('page_settings_hide_title', $post_id);
+}
+
+if (!$hide_title ) { ?>
 
   <div class="page-header">
 

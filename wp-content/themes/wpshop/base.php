@@ -9,7 +9,12 @@ $detect = new Mobile_Detect;
 
 $mobileBodyClass = $detect->isMobile() ? 'is-mobile' : '';
 
-$notices_enabled = get_field('theme_notice_enable', 'option');
+if (is_page('checkout') || is_page('purchase-confirmation')) {
+   $notices_enabled = false;
+} else {
+   $notices_enabled = get_field('theme_notice_enable', 'option');
+}
+
 
 if ($notices_enabled) {
   $mobileBodyClass .= ' is-showing-notices';
@@ -65,9 +70,6 @@ if (is_page('faq')) {
          'event': 'transactionComplete'
       });
 
-    } else {
-      console.log('Did not come from Checkout page');
-
     }
 
   </script>
@@ -80,17 +82,13 @@ if (is_page('faq')) {
 
   <body <?php body_class($mobileBodyClass); ?>>
 
-  
-
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH&gtm_auth=zEmWFISEpQvchduPXr4jaQ&gtm_preview=env-2&gtm_cookies_win=x"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
   <?php  if (is_page('purchase-confirmation')) { ?>
-
-   <canvas id="confetti-holder" style="width: 100%;z-index: 4;position: absolute;top: -180px;left: 0;margin-top: 0;"></canvas>
-
+      <canvas id="confetti-holder" style="width: 100%;z-index: 4;position: absolute;top: -180px;left: 0;margin-top: 0;"></canvas>
   <?php } ?>
 
 
@@ -155,7 +153,7 @@ if (is_page('faq')) {
 
 <?php
 
-if ( get_field('theme_notice_enable', 'option') ) {
+if ($notices_enabled ) {
   include(locate_template('components/notices/notices-view.php'));
 }
 ?>
@@ -183,7 +181,7 @@ if ( get_field('theme_notice_enable', 'option') ) {
 
   <?php } ?>
 
-   <?php if (!is_page('checkout')) { ?>
+   <?php if (!is_page('checkout') && !is_page('purchase-confirmation')) { ?>
       <script src="https://unpkg.com/@popperjs/core@2"></script>
       <script src="https://unpkg.com/tippy.js@6"></script>
    <?php } ?>

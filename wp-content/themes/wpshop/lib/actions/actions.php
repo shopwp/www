@@ -23,22 +23,6 @@ add_action('wp', 'wps_login_check');
 
 
 
-function wps_user_login_redirect( $url, $request, $user ) {
-
-    if ( $user && is_object( $user ) && is_a( $user, 'WP_User' ) ) {
-        if ( $user->has_cap( 'administrator' ) ) {
-            $url = admin_url();
-        } else {
-            $url = home_url( '/account/' );
-        }
-    }
-    return $url;
-}
- 
-add_filter( 'login_redirect', 'wps_user_login_redirect', 10, 3 );
-
-
-
 /*
 
 Changing the default Wordpress login logo
@@ -76,22 +60,6 @@ function my_login_logo_url_title() {
 }
 add_filter( 'login_headertext', 'my_login_logo_url_title' );
 
-/*
-
-wps_login_redirect
-
-*/
-// function wps_login_redirect()
-// {
-
-//    if (!is_user_logged_in() && is_page('account')) {
-//       wp_redirect('/login');
-//       exit();
-//    }
-  
-// }
-
-// add_action('template_redirect', 'wps_login_redirect');
 
 function process_add_transfer()
 {

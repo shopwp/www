@@ -3,7 +3,7 @@
 .search-form,
 .affwp-form {
   width: 100%;
-  max-width: 700px;
+  max-width: 600px;
   position: relative;
   text-align: left;
   margin: 0 auto 2em auto;
@@ -108,14 +108,14 @@ select,
 .form-input,
 .affwp-form input:not([type='checkbox']):not([type='radio']):not([type='submit']) {
   width: 100%;
-  padding: 16px 24px;
+  padding: 9px 18px;
   border-radius: 0.4em;
-  font-size: 20px;
+  font-size: 17px;
   border: none;
   background: color(white);
   color: color(base);
   margin-top: 0;
-  border: 1px solid #415aff;
+  border: 1px solid color(base);
   font-weight: normal;
 
   &:focus:not([type='checkbox']):not([type='radio']) {
@@ -620,13 +620,6 @@ select {
   }
 }
 
-// .form-account {
-//   .spinner {
-//     top: calc(50% - 80px);
-//     right: calc(50% - 15px);
-//   }
-// }
-
 #edd_sl_license_keys2 {
   @include device(600, 'max') {
     display: flex;
@@ -635,18 +628,10 @@ select {
 }
 
 #edd_sl_license_keys {
-  // border-top-left-radius: 0;
-  // border-top-right-radius: 0;
-  // border-top: 0;
-
   @include device(600, 'max') {
     display: flex;
     flex-direction: column;
   }
-
-  // thead th {
-  //   padding-top: 0;
-  // }
 }
 
 #edd-discount-code-wrap {

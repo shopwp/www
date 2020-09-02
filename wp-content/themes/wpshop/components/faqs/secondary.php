@@ -15,7 +15,7 @@
          ?>
 
          <div class="l-row l-row-center">
-            <a href="/faq" class="btn btn-l btn-secondary">Read all FAQs <i class="fal fa-long-arrow-right"></i></a>
+            <a href="/faq" class="btn btn-s">Read all FAQs <i class="fal fa-long-arrow-right"></i></a>
          </div>
          
 

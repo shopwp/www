@@ -72,6 +72,7 @@
   transform: translateY(0%);
   height: 70px;
   border-bottom: 1px solid #ddd;
+  background: white !important;
 
   &.headroom--top {
     height: 120px;
@@ -88,13 +89,11 @@
 
 .headroom--not-top.headroom--pinned {
   &.header .sub-menu {
-    top: 65px;
+    top: 50px;
   }
 
   .logo-link {
-    width: 40px;
     @include device(1300, 'max') {
-      width: 45px;
       top: 0;
     }
   }

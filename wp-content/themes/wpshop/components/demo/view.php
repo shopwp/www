@@ -1,12 +1,12 @@
 <section class="component component-demo">
    <div class="row">
       <div class="demo">
-         <?= do_shortcode('[wps_products title="Super awesome jeans" variant_style="buttons" show_zoom="true" show_compare_at="true"]'); ?>
+         <?= do_shortcode('[wps_products title="Super awesome t-shirt" variant_style="buttons" show_zoom="true" show_compare_at="true"]'); ?>
       </div>
       <div class="content">
          <h2>See it in action!</h2>
-         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-         <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+         <p>WP Shopify provides a completely seamless way to embed your products. Display a single buy button, or a whole list of products with ease.</p>
+         <p>No need to worry about the checkout or cart experience either. WP Shopfiy creates these for you out of the box.</p>
          <span class="btn btn-l btn-download-free getting-started-trigger">Download the plugin</span>
       </div>
    </div>
@@ -38,6 +38,10 @@
       .wps-component-products-images-thumbnail {margin-top: 0;}
       .wps-item *+* {
          margin-top: 0;
+      }
+
+      .wps-item .wps-thumbnails-wrapper {
+         margin-top: 13px !important;
       }
 
       .component-demo .wps-items {

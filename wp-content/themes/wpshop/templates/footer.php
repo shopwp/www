@@ -65,7 +65,7 @@ if (!is_page('checkout')) {
 
       <section class="footer-attr">
          <a class="logo-link" href="<?= esc_url(home_url('/')); ?>">
-            <img src="<?php the_field('theme_logo_mark', 'option'); ?>" alt="WP Shopify" class="logo-header">
+            <img src="/wp-content/themes/wpshop/assets/imgs/logo-mark-v2.svg" alt="WP Shopify" class="logo-header">
             </a>
 
             <small>&copy; <?php echo date("Y"); ?> WP Shopfiy</small>

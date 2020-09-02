@@ -36,16 +36,21 @@
 .edd-failed-transaction .main,
 .reset-password .main,
 .purchase-confirmation .main,
-.try-wp-shopify-for-free .main {
+.try-wp-shopify-for-free .main,
+.post-type-archive-download .main {
   margin-top: 180px;
 
   @include device(1500, 'max') {
-    margin-top: 150px;
+    margin-top: 145px;
   }
 
   @include device(1300, 'max') {
     margin-top: 100px;
   }
+}
+
+.single-download .main {
+  margin-top: 100px;
 }
 
 .home .main {
@@ -63,8 +68,10 @@
   margin: 20px auto 0 auto;
 }
 
+.how .component-getting-started-inline,
 .try-wp-shopify-for-free .component-getting-started-inline,
-.purchase-confirmation .component-getting-started-inline {
+.purchase-confirmation .component-getting-started-inline,
+.login .component-getting-started-inline {
   display: none;
 }
 
@@ -193,6 +200,24 @@
   }
 }
 
+.single-post .main-inner {
+  @include device(900, 'max') {
+    max-width: 100%;
+    padding: 0;
+
+    .post-single-header {
+      margin-top: 5em;
+    }
+
+    .entry-content {
+      padding: 0 20px;
+      p {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
 .blog {
   .component-affiliate,
   .component-pro,
@@ -202,6 +227,12 @@
 
   .main {
     margin-bottom: $space-xxl * 2;
+  }
+
+  .main-inner {
+    @include device(1300, 'max') {
+      padding: 0 20px;
+    }
   }
 
   .l-contain-narrow {
@@ -306,4 +337,8 @@
     margin-bottom: 0;
     padding-bottom: 0;
   }
+}
+
+.post-type-archive-download .page-content {
+  margin-top: -10px;
 }
