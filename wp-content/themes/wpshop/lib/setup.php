@@ -126,7 +126,7 @@ function assets()
 
 
    if (is_page('purchase-confirmation')) {
-      wp_enqueue_script('confetti-js', Assets\asset_path('../node_modules/confetti-js/dist/index.min.js'), [], null, false);
+      wp_enqueue_script('confetti-js', Assets\asset_path('js/vendor/confetti.min.js'), [], null, false);
    }
 
    if (!is_page('checkout')) {

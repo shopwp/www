@@ -1,6 +1,8 @@
 <head>
 
+<?php if (!is_page('purchase-confirmation')) { ?>
 <script type="text/javascript" src="https://load.fomo.com/api/v1/6p7yBoHBiIeSctKUyPZ9QA/load.js" async></script>
+<?php } ?>
 
 <?php wp_head(); ?>
 

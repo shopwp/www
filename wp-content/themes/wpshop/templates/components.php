@@ -9,7 +9,7 @@ if (is_page('checkout')) {
     while(have_rows('components')) : the_row();
 
       // Mailing List
-      if(get_row_layout() == 'component_mailinglist') {
+      if(get_row_layout() == 'component_mailinglist' && !is_404()) {
 
         get_template_part('components/mailinglist/mailinglist-controller');
 
