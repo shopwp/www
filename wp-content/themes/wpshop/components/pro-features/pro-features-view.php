@@ -11,7 +11,7 @@
       <div class="how-content">
          <div class="inner">
       <h2>🔭 Product Searching</h2>   
-      <p>Create an all-in-one <a href="https://demo.wpshop.io/search-example" title="WP Shopify Search Example">search experience</a> for customers with real-time results. No page reloads! View the <a href="https://demo.wpshop.io/search-example" title="WP Shopify Search Example">live demo</a> in action.</p>
+      <p>Create an all-in-one <a href="https://demo.wpshop.io/search-example?utm_medium=marketing-site&utm_source=component-pro-features&utm_campaign=demo" title="WP Shopify Search Example">search experience</a> for customers with real-time results. No page reloads! View the <a href="https://demo.wpshop.io/search-example?utm_medium=marketing-site&utm_source=component-pro-features&utm_campaign=demo" title="WP Shopify Search Example">live demo</a> in action.</p>
             </div>
       </div>
       <div class="how-image">
@@ -24,7 +24,7 @@
       <div class="how-content">
          <div class="inner">
       <h2>⚗️ Product Filtering</h2>   
-      <p>Easily create a <a href="https://demo.wpshop.io/storefront-example" title="WP Shopify Storefront Example">dedicated storefront</a> on any page giving customers the ability to filter and sort your products. View the <a href="https://demo.wpshop.io/storefront-example" title="WP Shopify Storefront Example">live demo</a> in action.</p>
+      <p>Easily create a <a href="https://demo.wpshop.io/storefront-example?utm_medium=marketing-site&utm_source=component-pro-features&utm_campaign=demo" title="WP Shopify Storefront Example">dedicated storefront</a> on any page giving customers the ability to filter and sort your products. View the <a href="https://demo.wpshop.io/storefront-example?utm_medium=marketing-site&utm_source=component-pro-features&utm_campaign=demo" title="WP Shopify Storefront Example">live demo</a> in action.</p>
             </div>
       </div>
       <div class="how-image">

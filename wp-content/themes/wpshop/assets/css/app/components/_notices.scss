@@ -87,6 +87,10 @@
   }
 }
 
+.features-sticky .headroom--pinned {
+  position: static;
+}
+
 .headroom--not-top.headroom--pinned {
   &.header .sub-menu {
     top: 50px;

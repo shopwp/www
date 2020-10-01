@@ -277,7 +277,7 @@ EDD
   display: block;
 
   @include device(1500, 'max') {
-    font-size: 34px;
+    font-size: 38px;
   }
 
   @include device(1000, 'max') {
@@ -1320,6 +1320,10 @@ div[data-tippy-root] div.tippy-box {
   .mailinglist-copy,
   p {
     text-align: left;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .btn-group {
@@ -1329,6 +1333,7 @@ div[data-tippy-root] div.tippy-box {
   .btn {
     width: 100%;
     margin-top: 15px;
+    font-size: 15px;
   }
 
   .mailinglist-email {
@@ -1350,6 +1355,19 @@ div[data-tippy-root] div.tippy-box {
 .tippy-content {
   padding: 0;
   margin: 0;
+}
+
+div[data-tippy-root] div.tippy-box[data-theme~='dark'] {
+  background-color: #2f2d41;
+  color: white;
+
+  .tippy-arrow {
+    margin-top: 0 !important;
+  }
+
+  a {
+    color: white !important;
+  }
 }
 
 .btn-getting-started-wrapper {

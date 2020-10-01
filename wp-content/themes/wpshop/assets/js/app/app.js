@@ -9,16 +9,17 @@ import { initFAQs } from './faqs/faqs';
   $(function () {
     initDriftTracking($);
 
-    if (document.URL.includes('purchase-confirmation') || document.URL.includes('checkout')) {
+    if (
+      window.location.pathname.includes('purchase-confirmation') ||
+      window.location.pathname.includes('checkout')
+    ) {
       return;
     }
 
     initPlugins($);
     initForms($);
-
     initAccount($);
     initFAQs();
-
     initMobile($);
 
     initDownloadTracking();
@@ -29,7 +30,15 @@ import { initFAQs } from './faqs/faqs';
     var myElement = document.querySelector('.header');
 
     if (myElement) {
-      var headroom = new Headroom(myElement);
+      var headroom = new Headroom(myElement, {
+        onPin: function () {
+          var component = jQuery('.component-features-demo');
+
+          if (component.length && component.hasClass('is-visible')) {
+            this.unpin();
+          }
+        },
+      });
       headroom.init();
     }
 
@@ -58,6 +67,31 @@ import { initFAQs } from './faqs/faqs';
           var $form = jQuery(instance.popper).find('.mailinglist-form');
           initMailinglist($form);
         },
+      });
+    });
+
+    jQuery('.component-comparison-chart .chart-label').each(function () {
+      var element = jQuery(this).find('.chart-label-description');
+
+      if (!element[0]) {
+        return;
+      }
+
+      tippy(this, {
+        content: element[0].innerHTML,
+        interactive: true,
+        trigger: 'mouseenter',
+        animation: 'shift-toward',
+        theme: 'dark',
+        arrow: true,
+        arrowType: 'round',
+        distance: 7,
+        placement: 'right',
+        maxWidth: 450,
+        duration: [280, 0],
+        moveTransition: 'transform 0.2s ease-out',
+        offset: [0, -80],
+        allowHTML: true,
       });
     });
 
@@ -94,6 +128,13 @@ import { initFAQs } from './faqs/faqs';
 
     jQuery('.price-toggle-label-wrapper').on('click', function () {
       jQuery(this).closest('.component-purchase').toggleClass('is-monthly');
+    });
+
+    wp.hooks.addAction('after.cart.ready', 'wpshopify', function (cartState) {
+      jQuery('.chart-label-anchor-open-cart').on('click', function (e) {
+        e.preventDefault();
+        wp.hooks.doAction('cart.toggle', 'open');
+      });
     });
   });
 })(jQuery);

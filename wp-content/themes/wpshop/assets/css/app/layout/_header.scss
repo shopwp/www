@@ -92,7 +92,7 @@
       transition: none;
       font-size: 15px;
       font-weight: bold;
-      padding: 0.9em 2.1em;
+      padding: 0.65em 2.1em;
       margin: 0;
 
       @include device(1500, 'max') {
@@ -125,6 +125,7 @@
   }
 }
 
+.is-not-showing-sticky-header .header,
 .purchase-confirmation .header {
   position: relative;
 }

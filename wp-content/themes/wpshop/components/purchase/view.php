@@ -2,8 +2,8 @@
 
    <div class="l-contain">
       
-      <h1>Choose a WP Shopify Pro License</h1>
-      <p>After purchasing WP Shopify Pro you’ll gain access to one of the following license keys:</p>
+      <h1>WP Shopify Pro Pricing</h1>
+      <p>Choose a license below and grow your online business with WP Shopify Pro.</p>
 
       <div class="price-toggle-label-wrapper">
          <span class="price-toggle-label">Yearly</span>
@@ -24,7 +24,7 @@
             </div>
 
             <div class="plan-pricing">
-               <span class="plan-price-year">$119.99 <span class="plan-terms">/year</span></span>
+               <span class="plan-price-year">$99 <span class="plan-terms">/year</span></span>
                <span class="plan-price-month">$20 <span class="plan-terms">/month</span></span>
             </div>
 
@@ -32,13 +32,15 @@
                <ul>
                   <li>Install on up to <strong>three</strong> WordPress sites</li>
                   <li>Access to all <a href="/pro-features" target="_blank">WP Shopify Pro features</a></li>
+                  <li>Plugin updates for WP Shopify Pro</li>
+                  <li>Dedicated support and access to our private Slack Channel</li>
                </ul>
             </div>
 
             <div class="plan-cta">
-               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=2" class="button button-l plan-cta-link-year">Purchase</a>
+               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=2" class="button button-l plan-cta-link-year">Purchase now</a>
 
-               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=5" class="button button-l plan-cta-link-month">Purchase</a>
+               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=5" class="button button-l plan-cta-link-month">Purchase now</a>
 
                <small class="plan-cta-notice-year"><i>Billed yearly until cancelled</i></small>
                <small class="plan-cta-notice-month"><i>Billed monthly until cancelled</i></small>
@@ -54,7 +56,7 @@
             </div>
 
             <div class="plan-pricing">
-               <span class="plan-price-year">$399.99 <span class="plan-terms">/year</span></span>
+               <span class="plan-price-year">$399 <span class="plan-terms">/year</span></span>
                <span class="plan-price-month">$50 <span class="plan-terms">/month</span></span>
             </div>
 
@@ -62,13 +64,15 @@
                <ul>
                   <li>Install on <strong>unlimited</strong> WordPress sites</li>
                   <li>Access to all <a href="/pro-features" target="_blank">WP Shopify Pro features</a></li>
+                  <li>Plugin updates for WP Shopify Pro</li>
+                  <li>Dedicated support and access to our private Slack Channel</li>
                </ul>
             </div>
 
             <div class="plan-cta">
-               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=3" class="button button-l plan-cta-link-year">Purchase</a>
+               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=3" class="button button-l plan-cta-link-year">Purchase now</a>
 
-               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=6" class="button button-l plan-cta-link-month">Purchase</a>
+               <a href="/checkout?edd_action=add_to_cart&download_id=35&edd_options[price_id]=6" class="button button-l plan-cta-link-month">Purchase now</a>
 
                <small class="plan-cta-notice-year"><i>Billed yearly until cancelled</i></small>
                <small class="plan-cta-notice-month"><i>Billed monthly until cancelled</i></small>

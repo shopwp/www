@@ -110,7 +110,7 @@ select,
   width: 100%;
   padding: 9px 18px;
   border-radius: 0.4em;
-  font-size: 17px;
+  font-size: 16px;
   border: none;
   background: color(white);
   color: color(base);
@@ -425,7 +425,6 @@ select {
 .form-error,
 .form-success {
   background: color(success);
-  //   padding: 10px 25px;
   border-radius: 0.4em;
   text-align: center;
   color: black;
@@ -441,6 +440,7 @@ select {
     padding: 10px 25px;
     font-weight: normal;
     font-size: 15px;
+    margin-top: 0;
   }
 }
 

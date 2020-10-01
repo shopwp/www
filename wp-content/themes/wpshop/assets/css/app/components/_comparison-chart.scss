@@ -13,6 +13,12 @@
   }
   tr {
     border-bottom: 1px solid #cbcbcb;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+
     @include device(600, 'max') {
       display: table;
       border: none;
@@ -30,6 +36,7 @@
 
     a:not(.btn) {
       color: #181625;
+      text-decoration: none;
     }
   }
 
@@ -48,10 +55,6 @@
 
   th {
     font-size: 20px;
-
-    &:first-of-type {
-      font-size: 16px;
-    }
 
     @include device(900, 'max') {
       font-size: 17px;
@@ -108,6 +111,67 @@
       text-decoration: none;
       color: #181625;
     }
+
+    th:first-of-type {
+      flex: 1;
+    }
+  }
+
+  .tippy-content p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  div[data-tippy-root] div.tippy-box {
+    padding: 10px;
+  }
+
+  .chart-label {
+    padding: 0;
+    flex: 1;
+
+    &[aria-expanded='true'] {
+      a {
+        color: #415aff;
+      }
+    }
+
+    a {
+      position: relative;
+      padding-left: 25px;
+      display: block;
+      padding: 10px 20px 10px 40px;
+
+      &:hover {
+        opacity: 1;
+        color: #415aff;
+        cursor: help;
+        background-color: #fbfbff;
+      }
+
+      svg {
+        width: 13px;
+        height: 13px;
+        color: #000;
+        position: absolute;
+        left: 14px;
+        top: calc(50% - 7px);
+        display: block;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .chart-label-anchor {
+    a {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .chart-label-description {
+    display: none;
   }
 
   .cell-no-border {
@@ -121,6 +185,9 @@
 
   .cell {
     text-align: center;
+    width: 210px;
+    margin: 0;
+    border-collapse: collapse;
   }
 
   .cell-yes {
@@ -128,8 +195,8 @@
     position: relative;
 
     svg {
-      max-width: 27px;
-      font-size: 27px;
+      max-width: 20px;
+      font-size: 20px;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -147,8 +214,8 @@
     position: relative;
 
     svg {
-      max-width: 23px;
-      font-size: 23px;
+      max-width: 18px;
+      font-size: 18px;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -167,6 +234,8 @@
 
   .cell-center {
     text-align: center;
+    width: 210px;
+    margin: 0;
   }
 
   .pro {
@@ -186,6 +255,10 @@
   }
 
   tfoot {
+    tr > td:first-of-type {
+      flex: 1;
+    }
+
     @include device(600, 'max') {
       tr > td:nth-of-type(1) {
         display: none;

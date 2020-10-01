@@ -25,7 +25,7 @@
 
       <div class="btn-group">
          <a href="http://wordpress.org/plugins/wpshopify" class="btn btn-l">Download Free</a>
-         <a href="/purchase/" class="btn btn-l">Purchase Pro</a>
+         <a href="/purchase" class="btn btn-l">Purchase Pro</a>
       </div>
 
    </div>

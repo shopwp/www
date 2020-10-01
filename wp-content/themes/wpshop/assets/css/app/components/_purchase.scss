@@ -31,7 +31,7 @@
   padding: 7em 0 4em 0;
 
   @include device(1500, 'max') {
-    padding: 4em 0;
+    padding: 3em 0 4em 0;
   }
 
   @include device(700, 'max') {
@@ -141,8 +141,8 @@
   }
 
   .icon-toggle {
-    height: 28px;
-    font-size: 38px;
+    height: 20px;
+    font-size: 20px;
     margin: 0;
 
     circle {
@@ -153,6 +153,7 @@
 
   .price-toggle-label {
     margin: 0 10px;
+    font-size: 15px;
   }
 }
 
@@ -160,6 +161,7 @@
 .plan-cta-link-month {
   width: auto;
   display: inline-block;
+  padding: 0.6em 1.5em;
 }
 
 .plan-cta .plan-cta-link-month,

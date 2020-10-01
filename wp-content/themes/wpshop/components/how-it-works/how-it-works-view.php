@@ -78,7 +78,7 @@
       <h2 itemprop="name"><span class="num">5</span><span itemprop="name">Ready to sell!</span></h2>
 
       <div itemprop="itemListElement" itemscope itemtype="http://schema.org/HowToDirection">
-         <p itemprop="text">WP Shopify comes with a <a href="https://demo.wpshop.io/" target="_blank">built-in cart</a> experience. When the user is ready to pay, they're taken to the default Shopify checkout page.</p>
+         <p itemprop="text">WP Shopify comes with a <a href="https://demo.wpshop.io?utm_medium=marketing-site&utm_source=component-how-it-works&utm_campaign=demo" target="_blank">built-in cart</a> experience. When the user is ready to pay, they're taken to the default Shopify checkout page.</p>
       </div>
             </div>
       </div>

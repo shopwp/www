@@ -178,11 +178,9 @@
             <div class="content-section">
                <h3>Plugin Support</h3>
                
-               <p>First, be sure to look through the <a href="https://docs.wpshop.io" target="_blank">plugin documentation</a>. The most common issues can be found here.</p>
+               <p>Solutions to the most common plugin issues (including syncing problems) can be found in our extensive <a href="https://docs.wpshop.io/#/getting-started/common-issues" target="_blank">plugin documentation</a>.</p>
                
-               <p>If you need more help, we have a <a href="https://wpshop.io/purchase">Slack channel</a> for customers-only to ask questions. We're online M-F 9am-4pm CST to help solve your problems.</p>
-
-               <a href="https://wpshop.io/purchase" class="btn">Purchase dedicated support</a>
+               <p>If you need more help, we have a <a href="https://wpshop.io/purchase">private Slack channel</a> for Pro customers only. We're online M-F 9am-4pm CST to help solve any issues you have.</p>
 
             </div>
 

@@ -53,6 +53,10 @@
   margin-top: 100px;
 }
 
+.is-not-showing-sticky-header .main {
+  margin-top: 60px;
+}
+
 .home .main {
   @include device(1300, 'max') {
     margin-top: 110px;

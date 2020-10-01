@@ -122,6 +122,10 @@ if (is_page('checkout')) {
 
         get_template_part('components/extensions/controller');
 
+      } else if(get_row_layout() == 'component_features_demo') {
+
+        get_template_part('components/features-demo/view');
+
       }
       
     endwhile;

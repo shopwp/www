@@ -112,8 +112,9 @@
 
 .mailinglist-group-copy {
   color: color(white);
-  z-index: 9999999999999;
+  z-index: 1;
   align-items: center;
+  margin-bottom: 10px;
 
   @include device(600, 'max') {
     z-index: 999;

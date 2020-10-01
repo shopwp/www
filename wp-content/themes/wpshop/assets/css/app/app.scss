@@ -148,3 +148,47 @@ Author URI:     https://simpleblend.net
     margin-left: 5px;
   }
 }
+
+body.testimonials {
+  height: auto !important;
+}
+
+#wps-input-terms {
+  width: auto;
+  margin: 0px;
+}
+
+.component-testimonials + .component-faq-secondary {
+  margin-top: 4.5em;
+}
+
+.edd-payment-icons {
+  top: 94px;
+}
+
+#password-lost-form-wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 10px;
+}
+
+#password-lost-form-wrap label {
+  text-align: left;
+}
+
+#password-lost-form-wrap .lostpassword-submit {
+  margin-top: 0;
+}
+
+#password-lost-form-wrap .som-password-sent-message {
+  background-color: #415aff;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+}
+
+#password-lost-form-wrap input[type='password'].som-password-input {
+  max-width: 100%;
+}
