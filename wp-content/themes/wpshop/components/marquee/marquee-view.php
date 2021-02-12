@@ -22,21 +22,17 @@
 
          <div class="btn-group l-row l-row-left">
             <span class="btn btn-download-free getting-started-trigger" target="_blank">Start for free</span>
-            <a href="https://demo.wpshop.io?utm_medium=marketing-site&utm_source=marquee&utm_campaign=demo" class="btn btn-l btn-secondary" target="_blank">View the demo <svg class="svg-inline--fa fa-external-link fa-w-16" aria-hidden="true" focusable="false" data-prefix="fal" data-icon="external-link" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M440,256H424a8,8,0,0,0-8,8V464a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V112A16,16,0,0,1,48,96H248a8,8,0,0,0,8-8V72a8,8,0,0,0-8-8H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V264A8,8,0,0,0,440,256ZM500,0,364,.34a12,12,0,0,0-12,12v10a12,12,0,0,0,12,12L454,34l.7.71L131.51,357.86a12,12,0,0,0,0,17l5.66,5.66a12,12,0,0,0,17,0L477.29,57.34l.71.7-.34,90a12,12,0,0,0,12,12h10a12,12,0,0,0,12-12L512,12A12,12,0,0,0,500,0Z"></path></svg></a>
-
-            <p style="margin-top: 10px;color: black;">
-	<a href="https://www.shopify.com/?ref=wps" class="wps-affiliate-marquee-bottom" target="_blank" style="color: black;font-size: 14px;">Still need a Shopify store?</a>
-</p>
-
+            <a href="https://wpshopify-web.loc/features" class="btn btn-l btn-secondary">View the demo</a>
+            <p style="margin-top: 10px;color: black;padding-left: 5px;"><a href="https://www.shopify.com/?ref=wps" class="wps-affiliate-marquee-bottom" target="_blank" style="color: black;font-size: 14px;">Still need a Shopify store?</a></p>
          </div>
 
       </div>
 
       <div class="marquee-right">
 
-      <img class="screen-one" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-<?= rand(1, 5) ?>.jpg" alt="Sup">
+      <img class="screen-one" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-<?= rand(1, 5) ?>.jpg" alt="Example product layout for Shopify WordPress plugin">
 
-      <img class="screen-two" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-two.jpg" alt="Sup">
+      <img class="screen-two" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-two.jpg" alt="Example product customization options for WordPress eCommerice plugin">
       <div class="stage"><div class="corner"></div></div>
       </div>
   </div>

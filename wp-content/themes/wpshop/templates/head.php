@@ -1,12 +1,8 @@
 <head>
 
-<?php if (!is_page('purchase-confirmation')) { ?>
-<script type="text/javascript" src="https://load.fomo.com/api/v1/6p7yBoHBiIeSctKUyPZ9QA/load.js" async></script>
-<?php } ?>
+<link rel="preconnect" href="https://fonts.gstatic.com">
 
 <?php wp_head(); ?>
-
-
 
    <!-- Start of Async Drift Code -->
     <script>
@@ -72,5 +68,6 @@
 <?php if (!is_page('checkout') && !is_page('purchase-confirmation')) { ?>
    <script src="https://unpkg.com/headroom.js"></script>
 <?php } ?>
+
 
 </head>

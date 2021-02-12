@@ -4,17 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6d412e1c3378364f6aeea5ed7752b9e7
+class ComposerStaticInitdfbee5702addcbc9a3b31d6d120a387d
 {
     public static $prefixLengthsPsr4 = array (
-        'Z' => 
-        array (
-            'Zend\\Dom\\' => 9,
-        ),
         'S' => 
         array (
             'Stripe\\' => 7,
-            'SteveGrunwell\\PHPUnit_Markup_Assertions\\' => 40,
         ),
         'C' => 
         array (
@@ -23,17 +18,9 @@ class ComposerStaticInit6d412e1c3378364f6aeea5ed7752b9e7
     );
 
     public static $prefixDirsPsr4 = array (
-        'Zend\\Dom\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/zendframework/zend-dom/src',
-        ),
         'Stripe\\' => 
         array (
             0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
-        ),
-        'SteveGrunwell\\PHPUnit_Markup_Assertions\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stevegrunwell/phpunit-markup-assertions/src',
         ),
         'Composer\\Installers\\' => 
         array (
@@ -44,8 +31,8 @@ class ComposerStaticInit6d412e1c3378364f6aeea5ed7752b9e7
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6d412e1c3378364f6aeea5ed7752b9e7::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6d412e1c3378364f6aeea5ed7752b9e7::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdfbee5702addcbc9a3b31d6d120a387d::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdfbee5702addcbc9a3b31d6d120a387d::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

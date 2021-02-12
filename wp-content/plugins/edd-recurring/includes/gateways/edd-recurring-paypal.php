@@ -310,7 +310,7 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 
 		if( $amount_received < $initial_amount ) {
 
-			$payment = new EDD_Payment( $subscription->parent_payment_id );
+			$payment         = edd_get_payment( $subscription->parent_payment_id );
 			$payment->status = 'failed';
 			$payment->add_note( __( 'Payment failed due to invalid initial amount in PayPal Recurring IPN.', 'edd-recurring' ) );
 			$payment->save();
@@ -326,7 +326,7 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 		$recurring_amount  = round( $subscription->recurring_amount, 2 );
 		if( $amount_to_receive < $recurring_amount ) {
 
-			$payment = new EDD_Payment( $subscription->parent_payment_id );
+			$payment         = edd_get_payment( $subscription->parent_payment_id );
 			$payment->status = 'failed';
 			$payment->add_note( __( 'Payment failed due to invalid recurring amount in PayPal Recurring IPN.', 'edd-recurring' ) );
 			$payment->save();
@@ -384,7 +384,7 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 		// Look to see if payment is same day as signup and we have set the transaction ID on the parent payment yet
 		if( $probably_is_initial_ipn && ( ! $transaction_id || $transaction_id == $subscription->parent_payment_id ) ) {
 
-			$payment = new EDD_Payment( $subscription->parent_payment_id );
+			$payment = edd_get_payment( $subscription->parent_payment_id );
 
 			// Check if the payment status is failed in the IPN.
 			if ( 'failed' === strtolower( $ipn_data['payment_status'] ) ) {
@@ -1171,7 +1171,7 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 		if( ! empty( $profile_id ) ) {
 			$html     = '<a href="%s" target="_blank">' . $profile_id . '</a>';
 
-			$payment  = new EDD_Payment( $subscription->parent_payment_id );
+			$payment  = edd_get_payment( $subscription->parent_payment_id );
 			$base_url = 'live' === $payment->mode ? 'https://www.paypal.com' : 'https://www.sandbox.paypal.com';
 			$link     = esc_url( $base_url . '/cgi-bin/webscr?cmd=_profile-recurring-payments&encrypted_profile_id=' . $profile_id );
 

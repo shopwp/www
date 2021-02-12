@@ -35,7 +35,7 @@ function edd_sl_admin_scripts() {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
-	wp_enqueue_script( 'edd-sl-admin', plugins_url( '/js/edd-sl-admin'  . $suffix . '.js', EDD_SL_PLUGIN_FILE ), array( 'jquery' ), EDD_SL_VERSION );
+	wp_enqueue_script( 'edd-sl-admin', plugins_url( '/assets/js/edd-sl-admin' . $suffix . '.js', EDD_SL_PLUGIN_FILE ), array( 'jquery' ), EDD_SL_VERSION );
 
 	if( $screen->id === 'download' ) {
 		wp_localize_script( 'edd-sl-admin', 'edd_sl', array(
@@ -43,7 +43,8 @@ function edd_sl_admin_scripts() {
 			'no_prices'     => __( 'N/A', 'edd_sl' ),
 			'add_banner'    => __( 'Add Banner', 'edd_sl' ),
 			'use_this_file' => __( 'Use This Image', 'edd_sl' ),
-			'new_media_ui'  => apply_filters( 'edd_use_35_media_ui', 1 )
+			'new_media_ui'  => apply_filters( 'edd_use_35_media_ui', 1 ),
+			'readme_nonce'  => wp_create_nonce( 'edd_sl_readme_cache_nonce' ),
 		) );
 	} else {
 		wp_localize_script( 'edd-sl-admin', 'edd_sl', array(
@@ -57,8 +58,8 @@ function edd_sl_admin_scripts() {
 		) );
 	}
 
-	wp_enqueue_style( 'edd-sl-admin-styles', plugins_url( '/css/edd-sl-admin' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
-	wp_enqueue_style( 'edd-sl-styles', plugins_url( '/css/edd-sl' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
+	wp_enqueue_style( 'edd-sl-admin-styles', plugins_url( '/assets/css/edd-sl-admin' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
+	wp_enqueue_style( 'edd-sl-styles', plugins_url( '/assets/css/edd-sl' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
 }
 add_action( 'admin_enqueue_scripts', 'edd_sl_admin_scripts' );
 
@@ -82,7 +83,7 @@ function edd_sl_scripts() {
 
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	wp_register_style( 'edd-sl-styles', plugins_url( '/css/edd-sl' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
+	wp_register_style( 'edd-sl-styles', plugins_url( '/assets/css/edd-sl' . $suffix . '.css', EDD_SL_PLUGIN_FILE ), false, EDD_SL_VERSION );
 
 	$should_load_styles = false;
 	if ( is_admin() || edd_is_checkout() ) {
@@ -112,40 +113,44 @@ add_action( 'wp_enqueue_scripts', 'edd_sl_scripts' );
 /**
  * Output the SL JavaScript for the checkout page
  *
+ * @param boolean $force Optional parameter to allow the script within the shortcode.
  * @since  3.2
  * @return void
  */
-function edd_sl_checkout_js() {
+function edd_sl_checkout_js( $force = false ) {
 
-	if( ! function_exists( 'edd_is_checkout' ) ) {
+	if ( ! function_exists( 'edd_is_checkout' ) ) {
 		return;
 	}
 
-	if ( ! edd_is_checkout() ) {
+	if ( ! edd_is_checkout() && ! $force ) {
 		return;
 	}
-?>
-	<script>
-	jQuery(document).ready(function($) {
-		$('#edd_sl_show_renewal_form, #edd-cancel-license-renewal').click(function(e) {
-			e.preventDefault();
-			$('#edd-license-key-container-wrap,#edd_sl_show_renewal_form,.edd-sl-renewal-actions').toggle();
-			$('#edd-license-key').focus();
-		});
 
-		$('#edd-license-key').keyup(function(e) {
-			var input  = $('#edd-license-key');
-			var button = $('#edd-add-license-renewal');
+	$is_checkout = edd_is_checkout() ? 'true' : 'false';
+	$script      = "jQuery(document).ready(function($) {
+		var hide = {$is_checkout};
+		if ( hide ) {
+			$( '.edd-sl-renewal-form-fields' ).hide();
+			$( '#edd_sl_show_renewal_form, #edd-cancel-license-renewal' ).click(function(e) {
+				e.preventDefault();
+				$( '.edd-sl-renewal-form-fields, #edd_sl_show_renewal_form' ).toggle();
+				$( '#edd-license-key' ).focus();
+			} );
+		}
 
-			if ( input.val() != '' ) {
-				button.prop("disabled", false);
-			} else {
-				button.prop("disabled", true);
-			}
-		});
-	});
-	</script>
-<?php
+		$( '#edd-license-key' ).keyup(function(e) {
+			var input    = $( '#edd-license-key' );
+			var disabled = ! input.val();
+
+			$( '#edd-add-license-renewal' ).prop( 'disabled', disabled );
+		} );
+	} );";
+	if ( function_exists( 'wp_add_inline_script' ) ) {
+		wp_add_inline_script( 'edd-ajax', $script );
+	} else {
+		echo "<script>{$script}</script>";
+	}
 }
 add_action( 'wp_head', 'edd_sl_checkout_js' );
 

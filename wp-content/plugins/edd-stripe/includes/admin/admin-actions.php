@@ -42,20 +42,27 @@ function edds_process_preapproved_cancel() {
 	if( ! wp_verify_nonce( $_GET['nonce'], 'edds-process-preapproval' ) )
 		return;
 
-	$payment_id  = absint( $_GET['payment_id'] );
-	$customer_id = get_post_meta( $payment_id, '_edds_stripe_customer_id', true );
+	$payment_id = absint( $_GET['payment_id'] );
 
-	if( empty( $customer_id ) || empty( $payment_id ) ) {
+	if ( empty( $payment_id ) ) {
 		return;
 	}
 
-	if ( 'preapproval' !== get_post_status( $payment_id ) ) {
+	$payment     = edd_get_payment( $payment_id );
+	$customer_id = $payment->get_meta( '_edds_stripe_customer_id', true );
+	$status      = $payment->status;
+
+	if ( empty( $customer_id ) ) {
+		return;
+	}
+
+	if ( 'preapproval' !== $status ) {
 		return;
 	}
 
 	edd_insert_payment_note( $payment_id, __( 'Preapproval cancelled', 'edds' ) );
 	edd_update_payment_status( $payment_id, 'cancelled' );
-	delete_post_meta( $payment_id, '_edds_stripe_customer_id' );
+	$payment->delete_meta( '_edds_stripe_customer_id' );
 
 	wp_redirect( esc_url_raw( add_query_arg( array( 'edd-message' => 'preapproval-cancelled' ), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ) ) ); exit;
 }
@@ -78,19 +85,10 @@ function edds_admin_messages() {
 	if ( isset( $_GET['edd-message'] ) && 'preapproval-cancelled' == $_GET['edd-message'] ) {
 		 add_settings_error( 'edds-notices', 'edds-preapproval-cancelled', __( 'The preapproved payment was successfully cancelled.', 'edds' ), 'updated' );
 	}
-	if ( isset( $_GET['edd-message'] ) && 'connect-to-stripe' === $_GET['edd-message'] ) {
-		add_settings_error( 'edds-notices', 'edds-connect-to-stripe', __( 'Connect your Stripe account using the "Connect with Stripe" button below.', 'edds' ), 'updated' );
-		// I feel dirty, but EDD does not remove `edd-message` params from settings URLs and the message carries to all links if not removed, and well I wanted this all to work without touching EDD core yet.
-		add_filter( 'wp_parse_str', function( $ar ) {
-			if( isset( $ar['edd-message'] ) && 'connect-to-stripe' === $ar['edd-message'] ) {
-				unset( $ar['edd-message'] );
-			}
-			return $ar;
-		});
-	}
 
 	if( isset( $_GET['edd_gateway_connect_error'], $_GET['edd-message'] ) ) {
-		echo '<div class="notice notice-error"><p>' . sprintf( __( 'There was an error connecting your Stripe account. Message: %s. Please <a href="%s">try again</a>.', 'edds' ), esc_html( urldecode( $_GET['edd-message'] ) ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) ) . '</p></div>';
+		/* translators: %1$s Stripe Connect error message. %2$s Retry URL. */
+		echo '<div class="notice notice-error"><p>' . sprintf( __( 'There was an error connecting your Stripe account. Message: %1$s. Please <a href="%2$s">try again</a>.', 'edds' ), esc_html( urldecode( $_GET['edd-message'] ) ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) ) . '</p></div>';
 		add_filter( 'wp_parse_str', function( $ar ) {
 			if( isset( $ar['edd_gateway_connect_error'] ) ) {
 				unset( $ar['edd_gateway_connect_error'] );
@@ -159,7 +157,6 @@ function edds_stripe_connect_test_mode_toggle_redirect() {
 		if( false !== strpos( $location, 'page=edd-settings' ) && false !== strpos( $location, 'settings-updated=true' ) ) {
 			$location = add_query_arg(
 				array(
-					'section' => 'edd-stripe',
 					'edd-message' => 'connect-to-stripe',
 				),
 				$location

@@ -77,13 +77,18 @@
   }
 
   .mailinglist-email {
-    padding: 6px 18px;
+    padding: 9px 18px;
+    margin-right: 10px;
 
     @include device(600, 'max') {
       width: 100%;
       margin-bottom: 1em;
       margin-right: 0;
     }
+  }
+
+  label.success {
+    text-align: center;
   }
 }
 

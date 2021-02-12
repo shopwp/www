@@ -2,8 +2,8 @@
 label.error {
   text-align: center;
   color: color(base);
-   font-size: 16px;
-   margin-top: 10px;
+  font-size: 16px;
+  margin-top: 10px;
 
   a {
     color: color(base);
@@ -37,19 +37,9 @@ label.error {
   font-weight: normal;
   margin-bottom: $space-xl;
   margin-top: $space-m;
-  position: relative;
-
-  position: fixed;
-  top: 23px;
-  left: 0;
-  width: auto;
-  width: 700px;
+  max-width: 600px;
   z-index: 999;
   animation-duration: 0.5s;
-  left: 50%;
-  margin-left: -350px;
-  font-size: $font-m;
-  box-shadow: 0 13px 67px -4px hsla(0, 0%, 43.1%, 0.31);
 
   @include device(800, 'max') {
     width: 90%;

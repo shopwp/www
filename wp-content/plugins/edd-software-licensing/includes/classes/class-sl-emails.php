@@ -5,7 +5,7 @@ class EDD_SL_Emails {
 	function __construct() {
 
 		add_action( 'edd_add_email_tags', array( $this, 'add_email_tag' ), 100 );
-
+		add_action( 'template_redirect', array( $this, 'display_renewal_email_preview' ) );
 	}
 
 	public function add_email_tag() {
@@ -125,17 +125,8 @@ class EDD_SL_Emails {
 	public function filter_reminder_template_tags( $text = '', $license_id = 0 ) {
 		$license = edd_software_licensing()->get_license( $license_id );
 
-		// Retrieve the customer name
-		if ( $license->user_id ) {
-			$user_data     = get_userdata( $license->user_id );
-			$customer_name = $user_data->display_name;
-		} else {
-			$user_info  = edd_get_payment_meta_user_info( $license->payment_id );
-			if ( isset( $user_info[ 'first_name' ] ) ) {
-				$customer_name = $user_info[ 'first_name' ];
-			} else {
-				$customer_name = $user_info[ 'email' ];
-			}
+		if ( ! $license ) {
+			return $text;
 		}
 
 		$expiration      = date_i18n( get_option( 'date_format' ), $license->expiration );
@@ -152,7 +143,8 @@ class EDD_SL_Emails {
 			$time_diff = sprintf( __( 'expires in %s', 'edd_sl' ), $time_diff );
 		}
 
-		$text = str_replace( '{name}',             $customer_name,  $text );
+		$text = str_replace( '{name}', edd_email_tag_first_name( $license->payment_id ), $text );
+		$text = str_replace( '{fullname}', edd_email_tag_fullname( $license->payment_id ), $text );
 		$text = str_replace( '{license_key}',      $license->key,    $text );
 		$text = str_replace( '{product_name}',     $license->get_download()->get_name(),   $text );
 		$text = str_replace( '{expiration}',       $expiration,     $text );
@@ -181,5 +173,85 @@ class EDD_SL_Emails {
 		return (bool) $license->get_meta( 'edd_sl_unsubscribed', true );
 	}
 
+	/**
+	 * Renders a preview for a renewal email.
+	 *
+	 * @since 3.7
+	 * @return void
+	 */
+	public function display_renewal_email_preview() {
+
+		if ( empty( $_GET['edd-action'] ) || ! isset( $_GET['notice-id'] ) || ! is_numeric( $_GET['notice-id'] ) ) {
+			return;
+		}
+
+		if ( 'edd_sl_preview_notice' !== $_GET['edd-action'] ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+
+		$data = edd_sl_get_renewal_notice( (int) $_GET['notice-id'] );
+		if ( empty( $data['message'] ) ) {
+			wp_die( esc_html__( 'The email message has no content.', 'edd_sl' ) );
+		}
+
+		EDD()->emails->heading = $this->preview_reminder_template_tags( $data['subject'] );
+
+		echo EDD()->emails->build_email( $this->preview_reminder_template_tags( $data['message'], $data['send_period'] ) );
+
+		exit;
+	}
+
+	/**
+	 * Replaces email template tags with license data for the preview email.
+	 *
+	 * @since 3.7
+	 *
+	 * @param string  $text        The email subject/body text.
+	 * @param string  $send_period The timeframe for sending the email. Default is one month before expiration.
+	 * @return string
+	 */
+	private function preview_reminder_template_tags( $text = '', $send_period = '+30 days' ) {
+		if ( 'expired' === $send_period ) {
+			$send_period = 'today';
+		}
+		$expiration   = strtotime( $send_period );
+		$discount     = edd_get_option( 'edd_sl_renewal_discount', 0 );
+		$site_link    = home_url();
+		$current_time = current_time( 'timestamp' );
+		$time_diff    = human_time_diff( $expiration, $current_time );
+
+		if ( $expiration < $current_time ) {
+			/* translators: how long ago the license expired. */
+			$time_diff = sprintf( __( 'expired %s ago', 'edd_sl' ), $time_diff );
+		} else {
+			/* translators: how long until the license expires. */
+			$time_diff = sprintf( __( 'expires in %s', 'edd_sl' ), $time_diff );
+		}
+
+		$text = edd_email_preview_template_tags( $text );
+		$text = str_replace( '{license_key}', __( 'Sample License Key', 'edd_sl' ), $text );
+		$text = str_replace( '{product_name}', __( 'Sample Product Name', 'edd_sl' ), $text );
+		$text = str_replace( '{expiration}', date_i18n( get_option( 'date_format' ), $expiration ), $text );
+		$text = str_replace( '{expiration_time}', $time_diff, $text );
+		if ( ! empty( $discount ) ) {
+			$text = str_replace( '{renewal_discount}', $discount . '%', $text );
+		};
+		$html_link = sprintf( '<a>%s</a>', $site_link );
+		$text      = str_replace( '{renewal_link}', $html_link, $text );
+		$text      = str_replace( '{renewal_url}', $site_link, $text );
+		$text      = str_replace( '{unsubscribe_url}', sprintf( '<a>%s</a>', $site_link ), $text );
+
+		/**
+		 * Filters the renewal message text.
+		 *
+		 * @param string $text       The message text.
+		 * @param int $license_id The license ID.
+		 */
+		return apply_filters( 'edd_sl_renewal_message', $text, 0 );
+	}
 }
 $edd_sl_emails = new EDD_SL_Emails;

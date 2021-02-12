@@ -208,7 +208,7 @@ function edd_recurring_v24_migrate_subscriptions() {
 			$cancelled    = false;
 			$expiration   = '';
 			$recurring_id = '';
-			$payment      = new EDD_Payment( $payment_id );
+			$payment      = edd_get_payment( $payment_id );
 			$profile      = edd_recurring_get_legacy_profile_id( $payment );
 			$cart_details = $payment->cart_details;
 			$download     = reset( $cart_details );
@@ -294,20 +294,20 @@ function edd_recurring_v24_migrate_subscriptions() {
 
 					// If no user account existed, we don't know the expiration date
 
-					$child_payments = get_posts( array(
-						'post_type'      => 'edd_payment',
-						'post_status'    => 'edd_subscription',
-						'posts_per_page' => 1,
-						'post_parent'    => $payment_id,
-						'order'          => 'DESC',
-						'orderby'        => 'post_date'
+					$child_payments = edd_get_payments( array(
+						'status'      => 'edd_subscription',
+						'number'      => 1,
+						'post_parent' => $payment_id,
+						'order'       => 'DESC',
+						'orderby'     => 'post_date',
+						'output'      => 'payments'
 					) );
 
 					if( $child_payments ) {
 
 						// Use date of latest renewal payment as base
 						$child_payment = reset( $child_payments );
-						$base = strtotime( $child_payment->post_date );
+						$base = strtotime( $child_payment->date );
 
 					} else {
 
@@ -1013,7 +1013,7 @@ function edd_recurring_27_add_subscription_id_meta() {
 
 			if( $subscription_id ) {
 
-				update_post_meta( $payment->ID, 'subscription_id', $subscription_id );
+				edd_update_payment_meta( $payment->ID, 'subscription_id', $subscription_id );
 
 			}
 
@@ -1178,7 +1178,7 @@ function edd_recurring_add_tax_columns_to_subs_table() {
 	if( $subs ) {
 
 		foreach( $subs as $subscription ) {
-			$payment = new EDD_Payment( $subscription->parent_payment_id );
+			$payment = edd_get_payment( $subscription->parent_payment_id );
 			$args    = array();
 			$subscription->update( array(
 				'initial_tax'        => $payment->tax,

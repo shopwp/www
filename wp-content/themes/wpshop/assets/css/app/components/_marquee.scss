@@ -89,7 +89,7 @@
 }
 
 .marquee-left {
-  padding: 4.3em 1em 0 5em;
+  padding: 3em 1em 0 5em;
   width: calc(44vw - 3em);
 
   @include device(1300, 'max') {
@@ -111,34 +111,11 @@
 
   .btn {
     margin-right: 0;
+    font-weight: 500;
   }
 
   .btn-secondary {
-    padding-right: 2.8em;
     margin-left: 1.2vw;
-
-    .svg-inline--fa {
-      max-width: 20px;
-      display: inline-block;
-      position: absolute;
-      right: 10%;
-      top: 49%;
-      transform: translate(0, -50%);
-
-      @include device(1500, 'max') {
-        max-width: 16px;
-        right: 13px;
-      }
-
-      @include device(700, 'max') {
-        display: none;
-      }
-    }
-
-    @include device(600, 'max') {
-      width: 100%;
-      padding: 12px 30px 14px 30px;
-    }
   }
 
   .btn-secondary,
@@ -158,14 +135,17 @@
 
   .mailinglist-form {
     .btn-secondary {
-      font-size: 17px;
+      font-size: 15px;
+      font-weight: 400;
       margin-left: 0;
+      margin-bottom: 0;
+      margin-right: 18px;
     }
   }
 }
 
 .marquee-short-blurb {
-  font-size: 1.4em;
+  font-size: 1.5em;
   max-width: 555px;
 
   @include device(1500, 'max') {
@@ -347,7 +327,7 @@
   h1 {
     max-width: 720px;
     line-height: 1;
-    font-size: 4.3vw;
+    font-size: 4.2vw;
     margin-bottom: 28px;
 
     @include device(1100, 'max') {

@@ -6,7 +6,7 @@ $extensions = get_posts([
    'tax_query' => [
         [
             'taxonomy' => 'download_category',
-            'terms' => 79,
+            'terms' => 80,
             'include_children' => false
         ],
     ],

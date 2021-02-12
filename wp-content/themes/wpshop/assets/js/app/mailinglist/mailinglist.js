@@ -1,7 +1,80 @@
 import { getMailchimpListById } from '../ws/ws.js';
-
+import to from 'await-to-js';
 import { initMailinglistTracking } from '../analytics/analytics.js';
 
+async function addToMailchimpList($form) {
+  var email = $form.find('.mailinglist-email').val();
+  var type = $form.data('type');
+
+  const response = await fetch(
+    wpshopifyMarketing.api.restUrl + wpshopifyMarketing.api.namespace + '/mailinglist/add',
+    {
+      body: JSON.stringify({
+        email: email,
+        type: type,
+      }),
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-WP-Nonce': wpshopifyMarketing.api.nonce,
+      },
+    }
+  );
+
+  return await response.json();
+}
+
+function showError($form, data) {
+  $form.find('.form-message.form-success').empty();
+  $form.find('.form-error').addClass('is-visible');
+  $form
+    .find('.form-message.form-error')
+    .empty()
+    .append('<label class="error">' + data.message + '</label>');
+  $form.find('.spinner').removeClass('is-visible');
+  $form.find('input, button[type="submit"]').removeClass('is-disabled').prop('disabled', false);
+  $form.removeClass('is-submitting');
+  $form.find('.mailinglist-email').focus().select();
+}
+
+function showSuccess($form, data) {
+  var type = $form.data('type');
+
+  if (type === 'Getting Started') {
+    var message =
+      '<label class="success"><i class="fa fa-check-circle" aria-hidden="true"></i> ' +
+      data.message +
+      '</label>';
+  } else {
+    var message =
+      '<label class="success"><i class="fa fa-check-circle" aria-hidden="true"></i> Success! Thanks for signing up</label>';
+  }
+  $form.find('.form-message.form-error').empty();
+  $form.removeClass('is-submitting');
+  $form.find('.spinner').removeClass('is-visible');
+  $form.find('input, button[type="submit"]').removeClass('is-disabled');
+  $form.find('input, button[type="submit"]').prop('disabled', false);
+  $form.find('input, button[type="submit"]').removeAttr('aria-invalid');
+  $form.find('input[type="text"]').val('');
+  $form.find('.form-success').addClass('is-visible');
+  $form.find('.form-success').empty().append(message);
+  $form.addClass('is-submitted');
+
+  downloadFreeVersion();
+
+  initMailinglistTracking();
+}
+
+function downloadFreeVersion() {
+  var anchor = document.createElement('a');
+  anchor.href =
+    'https://downloads.wordpress.org/plugin/wpshopify.' +
+    wpshopifyMarketing.misc.latestVersion +
+    '.zip';
+  anchor.download = 'WP Shopify';
+  anchor.click();
+}
 /*
 
 On Mailing List Form submission
@@ -9,7 +82,7 @@ On Mailing List Form submission
 */
 function validateMailingListForm($form) {
   $form.validate({
-    submitHandler: function (form, e) {
+    submitHandler: async function (form, e) {
       e.preventDefault();
       $form.find('.form-message').empty();
 
@@ -17,94 +90,21 @@ function validateMailingListForm($form) {
       $form.find('input, button[type="submit"]').addClass('is-disabled').prop('disabled', true);
       $form.find('.spinner').addClass('is-visible');
 
-      getMailchimpListById($form)
-        .done(function (data) {
-          $form.find('input, button[type="submit"]').prop('disabled', false);
-          $form.find('.mailinglist-email').focus().select();
+      const [err, resp] = await to(addToMailchimpList($form));
 
-          if (data.code !== 200) {
-            var type = $form.data('type');
-            var message = data.message.detail;
+      console.log('resp', resp);
+      console.log('err', err);
 
-            if (message.includes('is already a list member')) {
-              if (type === 'Getting Started') {
-                message =
-                  '<label class="success">It looks like you already requested the download link. <a href="https://wordpress.org/plugins/wpshopify/" target="_blank">Here it is again.</a></label>';
+      if (resp.code === 'rest_cookie_invalid_nonce') {
+        return showError($form, resp);
+      }
 
-                $form.find('.form-message.form-error').empty();
-                $form.removeClass('is-submitting');
-                $form.find('.spinner').removeClass('is-visible');
-                $form.find('input, button[type="submit"]').removeClass('is-disabled');
-                $form.find('.form-success').addClass('is-visible');
-                $form.find('.form-success').empty().append(message);
-                $form.addClass('is-submitted');
-                return;
-              } else {
-                message = 'That email is already signed up, thanks!';
-              }
-            }
+      if (resp.error) {
+        return showError($form, resp);
+      }
 
-            // }
-            $form.find('.form-message.form-success').empty();
-            $form.find('.form-error').addClass('is-visible');
-            $form
-              .find('.form-message.form-error')
-              .empty()
-              .append(
-                '<label class="error"><i class="fa fa-times-circle" aria-hidden="true"></i> ' +
-                  message +
-                  '</label>'
-              );
-            $form.find('.spinner').removeClass('is-visible');
-            $form.find('input, button[type="submit"]').removeClass('is-disabled');
-            $form.removeClass('is-submitting');
-          } else {
-            var type = $form.data('type');
-
-            if (type === 'Getting Started') {
-              var message =
-                '<label class="success"><i class="fa fa-check-circle" aria-hidden="true"></i> Success! Please check your email to download</label>';
-            } else {
-              var message =
-                '<label class="success"><i class="fa fa-check-circle" aria-hidden="true"></i> Success! Thanks for signing up</label>';
-            }
-            $form.find('.form-message.form-error').empty();
-            $form.removeClass('is-submitting');
-            $form.find('.spinner').removeClass('is-visible');
-            $form.find('input, button[type="submit"]').removeClass('is-disabled');
-            $form.find('.form-success').addClass('is-visible');
-            $form.find('.form-success').empty().append(message);
-            $form.addClass('is-submitted');
-
-            initMailinglistTracking();
-          }
-        })
-        .fail(function (jqXHR, textStatus) {
-          $form.find('.form-message.form-success').empty();
-          $form.find('.form-error').addClass('is-visible');
-          $form
-            .find('.form-message.form-error')
-            .empty()
-            .append('<label class="error">Error! ' + textStatus + '</label>');
-
-          $form.find('.spinner').removeClass('is-visible');
-          $form.find('input, button[type="submit"]').removeClass('is-disabled');
-          $form.removeClass('is-submitting');
-
-          $form.find('.mailinglist-email').prop('disabled', false);
-        });
+      showSuccess($form, resp);
     },
-
-    rules: {
-      email: {
-        required: true,
-        email: true,
-      },
-    },
-
-    errorClass: 'error',
-    validClass: 'succes',
-
     highlight: function (element, errorClass, validClass) {
       jQuery(element).parent().removeClass('form-valid');
       jQuery('.form-error').addClass('is-visible');

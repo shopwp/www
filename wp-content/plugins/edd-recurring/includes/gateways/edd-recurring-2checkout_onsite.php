@@ -267,7 +267,7 @@ class EDD_Recurring_2Checkout_Onsite extends EDD_Recurring_2Checkout {
 		if( ! empty( $profile_id ) ) {
 			$html     = '<a href="%s" target="_blank">' . $profile_id . '</a>';
 
-			$payment  = new EDD_Payment( $subscription->parent_payment_id );
+			$payment  = edd_get_payment( $subscription->parent_payment_id );
 			$base_url = 'live' === $payment->mode ? 'https://2checkout.com/' : 'https://sandbox.2checkout.com/sandbox/';
 			$url      = '<a href="%s" target="_blank">' . $profile_id . '</a>';
 			$link     = esc_url( $base_url . 'sales/detail?sale_id=' . $payment->transaction_id );

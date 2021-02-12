@@ -14,13 +14,183 @@ class EDD_Recurring_Reports {
 	 */
 	public function __construct() {
 
-		//Graph Reports
-		add_filter( 'edd_report_views', array( $this, 'add_subscriptions_reports_view' ) );
-		add_action( 'edd_reports_view_subscriptions', array( $this, 'display_subscriptions_report' ) );
+		if ( function_exists( 'edd_add_order' ) ) {
+			// EDD 3.0+ Graph Reports
+			add_action( 'edd_reports_init', array( $this, 'register_reports' ) );
+		} else {
+			// EDD 2.9 and below Graph Reports
+			add_filter( 'edd_report_views', array( $this, 'add_subscriptions_reports_view' ) );
+			add_action( 'edd_reports_view_subscriptions', array( $this, 'display_subscriptions_report' ) );
+		}
 
 		//Payments' subscription status column
 		add_filter( 'edd_payments_table_column', array( $this, 'status_column' ), 800, 3 );
 
+	}
+
+	/**
+	 * Registers reports with EDD
+	 *
+	 * @param EDD\Reports\Data\Report_Registry $reports
+	 *
+	 * @since 2.10.1
+	 * @return void
+	 */
+	public function register_reports( $reports ) {
+		try {
+			$options = EDD\Reports\get_dates_filter_options();
+			$dates   = EDD\Reports\get_filter_value( 'dates' );
+			$label   = $options[ $dates['range'] ];
+
+			$reports->add_report( 'recurring_subscription_renewals', array(
+				'label'     => __( 'Subscription Renewals', 'edd-recurring' ),
+				'icon'      => 'chart-area', // @todo is there a better one?
+				'priority'  => 60,
+				'endpoints' => array(
+					'tiles' => array(
+						'recurring_subscription_renewals_number',
+						'recurring_subscription_renewals_refunded_number',
+						'recurring_subscription_renewals_gross_earnings',
+						'recurring_subscription_renewals_refunded_amount',
+						'recurring_subscription_renewals_net_earnings'
+					),
+					'charts' => array(
+						'recurring_subscription_renewals_chart'
+					)
+				)
+			) );
+
+			$reports->register_endpoint( 'recurring_subscription_renewals_number', array(
+				'label' => __( 'Number of Renewals', 'edd-recurring' ),
+				'views' => array(
+					'tile' => array(
+						'data_callback' => 'edd_recurring_renewals_number_callback',
+						'display_args'  => array(
+							'comparison_label' => $label
+						)
+					)
+				)
+			) );
+
+			$reports->register_endpoint( 'recurring_subscription_renewals_refunded_number', array(
+				'label' => __( 'Number of Refunded Renewals', 'edd-recurring' ),
+				'views' => array(
+					'tile' => array(
+						'data_callback' => 'edd_recurring_renewals_refunded_number_callback',
+						'display_args'  => array(
+							'comparison_label' => $label
+						)
+					)
+				)
+			) );
+
+			$reports->register_endpoint( 'recurring_subscription_renewals_gross_earnings', array(
+				'label' => __( 'Gross Renewal Earnings', 'edd-recurring' ),
+				'views' => array(
+					'tile' => array(
+						'data_callback' => function() {
+							return edd_currency_filter( edd_format_amount( edd_recurring_get_gross_renewal_earnings_for_report_period() ) );
+						},
+						'display_args'  => array(
+							'comparison_label' => $label
+						)
+					)
+				)
+			) );
+
+			$reports->register_endpoint( 'recurring_subscription_renewals_refunded_amount', array(
+				'label' => __( 'Refunded Renewals', 'edd-recurring' ),
+				'views' => array(
+					'tile' => array(
+						'data_callback' => function() {
+							return edd_currency_filter( edd_format_amount( abs( edd_recurring_get_refunded_amount_for_report_period() ) ) );
+						},
+						'display_args'  => array(
+							'comparison_label' => $label
+						)
+					)
+				)
+			) );
+
+			$reports->register_endpoint( 'recurring_subscription_renewals_net_earnings', array(
+				'label' => __( 'Net Renewal Earnings', 'edd-recurring' ),
+				'views' => array(
+					'tile' => array(
+						'data_callback' => function() {
+							$net = edd_recurring_get_gross_renewal_earnings_for_report_period() - edd_recurring_get_refunded_amount_for_report_period();
+
+							return edd_currency_filter( edd_format_amount( $net ) );
+						},
+						'display_args'  => array(
+							'comparison_label' => $label
+						)
+					)
+				)
+			) );
+
+			$reports->register_endpoint( 'recurring_subscription_renewals_chart', array(
+				'label' => __( 'Subscription Renewals', 'edd-recurring' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => 'EDD_Recurring_Reports_Chart::get_chart_data',
+						'type'          => 'line',
+						'options'       => array(
+							'datasets' => array(
+								'renewals' => array(
+									'label'                => __( 'Renewals', 'edd-recurring' ),
+									'borderColor'          => 'rgb(237,194,64)',
+									'backgroundColor'      => 'rgba(237,194,64,0.2)',
+									'fill'                 => true,
+									'borderDash'           => array( 2, 6 ),
+									'borderCapStyle'       => 'round',
+									'borderJoinStyle'      => 'round',
+									'pointRadius'          => 4,
+									'pointHoverRadius'     => 6,
+									'pointBackgroundColor' => 'rgb(255,255,255)',
+								),
+								'refunds' => array(
+									'label'                => __( 'Refunds', 'edd-recurring' ),
+									'borderColor'          => 'rgb(175,216,248)',
+									'backgroundColor'      => 'rgba(175,216,248,0.05)',
+									'fill'                 => true,
+									'borderDash'           => array( 2, 6 ),
+									'borderCapStyle'       => 'round',
+									'borderJoinStyle'      => 'round',
+									'pointRadius'          => 4,
+									'pointHoverRadius'     => 6,
+									'pointBackgroundColor' => 'rgb(255,255,255)',
+								),
+								'earnings' => array(
+									'label'                => __( 'Earnings', 'edd-recurring' ),
+									'borderColor'          => 'rgb(203,75,75)',
+									'backgroundColor'      => 'rgba(203,75,75,0.05)',
+									'fill'                 => true,
+									'borderWidth'          => 2,
+									'type'                 => 'currency',
+									'pointRadius'          => 4,
+									'pointHoverRadius'     => 6,
+									'pointBackgroundColor' => 'rgb(255,255,255)',
+								),
+								'refunded_earnings' => array(
+									'label'                => __( 'Refunded Earnings', 'edd-recurring' ),
+									'borderColor'          => 'rgb(77,167,77)',
+									'backgroundColor'      => 'rgba(77,167,77,0.05)',
+									'fill'                 => true,
+									'borderWidth'          => 2,
+									'type'                 => 'currency',
+									'pointRadius'          => 4,
+									'pointHoverRadius'     => 6,
+									'pointBackgroundColor' => 'rgb(255,255,255)',
+								),
+							)
+						)
+					)
+				)
+			) );
+
+		} catch( \Exception $e ) {
+
+		}
 	}
 
 	/**
@@ -55,7 +225,6 @@ class EDD_Recurring_Reports {
 
 		$args = apply_filters( 'edd_get_subscriptions_by_date', array(
 			'nopaging'    => true,
-			'post_type'   => 'edd_payment',
 			'post_status' => array( 'edd_subscription', 'refunded' ),
 			'year'        => $year,
 			'monthnum'    => $month,
@@ -70,7 +239,7 @@ class EDD_Recurring_Reports {
 			$args['hour'] = $hour;
 		}
 
-		$subscriptions = get_posts( $args );
+		$subscriptions = edd_get_payments( $args );
 
 		$return             = array();
 		$return['earnings']       = 0;

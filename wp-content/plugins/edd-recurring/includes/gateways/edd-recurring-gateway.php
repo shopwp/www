@@ -455,6 +455,16 @@ class EDD_Recurring_Gateway {
 			// Determine tax amount for any fees if it's more than $0
 			$fee_tax = $fees > 0 ? edd_calculate_tax( $fees ) : 0;
 
+			// Format the tax rate.
+			$tax_rate = round( floatval( $this->purchase_data['tax_rate'] ), 4 );
+			if ( 4 > strlen( $tax_rate ) ) {
+				/*
+				 * Enforce a minimum of 2 decimals for backwards compatibility.
+				 * @link https://github.com/easydigitaldownloads/edd-recurring/pull/1386#issuecomment-745350210
+				 */
+				$tax_rate = number_format( $tax_rate, 2, '.', '' );
+			}
+
 			$args = array(
 				'cart_index'         => $key,
 				'id'                 => $item['id'],
@@ -463,9 +473,9 @@ class EDD_Recurring_Gateway {
 				'initial_amount'     => edd_sanitize_amount( $item['price'] + $fees + $fee_tax ),
 				'recurring_amount'   => edd_sanitize_amount( $recurring_amount ),
 				'initial_tax'        => edd_use_taxes() ? edd_sanitize_amount( $item['tax'] + $fee_tax ) : 0,
-				'initial_tax_rate'   => edd_sanitize_amount( $this->purchase_data['tax_rate'] ),
+				'initial_tax_rate'   => $tax_rate,
 				'recurring_tax'      => edd_use_taxes() ? edd_sanitize_amount( $recurring_tax ) : 0,
-				'recurring_tax_rate' => edd_sanitize_amount( $this->purchase_data['tax_rate'] ),
+				'recurring_tax_rate' => $tax_rate,
 				'signup_fee'         => edd_sanitize_amount( $fees ),
 				'period'             => $item['item_number']['options']['recurring']['period'],
 				'frequency'          => 1, // Hard-coded to 1 for now but here in case we offer it later. Example: charge every 3 weeks
@@ -600,7 +610,7 @@ class EDD_Recurring_Gateway {
 
 		// Record the pending payment
 		$this->payment_id = edd_insert_payment( $payment_data );
-		$payment = new EDD_Payment( $this->payment_id );
+		$payment          = edd_get_payment( $this->payment_id );
 
 		if ( ! $this->offsite ) {
 

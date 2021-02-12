@@ -28,11 +28,9 @@ if ( is_user_logged_in() ) :
 
 					<td>
 						<div class="edd_sl_item_name">
-							<?php echo edd_software_licensing()->get_download_name( $license->ID ); ?>
-							<?php if( $price_id = edd_software_licensing()->get_price_id( $license->ID ) ) : ?>
-								<span class="edd_sl_key_sep">&nbsp;&ndash;&nbsp;</span>
-								<span class="edd_sl_key_price_option"><?php echo edd_get_price_option_name( edd_software_licensing()->get_download_id( $license->ID ), $price_id ); ?></span>
-							<?php endif; ?>
+							<?php
+							echo edd_software_licensing()->get_license_download_display_name( $license );
+							?>
 						</div>
 						<input type="text" readonly="readonly" class="edd_sl_license_key" value="<?php echo esc_attr( edd_software_licensing()->get_license_key( $license->ID ) ); ?>" />
 						<?php if ( ! empty( $child_keys ) ) : ?>
@@ -43,8 +41,8 @@ if ( is_user_logged_in() ) :
 
 									<li class="edd-sl-child">
 										<span>
-											<?php echo edd_software_licensing()->get_download_name( $child_key->ID ); ?>
 											<?php
+											echo edd_software_licensing()->get_license_download_display_name( $child_key );
 											if ( ! edd_software_licensing()->force_increase() ) {
 												$url = esc_url( add_query_arg( array( 'license_id' => $child_key->ID, 'action' => 'manage_licenses', 'payment_id' => $payment_id ), get_permalink( edd_get_option( 'purchase_history_page' ) ) ) );
 												?>

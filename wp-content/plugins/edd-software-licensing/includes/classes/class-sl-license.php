@@ -401,17 +401,18 @@ class EDD_SL_License {
 			}
 		}
 
-		$child_license_download_ids = array();
+		$child_product_license_keys = array();
 		if ( $purchased_download->licensing_enabled() ) {
 			$existing_child_licenses    = $this->get_child_licenses();
-			$child_license_download_ids = wp_list_pluck( $existing_child_licenses, 'download_id' );
+			$child_product_license_keys = wp_list_pluck( $existing_child_licenses, 'license_key', 'download_id' );
 		}
 
 		// If we have a bundle download, process the licenses.
 		foreach ( $downloads as $d_id ) {
 
+			$d_price_id   = null;
 			$price_id_pos = strpos( $d_id, '_' );
-			if( false !== $price_id_pos ) {
+			if ( false !== $price_id_pos ) {
 				$d_price_id = substr( $d_id, $price_id_pos + 1, strlen( $d_id ) );
 			}
 
@@ -421,18 +422,20 @@ class EDD_SL_License {
 				continue;
 			}
 
-			// Make sure we do not already have a child key for this product
-			if ( in_array( $download->ID, $child_license_download_ids ) ) {
+			// If we already have a key for this product, maybe update the price ID and stop.
+			if ( array_key_exists( $download->ID, $child_product_license_keys ) ) {
+				$license_to_update = edd_software_licensing()->get_license( $child_product_license_keys[ $download->ID ] );
+				$license_to_update->update(
+					array(
+						'price_id' => $d_price_id,
+					)
+				);
 				continue;
 			}
 
 			// Make sure we do not already havev a key for this product
 			if ( ! empty( $existing_license_product_ids ) && in_array( $download->ID, $existing_license_product_ids ) ) {
 				continue;
-			}
-
-			if( false === $price_id_pos ) {
-				$d_price_id = edd_get_default_variable_price( $download->ID );
 			}
 
 			// Generate a license for a child license.
@@ -1470,14 +1473,16 @@ class EDD_SL_License {
 	 * Add a given site to the list of activated sites for the license.
 	 *
 	 * @since 3.5
-	 * @param $site
+	 * @param string $url A URL that possibly represents a local environment.
+	 * @param string $environment The current site environment. Default production.
+	 *                            Always production in WordPress < 5.5
 	 *
 	 * @return array|bool
 	 */
-	public function add_site( $site ) {
+	public function add_site( $site, $environment = 'production' ) {
 
 		$added    = false;
-		$is_local = edd_software_licensing()->is_local_url( $site );
+		$is_local = edd_software_licensing()->is_local_url( $site, $environment );
 		if ( ( $this->is_at_limit() && ! $is_local ) && ( ! is_admin() && ! current_user_can( 'manage_licenses' ) ) ) {
 			return $added;
 		}
@@ -1529,11 +1534,11 @@ class EDD_SL_License {
 	 */
 	public function remove_site( $site = '' ) {
 
+		$removed = false;
 		if ( is_numeric( $site ) ) {
 			$site = absint( $site );
 		} else {
-			$site    = trailingslashit( edd_software_licensing()->clean_site_url( $site ) );
-			$removed = false;
+			$site = trailingslashit( edd_software_licensing()->clean_site_url( $site ) );
 		}
 
 		if ( edd_software_licensing()->force_increase() ) {
@@ -1763,7 +1768,7 @@ class EDD_SL_License {
 
 		if ( $updated ) {
 
-			// Change status to expired when expiration date is in the past. Note: an empty expiration means a lifetime license. 
+			// Change status to expired when expiration date is in the past. Note: an empty expiration means a lifetime license.
 			if( ! empty( $expiration ) && $expiration < current_time( 'timestamp' ) ) {
 				$this->set_status( 'expired' );
 			} else {

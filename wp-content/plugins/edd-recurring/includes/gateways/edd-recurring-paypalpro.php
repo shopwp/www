@@ -322,7 +322,7 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 	public function complete_signup() {
 
 		if( ! empty( $this->payment_transaction_id ) ) {
-			$payment = new EDD_Payment( $this->payment_id );
+			$payment                 = edd_get_payment( $this->payment_id );
 			$payment->transaction_id = $this->payment_transaction_id;
 			$payment->save();
 		}
@@ -453,10 +453,9 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 				return; // This is not related to Recurring Payments
 			}
 
-			$amount          = number_format( (float) $posted['mc_gross'], 2 );
-			$payment_status  = $posted['payment_status'];
-			$currency_code   = $posted['mc_currency'];
-			$subscription    = new EDD_Subscription( $posted['recurring_payment_id'], true );
+			$amount        = isset( $posted['mc_gross'] ) ? number_format( (float) $posted['mc_gross'], 2 ) : 0.00;
+			$currency_code = isset( $posted['mc_currency'] ) ? $posted['mc_currency'] : false;
+			$subscription  = new EDD_Subscription( $posted['recurring_payment_id'], true );
 
 			$parent_payment = edd_get_payment( $subscription->parent_payment_id );
 			if ( $parent_payment->gateway !== $this->id ) {
@@ -1081,7 +1080,7 @@ class EDD_Recurring_PayPal_Website_Payments_Pro extends EDD_Recurring_Gateway {
 		if( ! empty( $profile_id ) ) {
 			$html     = '<a href="%s" target="_blank">' . $profile_id . '</a>';
 
-			$payment  = new EDD_Payment( $subscription->parent_payment_id );
+			$payment  = edd_get_payment( $subscription->parent_payment_id );
 			$base_url = 'live' === $payment->mode ? 'https://www.paypal.com' : 'https://www.sandbox.paypal.com';
 			$link     = esc_url( $base_url . '/cgi-bin/webscr?cmd=_profile-recurring-payments&encrypted_profile_id=' . $profile_id );
 

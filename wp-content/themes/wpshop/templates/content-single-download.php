@@ -5,7 +5,7 @@ global $post;
 $download = new EDD_Download($post->ID);
 $prices = $download->get_prices();
 $notes = $download->get_notes();
-
+$id = get_the_ID();
 $license_ver = edd_software_licensing()->get_download_version($download->ID);
 
 while (have_posts()) : the_post(); ?>
@@ -40,8 +40,17 @@ while (have_posts()) : the_post(); ?>
             </div>
 
             <div class="l-box-3 extension-purchase">
+               <?php 
                
-               <a class="post-thumb" href="https://www.wpbeaverbuilder.com/?fla=4036" target="_blank" style="background-image: url('<?= get_the_post_thumbnail_url(get_the_ID(), 'full'); ?>');"></a>
+               if ($id === 203186) {
+                  $link = 'https://www.wpbeaverbuilder.com/?fla=4036';
+
+               } else {
+                  $link = 'https://elementor.com/?ref=17221';
+               }
+               
+               ?>
+               <a class="post-thumb" href="<?= $link; ?>" target="_blank" style="background-image: url('<?= get_the_post_thumbnail_url($id, 'full'); ?>');"></a>
 
                <div class="extension-purchase-inner">
 
@@ -51,7 +60,7 @@ while (have_posts()) : the_post(); ?>
                         <div class="l-row extension-button" data-extension-id="<?= $download->ID; ?>" data-extension-index="<?= $price['index']; ?>">
                            <p class="extension-selection-icon <?= $price['index'] === '1' ? 'is-selected' : ''; ?>"></p>
                            <p class="extension-tier"><?= $price['name']; ?></p>
-                           <p class="extension-price"><?= $price['amount']; ?> 
+                           <p class="extension-price">$<?= $price['amount']; ?> 
                               <span class="extension-interval">/<?= $price['period']; ?></span>
                            </p>
                         </div>
@@ -60,7 +69,7 @@ while (have_posts()) : the_post(); ?>
                   </div>
 
                   <div class="extension-add-to-cart">
-                     <a href="/checkout?edd_action=add_to_cart&download_id=203186&edd_options[price_id]=1" class="btn btn-l">Purchase</a>
+                     <a href="/checkout?edd_action=add_to_cart&download_id=<?= $id; ?>&edd_options[price_id]=1" class="btn btn-l">Purchase</a>
                   </div>
 
                   <div class="extension-terms">

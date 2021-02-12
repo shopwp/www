@@ -28,7 +28,8 @@ function edd_stripe_upgrade_notices() {
 		printf(
 			'<div class="updated">' .
 			'<p>' .
-			__( 'Easy Digital Downloads - Stripe Gateway needs to upgrade the customers database, click <a href="%s">here</a> to start the upgrade. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this upgrade</a>', 'edds' ) .
+			/* translators: %s Upgrade link. */
+			__( 'Easy Digital Downloads - Stripe Gateway needs to upgrade the customers database; <a href="%s">click here to start the upgrade</a>. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this upgrade</a>', 'edds' ) .
 			'</p>' .
 			'<p style="display: none;">' .
 			__( '<strong>About this upgrade:</strong><br />This upgrade will improve the reliability of associating purchase records with your existing customer records in Stripe by changing their Stripe Customer IDs to be stored locally on their EDD customer record, instead of their user record.', 'edds' ) .

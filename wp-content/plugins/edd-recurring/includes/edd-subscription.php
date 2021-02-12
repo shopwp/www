@@ -35,6 +35,10 @@ class EDD_Subscription {
 	public $status                = 'pending';
 	public $profile_id            = '';
 	public $gateway               = '';
+
+	/**
+	 * @var EDD_Customer $customer
+	 */
 	public $customer;
 
 	/**
@@ -325,7 +329,7 @@ class EDD_Subscription {
 
 		$amount = 0.00;
 
-		$parent_payment   = new EDD_Payment( $this->parent_payment_id );
+		$parent_payment   = edd_get_payment( $this->parent_payment_id );
 		$ignored_statuses = array( 'refunded', 'pending', 'abandoned', 'failed' );
 
 		if ( false === in_array( $parent_payment->status, $ignored_statuses ) ) {
@@ -342,7 +346,7 @@ class EDD_Subscription {
 		if( $children ) {
 
 			foreach( $children as $child ) {
-				$child_payment = new EDD_Payment( $child->ID );
+				$child_payment = edd_get_payment( $child->ID );
 				if ( 'refunded' === $child_payment->status ) {
 					continue;
 				}
@@ -376,7 +380,7 @@ class EDD_Subscription {
 		}
 
 		$payment                 = new EDD_Payment();
-		$parent                  = new EDD_Payment( $this->parent_payment_id );
+		$parent                  = edd_get_payment( $this->parent_payment_id );
 		$payment->parent_payment = $this->parent_payment_id;
 		$payment->customer_id    = $parent->customer_id;
 
@@ -385,8 +389,15 @@ class EDD_Subscription {
 		$user_info['discount']   = 'none';
 		$payment->user_info      = $user_info;
 
-		$payment->address        = $parent->address;
-		$payment->user_id        = $parent->user_id;
+		$payment->user_id = $parent->user_id;
+		$payment->address = $parent->address;
+		// In EDD3, use the customer's primary billing address, if set.
+		if ( function_exists( 'edd_get_customer_address' ) ) {
+			$address = edd_get_customer_address( $payment->user_id );
+			if ( $address ) {
+				$payment->address = $address;
+			}
+		}
 		$payment->email          = $parent->email;
 		$payment->currency       = $parent->currency;
 		$payment->status         = 'edd_subscription';
@@ -419,6 +430,10 @@ class EDD_Subscription {
 
 			$tax = $this->recurring_tax;
 
+		}
+
+		if ( ! empty( $this->recurring_tax_rate ) ) {
+			$payment->tax_rate = $this->recurring_tax_rate;
 		}
 
 		$customer = new EDD_Customer( $payment->customer_id );
@@ -1121,7 +1136,7 @@ class EDD_Subscription {
 			$notes = '';
 		}
 
-		$note_string = date_i18n( 'F j, Y H:i:s', current_time( 'timestamp' ) ) . ' - ' . $note;
+		$note_string = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) . ' - ' . $note;
 		$new_note    = apply_filters( 'edd_subscription_add_note_string', $note_string );
 		$notes      .= "\n\n" . $new_note;
 

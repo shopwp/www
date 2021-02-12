@@ -18,16 +18,15 @@
     height: 65px;
   }
 
-  .btn {
-    margin-top: 0;
+  &.headroom--not-top.headroom--pinned {
+    .nav > .menu-item > a {
+      padding: 0.4em 1.1em;
+      font-size: 1.1em;
+    }
   }
 
-  .getting-started-mailinglist-form .btn {
-    margin-top: 0.69444em;
-
-    svg {
-      max-width: 20px;
-    }
+  .btn {
+    margin-top: 0;
   }
 
   .btn-account {
@@ -35,17 +34,17 @@
   }
 
   #menu-primary-navigation > .menu-item {
-    padding: 10px 0;
+    padding: 0;
   }
 
   .menu-item {
     a {
       border-radius: 0.4em;
       width: 100%;
-      padding: 0.2em 1.1em;
+      padding: 0.9em 1.1em;
       margin: 0 0.3em;
       border-radius: 0.3em;
-      font-weight: bold;
+      font-weight: 400;
 
       @include device(1500, 'max') {
         font-size: 1.14em;
@@ -69,39 +68,47 @@
   }
 
   .sub-menu {
-    @include popoverDeep();
+    @include popoverShallow();
 
-    height: 0;
+    border-radius: 10px;
+    border: 1px solid #d0d0d0;
     overflow: hidden;
     position: absolute;
-    top: 60px;
+    top: 70px;
     margin: 0;
     width: 290px;
     font-size: 14px;
     padding: 0;
     transform: translateY(10px);
     transition: all 0.3s ease;
+    visibility: hidden;
     opacity: 0;
 
     @include device(1500, 'max') {
-      top: 50px;
+      top: 60px;
+    }
+
+    > li:nth-of-type(1) {
+      a {
+        padding-top: 13px;
+      }
     }
 
     a {
       border-radius: 0;
       transition: none;
-      font-size: 15px;
-      font-weight: bold;
-      padding: 0.65em 2.1em;
+      font-size: 16px;
+      padding: 0.45em 2.1em;
       margin: 0;
 
       @include device(1500, 'max') {
-        font-size: 14px;
+        font-size: 15px;
       }
     }
 
     .menu-item:last-child a {
       border: none;
+      padding-bottom: 13px;
     }
   }
 
@@ -131,7 +138,7 @@
 }
 
 .purchase-confirmation .main {
-  margin-top: 60px !important;
+  margin-top: 40px !important;
 }
 
 .footer-wrapper .menu-item a svg {
@@ -288,6 +295,36 @@
 
   @include device(500, 'max') {
     right: 60px;
+  }
+}
+
+.msg-success,
+label.success {
+  border: 1px solid #84e7a3;
+  border-radius: 6px;
+  border-radius: 0.4em;
+  text-align: center;
+}
+
+.msg-error,
+label.error {
+  border: 1px solid #e39292;
+  border-radius: 6px;
+  border-radius: 0.4em;
+  text-align: center;
+}
+
+.getting-started-mailinglist-form {
+  label.success {
+    margin-bottom: 0;
+  }
+}
+
+.getting-started-mailinglist-form .btn {
+  margin-top: 0.69444em;
+
+  svg {
+    max-width: 20px;
   }
 }
 

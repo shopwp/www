@@ -14,7 +14,7 @@ class EDD_SL_Retroactive_Licensing {
 	*/
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
-		add_action( 'edd_tools_banned_emails_after', array( $this, 'tool_box' ) );
+		add_action( 'edd_tools_recount_stats_before', array( $this, 'tool_box' ) );
 		add_action( 'wp_ajax_edd_sl_process_retroactive_post', array( $this, 'edd_sl_process_retroactive_post' ) );
 	}
 
@@ -32,7 +32,7 @@ class EDD_SL_Retroactive_Licensing {
 		}
 ?>
 		<div class="postbox edd-sl-retroactive-licensing">
-			<h3><span><?php _e( 'Software Licensing - Retroactive Licensing Processor', 'edd_sl' ); ?></span></h3>
+			<h3 id="edd-sl-retroactive-processor"><?php esc_html_e( 'Software Licensing - Retroactive Licensing Processor', 'edd_sl' ); ?></h3>
 			<div class="inside">
 <?php
 				// To prevent the script from showing errors and breaking the JSON, disable the backcompat notices.
@@ -317,40 +317,51 @@ class EDD_SL_Retroactive_Licensing {
 			die( json_encode( array( 'error' => __( 'Failed Licensing: You do not have permission to perform this action.', 'edd_sl' ) ) ) );
 		}
 
-		$payment_id = intval( $_REQUEST['id'] );
-		$post       = get_post( $payment_id );
-		$download   = intval( $_REQUEST['dl'] );
+		$payment_id   = intval( $_REQUEST['id'] );
+		$post         = new EDD_Payment( $payment_id );
+		$download     = intval( $_REQUEST['dl'] );
+		$order_number = empty( $post->number ) ? $post->ID : $post->number;
 
-		if ( ! $post || $post->post_type != 'edd_payment' ) {
-			die( json_encode( array( 'error' => sprintf( esc_html__( 'Failed Licensing: %s is incorrect post type.', 'edd_sl' ), esc_html( $payment_id ) ) ) ) );
+		if ( ! $post ) {
+			/* translators: the order number */
+			die( wp_json_encode( array( 'error' => sprintf( esc_html__( 'Failed Licensing: %s is incorrect post type.', 'edd_sl' ), esc_html( $order_number ) ) ) ) );
 		}
 
-		$number_generated = self::generate_license_keys( $payment_id, $download );
+		$number_generated = self::generate_license_keys( $payment_id, $download, $post );
 
-		if ( ! empty( $number_generated ) ) {
-			$message = _n( '%1$s License key for Payment ID <a href="%2$s" target="_blank">%3$s</a> was successfully processed.', '%1$s License keys for Payment ID <a href="%2$s" target="_blank">%3$s</a> were successfully processed.', $number_generated, 'edd_sl' );
-			die( json_encode( array( 'success' => sprintf( $message, $number_generated, self::get_order_url( $payment_id ), $payment_id ) ) ) );
-		} else if ( 0 === $number_generated ) {
-			die( json_encode( array( 'success' => sprintf( __( 'Payment ID <a href="%1$s" target="_blank">%2$s</a> processed. No licenses needed to be processed.', 'edd_sl' ), self::get_order_url( $payment_id ), $payment_id ) ) ) );
+		if ( ! empty( $number_generated ) && is_numeric( $number_generated ) ) {
+			/* translators: 1. The number of keys generated 2. The URL for the order 3. The order number */
+			$message = _n( '%1$s License key for Order <a href="%2$s" target="_blank">%3$s</a> was successfully processed.', '%1$s License keys for Order <a href="%2$s" target="_blank">%3$s</a> were successfully processed.', $number_generated, 'edd_sl' );
+			die( json_encode( array( 'success' => sprintf( $message, $number_generated, self::get_order_url( $payment_id ), $order_number ) ) ) );
+		} elseif ( 0 === $number_generated ) {
+			/* translators: 1. The URL for the order 2. The order number */
+			die( json_encode( array( 'success' => sprintf( __( 'Order <a href="%1$s" target="_blank">%2$s</a> processed. No licenses needed to be processed.', 'edd_sl' ), self::get_order_url( $payment_id ), $order_number ) ) ) );
 		} else {
-			die( json_encode( array( 'error' => sprintf( __( 'Payment ID <a href="%1$s" target="_blank">%2$s</a> was NOT licensed because "%4$".', 'edd_sl' ), self::get_order_url( $payment_id ), $payment_id, $number_generated ) ) ) );
+			/* translators: 1. The URL for the order 2. The order number 3. The failure message returned from the license key generator */
+			die( json_encode( array( 'error' => sprintf( __( 'Order <a href="%1$s" target="_blank">%2$s</a> was NOT licensed because "%3$s".', 'edd_sl' ), self::get_order_url( $payment_id ), $order_number, $number_generated ) ) ) );
 		}
 	}
 
 	/**
 	 * Generate the license keys for a payment during an ajax post
 	 *
+	 * @param int $payment_id         The payment/order ID.
+	 * @param int $download_id        The download ID.
+	 * @param boolean|object $payment The payment object, if it is known.
+	 *
 	 * @access      public
 	 * @since       2.4
 	 * @return      mixed
 	*/
-	public static function generate_license_keys( $payment_id, $download_id ) {
+	public static function generate_license_keys( $payment_id, $download_id, $payment = false ) {
 		$payment_id = absint( $payment_id );
 		if ( empty( $payment_id ) ) {
 			return esc_html__( 'Empty `$payment_id`', 'edd_sl' );
 		}
 
-		$payment   = new EDD_Payment( $payment_id );
+		if ( ! $payment ) {
+			$payment = new EDD_Payment( $payment_id );
+		}
 		$downloads = $payment->cart_details;
 
 		if ( empty( $downloads ) ) {
@@ -389,7 +400,15 @@ class EDD_SL_Retroactive_Licensing {
 
 			} else {
 
-				$keys = edd_software_licensing()->generate_license( $download['id'], $payment_id, $type, $download, $cart_key );
+				$args = array(
+					'download_id' => $download['id'],
+					'payment_id'  => $payment_id,
+					'type'        => $type,
+					'cart_item'   => $download,
+					'cart_index'  => $cart_key,
+					'retroactive' => true,
+				);
+				$keys = edd_software_licensing()->generate_new_license( $args );
 
 			}
 
@@ -410,7 +429,7 @@ class EDD_SL_Retroactive_Licensing {
 	public static function scripts( $hook ) {
 
 		if ( 'download_page_edd-tools' == $hook ) {
-			wp_enqueue_script( 'jquery-ui-progressbar', plugins_url( 'js/jquery.ui.progressbar.js', EDD_SL_PLUGIN_FILE ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-widget' ), '1.10.3' );
+			wp_enqueue_script( 'jquery-ui-progressbar', plugins_url( 'assets/js/jquery.ui.progressbar.js', EDD_SL_PLUGIN_FILE ), array( 'jquery', 'jquery-ui-core', 'jquery-ui-widget' ), '1.10.3' );
 		}
 
 	}

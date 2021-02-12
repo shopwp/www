@@ -26,6 +26,7 @@ function edd_recurring_admin_scripts( $hook ) {
 
 	wp_register_script( 'edd-admin-recurring', EDD_Recurring::$plugin_dir . '/assets/js/edd-admin-recurring.js', array('jquery'));
 	wp_enqueue_script( 'edd-admin-recurring' );
+	wp_enqueue_style( 'edd-admin-recurring', EDD_Recurring::$plugin_dir . '/assets/css/admin.css', array(), EDD_RECURRING_VERSION );
 
 	$ajax_vars = array(
 		'singular'            => _x( 'time', 'Referring to billing period', 'edd-recurring' ),

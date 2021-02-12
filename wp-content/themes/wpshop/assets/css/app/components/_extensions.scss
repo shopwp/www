@@ -28,6 +28,7 @@
   min-height: 400px;
   box-shadow: 0 0 21px -13px rgba(0, 0, 0, 0.42);
   border-radius: 10px;
+  margin: 0 10px 0 10px;
 }
 
 .extension-inner {
@@ -35,6 +36,8 @@
   padding: 20px;
   margin-top: 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
   border-right: 1px solid #ddd;
@@ -43,8 +46,9 @@
 }
 
 .extension-name {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 600;
+  font-family: $font-secondary;
   color: color(base);
   text-decoration: none;
   display: block;
@@ -142,6 +146,8 @@
   }
 
   .extension-purchase {
+    position: sticky;
+    top: 20px;
     margin-top: 26px;
     padding: 0;
     margin-bottom: auto;

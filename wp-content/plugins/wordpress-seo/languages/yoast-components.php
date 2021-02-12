@@ -60,6 +60,10 @@ $generated_i18n_strings = array(
 	// Reference: node_modules/@yoast/components/WordOccurrenceInsights.js:54
 	__( 'The following words occur the most in the content. These give an indication of what your content focuses on. If the words differ a lot from your topic, you might want to rewrite your content accordingly. ', 'wordpress-seo' ),
 
+	// Reference: node_modules/@yoast/components/WordOccurrenceInsights.js:72
+	// Reference: node_modules/@yoast/components/data-model/DataModel.js:50
+	__( 'Prominent words', 'wordpress-seo' ),
+
 	// Reference: node_modules/@yoast/components/button/Icon.js:21
 	__( 'Close', 'wordpress-seo' ),
 
@@ -67,11 +71,26 @@ $generated_i18n_strings = array(
 	/* translators: %d expands to number of occurrences. */
 	__( '%d occurrences', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/components/data-model/DataModel.js:50
-	__( 'Prominent words', 'wordpress-seo' ),
-
 	// Reference: node_modules/@yoast/components/help-icon/HelpIcon.js:50
 	__( '(Opens in a new browser tab)', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/components/image-select/ImageSelectButtons.js:32
+	__( 'Replace image', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/components/image-select/ImageSelectButtons.js:33
+	__( 'Select image', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/components/image-select/ImageSelectButtons.js:42
+	__( 'Remove image', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/components/inputs/DurationInput.js:138
+	__( 'hours', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/components/inputs/DurationInput.js:152
+	__( 'minutes', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/components/inputs/DurationInput.js:167
+	__( 'seconds', 'wordpress-seo' ),
 
 	// Reference: node_modules/yoast-components/composites/LinkSuggestions/LinkSuggestion.js:65
 	__( 'Copy link', 'wordpress-seo' ),
@@ -102,9 +121,6 @@ $generated_i18n_strings = array(
 
 	// Reference: node_modules/yoast-components/composites/Plugin/CornerstoneContent/components/CornerstoneToggle.js:26
 	__( 'Mark as cornerstone content', 'wordpress-seo' ),
-
-	// Reference: node_modules/yoast-components/composites/Plugin/Shared/components/KeywordInput.js:146
-	__( 'Are you trying to use multiple keyphrases? You should add them separately below.', 'wordpress-seo' ),
 
 	// Reference: node_modules/@yoast/configuration-wizard/ConfigurationWizard.js:191
 	__( 'A problem occurred when saving the current step, {{link}}please file a bug report{{/link}} describing what step you are on and which changes you want to make (if any).', 'wordpress-seo' ),
@@ -149,34 +165,32 @@ $generated_i18n_strings = array(
 	/* translators: %s expands to Twitter, %s expands to the 5MB size. */
 	__( 'The file size of the uploaded image is too large for %s. File size must be less than %s.', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:107
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:104
 	__( 'Desktop result', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:78
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:79
 	__( 'Preview as:', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:92
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/ModeSwitcher.js:91
 	__( 'Mobile result', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SettingsSnippetEditorFields.js:136
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditorFields.js:181
-	__( 'SEO title', 'wordpress-seo' ),
-
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SettingsSnippetEditorFields.js:151
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditorFields.js:224
-	__( 'Meta description', 'wordpress-seo' ),
-
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditor.js:255
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditor.js:256
 	__( 'Modify your meta description by editing it right here', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditor.js:275
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditor.js:279
 	__( 'Close snippet editor', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditor.js:559
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditor.js:568
 	__( 'Edit snippet', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditorFields.js:203
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditorFields.js:182
+	__( 'SEO title', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditorFields.js:204
 	__( 'Slug', 'wordpress-seo' ),
+
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-editor/SnippetEditorFields.js:225
+	__( 'Meta description', 'wordpress-seo' ),
 
 	// Reference: node_modules/@yoast/search-metadata-previews/snippet-preview/FixedWidthContainer.js:133
 	__( 'Scroll to see the preview content.', 'wordpress-seo' ),
@@ -187,10 +201,10 @@ $generated_i18n_strings = array(
 	// Reference: node_modules/@yoast/search-metadata-previews/snippet-preview/SnippetPreview.js:589
 	__( 'Url preview', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-preview/SnippetPreview.js:769
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-preview/SnippetPreview.js:778
 	__( 'SEO title preview', 'wordpress-seo' ),
 
-	// Reference: node_modules/@yoast/search-metadata-previews/snippet-preview/SnippetPreview.js:788
+	// Reference: node_modules/@yoast/search-metadata-previews/snippet-preview/SnippetPreview.js:797
 	__( 'Meta description preview', 'wordpress-seo' ),
 
 	// Reference: js/src/components/MailchimpSignup.js:235

@@ -36,6 +36,8 @@ class EDD_Recurring_Software_Licensing {
 		add_filter( 'edd_recurring_create_subscription_args', array( $this, 'handle_subscription_upgrade_billing' ), 10, 5 );
 		add_filter( 'edd_recurring_pre_record_signup_args', array( $this, 'handle_subscription_upgrade_expiration' ), 10, 2 );
 		add_filter( 'edd_cart_contents', array( $this, 'remove_trial_flags_on_renewals_and_upgrades' ) );
+		add_filter( 'edd_sl_get_time_based_pro_rated_upgrade_cost', array( $this, 'reset_upgrade_cost_when_trialling' ), 10, 4 );
+		add_filter( 'edd_sl_get_cost_based_pro_rated_upgrade_cost', array( $this, 'reset_upgrade_cost_when_trialling' ), 10, 4 );
 
 		add_action( 'edd_recurring_post_create_payment_profiles', array( $this, 'handle_subscription_upgrade' ) );
 		add_action( 'edd_recurring_post_create_payment_profiles', array( $this, 'handle_manual_license_renewal' ) );
@@ -359,12 +361,34 @@ class EDD_Recurring_Software_Licensing {
 	}
 
 	/**
+	 * If a license has an associated subscription and that subscription is currently trialling, the upgrade
+	 * cost is modified to be the full amount of the new product.
+	 *
+	 * @param float $prorated_price The prorated cost to upgrade the license.
+	 * @param int   $license_id     ID of the license being upgraded.
+	 * @param float $old_price      Price of the license being upgraded.
+	 * @param float $new_price      Price of the new license level.
+	 *
+	 * @since 2.10.1
+	 * @return float The prorated cost to upgrade the license.
+	 */
+	public function reset_upgrade_cost_when_trialling( $prorated_price, $license_id, $old_price, $new_price ) {
+		$subscription = $this->get_subscription_of_license( $license_id );
+
+		if ( ! $subscription ) {
+			return $prorated_price;
+		}
+		
+		return 'trialling' === $subscription->get_status() ? $new_price : $prorated_price;
+	}
+
+	/**
 	 * When upgrading a license, set a trial period so that we avoid having a license that expires prior to the subscription,
 	 * and renew the subscription at the next expiration.
 	 *
 	 * @since 2.7.1
 	 * @param $args
-	 * @param $purchase_data
+	 * @param $downloads
 	 * @param $gateway
 	 * @param $download_id
 	 * @param $price_id
@@ -401,6 +425,15 @@ class EDD_Recurring_Software_Licensing {
 
 			$license = edd_software_licensing()->get_license( $license_id );
 			if ( false === $license ) {
+				continue;
+			}
+
+			/*
+			 * If the license never expires, then exit now.
+			 * This logic to sync up with the license expiration date is not necessary if there is no expiration date.
+			 * @link https://github.com/easydigitaldownloads/edd-recurring/issues/1311
+			 */
+			if ( empty( $license->expiration ) ) {
 				continue;
 			}
 
@@ -875,7 +908,7 @@ class EDD_Recurring_Software_Licensing {
 		if( $sub ) {
 
 			echo '<div class="edd-recurring-license-renewal">';
-				printf( __( 'Renews automatically on %s', 'edd-recurring' ), date_i18n( 'F j, Y', strtotime( $sub->expiration ) ) );
+				printf( __( 'Renews automatically on %s', 'edd-recurring' ), date_i18n( get_option( 'date_format' ), strtotime( $sub->expiration ) ) );
 			echo '</div>';
 
 		}

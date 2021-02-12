@@ -170,7 +170,7 @@ class EDD_Recurring_Emails {
 			$text = str_replace( '{subscription_name}', $download->get_name(), $text );
 		}
 
-		$text = str_replace( '{expiration}', date_i18n( 'F j, Y', $expiration ), $text );
+		$text = str_replace( '{expiration}', date_i18n( get_option( 'date_format' ), $expiration ), $text );
 		$text = str_replace( '{amount}', edd_currency_filter( edd_format_amount( $this->subscription->recurring_amount ) ), $text );
 		$text = str_replace( '{subscription_id}', absint( $this->subscription->id ), $text );
 
@@ -190,7 +190,7 @@ class EDD_Recurring_Emails {
 			$text = str_replace( '{subscription_name}', $download->get_name(), $text );
 		}
 
-		$text = str_replace( '{expiration}', date_i18n( 'F j, Y', $expiration ), $text );
+		$text = str_replace( '{expiration}', date_i18n( get_option( 'date_format' ), $expiration ), $text );
 		$text = str_replace( '{amount}', edd_currency_filter( edd_format_amount( $amount ) ), $text );
 		$text = str_replace( '{subscription_id}', absint( $this->subscription->id ), $text );
 

@@ -180,6 +180,11 @@ function edd_sl_readme_modify_license_response( $original_response = array(), $d
 				// If "remaining_content" has been chosen by the site owner...
 				if ( isset( $readme_items_chosen['remaining_content'] ) ) {
 					$response[ $item_key ] = $readme[ $item_key ];
+
+					// Convert the upgrade notice to a string.
+					if ( 'upgrade_notice' === $item_key && is_array( $readme[ $item_key ] ) ) {
+						$response[ $item_key ] = implode( ' ', $readme[ $item_key ] );
+					}
 				}
 			}
 		}
@@ -252,26 +257,11 @@ function edd_sl_readme_get_download_banners( $download_id, $serialize = true ) {
  */
 function edd_sl_render_readme_cache_status() {
 
-	$deleted = null; // delete_transient returns false, so we don't want to use false
-	if ( isset( $_REQUEST['refresh'] ) && $_REQUEST['refresh'] === 'readmecache' ) {
-		$deleted = delete_transient( _edd_sl_readme_get_transient_key() );
-	}
-
-	if ( ! empty( $deleted ) ) {
-		echo '<div class="updated inline">';
-		echo wpautop( __( 'The cache has been deleted.', 'edd_sl' ) );
-		echo '</div>';
-	} elseif ( ! is_null( $deleted ) ) {
-		echo '<div class="error inline">';
-		echo wpautop( __( 'There was an error when deleting the cache. It may have already been deleted.', 'edd_sl' ) );
-		echo '</div>';
-	}
-
 	$readme = get_transient( _edd_sl_readme_get_transient_key() );
 
 	// The readme has been cached. Show the reset
 	if ( ! empty( $readme ) ) {
-		$message = sprintf( __( 'the file has been cached. %1$sClear cached file%2$s', 'edd_sl' ), '<a href="' . esc_url( add_query_arg( array( 'refresh' => 'readmecache' ) ) ) . '#edd_readme_cache" class="button button-secondary">', '</a>' );
+		$message = sprintf( __( 'the file has been cached. %1$sClear cached file%2$s', 'edd_sl' ), '<button class="button button-secondary">', '</button>' );
 	} else {
 		$message = __( 'the file is not cached.', 'edd_sl' );
 	}
@@ -280,6 +270,42 @@ function edd_sl_render_readme_cache_status() {
 	printf( wpautop( '<strong>%s</strong> %s' ), __( 'Cache:', 'edd_sl' ), $message );
 	echo '</div>';
 }
+
+/**
+ * Delete the readme transient via ajax.
+ *
+ * @since 3.7
+ * @return void
+ */
+function edd_sl_delete_readme_transient() {
+	$response = null;
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'edd_sl_readme_cache_nonce' ) || ! current_user_can( 'edit_products' ) ) {
+		wp_send_json_error(
+			array(
+				'message' => __( 'Something went wrong. You may not have permission to perform this action.', 'edd_sl' ),
+			),
+			403
+		);
+	}
+	$clear       = isset( $_POST['action'] ) && 'edd_sl_clear_readme' === $_POST['action'];
+	$download_id = isset( $_POST['download_id'] ) ? intval( $_POST['download_id'] ) : false;
+	if ( $clear && $download_id ) {
+		$response = delete_transient( _edd_sl_readme_get_transient_key( $download_id ) );
+	}
+	if ( $response ) {
+		wp_send_json_success(
+			array(
+				'message' => __( 'The cache has been deleted.', 'edd_sl' ),
+			)
+		);
+	}
+	wp_send_json_error(
+		array(
+			'message' => __( 'There was an error when deleting the cache. It may have already been deleted.', 'edd_sl' ),
+		)
+	);
+}
+add_action( 'wp_ajax_edd_sl_clear_readme', 'edd_sl_delete_readme_transient' );
 
 /**
  * Get the cache key for the cached readme

@@ -11,11 +11,5 @@ function reload(done) {
 }
 
 gulp.task('watch', (done) => {
-
-  // JS
-  gulp.watch( config.files.js, gulp.series('js', reload) );
-
-  // CSS
-  gulp.watch( config.files.css, gulp.series('css', reload) );
-
+  gulp.watch(config.files.css, gulp.series('css', reload));
 });

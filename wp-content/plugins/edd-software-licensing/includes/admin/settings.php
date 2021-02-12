@@ -173,7 +173,8 @@ function edd_sl_renewal_notices_settings( $args ) {
 				<td><?php echo esc_html( edd_sl_get_renewal_notice_period_label( $key ) ); ?></td>
 				<td>
 					<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-license-renewal-notice&edd_sl_action=edit-renewal-notice&notice=' . $key ) ); ?>" class="edd-sl-edit-renewal-notice" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Edit', 'edd_sl' ); ?></a>&nbsp;|
-					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'clone_renewal_notice', 'notice-id' => $key ) ) ) ); ?>" class="edd-sl-clone-renewal-notice" data-key="<?php echo esc_attr( $key ); ?>"><?php _e( 'Clone', 'edd_sl' ); ?></a>&nbsp;|
+					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'clone_renewal_notice', 'notice-id' => urlencode( $key ) ) ) ) ); ?>" class="edd-sl-clone-renewal-notice" data-key="<?php echo esc_attr( $key ); ?>"><?php esc_html_e( 'Clone', 'edd_sl' ); ?></a>&nbsp;|
+					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'edd_sl_preview_notice', 'notice-id' => urlencode( $key ) ), home_url() ) ) ); ?>" class="edd-sl-preview-renewal-notice" data-key="<?php echo esc_attr( $key ); ?>" target="_blank"><?php esc_html_e( 'Preview', 'edd_sl' ); ?></a>&nbsp;|
 					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'edit.php?post_type=download&page=edd-license-renewal-notice&edd_action=delete_renewal_notice&notice-id=' . $key ) ) ); ?>" class="edd-delete"><?php _e( 'Delete', 'edd_sl' ); ?></a>
 				</td>
 			</tr>
@@ -230,7 +231,7 @@ function edd_sl_process_clone_renewal_notice() {
 	$data = edd_sl_get_renewal_notice( absint( $_GET['notice-id'] ) );
 
 	$notices = edd_sl_get_renewal_notices();
-	$key = count( $notices );
+	$key     = is_array( $notices ) ? count( $notices ) : 1;
 
 	$notices[] = array(
 		'subject'     => $data['subject'] . ' - ' . __( 'Copy', 'edd_sl' ),
@@ -240,7 +241,19 @@ function edd_sl_process_clone_renewal_notice() {
 
 	update_option( 'edd_sl_renewal_notices', $notices );
 
-	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-license-renewal-notice&edd_sl_action=edit-renewal-notice&notice=' . $key ) );
+	$redirect_url = add_query_arg(
+		array(
+			'post_type'     => 'download',
+			'page'          => 'edd-license-renewal-notice',
+			'edd_sl_action' => 'edit-renewal-notice',
+			'notice'        => urlencode( $key ),
+			'edd-message'   => urlencode( __( 'Renewal Notice cloned successfully. You are editing a new notice.', 'edd_sl' ) ),
+			'edd-result'    => 'success',
+		),
+		admin_url( 'edit.php' )
+	);
+
+	wp_safe_redirect( $redirect_url );
 	exit;
 
 }
@@ -270,32 +283,38 @@ function edd_sl_process_add_renewal_notice( $data ) {
 	$subject = isset( $data['subject'] ) ? sanitize_text_field( $data['subject'] ) : __( 'Your License Key is About to Expire', 'edd_sl' );
 	$period  = isset( $data['period'] )  ? sanitize_text_field( $data['period'] )  : '+1month';
 	$message = isset( $data['message'] ) ? wp_kses( stripslashes( $data['message'] ), wp_kses_allowed_html( 'post' ) ) : false;
+	$result  = 'success';
+	$notice  = __( 'Renewal Notice saved successfully.', 'edd_sl' );
 
-	if( empty( $message ) ) {
-		$message = 'Hello {name},
-
-Your license key for {product_name} is about to expire.
-
-If you wish to renew your license, simply click the link below and follow the instructions.
-
-Your license expires on: {expiration}.
-
-Your expiring license key is: {license_key}.
-
-Renew now: {renewal_link}.';
+	if ( empty( $message ) ) {
+		$result  = 'warning';
+		$notice  = __( 'Your message was empty and could not be saved. It has been reset to the default.', 'edd_sl' );
+		$message = edd_sl_get_default_renewal_notice_message();
 	}
 
-
-	$notices = edd_sl_get_renewal_notices();
+	$notices   = edd_sl_get_renewal_notices();
+	$key       = is_array( $notices ) ? count( $notices ) : 1;
 	$notices[] = array(
 		'subject'     => $subject,
-		'message'     => $message,
-		'send_period' => $period
+		'message'     => $notice,
+		'send_period' => $period,
 	);
 
 	update_option( 'edd_sl_renewal_notices', $notices );
 
-	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=extensions&section=software-licensing' ) );
+	$redirect_url = add_query_arg(
+		array(
+			'post_type'     => 'download',
+			'page'          => 'edd-license-renewal-notice',
+			'edd_sl_action' => 'edit-renewal-notice',
+			'notice'        => urlencode( $key ),
+			'edd-message'   => urlencode( $notice ),
+			'edd-result'    => urlencode( $result ),
+		),
+		admin_url( 'edit.php' )
+	);
+
+	wp_safe_redirect( $redirect_url );
 	exit;
 
 }
@@ -329,21 +348,14 @@ function edd_sl_process_update_renewal_notice( $data ) {
 	$subject = isset( $data['subject'] ) ? sanitize_text_field( $data['subject'] ) : __( 'Your License Key is About to Expire', 'edd_sl' );
 	$period  = isset( $data['period'] )  ? sanitize_text_field( $data['period'] )  : '1month';
 	$message = isset( $data['message'] ) ? wp_kses( stripslashes( $data['message'] ), wp_kses_allowed_html( 'post' ) ) : false;
+	$result  = 'success';
+	$notice  = __( 'Renewal Notice saved successfully.', 'edd_sl' );
 
-	if( empty( $message ) ) {
-		$message = 'Hello {name},
-
-Your license key for {product_name} is about to expire.
-
-If you wish to renew your license, simply click the link below and follow the instructions.
-
-Your license expires on: {expiration}.
-
-Your expiring license key is: {license_key}.
-
-Renew now: {renewal_link}.';
+	if ( empty( $message ) ) {
+		$result  = 'warning';
+		$notice  = __( 'Your message was empty and could not be saved. It has been reset to the default.', 'edd_sl' );
+		$message = edd_sl_get_default_renewal_notice_message();
 	}
-
 
 	$notices = edd_sl_get_renewal_notices();
 	$notices[ absint( $data['notice-id'] ) ] = array(
@@ -354,7 +366,20 @@ Renew now: {renewal_link}.';
 
 	update_option( 'edd_sl_renewal_notices', $notices );
 
-	wp_redirect( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=extensions&section=software-licensing' ) );
+	$redirect_url = add_query_arg(
+		array(
+			'post_type'     => 'download',
+			'page'          => 'edd-license-renewal-notice',
+			'edd_sl_action' => 'edit-renewal-notice',
+			'notice'        => urlencode( $data['notice-id'] ),
+			'edd-message'   => urlencode( $notice ),
+			'edd-result'    => urlencode( $result ),
+		),
+		admin_url( 'edit.php' )
+	);
+
+	wp_safe_redirect( $redirect_url );
+
 	exit;
 
 }
@@ -395,3 +420,23 @@ function edd_sl_process_delete_renewal_notice( $data ) {
 
 }
 add_action( 'edd_delete_renewal_notice', 'edd_sl_process_delete_renewal_notice' );
+
+/**
+ * Gets the default text for the renewal notices.
+ *
+ * @since 3.7
+ * @return string
+ */
+function edd_sl_get_default_renewal_notice_message() {
+	return 'Hello {name},
+
+Your license key for {product_name} is about to expire.
+
+If you wish to renew your license, simply click the link below and follow the instructions.
+
+Your license expires on: {expiration}.
+
+Your expiring license key is: {license_key}.
+
+Renew now: {renewal_link}.';
+}

@@ -5,7 +5,7 @@
  * Description: Sell subscriptions with Easy Digital Downloads
  * Author: Sandhills Development, LLC
  * Author URI: https://sandhillsdev.com
- * Version: 2.9.11
+ * Version: 2.10.1
  * Text Domain: edd-recurring
  * Domain Path: languages
  */
@@ -31,7 +31,7 @@ if ( ! defined( 'EDD_RECURRING_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_RECURRING_VERSION' ) ) {
-	define( 'EDD_RECURRING_VERSION', '2.9.11' );
+	define( 'EDD_RECURRING_VERSION', '2.10.1' );
 }
 
 final class EDD_Recurring {
@@ -214,7 +214,8 @@ final class EDD_Recurring {
 			'plugin-auto-register.php',
 			'plugin-invoices.php',
 			'plugin-fraud-monitor.php',
-			'deprecated/edd-recurring-customer.php'
+			'deprecated/edd-recurring-customer.php',
+			'logging.php',
 		);
 
 		//Load main files
@@ -252,6 +253,8 @@ final class EDD_Recurring {
 			'class-subscriptions-list-table.php',
 			'class-summary-widget.php',
 			'class-recurring-reports.php',
+			'reports/class-recurring-reports-chart.php',
+			'reports/report-data-callbacks.php',
 			'subscriptions.php',
 			'metabox.php',
 			'refunds.php',
@@ -385,6 +388,7 @@ final class EDD_Recurring {
 		add_filter( 'eddpdfi_is_invoice_link_allowed', array( $this, 'is_invoice_allowed' ), 10, 2 );
 
 		// Allow edd_subscription to run a refund to the gateways
+		add_filter( 'edd_refundable_order_statuses', array( $this, 'refundable_order_statuses' ) );
 		add_filter( 'edd_should_process_refund', array( $this, 'maybe_process_refund' ), 10, 2 );
 		add_filter( 'edd_decrease_sales_on_undo', array( $this, 'maybe_decrease_sales' ), 10, 2 );
 		add_filter( 'edd_decrease_customer_purchase_count_on_refund', array( $this, 'maybe_decrease_sales' ), 10, 2 );
@@ -508,7 +512,7 @@ final class EDD_Recurring {
 	 * @return bool               If the file should be delivered or not.
 	 */
 	public function allow_file_access( $has_access, $payment_id, $args ) {
-		$payment = new EDD_Payment( $payment_id );
+		$payment = edd_get_payment( $payment_id );
 		if ( 'edd_subscription' === $payment->status ) {
 			$has_access = true;
 		}
@@ -639,7 +643,7 @@ final class EDD_Recurring {
 			$has_access = false;
 
 			// Check if the purchase included a bundle
-			$payment = new EDD_Payment( $payment_id );
+			$payment = edd_get_payment( $payment_id );
 
 			foreach( $payment->downloads as $download ) {
 
@@ -1633,6 +1637,20 @@ final class EDD_Recurring {
 	}
 
 	/**
+	 * Adds `edd_subscription` to the list of order statuses that support refunds.
+	 *
+	 * @param array $statuses
+	 *
+	 * @since 2.10.1
+	 * @return array
+	 */
+	public function refundable_order_statuses( $statuses ) {
+		$statuses[] = 'edd_subscription';
+
+		return $statuses;
+	}
+
+	/**
 	 * Checks the payment status during the refund process and allows it to be processed through the gateway
 	 * if it's an edd_subscription
 	 *
@@ -2096,7 +2114,7 @@ function edd_recurring_install() {
 			}
 
 			$total_sql = "SELECT COUNT(ID) as total_error_logs FROM $wpdb->posts WHERE post_title = 'PayPal Express Error' AND post_type = 'edd_log'";
-			$results   = $wpdb->get_row( $total_sql, 0 );
+			$results   = $wpdb->get_row( $total_sql );
 			$total     = $results->total_error_logs;
 
 			// Set any other upgrades as completed on a fresh install.
@@ -2107,13 +2125,11 @@ function edd_recurring_install() {
 			edd_set_upgrade_complete( 'recurring_add_tax_columns_to_subs_table' );
 			edd_set_upgrade_complete( 'recurring_27_subscription_meta' );
 			edd_set_upgrade_complete( 'recurring_increase_transaction_profile_id_cols_and_collate' );
-
 		}
 
 		if ( false === edd_recurring_needs_24_stripe_fix() ) {
 			edd_set_upgrade_complete( 'fix_24_stripe_customers' );
 		}
-
 		if ( ! edd_has_upgrade_completed( 'recurring_increase_transaction_profile_id_cols_and_collate' ) ) {
 			@$db->create_table();
 			edd_set_upgrade_complete( 'recurring_increase_transaction_profile_id_cols_and_collate' );

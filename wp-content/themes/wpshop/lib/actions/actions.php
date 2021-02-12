@@ -1,24 +1,5 @@
 <?php
 
-/*
-
-wps_login_check
-
-*/
-function wps_login_check()
-{
-   if (is_user_logged_in() && is_page('login')) {
-      wp_redirect('/account');
-      exit();
-   }
-
-   if (is_user_logged_in() && is_page('forgot-password')) {
-      wp_redirect('/account');
-      exit();
-   }
-}
-
-add_action('wp', 'wps_login_check');
 
 
 
@@ -72,59 +53,3 @@ function process_add_transfer()
 }
 
 // add_action('wp_ajax_add_transfer', 'process_add_transfer');
-
-function redirect_to_custom_lostpassword()
-{
-   if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-      // if ( is_user_logged_in() ) {
-      //
-      //   $this->redirect_logged_in_user();
-      //   exit;
-      //
-      // }
-
-      wp_redirect(home_url('reset-password'));
-      exit();
-   }
-}
-
-add_action('login_form_lostpassword', 'redirect_to_custom_lostpassword');
-
-/*
-
-Redirects to the custom password reset page, or the login page
-if there are errors.
-
-*/
-function wps_redirect_to_custom_password_reset()
-{
-   global $wpdb;
-
-   if ('GET' == $_SERVER['REQUEST_METHOD']) {
-      $user = $wpdb->get_row($wpdb->prepare("SELECT ID, user_activation_key FROM $wpdb->users WHERE user_login = %s", $_REQUEST['login']));
-
-      if (isset($user) && $user) {
-         if (password_verify($_REQUEST['key'], $user->user_activation_key)) {
-            $redirect_url = home_url('reset-password');
-            $redirect_url = add_query_arg('login', esc_attr($_REQUEST['login']), $redirect_url);
-            $redirect_url = add_query_arg('key', esc_attr($_REQUEST['key']), $redirect_url);
-
-            wp_redirect($redirect_url);
-            exit();
-         } else {
-            wp_redirect(home_url('login?login=badkey'));
-            exit();
-         }
-      } else {
-         wp_redirect(home_url('login?login=failed'));
-         exit();
-      }
-   }
-}
-
-add_action('login_form_rp', 'wps_redirect_to_custom_password_reset');
-add_action('login_form_resetpass', 'wps_redirect_to_custom_password_reset');
-
-
-
-?>

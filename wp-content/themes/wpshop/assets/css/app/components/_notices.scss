@@ -97,6 +97,10 @@
   }
 
   .logo-link {
+    width: 40px;
+  }
+
+  .logo-link {
     @include device(1300, 'max') {
       top: 0;
     }

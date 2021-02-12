@@ -1,15 +1,15 @@
-# Copyright (C) 2020 Easy Digital Downloads
+# Copyright (C) 2021 Sandhills Development, LLC
 # This file is distributed under the same license as the Easy Digital Downloads - Recurring Payments plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads - Recurring Payments 2.9.9\n"
+"Project-Id-Version: Easy Digital Downloads - Recurring Payments 2.10.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/edd-recurring\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-03-23T23:24:39+00:00\n"
+"POT-Creation-Date: 2021-01-28T15:44:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: edd-recurring\n"
@@ -27,203 +27,204 @@ msgid "Sell subscriptions with Easy Digital Downloads"
 msgstr ""
 
 #. Author of the plugin
-msgid "Easy Digital Downloads"
+msgid "Sandhills Development, LLC"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://easydigitaldownloads.com/"
+msgid "https://sandhillsdev.com"
 msgstr ""
 
-#: edd-recurring.php:412
+#: edd-recurring.php:416
 msgctxt "Cancelled payment status"
 msgid "Cancelled"
 msgstr ""
 
-#: edd-recurring.php:417
+#: edd-recurring.php:421
 msgid "Cancelled <span class=\"count\">(%s)</span>"
 msgid_plural "Cancelled <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: edd-recurring.php:420
+#: edd-recurring.php:424
 msgctxt "Subscription renewal payment status"
 msgid "Renewal"
 msgstr ""
 
-#: edd-recurring.php:425
+#: edd-recurring.php:429
 msgid "Renewal <span class=\"count\">(%s)</span>"
 msgid_plural "Renewals <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: edd-recurring.php:438
+#: edd-recurring.php:442
 #: includes/admin/customers.php:19
-#: includes/admin/metabox.php:480
+#: includes/admin/metabox.php:513
 #: includes/admin/subscriptions.php:28
 #: includes/gateways/edd-recurring-paypalexpress.php:239
 msgid "Subscriptions"
 msgstr ""
 
-#: edd-recurring.php:528
+#: edd-recurring.php:532
 #: includes/edd-recurring-reminders.php:85
 msgid "Renewal"
 msgstr ""
 
-#: edd-recurring.php:549
-#: includes/admin/class-recurring-reports.php:314
+#: edd-recurring.php:553
+#: includes/admin/class-recurring-reports.php:140
+#: includes/admin/class-recurring-reports.php:483
 msgid "Renewals"
 msgstr ""
 
-#: edd-recurring.php:586
-#: includes/admin/metabox.php:351
-#: includes/admin/metabox.php:450
+#: edd-recurring.php:590
+#: includes/admin/metabox.php:382
+#: includes/admin/metabox.php:483
 #: includes/admin/settings.php:56
 msgid "Signup Fee"
 msgstr ""
 
-#: edd-recurring.php:671
+#: edd-recurring.php:675
 msgid "You must have an active subscription to %s in order to download this file."
 msgstr ""
 
-#: edd-recurring.php:674
+#: edd-recurring.php:678
 msgid "Access Denied"
 msgstr ""
 
-#: edd-recurring.php:750
+#: edd-recurring.php:754
 #: tests/tests-recurring-misc.php:23
 msgctxt "Billing period"
 msgid "Daily"
 msgstr ""
 
-#: edd-recurring.php:751
+#: edd-recurring.php:755
 #: tests/tests-recurring-misc.php:24
 msgctxt "Billing period"
 msgid "Weekly"
 msgstr ""
 
-#: edd-recurring.php:752
+#: edd-recurring.php:756
 #: tests/tests-recurring-misc.php:25
 msgctxt "Billing period"
 msgid "Monthly"
 msgstr ""
 
-#: edd-recurring.php:753
+#: edd-recurring.php:757
 #: tests/tests-recurring-misc.php:26
 msgctxt "Billing period"
 msgid "Quarterly"
 msgstr ""
 
-#: edd-recurring.php:754
+#: edd-recurring.php:758
 #: tests/tests-recurring-misc.php:27
 msgctxt "Billing period"
 msgid "Semi-Yearly"
 msgstr ""
 
-#: edd-recurring.php:755
+#: edd-recurring.php:759
 #: tests/tests-recurring-misc.php:28
 msgctxt "Billing period"
 msgid "Yearly"
 msgstr ""
 
-#: edd-recurring.php:771
+#: edd-recurring.php:775
 #: tests/tests-recurring-misc.php:36
 msgctxt "Billing period"
 msgid "Day(s)"
 msgstr ""
 
-#: edd-recurring.php:772
+#: edd-recurring.php:776
 #: tests/tests-recurring-misc.php:37
 msgctxt "Billing period"
 msgid "Week(s)"
 msgstr ""
 
-#: edd-recurring.php:773
+#: edd-recurring.php:777
 #: tests/tests-recurring-misc.php:38
 msgctxt "Billing period"
 msgid "Month(s)"
 msgstr ""
 
-#: edd-recurring.php:774
+#: edd-recurring.php:778
 #: tests/tests-recurring-misc.php:39
 msgctxt "Billing period"
 msgid "Quarter(s)"
 msgstr ""
 
-#: edd-recurring.php:775
+#: edd-recurring.php:779
 #: tests/tests-recurring-misc.php:40
 msgctxt "Billing period"
 msgid "Semi-Year(s)"
 msgstr ""
 
-#: edd-recurring.php:776
+#: edd-recurring.php:780
 #: tests/tests-recurring-misc.php:41
 msgctxt "Billing period"
 msgid "Year(s)"
 msgstr ""
 
-#: edd-recurring.php:1588
+#: edd-recurring.php:1592
 msgid "Are you sure you want to cancel your subscription?"
 msgstr ""
 
-#: edd-recurring.php:1724
+#: edd-recurring.php:1742
 msgid "Daily"
 msgstr ""
 
-#: edd-recurring.php:1727
+#: edd-recurring.php:1745
 msgid "Weekly"
 msgstr ""
 
-#: edd-recurring.php:1730
+#: edd-recurring.php:1748
 msgid "Monthly"
 msgstr ""
 
-#: edd-recurring.php:1733
+#: edd-recurring.php:1751
 msgid "Quarterly"
 msgstr ""
 
-#: edd-recurring.php:1736
+#: edd-recurring.php:1754
 msgid "Semi-Yearly"
 msgstr ""
 
-#: edd-recurring.php:1739
+#: edd-recurring.php:1757
 msgid "Yearly"
 msgstr ""
 
-#: edd-recurring.php:1762
+#: edd-recurring.php:1780
 msgid "Day"
 msgstr ""
 
-#: edd-recurring.php:1765
+#: edd-recurring.php:1783
 msgid "Week"
 msgstr ""
 
-#: edd-recurring.php:1768
+#: edd-recurring.php:1786
 msgid "Month"
 msgstr ""
 
-#: edd-recurring.php:1771
+#: edd-recurring.php:1789
 msgid "Quarter"
 msgstr ""
 
-#: edd-recurring.php:1774
+#: edd-recurring.php:1792
 msgid "Semi-Year"
 msgstr ""
 
-#: edd-recurring.php:1777
+#: edd-recurring.php:1795
 msgid "Year"
 msgstr ""
 
 #. translators: %1$s Opening strong tag, do not translate. %2$s Closing strong tag, do not translate.
-#: edd-recurring.php:1985
+#: edd-recurring.php:2003
 msgid "%1$sCredit card payments with Authorize.net are currently disabled.%2$s"
 msgstr ""
 
 #. translators: %1$s Opening code tag, do not translate. %2$s Closing code tag, do not translate.
-#: edd-recurring.php:1992
+#: edd-recurring.php:2010
 msgid "To continue accepting recurring credit card payments with Authorize.net please update the Authorize.net Payment Gateway extension to version %1$s2.0%2$s."
 msgstr ""
 
-#: edd-recurring.php:2074
+#: edd-recurring.php:2092
 msgid "EDD Subscriber"
 msgstr ""
 
@@ -332,16 +333,53 @@ msgstr ""
 msgid "Retry failed. %s"
 msgstr ""
 
-#: includes/admin/class-recurring-reports.php:34
-#: includes/admin/class-recurring-reports.php:336
+#: includes/admin/class-recurring-reports.php:46
+#: includes/admin/class-recurring-reports.php:132
+#: includes/admin/class-recurring-reports.php:204
+#: includes/admin/class-recurring-reports.php:505
 msgid "Subscription Renewals"
 msgstr ""
 
-#: includes/admin/class-recurring-reports.php:128
+#: includes/admin/class-recurring-reports.php:64
+msgid "Number of Renewals"
+msgstr ""
+
+#: includes/admin/class-recurring-reports.php:76
+msgid "Number of Refunded Renewals"
+msgstr ""
+
+#: includes/admin/class-recurring-reports.php:88
+msgid "Gross Renewal Earnings"
+msgstr ""
+
+#: includes/admin/class-recurring-reports.php:102
+msgid "Refunded Renewals"
+msgstr ""
+
+#: includes/admin/class-recurring-reports.php:116
+msgid "Net Renewal Earnings"
+msgstr ""
+
+#: includes/admin/class-recurring-reports.php:152
+#: includes/admin/class-recurring-reports.php:484
+msgid "Refunds"
+msgstr ""
+
+#: includes/admin/class-recurring-reports.php:164
+#: includes/admin/class-recurring-reports.php:485
+msgid "Earnings"
+msgstr ""
+
+#: includes/admin/class-recurring-reports.php:175
+#: includes/admin/class-recurring-reports.php:486
+msgid "Refunded Earnings"
+msgstr ""
+
+#: includes/admin/class-recurring-reports.php:297
 msgid "You do not have permission to view this data"
 msgstr ""
 
-#: includes/admin/class-recurring-reports.php:128
+#: includes/admin/class-recurring-reports.php:297
 #: includes/admin/settings.php:355
 #: includes/admin/settings.php:359
 #: includes/admin/settings.php:406
@@ -352,59 +390,47 @@ msgstr ""
 #: includes/admin/settings.php:500
 #: includes/admin/settings.php:504
 #: includes/admin/settings.php:508
-#: includes/admin/subscriptions.php:667
-#: includes/admin/subscriptions.php:682
-#: includes/admin/subscriptions.php:755
+#: includes/admin/subscriptions.php:671
+#: includes/admin/subscriptions.php:686
 #: includes/admin/subscriptions.php:759
 #: includes/admin/subscriptions.php:763
 #: includes/admin/subscriptions.php:767
 #: includes/admin/subscriptions.php:771
-#: includes/admin/subscriptions.php:877
-#: includes/admin/subscriptions.php:908
-#: includes/admin/subscriptions.php:957
-#: includes/admin/subscriptions.php:963
-#: includes/admin/subscriptions.php:998
-#: includes/admin/subscriptions.php:1039
+#: includes/admin/subscriptions.php:775
+#: includes/admin/subscriptions.php:881
+#: includes/admin/subscriptions.php:912
+#: includes/admin/subscriptions.php:961
+#: includes/admin/subscriptions.php:967
+#: includes/admin/subscriptions.php:1002
+#: includes/admin/subscriptions.php:1043
 #: includes/admin/upgrade-functions.php:158
 #: includes/admin/upgrade-functions.php:518
 #: includes/admin/upgrade-functions.php:981
 #: includes/admin/upgrade-functions.php:1060
 #: includes/admin/upgrade-functions.php:1140
 #: includes/admin/upgrade-functions.php:1230
-#: includes/edd-recurring-checkout.php:675
+#: includes/edd-recurring-checkout.php:709
 #: includes/gateways/edd-recurring-gateway.php:336
-#: includes/gateways/edd-recurring-gateway.php:898
-#: includes/gateways/edd-recurring-gateway.php:923
-#: includes/gateways/edd-recurring-gateway.php:946
-#: includes/gateways/edd-recurring-gateway.php:954
-#: includes/gateways/edd-recurring-gateway.php:980
+#: includes/gateways/edd-recurring-gateway.php:908
+#: includes/gateways/edd-recurring-gateway.php:933
+#: includes/gateways/edd-recurring-gateway.php:956
+#: includes/gateways/edd-recurring-gateway.php:964
+#: includes/gateways/edd-recurring-gateway.php:990
 #: includes/gateways/edd-recurring-paypal.php:700
 #: includes/gateways/edd-recurring-paypal.php:708
 #: includes/gateways/edd-recurring-paypalexpress.php:256
-#: includes/gateways/edd-recurring-paypalexpress.php:353
+#: includes/gateways/edd-recurring-paypalexpress.php:357
 #: includes/gateways/edd-recurring-paypalpro.php:156
-#: includes/gateways/edd-recurring-stripe.php:1777
-#: includes/gateways/edd-recurring-stripe.php:1971
+#: includes/gateways/edd-recurring-stripe.php:1799
+#: includes/gateways/edd-recurring-stripe.php:2016
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-recurring-reports.php:315
-msgid "Refunds"
-msgstr ""
-
-#: includes/admin/class-recurring-reports.php:316
-msgid "Earnings"
-msgstr ""
-
-#: includes/admin/class-recurring-reports.php:317
-msgid "Refunded Earnings"
-msgstr ""
-
-#: includes/admin/class-recurring-reports.php:392
+#: includes/admin/class-recurring-reports.php:561
 msgid "Total renewals for period shown: "
 msgstr ""
 
-#: includes/admin/class-recurring-reports.php:437
+#: includes/admin/class-recurring-reports.php:606
 msgid "Renewal Payment"
 msgstr ""
 
@@ -428,8 +454,8 @@ msgstr ""
 
 #: includes/admin/class-subscriptions-list-table.php:266
 #: includes/admin/customers.php:25
-#: includes/admin/subscriptions.php:542
-#: includes/plugin-software-licensing.php:846
+#: includes/admin/subscriptions.php:546
+#: includes/plugin-software-licensing.php:879
 #: templates/shortcode-subscription-receipt.php:40
 #: templates/shortcode-subscriptions.php:36
 msgid "Status"
@@ -460,8 +486,8 @@ msgstr ""
 #: includes/admin/customers.php:26
 #: includes/admin/settings.php:211
 #: includes/admin/settings.php:257
-#: includes/admin/subscriptions.php:543
-#: includes/plugin-software-licensing.php:847
+#: includes/admin/subscriptions.php:547
+#: includes/plugin-software-licensing.php:880
 #: templates/shortcode-subscriptions.php:40
 msgid "Actions"
 msgstr ""
@@ -496,7 +522,7 @@ msgid "Next 30 Days"
 msgstr ""
 
 #: includes/admin/customers.php:24
-#: includes/admin/subscriptions.php:540
+#: includes/admin/subscriptions.php:544
 msgid "Amount"
 msgstr ""
 
@@ -506,7 +532,7 @@ msgid "%s every %s"
 msgstr ""
 
 #: includes/admin/customers.php:35
-#: includes/admin/subscriptions.php:557
+#: includes/admin/subscriptions.php:561
 msgid "View Details"
 msgstr ""
 
@@ -535,89 +561,106 @@ msgid "Update Reminder Notice"
 msgstr ""
 
 #: includes/admin/metabox.php:24
-#: includes/admin/metabox.php:282
-#: includes/admin/metabox.php:434
+#: includes/admin/metabox.php:71
+#: includes/admin/metabox.php:313
+#: includes/admin/metabox.php:467
 msgid "Recurring"
 msgstr ""
 
 #: includes/admin/metabox.php:25
+#: includes/admin/metabox.php:105
 msgid "Free Trial"
 msgstr ""
 
 #: includes/admin/metabox.php:26
-#: includes/admin/metabox.php:304
-#: includes/admin/metabox.php:439
+#: includes/admin/metabox.php:142
+#: includes/admin/metabox.php:335
+#: includes/admin/metabox.php:472
 msgid "Period"
 msgstr ""
 
 #: includes/admin/metabox.php:27
+#: includes/admin/metabox.php:172
 msgctxt "Referring to billing period"
 msgid "Times"
 msgstr ""
 
 #: includes/admin/metabox.php:28
+#: includes/admin/metabox.php:198
 msgctxt "Referring to subscription signup fee"
 msgid "Signup Fee"
 msgstr ""
 
-#: includes/admin/metabox.php:60
-#: includes/admin/metabox.php:284
-#: includes/admin/metabox.php:436
+#: includes/admin/metabox.php:44
+msgid "Recurring Payments Settings"
+msgstr ""
+
+#: includes/admin/metabox.php:74
+#: includes/admin/metabox.php:315
+#: includes/admin/metabox.php:469
 msgid "No"
 msgstr ""
 
-#: includes/admin/metabox.php:61
-#: includes/admin/metabox.php:285
-#: includes/admin/metabox.php:437
+#: includes/admin/metabox.php:75
+#: includes/admin/metabox.php:316
+#: includes/admin/metabox.php:470
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/metabox.php:328
-#: includes/admin/metabox.php:446
+#: includes/admin/metabox.php:108
+msgid "Trial Quantity"
+msgstr ""
+
+#: includes/admin/metabox.php:112
+msgid "Trial Period"
+msgstr ""
+
+#: includes/admin/metabox.php:359
+#: includes/admin/metabox.php:479
 msgid "Times"
 msgstr ""
 
-#: includes/admin/metabox.php:378
+#: includes/admin/metabox.php:411
 msgid "<strong>Additional note</strong>: with free trials, one time discounts are not supported and discount codes for this product will apply to all payments after the trial period."
 msgstr ""
 
-#: includes/admin/metabox.php:388
+#: includes/admin/metabox.php:421
 msgid "2Checkout does not support free trial periods. Subscriptions purchased through 2Checkout cannot include free trials."
 msgstr ""
 
-#: includes/admin/metabox.php:394
+#: includes/admin/metabox.php:427
 msgid "Enable free trial for subscriptions"
 msgstr ""
 
-#: includes/admin/metabox.php:395
+#: includes/admin/metabox.php:428
 msgid "Check this box to include a free trial with subscriptions for this product. When signing up for a free trial, the customer's payment details will be taken at checkout but the customer will not be charged until the free trial is completed. <strong>Note:</strong> this only applies when purchasing a subscription. If a price option is not set to recurring, this free trial will not be used."
 msgstr ""
 
-#: includes/admin/metabox.php:432
+#: includes/admin/metabox.php:465
 msgid "Recurring Options for Custom Prices"
 msgstr ""
 
-#: includes/admin/metabox.php:433
+#: includes/admin/metabox.php:466
 msgid "Select the recurring options for customers that pay with a custom price."
 msgstr ""
 
-#: includes/admin/metabox.php:491
+#: includes/admin/metabox.php:524
 msgid "Associated Payments"
 msgstr ""
 
-#: includes/admin/metabox.php:543
+#: includes/admin/metabox.php:576
 #: templates/paypal-express-confirm.php:11
 #: templates/shortcode-subscription-receipt.php:36
 #: templates/shortcode-subscriptions.php:35
 msgid "Subscription"
 msgstr ""
 
-#: includes/admin/metabox.php:580
+#: includes/admin/metabox.php:613
 msgid "Subscription TXN ID:"
 msgstr ""
 
 #: includes/admin/refunds.php:87
-#: includes/admin/subscriptions.php:505
+#: includes/admin/subscriptions.php:509
 #: includes/edd-recurring-shortcodes.php:111
 msgid "Cancel Subscription"
 msgstr ""
@@ -627,35 +670,35 @@ msgstr ""
 msgid "Subscription %d cancelled because of refund."
 msgstr ""
 
-#: includes/admin/scripts.php:31
+#: includes/admin/scripts.php:32
 msgctxt "Referring to billing period"
 msgid "time"
 msgstr ""
 
-#: includes/admin/scripts.php:32
+#: includes/admin/scripts.php:33
 msgctxt "Referring to billing period"
 msgid "times"
 msgstr ""
 
-#: includes/admin/scripts.php:35
+#: includes/admin/scripts.php:36
 #: includes/gateways/edd-recurring-paypal.php:690
 msgid "PayPal Standard requires recurring times to be set to 0 for indefinite subscriptions or a minimum value of 2 and a maximum value of 52 for limited subscriptions."
 msgstr ""
 
-#: includes/admin/scripts.php:37
+#: includes/admin/scripts.php:38
 msgid "Are you sure you want to delete this subscription?"
 msgstr ""
 
-#: includes/admin/scripts.php:38
+#: includes/admin/scripts.php:39
 #: includes/admin/settings.php:222
 #: includes/admin/settings.php:268
-#: includes/admin/subscriptions.php:433
-#: includes/admin/subscriptions.php:444
-#: includes/admin/subscriptions.php:467
+#: includes/admin/subscriptions.php:437
+#: includes/admin/subscriptions.php:448
+#: includes/admin/subscriptions.php:471
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/scripts.php:39
+#: includes/admin/scripts.php:40
 #: includes/admin/settings.php:63
 #: templates/shortcode-subscriptions.php:98
 msgid "Cancel"
@@ -948,16 +991,16 @@ msgstr ""
 #: includes/admin/settings.php:410
 #: includes/admin/settings.php:465
 #: includes/admin/settings.php:504
-#: includes/admin/subscriptions.php:667
-#: includes/admin/subscriptions.php:755
-#: includes/admin/subscriptions.php:877
-#: includes/admin/subscriptions.php:908
-#: includes/admin/subscriptions.php:957
-#: includes/admin/subscriptions.php:998
-#: includes/admin/subscriptions.php:1039
-#: includes/edd-recurring-checkout.php:675
-#: includes/gateways/edd-recurring-gateway.php:898
-#: includes/gateways/edd-recurring-gateway.php:946
+#: includes/admin/subscriptions.php:671
+#: includes/admin/subscriptions.php:759
+#: includes/admin/subscriptions.php:881
+#: includes/admin/subscriptions.php:912
+#: includes/admin/subscriptions.php:961
+#: includes/admin/subscriptions.php:1002
+#: includes/admin/subscriptions.php:1043
+#: includes/edd-recurring-checkout.php:709
+#: includes/gateways/edd-recurring-gateway.php:908
+#: includes/gateways/edd-recurring-gateway.php:956
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -1022,7 +1065,7 @@ msgid "then"
 msgstr ""
 
 #: includes/admin/subscriptions.php:108
-#: includes/admin/subscriptions.php:366
+#: includes/admin/subscriptions.php:369
 msgid "Times Billed:"
 msgstr ""
 
@@ -1051,7 +1094,7 @@ msgid "%sSelect existing%s customer or %screate new customer%s"
 msgstr ""
 
 #: includes/admin/subscriptions.php:140
-#: includes/admin/subscriptions.php:387
+#: includes/admin/subscriptions.php:390
 msgid "Product:"
 msgstr ""
 
@@ -1060,7 +1103,7 @@ msgid "Required. Select the product this subscription grants access to."
 msgstr ""
 
 #: includes/admin/subscriptions.php:150
-#: includes/admin/subscriptions.php:381
+#: includes/admin/subscriptions.php:384
 msgid "Initial Purchase ID:"
 msgstr ""
 
@@ -1081,7 +1124,7 @@ msgid "Gateway:"
 msgstr ""
 
 #: includes/admin/subscriptions.php:175
-#: includes/admin/subscriptions.php:425
+#: includes/admin/subscriptions.php:429
 msgid "Profile ID:"
 msgstr ""
 
@@ -1090,8 +1133,8 @@ msgid "Required. This is the unique ID of the subscription in the merchant proce
 msgstr ""
 
 #: includes/admin/subscriptions.php:184
-#: includes/admin/subscriptions.php:438
-#: includes/admin/subscriptions.php:590
+#: includes/admin/subscriptions.php:442
+#: includes/admin/subscriptions.php:594
 msgid "Transaction ID:"
 msgstr ""
 
@@ -1100,7 +1143,7 @@ msgid "Optional. This is the unique ID of the initial transaction inside of the 
 msgstr ""
 
 #: includes/admin/subscriptions.php:193
-#: includes/admin/subscriptions.php:449
+#: includes/admin/subscriptions.php:453
 msgid "Date Created:"
 msgstr ""
 
@@ -1109,7 +1152,7 @@ msgid "Optional. The date this subscription was created."
 msgstr ""
 
 #: includes/admin/subscriptions.php:202
-#: includes/admin/subscriptions.php:459
+#: includes/admin/subscriptions.php:463
 msgid "Expiration Date:"
 msgstr ""
 
@@ -1118,49 +1161,49 @@ msgid "Required. The date the subscription expires or the date of the next autom
 msgstr ""
 
 #: includes/admin/subscriptions.php:211
-#: includes/admin/subscriptions.php:472
+#: includes/admin/subscriptions.php:476
 msgid "Subscription Status:"
 msgstr ""
 
 #: includes/admin/subscriptions.php:215
-#: includes/admin/subscriptions.php:476
-#: includes/edd-subscription.php:1019
+#: includes/admin/subscriptions.php:480
+#: includes/edd-subscription.php:1034
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/subscriptions.php:216
-#: includes/admin/subscriptions.php:477
-#: includes/edd-subscription.php:1007
+#: includes/admin/subscriptions.php:481
+#: includes/edd-subscription.php:1022
 msgid "Active"
 msgstr ""
 
 #: includes/admin/subscriptions.php:217
-#: includes/admin/subscriptions.php:478
-#: includes/edd-subscription.php:1011
+#: includes/admin/subscriptions.php:482
+#: includes/edd-subscription.php:1026
 msgid "Cancelled"
 msgstr ""
 
 #: includes/admin/subscriptions.php:218
-#: includes/admin/subscriptions.php:479
-#: includes/edd-subscription.php:1015
+#: includes/admin/subscriptions.php:483
+#: includes/edd-subscription.php:1030
 msgid "Expired"
 msgstr ""
 
 #: includes/admin/subscriptions.php:219
-#: includes/admin/subscriptions.php:480
-#: includes/edd-subscription.php:1027
+#: includes/admin/subscriptions.php:484
+#: includes/edd-subscription.php:1042
 msgid "Trialling"
 msgstr ""
 
 #: includes/admin/subscriptions.php:220
-#: includes/admin/subscriptions.php:481
-#: includes/edd-subscription.php:1023
+#: includes/admin/subscriptions.php:485
+#: includes/edd-subscription.php:1038
 msgid "Failing"
 msgstr ""
 
 #: includes/admin/subscriptions.php:221
-#: includes/admin/subscriptions.php:482
-#: includes/edd-subscription.php:1031
+#: includes/admin/subscriptions.php:486
+#: includes/edd-subscription.php:1046
 msgid "Completed"
 msgstr ""
 
@@ -1199,143 +1242,143 @@ msgstr ""
 msgid "Tax Rate:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:338
 #: includes/admin/subscriptions.php:352
-msgctxt "Inital subscription tax rate then billing cycle and tax rate"
-msgid "%s then %s"
-msgstr ""
-
-#: includes/admin/subscriptions.php:349
 msgid "Tax Amount:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:372
+#. translators: %1$s Initial tax value. %2$s Billing tax value and cycle length
+#: includes/admin/subscriptions.php:356
+msgctxt "Initial subscription tax value then recurring tax value and billing cycle."
+msgid "%1$s then %2$s"
+msgstr ""
+
+#: includes/admin/subscriptions.php:375
 msgid "Customer:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:413
+#: includes/admin/subscriptions.php:417
 msgid "View %s"
 msgstr ""
 
-#: includes/admin/subscriptions.php:419
+#: includes/admin/subscriptions.php:423
 msgid "Payment Method:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:457
+#: includes/admin/subscriptions.php:461
 #: templates/shortcode-subscription-receipt.php:58
 #: templates/shortcode-subscriptions.php:75
 msgid "Trialling Until:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:485
+#: includes/admin/subscriptions.php:489
 msgid "Reactivate Subscription"
 msgstr ""
 
-#: includes/admin/subscriptions.php:488
+#: includes/admin/subscriptions.php:492
 msgid "Retry Renewal"
 msgstr ""
 
-#: includes/admin/subscriptions.php:496
+#: includes/admin/subscriptions.php:500
 msgid "Changing the expiration date will not affect when renewal payments are processed."
 msgstr ""
 
-#: includes/admin/subscriptions.php:497
+#: includes/admin/subscriptions.php:501
 msgid "Changing the product assigned will not automatically adjust any pricing."
 msgstr ""
 
-#: includes/admin/subscriptions.php:498
+#: includes/admin/subscriptions.php:502
 msgid "Changing the profile ID can result in renewals not being processed. Do this with caution."
 msgstr ""
 
-#: includes/admin/subscriptions.php:502
+#: includes/admin/subscriptions.php:506
 msgid "Update Subscription"
 msgstr ""
 
-#: includes/admin/subscriptions.php:507
+#: includes/admin/subscriptions.php:511
 msgid "Delete Subscription"
 msgstr ""
 
-#: includes/admin/subscriptions.php:531
+#: includes/admin/subscriptions.php:535
 msgid "Renewal Payments:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:534
+#: includes/admin/subscriptions.php:538
 msgid "Note:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:534
+#: includes/admin/subscriptions.php:538
 msgid "subscriptions purchased with the Test Payment gateway will not renew automatically."
 msgstr ""
 
-#: includes/admin/subscriptions.php:539
+#: includes/admin/subscriptions.php:543
 msgid "ID"
 msgstr ""
 
-#: includes/admin/subscriptions.php:541
+#: includes/admin/subscriptions.php:545
 msgid "Date"
 msgstr ""
 
-#: includes/admin/subscriptions.php:555
+#: includes/admin/subscriptions.php:559
 msgid "View Details for Payment"
 msgstr ""
 
-#: includes/admin/subscriptions.php:565
+#: includes/admin/subscriptions.php:569
 msgid "No Payments Found"
 msgstr ""
 
-#: includes/admin/subscriptions.php:573
+#: includes/admin/subscriptions.php:577
 msgid "Use this form to manually record a renewal payment."
 msgstr ""
 
-#: includes/admin/subscriptions.php:573
+#: includes/admin/subscriptions.php:577
 msgid "Note: this does not initiate a charge in your merchant processor. This should only be used for recording a missed payment or one that was manually collected."
 msgstr ""
 
-#: includes/admin/subscriptions.php:577
+#: includes/admin/subscriptions.php:581
 msgid "Tax:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:584
+#: includes/admin/subscriptions.php:588
 msgid "Total:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:597
+#: includes/admin/subscriptions.php:601
 msgid "Record Payment and Renew Subscription"
 msgstr ""
 
-#: includes/admin/subscriptions.php:598
+#: includes/admin/subscriptions.php:602
 msgid "Record Payment Only"
 msgstr ""
 
-#: includes/admin/subscriptions.php:613
+#: includes/admin/subscriptions.php:617
 msgid "Notes:"
 msgstr ""
 
-#: includes/admin/subscriptions.php:629
+#: includes/admin/subscriptions.php:633
 msgid "Add Note"
 msgstr ""
 
-#: includes/admin/subscriptions.php:682
+#: includes/admin/subscriptions.php:686
 msgid "A variation is required for the selected product"
 msgstr ""
 
-#: includes/admin/subscriptions.php:759
+#: includes/admin/subscriptions.php:763
 msgid "Please enter an expiration date"
 msgstr ""
 
-#: includes/admin/subscriptions.php:763
+#: includes/admin/subscriptions.php:767
 msgid "Please select a product"
 msgstr ""
 
-#: includes/admin/subscriptions.php:767
+#: includes/admin/subscriptions.php:771
 msgid "Please enter an initial amount"
 msgstr ""
 
-#: includes/admin/subscriptions.php:771
+#: includes/admin/subscriptions.php:775
 msgid "Please enter a recurring amount"
 msgstr ""
 
-#: includes/admin/subscriptions.php:963
+#: includes/admin/subscriptions.php:967
 msgid "This subscription does not support being retried."
 msgstr ""
 
@@ -1478,47 +1521,77 @@ msgstr ""
 msgid "With %s %s"
 msgstr ""
 
-#: includes/edd-recurring-checkout.php:389
-#: includes/edd-recurring-checkout.php:412
-#: includes/edd-recurring-checkout.php:476
-#: includes/edd-recurring-checkout.php:544
-#: includes/edd-recurring-checkout.php:602
-msgid "Billed %s until cancelled"
+#. translators: the billing period
+#: includes/edd-recurring-checkout.php:578
+msgid "Billed once per %1$s until cancelled"
 msgstr ""
 
-#: includes/edd-recurring-checkout.php:391
-#: includes/edd-recurring-checkout.php:414
-#: includes/edd-recurring-checkout.php:478
-#: includes/edd-recurring-checkout.php:546
-#: includes/edd-recurring-checkout.php:604
-#: includes/edd-recurring-checkout.php:612
-msgid "Billed %s until cancelled with a %s free trial"
+#. translators: 1. the billing period 2. the number of trial units 3. the trial period unit (week, month)
+#: includes/edd-recurring-checkout.php:582
+msgid "Billed once per %1$s until cancelled, after a %2$s %3$s free trial"
 msgstr ""
 
-#: includes/edd-recurring-checkout.php:397
-#: includes/edd-recurring-checkout.php:420
-#: includes/edd-recurring-checkout.php:484
-#: includes/edd-recurring-checkout.php:552
-#: includes/edd-recurring-checkout.php:610
-msgid "Billed once per %s, %d times"
+#. translators: 1. the billing period 2. the number of times it will be billed
+#: includes/edd-recurring-checkout.php:591
+msgid "Billed once per %1$s, %2$s time"
+msgid_plural "Billed once per %1$s, %2$s times"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1. the billing period 2. the number of times the subscription will be billed 3. the number of trial units 4. the trial period unit (week, month)
+#: includes/edd-recurring-checkout.php:603
+msgid "Billed once per %1$s, %2$s time, after a %3$s %4$s free trial"
+msgid_plural "Billed once per %1$s, %2$s times, after a %3$s %4$s free trial"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/edd-recurring-checkout.php:633
+msgctxt "subscription term"
+msgid "day"
+msgid_plural "days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/edd-recurring-checkout.php:636
+msgctxt "subscription term"
+msgid "week"
+msgid_plural "weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/edd-recurring-checkout.php:639
+msgctxt "subscription term"
+msgid "month"
+msgid_plural "months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/edd-recurring-checkout.php:642
+msgctxt "subscription term"
+msgid "quarter"
 msgstr ""
 
-#: includes/edd-recurring-checkout.php:399
-#: includes/edd-recurring-checkout.php:422
-#: includes/edd-recurring-checkout.php:486
-#: includes/edd-recurring-checkout.php:554
-msgid "Billed once per %s, %d times with a %s free trial"
+#: includes/edd-recurring-checkout.php:645
+msgctxt "subscription term"
+msgid "six months"
 msgstr ""
 
-#: includes/edd-recurring-checkout.php:653
+#: includes/edd-recurring-checkout.php:648
+msgctxt "subscription term"
+msgid "year"
+msgid_plural "years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/edd-recurring-checkout.php:687
 msgid "Total Due Today:"
 msgstr ""
 
-#: includes/edd-recurring-checkout.php:656
+#: includes/edd-recurring-checkout.php:690
 msgid "Your account will be automatically charged when the free trial is completed."
 msgstr ""
 
-#: includes/edd-recurring-checkout.php:720
+#: includes/edd-recurring-checkout.php:754
 msgid "You have already used the free trial for <strong>%s</strong>. Please log into your account to complete the purchase. You will be charged immediately."
 msgstr ""
 
@@ -1638,40 +1711,40 @@ msgstr ""
 msgid "Unable to verify payment update. Please try again later."
 msgstr ""
 
-#: includes/edd-subscription.php:116
+#: includes/edd-subscription.php:120
 msgid "Can't get property %s"
 msgstr ""
 
-#: includes/edd-subscription.php:198
+#: includes/edd-subscription.php:202
 msgid "Product ID changed from %d to %d."
 msgstr ""
 
-#: includes/edd-subscription.php:202
+#: includes/edd-subscription.php:206
 msgid "Price ID changed from %d to %d."
 msgstr ""
 
-#: includes/edd-subscription.php:676
-#: includes/edd-subscription.php:1204
+#: includes/edd-subscription.php:691
+#: includes/edd-subscription.php:1219
 msgid "gateway"
 msgstr ""
 
-#: includes/edd-subscription.php:682
+#: includes/edd-subscription.php:697
 msgid "Subscription #%d cancelled by %s"
 msgstr ""
 
-#: includes/edd-subscription.php:821
+#: includes/edd-subscription.php:836
 msgid "This subscription is not failing so cannot be retried."
 msgstr ""
 
-#: includes/edd-subscription.php:839
+#: includes/edd-subscription.php:854
 msgid "An error was encountered. Please check your merchant account logs."
 msgstr ""
 
-#: includes/edd-subscription.php:961
+#: includes/edd-subscription.php:976
 msgid "Expiration synced with gateway and updated to %s"
 msgstr ""
 
-#: includes/edd-subscription.php:1209
+#: includes/edd-subscription.php:1224
 msgid "Status changed from %s to %s by %s"
 msgstr ""
 
@@ -1691,8 +1764,8 @@ msgstr ""
 msgid "No subscriptions found!"
 msgstr ""
 
-#: includes/edd-subscriptions-db.php:123
-#: includes/edd-subscriptions-db.php:441
+#: includes/edd-subscriptions-db.php:124
+#: includes/edd-subscriptions-db.php:442
 msgid "The bill_times argument should be a number but was not."
 msgstr ""
 
@@ -1714,23 +1787,23 @@ msgstr ""
 msgid "Free trials are not supported by 2Checkout."
 msgstr ""
 
-#: includes/gateways/edd-recurring-2checkout.php:321
+#: includes/gateways/edd-recurring-2checkout.php:314
 msgid "2Checkout fraud review failed."
 msgstr ""
 
-#: includes/gateways/edd-recurring-2checkout.php:336
+#: includes/gateways/edd-recurring-2checkout.php:329
 msgid "2Checkout fraud review in progress."
 msgstr ""
 
-#: includes/gateways/edd-recurring-2checkout.php:350
+#: includes/gateways/edd-recurring-2checkout.php:343
 msgid "2Checkout fraud review passed."
 msgstr ""
 
-#: includes/gateways/edd-recurring-2checkout.php:377
+#: includes/gateways/edd-recurring-2checkout.php:370
 msgid "2Checkout Invoice status set to deposited."
 msgstr ""
 
-#: includes/gateways/edd-recurring-2checkout.php:444
+#: includes/gateways/edd-recurring-2checkout.php:437
 msgid "Payment refunded in 2Checkout."
 msgstr ""
 
@@ -1754,64 +1827,64 @@ msgstr ""
 msgid "You must log in or create an account to purchase a subscription"
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:504
+#: includes/gateways/edd-recurring-gateway.php:514
 msgid "You must be logged in to purchase a subscription"
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:534
+#: includes/gateways/edd-recurring-gateway.php:544
 msgid "There was an error processing your order. Please contact support."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:705
-#: includes/gateways/edd-recurring-stripe.php:798
+#: includes/gateways/edd-recurring-gateway.php:715
+#: includes/gateways/edd-recurring-stripe.php:800
 msgid "Failed creating subscription for %s. Gateway returned: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:740
+#: includes/gateways/edd-recurring-gateway.php:750
 msgid "Free trials and non-trials may not be purchased at the same time. Please purchase each separately."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:758
+#: includes/gateways/edd-recurring-gateway.php:768
 msgid "Subscriptions and non-subscriptions may not be purchased at the same time. Please purchase each separately."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:766
+#: includes/gateways/edd-recurring-gateway.php:776
 msgid "This message is showing because you are a shop manager"
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:771
+#: includes/gateways/edd-recurring-gateway.php:781
 msgid "Your active payment gateways do not support mixed carts. The %1$sStripe Payment Gateway%2$s allows customers to purchase carts containing both recurring subscriptions and one-time charges at the same time."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:803
+#: includes/gateways/edd-recurring-gateway.php:813
 msgid "Sorry, purchasing a subscription and non-subscription product is only supported when paying by credit card. %1$sSwitch to this payment method%2$s."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:832
+#: includes/gateways/edd-recurring-gateway.php:842
 msgid "Unable to verify payment update."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:836
+#: includes/gateways/edd-recurring-gateway.php:846
 msgid "You must be logged in to update a payment method."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:845
+#: includes/gateways/edd-recurring-gateway.php:855
 msgid "Invalid subscription id."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:850
+#: includes/gateways/edd-recurring-gateway.php:860
 msgid "Invalid subscriber."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:855
+#: includes/gateways/edd-recurring-gateway.php:865
 msgid "User ID and Subscriber do not match."
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:954
+#: includes/gateways/edd-recurring-gateway.php:964
 msgid "This subscription cannot be reactivated"
 msgstr ""
 
-#: includes/gateways/edd-recurring-gateway.php:962
+#: includes/gateways/edd-recurring-gateway.php:972
 msgid "Subscription reactivated by %s"
 msgstr ""
 
@@ -1840,8 +1913,8 @@ msgstr ""
 #: includes/gateways/edd-recurring-paypal.php:334
 #: includes/gateways/edd-recurring-paypal.php:410
 #: includes/gateways/edd-recurring-paypal.php:528
-#: includes/gateways/edd-recurring-paypalexpress.php:610
-#: includes/gateways/edd-recurring-paypalexpress.php:618
+#: includes/gateways/edd-recurring-paypalexpress.php:622
+#: includes/gateways/edd-recurring-paypalexpress.php:630
 #: includes/gateways/edd-recurring-paypalpro.php:427
 #: includes/gateways/edd-recurring-paypalpro.php:434
 msgid "IPN Error"
@@ -1931,37 +2004,37 @@ msgstr ""
 msgid "Subscription %d cancelled."
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypal.php:978
-#: includes/gateways/edd-recurring-paypalexpress.php:1031
-#: includes/gateways/edd-recurring-paypalpro.php:801
+#: includes/gateways/edd-recurring-paypal.php:984
+#: includes/gateways/edd-recurring-paypalexpress.php:1043
+#: includes/gateways/edd-recurring-paypalpro.php:800
 msgid "Retry initiated from EDD Recurring"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypal.php:1086
+#: includes/gateways/edd-recurring-paypal.php:1092
 msgid "Missing PayPal API credentials"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypal.php:1091
-#: includes/gateways/edd-recurring-paypalexpress.php:1129
-#: includes/gateways/edd-recurring-paypalpro.php:899
+#: includes/gateways/edd-recurring-paypal.php:1097
+#: includes/gateways/edd-recurring-paypalexpress.php:1141
+#: includes/gateways/edd-recurring-paypalpro.php:898
 msgid "Invalid subscription object supplied"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypal.php:1123
-#: includes/gateways/edd-recurring-paypalexpress.php:1161
-#: includes/gateways/edd-recurring-paypalpro.php:931
+#: includes/gateways/edd-recurring-paypal.php:1129
+#: includes/gateways/edd-recurring-paypalexpress.php:1173
+#: includes/gateways/edd-recurring-paypalpro.php:930
 msgid "Non 200 response code. Response code was: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypal.php:1127
-#: includes/gateways/edd-recurring-paypalexpress.php:1165
-#: includes/gateways/edd-recurring-paypalpro.php:935
+#: includes/gateways/edd-recurring-paypal.php:1133
+#: includes/gateways/edd-recurring-paypalexpress.php:1177
+#: includes/gateways/edd-recurring-paypalpro.php:934
 msgid "Response message not okay. Response message was: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypal.php:1146
-#: includes/gateways/edd-recurring-paypalexpress.php:1184
-#: includes/gateways/edd-recurring-paypalpro.php:954
+#: includes/gateways/edd-recurring-paypal.php:1152
+#: includes/gateways/edd-recurring-paypalexpress.php:1196
+#: includes/gateways/edd-recurring-paypalpro.php:953
 msgid "No profile_id set on subscription object"
 msgstr ""
 
@@ -1978,14 +2051,14 @@ msgid "Something has gone wrong, please try again"
 msgstr ""
 
 #: includes/gateways/edd-recurring-paypalexpress.php:253
-#: includes/gateways/edd-recurring-paypalexpress.php:350
+#: includes/gateways/edd-recurring-paypalexpress.php:354
 #: includes/gateways/edd-recurring-paypalpro.php:153
 msgid "An unidentified error occurred."
 msgstr ""
 
 #: includes/gateways/edd-recurring-paypalexpress.php:266
-#: includes/gateways/edd-recurring-paypalexpress.php:392
-#: includes/gateways/edd-recurring-paypalexpress.php:420
+#: includes/gateways/edd-recurring-paypalexpress.php:396
+#: includes/gateways/edd-recurring-paypalexpress.php:432
 msgid "PayPal Express Error"
 msgstr ""
 
@@ -1994,49 +2067,49 @@ msgstr ""
 msgid "Error processing payment: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:392
-#: includes/gateways/edd-recurring-paypalexpress.php:420
+#: includes/gateways/edd-recurring-paypalexpress.php:396
+#: includes/gateways/edd-recurring-paypalexpress.php:432
 msgid "Error creating payment profile: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:396
-#: includes/gateways/edd-recurring-paypalexpress.php:422
+#: includes/gateways/edd-recurring-paypalexpress.php:400
+#: includes/gateways/edd-recurring-paypalexpress.php:434
 msgid "PayPal error while creating subscription. %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:610
-#: includes/gateways/edd-recurring-paypalexpress.php:618
+#: includes/gateways/edd-recurring-paypalexpress.php:622
+#: includes/gateways/edd-recurring-paypalexpress.php:630
 msgid "Invalid PayPal Express IPN verification response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:695
-#: includes/gateways/edd-recurring-paypalpro.php:496
+#: includes/gateways/edd-recurring-paypalexpress.php:707
+#: includes/gateways/edd-recurring-paypalpro.php:495
 msgid "Invalid Currency Code"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:695
-#: includes/gateways/edd-recurring-paypalpro.php:496
+#: includes/gateways/edd-recurring-paypalexpress.php:707
+#: includes/gateways/edd-recurring-paypalpro.php:495
 msgid "The currency code in an IPN request did not match the site currency code. Payment data: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:706
+#: includes/gateways/edd-recurring-paypalexpress.php:718
 msgid "Transaction ID %s failed in PayPal"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:739
+#: includes/gateways/edd-recurring-paypalexpress.php:751
 msgid "Outstanding subscription balance of %s collected successfully."
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:881
+#: includes/gateways/edd-recurring-paypalexpress.php:893
 msgid "PayPal Express refund failed: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:891
+#: includes/gateways/edd-recurring-paypalexpress.php:903
 msgid "PayPal Express Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalexpress.php:988
-#: includes/gateways/edd-recurring-paypalpro.php:758
+#: includes/gateways/edd-recurring-paypalexpress.php:1000
+#: includes/gateways/edd-recurring-paypalpro.php:757
 msgid "There was a problem cancelling the subscription, please contact customer support. Error: %s"
 msgstr ""
 
@@ -2057,19 +2130,19 @@ msgstr ""
 msgid "Invalid PayPal Pro IPN verification response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalpro.php:652
+#: includes/gateways/edd-recurring-paypalpro.php:651
 msgid "PayPal Pro refund failed: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalpro.php:662
+#: includes/gateways/edd-recurring-paypalpro.php:661
 msgid "PayPal Pro Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalpro.php:995
+#: includes/gateways/edd-recurring-paypalpro.php:994
 msgid "Please enter all required fields."
 msgstr ""
 
-#: includes/gateways/edd-recurring-paypalpro.php:1053
+#: includes/gateways/edd-recurring-paypalpro.php:1052
 msgid "Error updating subscription"
 msgstr ""
 
@@ -2092,50 +2165,51 @@ msgstr ""
 msgid "A customer account for %1$s already exists. Please log in to complete your purchase."
 msgstr ""
 
+#: includes/gateways/edd-recurring-stripe.php:209
+msgid "Use edds_api_request() to make Stripe API requests."
+msgstr ""
+
 #. translators: %1$s Customer currency.
-#: includes/gateways/edd-recurring-stripe.php:272
+#: includes/gateways/edd-recurring-stripe.php:267
 msgid "Unable to complete your purchase. Your order must be completed in %1$s."
 msgstr ""
 
-#: includes/gateways/edd-recurring-stripe.php:840
+#: includes/gateways/edd-recurring-stripe.php:842
 msgid "PaymentIntent cancelled because there is nothing to collect."
 msgstr ""
 
-#: includes/gateways/edd-recurring-stripe.php:953
+#: includes/gateways/edd-recurring-stripe.php:970
 msgid "Failing invoice URL: %s"
 msgstr ""
 
 #. Translators: The error message from Stripe.
-#: includes/gateways/edd-recurring-stripe.php:1590
-#: includes/gateways/edd-recurring-stripe.php:1632
+#: includes/gateways/edd-recurring-stripe.php:1606
+#: includes/gateways/edd-recurring-stripe.php:1645
 msgid "Attempted cancellation but was unable. Message was \"%s\"."
 msgstr ""
 
-#: includes/gateways/edd-recurring-stripe.php:1748
+#: includes/gateways/edd-recurring-stripe.php:1770
 msgid "Subscription reactivation requires payment by customer and will be cancelled in 24 hours if no action is taken."
 msgstr ""
 
-#: includes/gateways/edd-recurring-stripe.php:1960
-msgid "Charge %s refunded in Stripe."
+#. translators: %s Refund ID.
+#: includes/gateways/edd-recurring-stripe.php:2011
+msgid "Charge refunded in Stripe. Refund ID %s"
 msgstr ""
 
-#: includes/gateways/edd-recurring-stripe.php:1968
-msgid "Something went wrong while refunding the Charge in Stripe."
-msgstr ""
-
-#: includes/gateways/edd-recurring-stripe.php:2005
+#: includes/gateways/edd-recurring-stripe.php:2050
 msgid "Please Wait…"
 msgstr ""
 
-#: includes/gateways/edd-recurring-stripe.php:2068
+#: includes/gateways/edd-recurring-stripe.php:2110
 msgid "Invalid request. Please try again"
 msgstr ""
 
-#: includes/gateways/edd-recurring-stripe.php:2074
+#: includes/gateways/edd-recurring-stripe.php:2116
 msgid "Unable to locate Subscription. Please try again"
 msgstr ""
 
-#: includes/gateways/edd-recurring-stripe.php:2113
+#: includes/gateways/edd-recurring-stripe.php:2152
 msgid "Payment method updated."
 msgstr ""
 
@@ -2153,48 +2227,48 @@ msgstr ""
 msgid "Subscription cancelled via Fraud Monitor"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:643
-#: includes/plugin-software-licensing.php:701
+#: includes/plugin-software-licensing.php:676
+#: includes/plugin-software-licensing.php:734
 msgid "Subscription #%d cancelled for license upgrade"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:645
+#: includes/plugin-software-licensing.php:678
 msgid "Subscription cancelled for license upgrade"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:742
+#: includes/plugin-software-licensing.php:775
 msgid "Subscription #%d cancelled for manual license renewal"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:825
+#: includes/plugin-software-licensing.php:858
 msgid "View Subscription"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:841
+#: includes/plugin-software-licensing.php:874
 msgid "License Key:"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:845
+#: includes/plugin-software-licensing.php:878
 msgid "License"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:856
+#: includes/plugin-software-licensing.php:889
 msgid "View License"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:878
+#: includes/plugin-software-licensing.php:911
 msgid "Renews automatically on %s"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:948
+#: includes/plugin-software-licensing.php:981
 msgid "%s will now automatically renew %s for %s"
 msgstr ""
 
-#: includes/plugin-software-licensing.php:1024
+#: includes/plugin-software-licensing.php:1057
 msgid "Your existing subscription to %s will be cancelled and replaced with a new subscription that automatically renews %s for %s."
 msgstr ""
 
-#: includes/plugin-software-licensing.php:1131
+#: includes/plugin-software-licensing.php:1164
 msgid "Note: license keys will remain valid for the duration of the free trial period. Once the free trial is over, the settings defined here determine the license lengths."
 msgstr ""
 

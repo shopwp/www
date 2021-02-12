@@ -36,15 +36,30 @@ function edd_stripe_js( $force_load_scripts = false ) {
 			$publishable_key = edd_get_option( 'live_publishable_key', '' );
 		}
 
-		wp_register_script( 'stripe-js', 'https://js.stripe.com/v3/', array( 'jquery' ), null );
-		wp_register_script( 'stripe-checkout', 'https://checkout.stripe.com/checkout.js', array( 'jquery' ), null );
-		wp_register_script( 'edd-stripe-js', EDDSTRIPE_PLUGIN_URL . 'assets/js/build/app.min.js', array( 'jquery', 'stripe-js', 'edd-ajax' ), EDD_STRIPE_VERSION, true );
+		wp_register_script(
+			'sandhills-stripe-js-v3',
+			'https://js.stripe.com/v3/',
+			array(),
+			'v3'
+		);
+
+		wp_register_script(
+			'edd-stripe-js',
+			EDDSTRIPE_PLUGIN_URL . 'assets/js/build/app.min.js',
+			array(
+				'sandhills-stripe-js-v3',
+				'jquery',
+				'edd-ajax'
+			),
+			EDD_STRIPE_VERSION,
+			true
+		);
 
 		$is_checkout     = edd_is_checkout();
 		$restrict_assets = edd_get_option( 'stripe_restrict_assets', false );
 
 		if ( $is_checkout || $force_load_scripts || false === $restrict_assets ) {
-			wp_enqueue_script( 'stripe-js' );
+			wp_enqueue_script( 'sandhills-stripe-js-v3' );
 		}
 
 		if ( $is_checkout || $force_load_scripts ) {
@@ -68,10 +83,13 @@ function edd_stripe_js( $force_load_scripts = false ) {
 				'no_key_error'                   => __( 'Stripe publishable key missing. Please enter your publishable key in Settings.', 'edds' ),
 				'checkout_required_fields_error' => __( 'Please fill out all required fields to continue your purchase.', 'edds' ),
 				'checkout_agree_to_terms'        => __( 'Please agree to the terms to complete your purchase.', 'edds' ),
+				'checkout_agree_to_privacy'      => __( 'Please agree to the privacy policy to complete your purchase.', 'edds' ),
 				'generic_error'                  => __( 'Unable to complete your request. Please try again.', 'edds' ),
 				'successPageUri'                 => edd_get_success_page_uri(),
 				'failurePageUri'                 => edd_get_failed_transaction_uri(),
 				'elementsOptions'                => edds_get_stripe_elements_options(),
+				'elementsSplitFields'            => '1' === edd_get_option( 'stripe_split_payment_fields', false ) ? 'true' : 'false',
+				'isTestMode'                     => edd_is_test_mode() ? 'true' : 'false',
 			) );
 
 			wp_localize_script( 'edd-stripe-js', 'edd_stripe_vars', $stripe_vars );
@@ -93,7 +111,7 @@ function edd_stripe_css( $force_load_scripts = false ) {
 			$deps = array();
 		}
 
-		wp_register_style( 'edd-stripe', EDDSTRIPE_PLUGIN_URL . 'assets/css/build/style.min.css', $deps, EDD_STRIPE_VERSION );
+		wp_register_style( 'edd-stripe', EDDSTRIPE_PLUGIN_URL . 'assets/css/build/app.min.css', $deps, EDD_STRIPE_VERSION );
 		wp_enqueue_style( 'edd-stripe' );
 	}
 }
@@ -150,7 +168,7 @@ function edd_stripe_connect_admin_script( $hook ) {
 		return;
 	}
 
-	wp_enqueue_style( 'edd-stripe-admin-styles', EDDSTRIPE_PLUGIN_URL . 'assets/css/build/admin-style.min.css', array(), EDD_STRIPE_VERSION );
+	wp_enqueue_style( 'edd-stripe-admin-styles', EDDSTRIPE_PLUGIN_URL . 'assets/css/build/admin.min.css', array(), EDD_STRIPE_VERSION );
 
 	wp_enqueue_script( 'edd-stripe-admin-scripts', EDDSTRIPE_PLUGIN_URL . 'assets/js/build/admin.min.js', array( 'jquery' ), EDD_STRIPE_VERSION );
 

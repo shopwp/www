@@ -55,6 +55,7 @@
 
   th {
     font-size: 20px;
+    font-family: $font-secondary;
 
     @include device(900, 'max') {
       font-size: 17px;

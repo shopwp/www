@@ -117,6 +117,7 @@ select,
   margin-top: 0;
   border: 1px solid color(base);
   font-weight: normal;
+  font-family: $font-secondary;
 
   &:focus:not([type='checkbox']):not([type='radio']) {
     outline: none;
@@ -308,14 +309,9 @@ label.error {
   background: color(error);
   display: inline-block !important;
   color: color(base);
-  // font-size: 13px;
   padding: 0.59444em 2.4em;
   border-radius: 0.4em;
   font-weight: normal;
-  // animation-duration: 0.1s;
-  // animation-delay: 0.1s;
-  // animation-fill-mode: both;
-  // animation-name: zoomIn;
   text-align: center;
   margin: 0;
   position: relative;
@@ -406,7 +402,7 @@ select {
 
   &.is-visible {
     text-align: left;
-    margin: 10px 0 5px 0;
+    margin: 10px 0 0 0;
   }
 }
 

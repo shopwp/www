@@ -13,6 +13,7 @@ function edds_register_post_statuses() {
 		'exclude_from_search'       => false,
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
+		/* translators: %s Payment status count */
 		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'edds' )
 	) );
 	register_post_status( 'preapproval', array(
@@ -21,6 +22,7 @@ function edds_register_post_statuses() {
 		'exclude_from_search'       => false,
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
+		/* translators: %s Payment status count */
 		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'edds' )
 	) );
 	register_post_status( 'cancelled', array(
@@ -29,6 +31,7 @@ function edds_register_post_statuses() {
 		'exclude_from_search'       => false,
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
+		/* translators: %s Payment status count */
 		'label_count'               => _n_noop( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', 'edds' )
 	) );
 }

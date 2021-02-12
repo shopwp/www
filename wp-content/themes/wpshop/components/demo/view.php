@@ -6,8 +6,8 @@
       <div class="content">
          <h2>See it in action!</h2>
          <p>WP Shopify provides a completely seamless way to embed your products. Display a single buy button, or a whole list of products with ease.</p>
-         <p>No need to worry about the checkout or cart experience either. WP Shopfiy creates these for you out of the box.</p>
-         <span class="btn btn-l btn-download-free getting-started-trigger">Download the plugin</span>
+         <p>No need to worry about the checkout or cart experience either. WP Shopify creates these for you out of the box.</p>
+         <span class="btn btn-l btn-download-free getting-started-trigger">Try for free</span>
       </div>
    </div>
    <style>

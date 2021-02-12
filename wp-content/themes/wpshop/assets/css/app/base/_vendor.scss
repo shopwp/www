@@ -100,7 +100,7 @@ EDD
   label {
     margin-bottom: $space-s;
     display: block;
-    font-weight: bold;
+    font-weight: 400;
     font-family: $font-secondary;
 
     + .edd-description {
@@ -275,6 +275,7 @@ EDD
   margin: 8px 0 29px 0;
   line-height: 1;
   display: block;
+  font-family: $font-secondary;
 
   @include device(1500, 'max') {
     font-size: 38px;
@@ -611,6 +612,11 @@ EDD
     &:hover {
       cursor: pointer;
     }
+  }
+}
+.edd_error {
+  strong {
+    font-weight: 400;
   }
 }
 
@@ -1310,6 +1316,7 @@ Tippy js
 div[data-tippy-root] div.tippy-box {
   @include popoverDeep();
   border-radius: 1em;
+  border: 1px solid #d0d0d0;
 
   h3 {
     font-size: 1.5em;
@@ -1320,6 +1327,7 @@ div[data-tippy-root] div.tippy-box {
   .mailinglist-copy,
   p {
     text-align: left;
+    font-weight: 400;
 
     &:last-child {
       margin-bottom: 0;
@@ -1334,6 +1342,7 @@ div[data-tippy-root] div.tippy-box {
     width: 100%;
     margin-top: 15px;
     font-size: 15px;
+    text-align: center;
   }
 
   .mailinglist-email {
@@ -1343,12 +1352,11 @@ div[data-tippy-root] div.tippy-box {
 
   .mailinglist-copy {
     margin-top: 0;
-    font-weight: bold;
   }
 
   .mailinglist-form .spinner {
-    top: calc(70% - 8px);
-    right: calc(55% - 120px);
+    top: calc(70% - 6px);
+    right: calc(55% - 86px);
   }
 }
 

@@ -1,5 +1,27 @@
 <?php
 
+$user = wp_get_current_user();
+
+if (is_page('account') && is_user_logged_in()) {   
+   error_log('----- is account and logged in -----');
+   get_template_part('templates/account/view');
+   exit;
+}
+
+if (is_page('account') && !is_user_logged_in()) {
+   error_log('----- is account and NOT logged in -----');
+   wp_redirect('/login');
+   exit;
+}
+
+if ( is_page('login') && is_user_logged_in() ) {
+   error_log('----- is login and logged in -----');
+   wp_redirect('/account');
+   exit;
+}
+
+error_log('----- is normal -----');
+
 use Roots\Sage\Setup;
 use Roots\Sage\Extras;
 use Roots\Sage\Wrapper;
@@ -81,110 +103,107 @@ if (is_page('faq')) {
   <?php get_template_part('templates/head'); ?>
 
   <body <?php body_class($mobileBodyClass); ?>>
+   
 
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH&gtm_auth=zEmWFISEpQvchduPXr4jaQ&gtm_preview=env-2&gtm_cookies_win=x"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWRL8QH&gtm_auth=zEmWFISEpQvchduPXr4jaQ&gtm_preview=env-2&gtm_cookies_win=x"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
 
-  <?php  if (is_page('purchase-confirmation')) { ?>
-      <canvas id="confetti-holder" style="width: 100%;z-index: 4;position: absolute;top: -180px;left: 0;margin-top: 0;"></canvas>
-  <?php } ?>
-
-
-   <?php if (!is_page('checkout')) { ?>
-      <?php include(locate_template('components/getting-started/view.php')); ?>
+   <?php  if (is_page('purchase-confirmation')) { ?>
+         <canvas id="confetti-holder" style="width: 100%;z-index: 4;position: absolute;top: -180px;left: 0;margin-top: 0;"></canvas>
    <?php } ?>
 
-    <?php
-
-    if ($notices_enabled) {
-      get_template_part('components/notices/notices-controller');
-    }
-
-    do_action('get_header');
-    get_template_part('templates/header');
-
-    ?>
 
       <?php if (!is_page('checkout')) { ?>
-         <script>
-            jQuery('.menu-item-has-children')
-               .mouseenter(function() {
-                  jQuery(this).addClass('is-active')
-                  jQuery('body').addClass('is-showing-sub-menu')
-               })
-               .mouseleave(function(event) {
-
-                  var $relatedElement = jQuery(event.relatedTarget);
-
-                  if (!$relatedElement.parents('.menu-item-has-children').length) {
-                     jQuery(this)
-                     .closest('.menu-item-has-children')
-                     .removeClass('is-active')
-
-                     jQuery('body').removeClass('is-showing-sub-menu')
-                  }
-
-               });
-         </script>
+         <?php include(locate_template('components/getting-started/view.php')); ?>
       <?php } ?>
 
-      <main class="main l-fill <?php echo isRegisteredAndPurchasing() ? ' is-registered-and-purchasing' : ''; ?>" role="document">
+      <?php
 
-         <div class="main-inner <?php echo is_singular('post') ? 'l-contain' : ''; ?>">
-            <?php include Wrapper\template_path(); ?>
-         </div>
+      if ($notices_enabled) {
+         get_template_part('components/notices/notices-controller');
+      }
 
-        <?php get_template_part('templates/components'); ?>
+      do_action('get_header');
+      get_template_part('templates/header');
+
+      ?>
+
+         <?php if (!is_page('checkout')) { ?>
+            <script>
+               jQuery('.menu-item-has-children')
+                  .mouseenter(function() {
+                     jQuery(this).addClass('is-active')
+                     jQuery('body').addClass('is-showing-sub-menu')
+                  })
+                  .mouseleave(function(event) {
+
+                     var $relatedElement = jQuery(event.relatedTarget);
+
+                     if (!$relatedElement.parents('.menu-item-has-children').length) {
+                        jQuery(this)
+                        .closest('.menu-item-has-children')
+                        .removeClass('is-active')
+
+                        jQuery('body').removeClass('is-showing-sub-menu')
+                     }
+
+                  });
+            </script>
+         <?php } ?>
+
+         <main class="main l-fill <?php echo isRegisteredAndPurchasing() ? ' is-registered-and-purchasing' : ''; ?>" role="document">
+
+            <div class="main-inner">
+               <?php include Wrapper\template_path(); ?>
+            </div>
+
+         <?php get_template_part('templates/components'); ?>
 
 
-      </main>
+         </main>
 
-      
-    <?php
+         
+      <?php
 
-      do_action('get_footer');
+         do_action('get_footer');
 
-      get_template_part('templates/footer');
-      wp_footer();
+         get_template_part('templates/footer');
+         wp_footer();
 
-    ?>
+      ?>
 
-<?php
+   <?php
 
-if ($notices_enabled ) {
-  include(locate_template('components/notices/notices-view.php'));
-}
-?>
-  <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-101619037-1', 'auto');
-      ga('send', 'pageview');
-
-
-    </script>
-
-
-<?php  if (is_page('purchase-confirmation')) { ?>
-
+   if ($notices_enabled ) {
+   include(locate_template('components/notices/notices-view.php'));
+   }
+   ?>
    <script>
-      
-      var confetti = new ConfettiGenerator({"target":"confetti-holder","max":"100","size":"1","animate":true,"props":["circle","square","triangle","line"],"colors":[[165,104,246],[230,61,135],[0,199,228],[253,214,126]],"clock":"50","rotate":false,"width":"1680","height":"947","start_from_edge":true,"respawn":false});
-      confetti.render();
+         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+         m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-   </script>
+         ga('create', 'UA-101619037-1', 'auto');
+         ga('send', 'pageview');
 
-  <?php } ?>
 
-   <?php if (!is_page('checkout') && !is_page('purchase-confirmation')) { ?>
-      <script src="https://unpkg.com/@popperjs/core@2"></script>
-      <script src="https://unpkg.com/tippy.js@6"></script>
+      </script>
+
+
+   <?php  if (is_page('purchase-confirmation')) { ?>
+
+      <script>
+         
+         var confetti = new ConfettiGenerator({"target":"confetti-holder","max":"100","size":"1","animate":true,"props":["circle","square","triangle","line"],"colors":[[165,104,246],[230,61,135],[0,199,228],[253,214,126]],"clock":"50","rotate":false,"width":"1680","height":"947","start_from_edge":true,"respawn":false});
+         confetti.render();
+
+      </script>
+
    <?php } ?>
+
 
   </body>
 </html>

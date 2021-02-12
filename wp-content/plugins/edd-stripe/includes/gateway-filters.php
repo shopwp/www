@@ -12,7 +12,7 @@ function edds_require_recurring_290( $enabled_gateways ) {
 	if ( 
 		isset( $enabled_gateways['stripe'] ) &&
 		defined( 'EDD_RECURRING_VERSION' ) &&
-		! version_compare( EDD_RECURRING_VERSION, '2.8.8', '>' )
+		! version_compare( EDD_RECURRING_VERSION, '2.9.99', '>' )
 	) {
 		unset( $enabled_gateways['stripe'] );
 	}
@@ -36,55 +36,11 @@ function edds_payment_status_labels( $statuses ) {
 add_filter( 'edd_payment_statuses', 'edds_payment_status_labels' );
 
 /**
- * Sets the stripe-checkout parameter if the direct parameter is present in the [purchase_link] short code
- *
- * @since  2.0
- * @return array
- */
-function edd_stripe_purchase_link_shortcode_atts( $out, $pairs, $atts ) {
-
-	if( ! empty( $out['direct'] ) ) {
-
-		$out['stripe-checkout'] = true;
-		$out['direct'] = true;
-
-	} else {
-
-		foreach( $atts as $key => $value ) {
-			if( false !== strpos( $value, 'stripe-checkout' ) ) {
-				$out['stripe-checkout'] = true;
-				$out['direct'] = true;
-			}
-		}
-
-	}
-
-	return $out;
-}
-add_filter( 'shortcode_atts_purchase_link', 'edd_stripe_purchase_link_shortcode_atts', 10, 3 );
-
-/**
- * Sets the stripe-checkout parameter if the direct parameter is present in edd_get_purchase_link()
- *
- * @since  2.0
- * @return array
- */
-function edd_stripe_purchase_link_atts( $args ) {
-
-	if( ! empty( $args['direct'] ) && edd_is_gateway_active( 'stripe' ) ) {
-
-		$args['stripe-checkout'] = true;
-		$args['direct'] = true;
-	}
-
-	return $args;
-}
-add_filter( 'edd_purchase_link_args', 'edd_stripe_purchase_link_atts', 10 );
-
-/**
  * Injects the Stripe token and customer email into the pre-gateway data
  *
- * @since  2.0
+ * @since 2.0
+ *
+ * @param array $purchase_data
  * @return array
  */
 function edd_stripe_straight_to_gateway_data( $purchase_data ) {
@@ -130,4 +86,20 @@ add_action( 'edd_checkout_error_checks', 'edds_process_post_data' );
  */
 function edds_get_stripe_checkout_locale() {
 	return apply_filters( 'edd_stripe_checkout_locale', 'auto' );
+}
+
+/**
+ * Sets the $_COOKIE global when a logged in cookie is available.
+ *
+ * We need the global to be immediately available so calls to wp_create_nonce()
+ * within the same session will use the newly available data.
+ *
+ * @since 2.8.0
+ *
+ * @link https://wordpress.stackexchange.com/a/184055
+ *
+ * @param string $logged_in_cookie The logged-in cookie value.
+ */
+function edds_set_logged_in_cookie_global( $logged_in_cookie ) {
+	$_COOKIE[ LOGGED_IN_COOKIE ] = $logged_in_cookie;
 }

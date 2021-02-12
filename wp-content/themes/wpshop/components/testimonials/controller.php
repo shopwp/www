@@ -14,7 +14,8 @@ if ($show_all) {
    $testimonials = get_posts([
       'post_type'       => 'testimonials',
       'numberposts'		=> 6,
-      'orderby'         => 'menu_order'
+      'orderby'         => 'menu_order',
+      'order'         => 'ASC'
    ]);
 }
 

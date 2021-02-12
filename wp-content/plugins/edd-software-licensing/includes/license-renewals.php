@@ -128,87 +128,57 @@ Renew now: {renewal_link}.';
 	return apply_filters( 'edd_sl_get_renewal_notices', $notices );
 }
 
-
+/**
+ * Adds the renewal form to the checkout screen.
+ *
+ * @since 1.6
+ * @return void
+ */
 function edd_sl_renewal_form() {
 
-	if( ! edd_sl_renewals_allowed() ) {
+	if ( ! edd_sl_renewals_allowed() ) {
 		return;
 	}
 
-	$renewal      = EDD()->session->get( 'edd_is_renewal' );
-	$renewal_keys = edd_sl_get_renewal_keys();
-	$preset_key   = ! empty( $_GET['key'] ) ? esc_html( urldecode( $_GET['key'] ) ) : '';
-	$error        = ! empty( $_GET['edd-sl-error'] ) ? sanitize_text_field( $_GET['edd-sl-error'] ) : '';
-	$color        = edd_get_option( 'checkout_color', 'blue' );
-	$color        = ( $color == 'inherit' ) ? '' : $color;
-	$style        = edd_get_option( 'button_style', 'button' );
-	ob_start(); ?>
-	<form method="post" id="edd_sl_renewal_form">
-		<fieldset id="edd_sl_renewal_fields">
-			<p id="edd_sl_show_renewal_form_wrap">
-				<?php _e( 'Renewing a license key? <a href="#" id="edd_sl_show_renewal_form">Click to renew an existing license</a>', 'edd_sl' ); ?>
-			</p>
-			<p id="edd-license-key-container-wrap" class="edd-cart-adjustment" style="display:none;">
-				<span class="edd-description"><?php _e( 'Enter the license key you wish to renew. Leave blank to purchase a new one.', 'edd_sl' ); ?></span>
-				<input class="edd-input required" type="text" name="edd_license_key" autocomplete="off" placeholder="<?php _e( 'Enter your license key', 'edd_sl' ); ?>" id="edd-license-key" value="<?php echo $preset_key; ?>"/>
-				<input type="hidden" name="edd_action" value="apply_license_renewal"/>
-			</p>
-			<p class="edd-sl-renewal-actions" style="display:none">
-				<input type="submit" id="edd-add-license-renewal" disabled="disabled" class="edd-submit button <?php echo $color . ' ' . $style; ?>" value="<?php _e( 'Apply License Renewal', 'edd_sl' ); ?>"/>&nbsp;<span><a href="#" id="edd-cancel-license-renewal"><?php _e( 'Cancel', 'edd_sl' ); ?></a></span>
-			</p>
-
-			<?php if( ! empty( $renewal ) && ! empty( $renewal_keys ) ) : ?>
-				<p id="edd-license-key-container-wrap" class="edd-cart-adjustment">
-					<span class="edd-description"><?php _e( 'You may renew multiple license keys at once.', 'edd_sl' ); ?></span>
-				</p>
-			<?php endif; ?>
-		</fieldset>
-		<?php if( ! empty( $error ) ) : ?>
-			<div class="edd_errors">
-					<p class="edd_error"><?php echo urldecode( sanitize_text_field( $_GET['message'] ) ); ?></p>
-			</div>
-		<?php endif; ?>
-	</form>
-	<?php if( ! empty( $renewal ) && ! empty( $renewal_keys ) ) : ?>
-	<form method="post" id="edd_sl_cancel_renewal_form">
-		<p>
-			<input type="hidden" name="edd_action" value="cancel_license_renewal"/>
-			<input type="submit" class="edd-submit button" value="<?php _e( 'Cancel License Renewal', 'edd_sl' ); ?>"/>
-		</p>
-	</form>
-	<?php
-	endif;
-	echo ob_get_clean();
+	edd_get_template_part( 'license', 'renewal-form' );
 }
 add_action( 'edd_before_purchase_form', 'edd_sl_renewal_form', -1 );
 
-
+/**
+ * Handles the template redirect if renewing a license key.
+ *
+ * @return void
+ */
 function edd_sl_listen_for_renewal_checkout() {
 
-	if( ! function_exists( 'edd_is_checkout' ) || ! edd_is_checkout() ) {
+	if ( ! function_exists( 'edd_is_checkout' ) || ! edd_is_checkout() ) {
 		return;
 	}
 
-	if( empty( $_GET['edd_license_key'] ) ) {
+	if ( empty( $_GET['edd_license_key'] ) ) {
 		return;
 	}
 
-	$added = edd_sl_add_renewal_to_cart( sanitize_text_field( $_GET['edd_license_key'] ), true );
+	$added      = edd_sl_add_renewal_to_cart( sanitize_text_field( $_GET['edd_license_key'] ), true );
+	$url        = edd_get_checkout_uri();
+	$query_args = false;
+	if ( is_wp_error( $added ) ) {
+		$query_args = array(
+			'edd-sl-error' => urlencode( $added->get_error_code() ),
+			'message'      => urlencode( $added->get_error_message() ),
+		);
+	}
+	$redirect = wp_validate_redirect( $url, edd_get_checkout_uri() );
 
-	if( $added && ! is_wp_error( $added ) ) {
-
-		$redirect = edd_get_checkout_uri();
-
-	} else {
-
-		$code     = $added->get_error_code();
-		$message  = $added->get_error_message();
-		$redirect = add_query_arg( array( 'edd-sl-error' => $code, 'message' => urlencode( $message ) ), edd_get_checkout_uri() );
-
+	if ( $query_args ) {
+		$redirect = add_query_arg(
+			$query_args,
+			$redirect
+		);
 	}
 
-	wp_safe_redirect( $redirect ); exit;
-
+	wp_safe_redirect( $redirect );
+	exit;
 }
 add_action( 'template_redirect', 'edd_sl_listen_for_renewal_checkout' );
 
@@ -242,28 +212,51 @@ function edd_sl_match_renewal_email( $valid_data, $posted ) {
 }
 add_action( 'edd_checkout_error_checks', 'edd_sl_match_renewal_email', 10, 2 );
 
+/**
+ * Maybe adds the license renewal to the cart.
+ * On success, redirects to the cart; on failure, redirects to the current page with errors.
+ *
+ * @since 3.4
+ * @param array $data
+ * @return void
+ */
 function edd_sl_apply_license_renewal( $data ) {
 
-	if( ! edd_sl_renewals_allowed() ) {
+	if ( ! edd_sl_renewals_allowed() ) {
 		return;
 	}
 
-	$license  = ! empty( $data['edd_license_key'] ) ? sanitize_text_field( $data['edd_license_key'] ) : false;
-	$added    = edd_sl_add_renewal_to_cart( $license, true );
+	$license    = ! empty( $data['edd_license_key'] ) ? sanitize_text_field( $data['edd_license_key'] ) : false;
+	$added      = edd_sl_add_renewal_to_cart( $license, true );
+	$url        = edd_get_checkout_uri();
+	$query_args = false;
+	if ( ! $added || is_wp_error( $added ) ) {
+		// `wp_get_raw_referer` was added in WP 4.5; this check is required as we still support 4.4.
+		if ( function_exists( 'wp_get_raw_referer' ) ) {
+			$url = wp_get_raw_referer();
+		} else {
+			if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+				$url = wp_unslash( $_REQUEST['_wp_http_referer'] );
+			} elseif ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+				$url = wp_unslash( $_SERVER['HTTP_REFERER'] );
+			}
+		}
+		$query_args = array(
+			'edd-sl-error' => urlencode( $added->get_error_code() ),
+			'message'      => urlencode( $added->get_error_message() ),
+		);
+	}
+	$redirect = wp_validate_redirect( $url, edd_get_checkout_uri() );
 
-	if( $added && ! is_wp_error( $added ) ) {
-
-		$redirect = edd_get_checkout_uri();
-
-	} else {
-
-		$code     = $added->get_error_code();
-		$message  = $added->get_error_message();
-		$redirect = add_query_arg( array( 'edd-sl-error' => $code, 'message' => urlencode( $message ) ), edd_get_checkout_uri() );
-
+	if ( $query_args ) {
+		$redirect = add_query_arg(
+			$query_args,
+			$redirect
+		);
 	}
 
-	wp_safe_redirect( $redirect ); exit;
+	wp_safe_redirect( $redirect );
+	exit;
 }
 add_action( 'edd_apply_license_renewal', 'edd_sl_apply_license_renewal' );
 
@@ -276,6 +269,10 @@ add_action( 'edd_apply_license_renewal', 'edd_sl_apply_license_renewal' );
  * @return bool|WP_Error $success    True if the renewal was added to the cart, WP_Error is not successful
  */
 function edd_sl_add_renewal_to_cart( $license_id = 0, $by_key = false ) {
+
+	if ( ! edd_sl_renewals_allowed() ) {
+		return new WP_Error( 'renewals_disabled', __( 'Renewals are not allowed on this site.', 'edd_sl' ) );
+	}
 
 	$license = edd_software_licensing()->get_license( $license_id, $by_key );
 
@@ -666,7 +663,7 @@ function edd_sl_set_renewal_flag( $payment_id, $payment_data ) {
 		return;
 	}
 
-	$payment      = function_exists( 'edd_get_payment' ) ? edd_get_payment( $payment_id ) : new EDD_Payment( $payment_id );
+	$payment      = new EDD_Payment( $payment_id );
 	$is_renewal   = false;
 	$renewal_keys = array();
 
@@ -685,11 +682,11 @@ function edd_sl_set_renewal_flag( $payment_id, $payment_data ) {
 
 	if( $is_renewal && ! empty( $renewal_keys ) ) {
 
-		add_post_meta( $payment->ID, '_edd_sl_is_renewal', '1', true );
+		$payment->add_meta( '_edd_sl_is_renewal', '1', true );
 
 		foreach( $renewal_keys as $key ) {
 
-			add_post_meta( $payment->ID, '_edd_sl_renewal_key', $key );
+			$payment->add_meta( '_edd_sl_renewal_key', $key );
 
 		}
 
@@ -990,14 +987,15 @@ function edd_sl_get_renewal_discount_percentage( $license_id = 0, $download_id =
  * @since 3.5
  */
 function edd_sl_dynamic_email_strings() {
-	$strings = array(
-		'{name}'         => __( 'The customer\'s name', 'edd_sl' ),
-		'{license_key}'  => __( 'The license key that needs renewed', 'edd_sl' ),
-		'{product_name}' => __( 'The name of the product the license key belongs to', 'edd_sl' ),
-		'{expiration}'   => __( 'The expiration date for the license key', 'edd_sl' ),
-		'{renewal_link}' => __( 'URL to the renewal checkout page', 'edd_sl' ),
-		'{renewal_url}'  => __( 'Raw URL of the renewal checkout page', 'edd_sl' ),
-		'{unsubscribe_url}'  => __( 'Raw URL to unsubscribe from email notifications for the license', 'edd_sl' ),
+	$strings  = array(
+		'{name}'            => __( 'The customer\'s first name', 'edd_sl' ),
+		'{fullname}'        => __( 'The customer\'s full name', 'edd_sl' ),
+		'{license_key}'     => __( 'The license key that needs renewed', 'edd_sl' ),
+		'{product_name}'    => __( 'The name of the product the license key belongs to', 'edd_sl' ),
+		'{expiration}'      => __( 'The expiration date for the license key', 'edd_sl' ),
+		'{renewal_link}'    => __( 'URL to the renewal checkout page', 'edd_sl' ),
+		'{renewal_url}'     => __( 'Raw URL of the renewal checkout page', 'edd_sl' ),
+		'{unsubscribe_url}' => __( 'Raw URL to unsubscribe from email notifications for the license', 'edd_sl' ),
 	);
 	$discount = edd_get_option( 'edd_sl_renewal_discount', false );
 	if ( ! empty( $discount ) ) {

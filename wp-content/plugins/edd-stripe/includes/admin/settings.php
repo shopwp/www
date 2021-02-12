@@ -21,44 +21,11 @@ add_filter( 'edd_settings_sections_gateways', 'edds_settings_section' );
  */
 
 function edds_add_settings( $settings ) {
-
-	// Build the Stripe Connect OAuth URL
-	$stripe_connect_url = add_query_arg( array(
-		'live_mode' => (int) ! edd_is_test_mode(),
-		'state' => str_pad( wp_rand( wp_rand(), PHP_INT_MAX ), 100, wp_rand(), STR_PAD_BOTH ),
-		'customer_site_url' => admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ),
-	), 'https://easydigitaldownloads.com/?edd_gateway_connect_init=stripe_connect' );
-
-	$test_mode = edd_is_test_mode();
-
-	$test_key = edd_get_option( 'test_publishable_key' );
-	$live_key = edd_get_option( 'live_publishable_key' );
-
-	$live_text = _x( 'live', 'current value for test mode', 'edds' );
-	$test_text = _x( 'test', 'current value for test mode', 'edds' );
-
-	$mode = $live_text;
-	if( $test_mode ) {
-		$mode = $test_text;
-	}
-
-	$stripe_connect_account_id = edd_get_option( 'stripe_connect_account_id' );
-
-	if( empty( $stripe_connect_account_id ) || ( ( empty( $test_key ) && $test_mode ) || ( empty( $live_key ) && ! $test_mode ) ) ) {
-		$stripe_connect_desc = '<a href="'. esc_url( $stripe_connect_url ) .'" class="edd-stripe-connect"><span>' . __( 'Connect with Stripe', 'edds' ) . '</span></a>';
-		$stripe_connect_desc .= '<p>' . sprintf( __( 'Have questions about connecting with Stripe? See the <a href="%s" target="_blank" rel="noopener noreferrer">documentation</a>.', 'edds' ), 'https://docs.easydigitaldownloads.com/article/2039-how-does-stripe-connect-affect-me' ) . '</p>';
-	} else {
-		$stripe_connect_desc = sprintf( __( 'Your Stripe account is connected in %s mode. If you need to reconnect in %s mode, <a href="%s">click here</a>.', 'edds' ), '<strong>' . $mode . '</strong>', $mode, esc_url( $stripe_connect_url ) );
-	}
-
-	$stripe_connect_desc .= '<p id="edds-api-keys-row-reveal">' . __( '<a href="#">Click here</a> to manage your API keys manually.', 'edds' ) . '</p>';
-	$stripe_connect_desc .= '<p id="edds-api-keys-row-hide" class="edd-hidden">' . __( '<a href="#">Click here</a> to hide your API keys.', 'edds' ) . '</p>';
-
 	$stripe_settings = array(
 		array(
 			'id' => 'stripe_connect_button',
 			'name' => __( 'Connection Status', 'edds' ),
-			'desc' => $stripe_connect_desc,
+			'desc' => edds_stripe_connect_setting_field(),
 			'type' => 'descriptive_text',
 			'class' => 'edd-stripe-connect-row',
 		),
@@ -99,9 +66,23 @@ function edds_add_settings( $settings ) {
 			'type'  => 'descriptive_text',
 			'name'  => __( 'Webhooks', 'edds' ),
 			'desc'  =>
-				'<p>' . sprintf( __( 'In order for Stripe to function completely, you must configure your Stripe webhooks. Visit your <a href="%s" target="_blank">account dashboard</a> to configure them. Please add a webhook endpoint for the URL below.', 'edds' ), 'https://dashboard.stripe.com/account/webhooks' ) . '</p>' .
-				'<p><strong>' . sprintf( __( 'Webhook URL: %s', 'edds' ), home_url( 'index.php?edd-listener=stripe' ) ) . '</strong></p>' .
-				'<p>' . sprintf( __( 'See our <a href="%s">documentation</a> for more information.', 'edds' ), 'http://docs.easydigitaldownloads.com/article/405-setup-documentation-for-stripe-payment-gateway' ) . '</p>'
+			'<p>' . sprintf(
+				/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+				__( 'In order for Stripe to function completely, you must configure your Stripe webhooks. Visit your %1$saccount dashboard%2$s to configure them. Please add a webhook endpoint for the URL below.', 'edds' ),
+				'<a href="https://dashboard.stripe.com/account/webhooks" target="_blank" rel="noopener noreferrer">',
+				'</a>'
+			) . '</p>' .
+			'<p><strong>' . sprintf(
+				/* translators: %s Webhook URL. Do not translate. */
+				__( 'Webhook URL: %s', 'edds' ),
+				home_url( 'index.php?edd-listener=stripe' )
+			) . '</strong></p>' .
+			'<p>' . sprintf(
+				/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+				__( 'See our %1$sdocumentation%2$s for more information.', 'edds' ),
+				'<a href="http://docs.easydigitaldownloads.com/article/405-setup-documentation-for-stripe-payment-gateway" target="_blank" rel="noopener noreferrer">',
+				'</a>'
+			) . '</p>'
 		),
 		array(
 			'id'    => 'stripe_billing_fields',
@@ -134,6 +115,18 @@ function edds_add_settings( $settings ) {
 			'type'  => 'checkbox',
 			'tooltip_title' => __( 'What does checking preapprove do?', 'edds' ),
 			'tooltip_desc'  => __( 'If you choose this option, Stripe will not charge the customer right away after checkout, and the payment status will be set to preapproved in Easy Digital Downloads. You (as the admin) can then manually change the status to Complete by going to Payment History and changing the status of the payment to Complete. Once you change it to Complete, the customer will be charged. Note that most typical stores will not need this option.', 'edds' ),
+		),
+		array(
+			'id'    => 'stripe_allow_prepaid',
+			'name'  => __( 'Prepaid Cards', 'edds' ),
+			'desc'  => __( 'Allow prepaid cards as valid payment method.', 'edds' ),
+			'type'  => 'checkbox',
+		),
+		array(
+			'id'   => 'stripe_split_payment_fields',
+			'name'  => __( 'Split Credit Card Form', 'edds' ),
+			'desc'  => __( 'Use separate card number, expiration, and CVC fields in payment forms.', 'edds' ),
+			'type'  => 'checkbox',
 		),
 		array(
 			'id' => 'stripe_restrict_assets',
@@ -175,7 +168,7 @@ function edds_add_settings( $settings ) {
 		$notice = array(
 			'stripe_connect_test_mode_toggle_notice' => array(
 				'id' => 'stripe_connect_test_mode_toggle_notice',
-				'desc' => '<p>' . __( 'You just toggled the test mode option. Save your changes using the Save Changes button below, then connect your Stripe account using the "Connect with Stripe" button when the page reloads.', 'edds' ) . '</p>',
+				'desc' => '<p>' . __( 'You have disabled the "Test Mode" option. Once you have saved your changes, please verify your Stripe connection, especially if you have not previously connected in with "Test Mode" disabled.', 'edds' ) . '</p>',
 				'type' => 'stripe_connect_notice',
 				'field_class' => 'edd-hidden',
 			)
@@ -295,7 +288,12 @@ function edds_process_gateway_connect_completion() {
 	$response = wp_remote_get( esc_url_raw( $edd_credentials_url ) );
 
 	if( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-		$message = '<p>' . sprintf( __( 'There was an error getting your Stripe credentials. Please <a href="%s">try again</a>. If you continue to have this problem, please contact support.', 'edds' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) ) . '</p>';
+		$message = '<p>' . sprintf(
+			/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+			__( 'There was an error getting your Stripe credentials. Please %1$stry again%2$s. If you continue to have this problem, please contact support.', 'edds' ),
+			'<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=edd-stripe' ) ) . '" target="_blank" rel="noopener noreferrer">',
+			'</a>'
+		) . '</p>';
 		wp_die( $message );
 	}
 

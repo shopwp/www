@@ -14,10 +14,14 @@
 
 .footer-col {
   h3 {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
     text-align: left;
     margin-bottom: -8px;
+
+    + div {
+      margin-top: 15px;
+    }
 
     @include device(1500, 'max') {
       font-size: 16px;
@@ -152,7 +156,7 @@
 
 .footer-social-link {
   font-size: 1.7em;
-  padding: 0 $space-xxxs;
+  padding: 0 0.3em;
   text-decoration: none;
   border: none;
 

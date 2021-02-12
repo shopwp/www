@@ -9,7 +9,7 @@ global $post;
 
       <header class="post-single-header">
 
-         <div class="l-row">
+         <div class="l-row l-contain">
 
             
 
@@ -67,10 +67,6 @@ global $post;
    <div class="article-footer">
    
       <div class="inner">
-
-         <div class="post-sharing">
-            <?= do_shortcode('[social_warfare buttons="twitter,facebook,linkedin"]'); ?>
-         </div>
          
          <div class="post-affiliate">
 

@@ -97,7 +97,10 @@ class EDD_Recurring_Cron {
 
 			foreach( $subscriptions as $subscription ) {
 
-				delete_post_meta( $subscription->parent_payment_id, '_edd_subscription_payment' );
+				$payment = new EDD_Payment( $subscription->parent_payment_id );
+				if ( $payment ) {
+					$payment->delete_meta( '_edd_subscription_payment' );
+				}
 				$db->delete( $subscription->id );
 
 			}

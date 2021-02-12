@@ -70,11 +70,18 @@ add_filter( 'edd_payments_table_views', 'edds_payment_status_filters' );
  */
 function edds_payments_column_data( $value, $payment_id, $column_name ) {
 	if ( $column_name == 'status' ) {
-		$status      = get_post_status( $payment_id );
-		$customer_id = get_post_meta( $payment_id, '_edds_stripe_customer_id', true );
+		$payment = edd_get_payment( $payment_id );
 
-		if( ! $customer_id )
+		if ( empty( $payment ) ) {
 			return $value;
+		}
+
+		$status      = $payment->status;
+		$customer_id = $payment->get_meta( '_edds_stripe_customer_id', true );
+
+		if ( empty( $customer_id ) ) {
+			return $value;
+		}
 
 		$nonce = wp_create_nonce( 'edds-process-preapproval' );
 

@@ -57,17 +57,12 @@ if ( $keys ) : ?>
 				<?php do_action( 'edd_sl_license_row_start', $license->ID ); ?>
 				<td>
 					<?php
-					$download_id = $edd_sl->get_download_id( $license->ID );
-					$price_id    = $edd_sl->get_price_id( $license->ID );
-
-					echo get_the_title( $download_id ); ?>
-					<?php if( '' !== $price_id ) : ?>
-						<span class="edd_sl_license_price_option">&ndash;&nbsp;<?php echo edd_get_price_option_name( $download_id, $price_id ); ?></span>
-					<?php endif; ?>
+					echo $edd_sl->get_license_download_display_name( $license );
+					?>
 				</td>
 				<td>
 					<span class="view-key-wrapper">
-						<a href="#" class="edd_sl_show_key" title="<?php _e( 'Click to view license key', 'edd_sl' ); ?>"><img src="<?php echo EDD_SL_PLUGIN_URL . '/images/key.png'; ?>"/></a>
+						<a href="#" class="edd_sl_show_key" title="<?php _e( 'Click to view license key', 'edd_sl' ); ?>"><img src="<?php echo EDD_SL_PLUGIN_URL . '/assets/images/key.png'; ?>"/></a>
 						<input type="text" readonly="readonly" class="edd_sl_license_key" value="<?php echo esc_attr( $edd_sl->get_license_key( $license->ID ) ); ?>" style="display:none;"/>
 					</span>
 				</td>
@@ -79,7 +74,7 @@ if ( $keys ) : ?>
 				<?php else: ?>
 					<?php echo date_i18n( 'F j, Y', $edd_sl->get_license_expiration( $license->ID ) ); ?>
 				<?php endif; ?>
-				<?php if( edd_sl_renewals_allowed() && $license->post_parent == 0 ) : ?>
+				<?php if ( edd_sl_renewals_allowed() && 0 == $license->parent ) : ?>
 					<?php if( 'expired' === edd_software_licensing()->get_license_status( $license->ID ) && edd_software_licensing()->can_renew( $license->ID ) ) : ?>
 						<span class="edd_sl_key_sep">&nbsp;&ndash;&nbsp;</span>
 						<a href="<?php echo edd_software_licensing()->get_renewal_url( $license->ID ); ?>" title="<?php esc_attr_e( 'Renew license', 'edd_sl' ); ?>"><?php _e( 'Renew license', 'edd_sl' ); ?></a>

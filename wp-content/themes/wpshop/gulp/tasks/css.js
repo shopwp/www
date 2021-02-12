@@ -1,19 +1,14 @@
-/////////
-// CSS //
-/////////
-
 import gulp from 'gulp';
 import config from '../config';
 import sass from 'gulp-sass';
-import rename from "gulp-rename";
+import rename from 'gulp-rename';
 import postcss from 'gulp-postcss';
-import gulpStylelint from 'gulp-stylelint';
 
 gulp.task('css', () => {
-  return gulp.src(config.files.cssEntry)
+  return gulp
+    .src(config.files.cssEntry)
     .pipe(sass())
-    // .pipe(gulpStylelint( config.stylelintConfig() ))
-    .pipe(postcss( config.postCSSPlugins() ))
+    .pipe(postcss(config.postCSSPlugins()))
     .pipe(rename(config.names.css))
     .pipe(gulp.dest(config.folders.dist))
     .pipe(config.bs.stream());

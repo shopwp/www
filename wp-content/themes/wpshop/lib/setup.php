@@ -112,6 +112,55 @@ function display_sidebar()
    return apply_filters('sage/display_sidebar', $display);
 }
 
+
+function dequeue_superfluous_assets() {
+   // Remove the REST API endpoint.
+   remove_action( 'rest_api_init', 'wp_oembed_register_route' );
+
+   // Turn off oEmbed auto discovery.
+   add_filter( 'embed_oembed_discover', '__return_false' );
+
+   // Don't filter oEmbed results.
+   remove_filter( 'oembed_dataparse', 'wp_filter_oembed_result', 10 );
+
+   // Remove oEmbed discovery links.
+   remove_action( 'wp_head', 'wp_oembed_add_discovery_links' );
+
+   // Remove oEmbed-specific JavaScript from the front-end and back-end.
+   remove_action( 'wp_head', 'wp_oembed_add_host_js' );
+   add_filter( 'tiny_mce_plugins', 'disable_embeds_tiny_mce_plugin' );
+
+   // Remove all embeds rewrite rules.
+   add_filter( 'rewrite_rules_array', 'disable_embeds_rewrites' );
+
+   // Remove filter of the oEmbed result before any HTTP requests are made.
+   remove_filter( 'pre_oembed_result', 'wp_filter_pre_oembed_result', 10 );
+   wp_deregister_script( 'wp-embed' );
+   wp_dequeue_style( 'wp-block-library' );
+   wp_dequeue_style( 'wpshopify-styles-frontend-all' );
+
+   wp_dequeue_script( 'wpshopify-runtime' );
+   wp_dequeue_script( 'wpshopify-vendors-public' );
+   wp_dequeue_script( 'wpshopify-public' );
+
+   wp_deregister_script( 'wpshopify-runtime' );
+   wp_deregister_script( 'wpshopify-vendors-public' );
+   wp_deregister_script( 'wpshopify-public' );
+}
+
+function is_page_to_dequeue() {
+   return is_page('checkout') || is_page('purchase-confirmation') || is_page('purchase') || is_page('login') || is_page('account');
+}
+
+
+function replace_rest_protocol() {
+   if (is_ssl()) {
+      return str_replace("http://", "https://", get_rest_url());
+   }
+
+   return get_rest_url();
+}
+
 /*
 
 Theme assets
@@ -119,49 +168,78 @@ Theme assets
 */
 function assets()
 {
-   
-   wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Open+Sans:400,700|Noto+Sans|Bitter:400,700|IBM+Plex+Sans:400,700|Catamaran:400,700|Suez+One&display=swap', false, null);
 
-   wp_enqueue_style('WP Shopify CSS', Assets\asset_path('prod/app.min.css'), false, filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.css'));
+   $settings_encoded_string = [
+      'api' => [
+         'namespace' => WPS_API_NAMESPACE,
+         'restUrl' => replace_rest_protocol(),
+         'nonce' => wp_create_nonce( 'wp_rest' )
+      ],
+      'misc' => [
+         'dequeued' => false,
+         'userId' => get_current_user_id(),
+         'themeUrl' => get_template_directory_uri(),
+         'siteUrl' => get_site_url()
+      ]
+   ];
 
-
-   if (is_page('purchase-confirmation')) {
-      wp_enqueue_script('confetti-js', Assets\asset_path('js/vendor/confetti.min.js'), [], null, false);
-   }
-
-   if (!is_page('checkout')) {
-      
-      wp_enqueue_style('Animate CSS', '//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css', false, null);
-      wp_enqueue_script('Anime JS', Assets\asset_path('js/vendor/anime.min.js'), [], null, false);
-      wp_enqueue_script('modernizr-js', Assets\asset_path('js/vendor/modernizr.min.js'), [], null, false);
-
-      wp_enqueue_script('masonry-js', 'https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js', [], null, false);
-      
-
-      if (is_single() && comments_open() && get_option('thread_comments')) {
-         wp_enqueue_script('comment-reply');
-      }
-
-
-      wp_enqueue_script('fitvids', '//cdnjs.cloudflare.com/ajax/libs/fitvids/1.2.0/jquery.fitvids.min.js', ['jquery'], null, false);
-
-      wp_enqueue_script('WPS Vendor Commons', Assets\asset_path('prod/js/vendor.min.js'), [], null, true);
-
-      wp_enqueue_script('jQuery Validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js', [], null, true);
-      wp_enqueue_script('jQuery Validate Additional Methods', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/additional-methods.min.js', ['jQuery Validate'], null, true);
-
-      wp_enqueue_script('WP Shopify JS', Assets\asset_path('prod/app.min.js'), [], filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.js'), true);
+   if (is_page('account')) {
+      wp_enqueue_script('WP Shopify Account', Assets\asset_path('prod/account.min.js'), [], filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/account.min.js'), true);
 
    } else {
 
-      // Removing on checkout page ...
-      wp_dequeue_style( 'wp-block-library' );
+      wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Inter&display=swap', false, null);
+
+      wp_enqueue_style('WP Shopify CSS', Assets\asset_path('prod/app.min.css'), false, filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.css'));
+
+      if (is_page('purchase-confirmation')) {
+         wp_enqueue_script('confetti-js', Assets\asset_path('js/vendor/confetti.min.js'), [], null, false);
+      }
+
+      wp_enqueue_script('masonry-js', Assets\asset_path('js/vendor/masonry.pkgd.min.js'), [], null, true);
+
+      wp_enqueue_script('jquery-validate', '//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js', [], null, true);
+
+      wp_enqueue_script('WP Shopify JavaScript', Assets\asset_path('prod/app.min.js'), ['jquery', 'jquery-validate', 'masonry-js'], filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.js'), true);
+
+      if (!is_page('purchase-confirmation')) {
+         wp_enqueue_script('popper-js', 'https://unpkg.com/@popperjs/core@2', [], null, false);
+         wp_enqueue_script('tippy-js', 'https://unpkg.com/tippy.js@6', [], null, false);
+      }
+      
    }
-   
+
+   if (is_page_to_dequeue()) {
+      dequeue_superfluous_assets();
+      $settings_encoded_string['misc']['dequeued'] = true;
+
+   } else {
+      $settings_encoded_string['misc']['latestVersion'] = WP_SHOPIFY_NEW_PLUGIN_VERSION;
+   }
+
+   $js_string = "const wpshopifyMarketing = " . wp_json_encode($settings_encoded_string) . ";";
+
+   wp_add_inline_script('WP Shopify JavaScript', $js_string, 'before');
+   wp_add_inline_script('WP Shopify Account', $js_string, 'before');
+
 }
 
 add_action('wp_enqueue_scripts', __NAMESPACE__ . '\\assets', 100);
 
+
+function assets_login() {
+
+   $uri = $_SERVER['REQUEST_URI'];
+
+   if (strpos($uri, '/wp-login.php?action=resetpass') !== false || strpos($uri, '/wp-login.php?action=rp') !== false) {
+      wp_enqueue_style('WPS Fonts', '//fonts.googleapis.com/css?family=Open+Sans:400,700|Noto+Sans|Bitter:400,700|IBM+Plex+Sans:400,700|Catamaran:400,700|Suez+One&display=swap', false, null);
+
+      wp_enqueue_style('WP Shopify CSS', Assets\asset_path('prod/app.min.css'), false, filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.css'));
+   }
+
+}
+
+add_action( 'login_enqueue_scripts', __NAMESPACE__ . '\\assets_login', 100);
 
 
 /*

@@ -54,12 +54,15 @@ function edd_sl_setup_post_type() {
 		'taxonomies'         => array( 'edd_log_type' )
 	) );
 
+	if ( ! taxonomy_exists( 'edd_log_type' ) ) {
+		register_taxonomy( 'edd_log_type', 'edd_license_log', array( 'public' => false ) );
+	}
 }
 add_action( 'init', 'edd_sl_setup_post_type', 2 );
 
 /**
  * Registers the thumbnail sizes for the plugins, so they can be used in the updater icons array.
- * 
+ *
  * @since 3.6.5
  *
  * @return void

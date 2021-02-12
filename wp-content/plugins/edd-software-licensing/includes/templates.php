@@ -41,42 +41,53 @@ add_action( 'edd_purchase_history_row_end', 'edd_sl_site_management_links', 10, 
 /**
  * Override the content of the purchase history page to show our license management UI
  *
+ * @param array       $templates Template stack.
+ * @param string      $slug      Template slug.
+ * @param string|null $name      Optional. Template name.
+ *
  * @since 2.7
+ * @since 3.7 - This function no longer hooks into `the_content`, but to `edd_get_template_part` instead.
+ *              See issue 1517 on GitHub.
+ * @link https://github.com/easydigitaldownloads/EDD-Software-Licensing/issues/1517
+ *
+ * @return array
  */
-function edd_sl_override_history_content( $content ) {
+function edd_sl_override_history_content( $templates, $slug, $name ) {
 
 	if( empty( $_GET['action'] ) || 'manage_licenses' != $_GET['action'] ) {
-		return $content;
+		return $templates;
 	}
 
 	if( empty( $_GET['payment_id'] ) ) {
-		return $content;
+		return $templates;
 	}
 
-	if( ! in_the_loop() ) {
-		return $content;
+	if ( 'history' !== $slug && 'purchases' !== $name ) {
+		return $templates;
 	}
 
 	if( isset( $_GET['license_id'] ) && isset( $_GET['view'] ) && 'upgrades' == $_GET['view'] ) {
 
-		ob_start();
-		edd_get_template_part( 'licenses', 'upgrades' );
-		$content = ob_get_clean();
+		$templates = array(
+			'licenses-upgrades.php',
+			'licenses.php',
+		);
 
 	} else {
 
 		$view = isset( $_GET['license_id'] ) ? 'single' : 'overview';
 
-		ob_start();
-		edd_get_template_part( 'licenses', 'manage-' . $view );
-		$content = ob_get_clean();
+		$templates = array(
+			'licenses-manage-' . $view . '.php',
+			'licenses.php',
+		);
 
 	}
 
-	return $content;
+	return $templates;
 
 }
-add_filter( 'the_content', 'edd_sl_override_history_content', 9999 );
+add_filter( 'edd_get_template_part', 'edd_sl_override_history_content', 10, 3 );
 
 /**
  * Adds our templates dir to the EDD template stack
@@ -117,10 +128,7 @@ function edd_sl_show_keys_on_receipt( $payment, $edd_receipt_args ) {
 		foreach( $licenses as $license ) {
 			echo '<tr class="edd_license_key">';
 				echo '<td>';
-					echo '<span class="edd_sl_license_title">' . $license->get_download()->get_name() . '</span>&nbsp;';
-					if( $license->get_download()->has_variable_prices() ) {
-						echo '<span class="edd_sl_license_price_option">&ndash;&nbsp;' . edd_get_price_option_name( $license->get_download()->ID, $license->price_id ) . '</span>';
-					}
+					echo $licensing->get_license_download_display_name( $license );
 					if( 'expired' == $license->status ) {
 						echo '<span class="edd_sl_license_key_expired">&nbsp;(' . __( 'expired', 'edd_sl' ) . ')</span>';
 					} elseif( 'disabled' === $license->status ) {

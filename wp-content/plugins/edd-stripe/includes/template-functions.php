@@ -85,6 +85,8 @@ function edd_stripe_new_card_form() {
 		edd_print_errors();
 		return;
 	}
+
+	$split = edd_get_option( 'stripe_split_payment_fields', false );
 ?>
 
 <p id="edd-card-name-wrap">
@@ -98,15 +100,54 @@ function edd_stripe_new_card_form() {
 
 <div id="edd-card-wrap">
 	<label for="edd-card-element" class="edd-label">
-		<?php esc_html_e( 'Credit Card', 'edds' ); ?>
+		<?php
+		if ( '1' === $split ) :
+			esc_html_e( 'Credit Card Number', 'edds' );
+		else :
+			esc_html_e( 'Credit Card', 'edds' );
+		endif;
+		?>
 		<span class="edd-required-indicator">*</span>
 	</label>
 
-	<div id="edd-stripe-card-element"></div>
-	<div id="edd-stripe-card-errors" role="alert"></div>
+	<div id="edd-stripe-card-element-wrapper">
+		<?php if ( '1' === $split ) : ?>
+			<span class="card-type"></span>
+		<?php endif; ?>
 
-	<p></p><!-- Extra spacing -->
+		<div id="edd-stripe-card-element" class="edd-stripe-card-element"></div>
+	</div>
+
+	<p class="edds-field-spacer-shim"></p><!-- Extra spacing -->
 </div>
+
+<?php if ( '1' === $split ) : ?>
+
+<div id="edd-card-details-wrap">
+	<p class="edds-field-spacer-shim"></p><!-- Extra spacing -->
+
+	<div id="edd-card-exp-wrap">
+		<label for="edd-card-exp-element" class="edd-label">
+			<?php esc_html_e( 'Expiration', 'edds' ); ?>
+			<span class="edd-required-indicator">*</span>
+		</label>
+
+		<div id="edd-stripe-card-exp-element" class="edd-stripe-card-exp-element"></div>
+	</div>
+
+	<div id="edd-card-cvv-wrap">
+		<label for="edd-card-exp-element" class="edd-label">
+			<?php esc_html_e( 'CVC', 'edds' ); ?>
+			<span class="edd-required-indicator">*</span>
+		</label>
+
+		<div id="edd-stripe-card-cvc-element" class="edd-stripe-card-cvc-element"></div>
+	</div>
+</div>
+
+<?php endif; ?>
+
+<div id="edd-stripe-card-errors" role="alert"></div>
 
 <?php
 	/**
@@ -173,7 +214,24 @@ function edd_stripe_update_billing_address_field() {
 
 	<p class="edd-stripe-update-billing-address-wrapper">
 		<input type="checkbox" name="edd_stripe_update_billing_address" id="edd-stripe-update-billing-address" value="1" />
-		<label for="edd-stripe-update-billing-address"><?php _e( 'Enter new billing address', 'edds' ); ?></label>
+		<label for="edd-stripe-update-billing-address">
+			<?php
+			echo wp_kses(
+				sprintf(
+					/* translators: %1$s Card type. %2$s Card last 4. */
+					__( 'Update card billing address for %1$s •••• %2$s', 'edds' ),
+					'<span class="edd-stripe-update-billing-address-brand">' . ( $default_card ? $default_card->brand : '' ) . '</span>',
+					'<span class="edd-stripe-update-billing-address-last4">' . ( $default_card ? $default_card->last4 : '' ) . '</span>'
+				),
+				array(
+					'strong' => true,
+					'span' => array(
+						'class' => true,
+					),
+				)
+			);
+			?>
+		</label>
 	</p>
 	<?php
 }
@@ -210,23 +268,36 @@ function edd_stripe_existing_card_field_radio( $user_id = 0 ) {
 					   data-address_line2="<?php echo $source->address_line2; ?>"
 					   data-address_state="<?php echo $source->address_state; ?>"
 					   data-address_zip="<?php echo $source->address_zip; ?>"
+					   data-brand="<?php echo $source->brand; ?>"
+					   data-last4="<?php echo $source->last4; ?>"
 				/>
 				<label for="<?php echo $source->id; ?>">
 					<input <?php checked( true, $card['default'], true ); ?> type="radio" id="<?php echo $source->id; ?>" name="edd_stripe_existing_card" value="<?php echo $source->id; ?>" class="edd-stripe-existing-card">
 					<span class="card-label">
 						<span class="card-data">
 							<span class="card-name-number">
-								<span class="card-brand"><?php echo $source->brand; ?></span>
-								<span class="card-ending-label"><?php _e( 'ending in', 'edds' ); ?></span>
-								<span class="card-last-4"><?php echo $source->last4; ?></span>
+								<?php
+										echo wp_kses(
+											sprintf(
+												/* translators: %1$s Card type. %2$s Card last 4. */
+												__( '%1$s •••• %2$s', 'edds' ),
+												'<span class="card-brand">' . $source->brand . '</span>',
+												'<span class="card-last-4">' . $source->last4 . '</span>'
+											),
+											array(
+												'span' => array(
+													'class' => true,
+												),
+											)
+										);
+								?>
 							</span>
-							<span class="card-expires-on">
-								<span class="default-card-sep"><?php echo '&mdash; '; ?></span>
-								<span class="card-expiration-label"><?php _e( 'expires', 'edds' ); ?></span>
+							<small class="card-expires-on">
+								<span class="default-card-sep"><?php echo '&nbsp;&nbsp;&nbsp;'; ?></span>
 								<span class="card-expiration">
 									<?php echo $source->exp_month . '/' . $source->exp_year; ?>
 								</span>
-							</span>
+							</small>
 						</span>
 						<?php
 							$current  = strtotime( date( 'm/Y' ) );
@@ -240,18 +311,14 @@ function edd_stripe_existing_card_field_radio( $user_id = 0 ) {
 							endif;
 						?>
 					</span>
-					<?php if ( $card['default'] && $is_checkout ) { ?>
-						<span class="card-status">
-							<span class="default-card-sep"><?php echo '&mdash; '; ?></span>
-							<span class="card-is-default"><?php _e( 'Default', 'edds'); ?></span>
-						</span>
-					<?php } ?>
 				</label>
 			</div>
 		<?php endforeach; ?>
 		<div class="edd-stripe-card-radio-item new-card-wrapper">
-			<input type="radio" id="edd-stripe-add-new" class="edd-stripe-existing-card" name="edd_stripe_existing_card" value="new" />
-			<label for="edd-stripe-add-new"><span class="add-new-card"><?php _e( 'Add New Card', 'edds' ); ?></span></label>
+			<label for="edd-stripe-add-new">
+				<input type="radio" id="edd-stripe-add-new" class="edd-stripe-existing-card" name="edd_stripe_existing_card" value="new" />
+				<span class="add-new-card"><?php _e( 'Add New Card', 'edds' ); ?></span>
+			</label>
 		</div>
 	</div>
 	<?php endif;
@@ -294,11 +361,22 @@ function edd_stripe_manage_cards() {
 				<?php foreach( $existing_cards as $card ) : ?>
 				<?php $source = $card['source']; ?>
 				<div id="<?php echo esc_attr( $source->id ); ?>_card_item" class="edd-stripe-card-item">
-
 					<span class="card-details">
-						<span class="card-brand"><?php echo $source->brand; ?></span>
-						<span class="card-ending-label"><?php _e( 'ending in', 'edds' ); ?></span>
-						<span class="card-last-4"><?php echo $source->last4; ?></span>
+						<?php
+								echo wp_kses(
+									sprintf(
+										__( '%1$s •••• %2$s', 'edds' ),
+										'<span class="card-brand">' . $source->brand . '</span>',
+										'<span class="card-last-4">' . $source->last4 . '</span>'
+									),
+									array(
+										'span' => array(
+											'class' => true,
+										),
+									)
+								);
+						?>
+
 						<?php if ( $card['default'] ) { ?>
 							<span class="default-card-sep"><?php echo '&mdash; '; ?></span>
 							<span class="card-is-default"><?php _e( 'Default', 'edds'); ?></span>
@@ -504,7 +582,7 @@ function edd_stripe_manage_cards() {
 				<?php endforeach; ?>
 			<?php endif; ?>
 			<form id="edd-stripe-add-new-card">
-				<div class="edd-stripe-add-new-card" style="display: none;">
+				<div class="edd-stripe-add-new-card edd-stripe-new-card" style="display: none;">
 					<label><?php _e( 'Add New Card', 'edds' ); ?></label>
 					<fieldset id="edd_cc_card_info" class="cc-card-info">
 						<legend><?php _e( 'Credit Card Details', 'easy-digital-downloads' ); ?></legend>
@@ -543,6 +621,45 @@ function edd_stripe_manage_cards() {
 	<?php
 }
 add_action( 'edd_profile_editor_after', 'edd_stripe_manage_cards' );
+
+/**
+ * Determines if the default Profile Editor's "Billing Address"
+ * fields should be hidden.
+ *
+ * If using Stripe + Saved Cards (and Stripe is the only active gateway)
+ * the information set in "Billing Address" is never utilized:
+ *
+ * - When using an existing Card that Card's billing address is used.
+ * - When adding a new Card the address form is blanked.
+ *
+ * @since 2.8.0
+ */
+function edd_stripe_maybe_hide_profile_editor_billing_address() {
+	// Only hide if Stripe is the only active gateway.
+	$active_gateways = edd_get_enabled_payment_gateways();
+
+	if ( ! ( 1 === count( $active_gateways ) && isset( $active_gateways['stripe'] ) ) ) {
+		return;
+	}
+
+	// Only hide if using Saved Cards.
+	$use_saved_cards = edd_stripe_existing_cards_enabled();
+
+	if ( false === $use_saved_cards ) {
+		return;
+	}
+
+	// Allow a default addres to be entered for the first Card
+	// if the Profile Editor is found before Checkout.
+	$existing_cards = edd_stripe_get_existing_cards( get_current_user_id() );
+
+	if ( empty( $existing_cards ) ) {
+		return;
+	}
+
+	echo '<style>#edd_profile_address_fieldset { display: none; }</style>';
+}
+add_action( 'edd_profile_editor_after', 'edd_stripe_maybe_hide_profile_editor_billing_address' );
 
 /**
  * Zip / Postal Code field for when full billing address is disabled

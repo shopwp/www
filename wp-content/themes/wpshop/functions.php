@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\BadResponseException;
 
+
 /**
  * Sage includes
  *
@@ -40,42 +41,9 @@ foreach ($sage_includes as $file) {
 }
 unset($file, $filepath);
 
-/*
-
-my_lost_password_page
-
-*/
-function my_lost_password_page($lostpassword_url, $redirect)
-{
-   return home_url('/forgot-password');
-}
-
-add_filter('lostpassword_url', 'my_lost_password_page', 10, 2);
-
-/*
-
-wps_reset_pass_redirect
-
-*/
-function wps_reset_pass_redirect()
-{
-   if (!is_user_logged_in() && is_page('reset-password')) {
-      global $_GET;
-
-      if (!isset($_GET['login']) || !$_GET['login'] || !isset($_GET['key']) || !$_GET['key']) {
-         wp_safe_redirect('/forgot-password');
-         exit();
-      }
-   }
-}
-
-add_action('template_redirect', 'wps_reset_pass_redirect');
-
-
-
 function wps_edd_payment_receipt_before($product_data)
 {
-   echo '<div class="receipt-account-wrapper"><a href="/account" class="btn btn-primary">Go to account</a></div>';
+   echo '<div class="receipt-account-wrapper" style="margin-top: 15px;"><a href="/account" class="btn btn-primary">Go to account</a></div>';
 }
 
 add_action('edd_payment_receipt_before', 'wps_edd_payment_receipt_before');
@@ -107,8 +75,6 @@ function wpshop_custom_excerpt_length($length)
    return 20;
 }
 add_filter('excerpt_length', 'wpshop_custom_excerpt_length', 999);
-
-
 
 
 function is_admin_user($user) {
@@ -153,98 +119,94 @@ function is_affiliate() {
 }
 
  
-function wps_on_login_redirect($redirect_to, $user_id) {
+// function wps_on_login_redirect($redirect_to, $user_id) {
 
-   $user = get_userdata($user_id);
+//    $user = get_userdata($user_id);
 
-   if (strpos($_SERVER['REQUEST_URI'], '?redirect=checkout') !== false) {
-      return '/checkout';
-   }
+//    if (strpos($_SERVER['REQUEST_URI'], '?redirect=checkout') !== false) {
+//       return '/checkout';
+//    }
 
 
-   if (isset($user->roles)) {
+//    if (isset($user->roles)) {
 
-      // Only admins end here
-      if (is_admin_user($user)) {
-         return admin_url();
+//       // Only admins end here
+//       if (is_admin_user($user)) {
+//          return admin_url();
 
-      }
+//       }
 
-      // Only affiliates end here
-      if (is_affiliate_only($user)) {
-         return '/affiliates';
+//       // Only affiliates end here
+//       if (is_affiliate_only($user)) {
+//          return '/affiliates';
 
-      }
+//       }
 
-      // Normal customers and customer affiliates end here
-      return '/account';
+//       // Normal customers and customer affiliates end here
+//       return '/account';
       
-   }
+//    }
 
-   // Fallback
-   return '/account';
+//    // Fallback
+//    return '/account';
 
-}
+// }
 
-add_filter('edd_login_redirect', 'wps_on_login_redirect', 10, 2);
-
-
+// add_filter('edd_login_redirect', 'wps_on_login_redirect', 10, 2);
 
 
 
-function wps_template_redirect() {
 
-   $user_d = wp_get_current_user();
-   $user = get_userdata($user_d->ID);
 
-   if (!is_user_logged_in() && is_page('account')) {
-      wp_redirect('/login');
-      exit();
-   }
+// function wps_template_redirect() {
 
-   if (!is_user_logged_in() && is_page('affiliates')) {
-      wp_redirect('/affiliate-login');
-      exit();
-   }   
+//    $user_d = wp_get_current_user();
+//    $user = get_userdata($user_d->ID);
 
-   if (is_user_logged_in() && is_page('become-an-affiliate') && is_affiliate()) {
-      wp_redirect('/affiliates');
-      exit();
-   }   
 
-   if (is_user_logged_in() && is_page('affiliate-login') && is_affiliate()) {
-      wp_redirect('/affiliates');
-      exit();
-   }   
+//    if (!is_user_logged_in() && is_page('affiliates')) {
+//       wp_redirect('/affiliate-login');
+//       exit();
+//    }   
 
-   if (is_user_logged_in() && is_page('affiliate-login') && !is_affiliate()) {
-      wp_redirect('/become-an-affiliate');
-      exit();
-   }   
+//    if (is_user_logged_in() && is_page('become-an-affiliate') && is_affiliate()) {
+//       wp_redirect('/affiliates');
+//       exit();
+//    }   
 
-   if (is_user_logged_in() && is_page('affiliates') && !is_affiliate()) {
-      wp_redirect('/become-an-affiliate');
-      exit();
-   }   
+//    if (is_user_logged_in() && is_page('affiliate-login') && is_affiliate()) {
+//       wp_redirect('/affiliates');
+//       exit();
+//    }   
 
-   if (!is_page('account')) {
-      return;
-   }
+//    if (is_user_logged_in() && is_page('affiliate-login') && !is_affiliate()) {
+//       wp_redirect('/become-an-affiliate');
+//       exit();
+//    }   
 
-   // Only affiliates end here
-   if (is_affiliate_only($user)) {
-      wp_redirect('/affiliates');
-      exit();
-   }
-}
+//    if (is_user_logged_in() && is_page('affiliates') && !is_affiliate()) {
+//       wp_redirect('/become-an-affiliate');
+//       exit();
+//    }   
 
-add_action( 'template_redirect', 'wps_template_redirect' );
+//    if (!is_page('account')) {
+//       return;
+//    }
+
+//    // Only affiliates end here
+//    if (is_affiliate_only($user)) {
+//       wp_redirect('/affiliates');
+//       exit();
+//    }
+// }
+
+// add_action( 'template_redirect', 'wps_template_redirect' );
 
 
 
 function add_script_attributes($tag, $handle) {
 
-   if ($handle !== 'fitvids' && $handle !== 'WPS Vendor Commons' && $handle !== 'WPS Fonts' && $handle !== 'modernizr-js' && $handle !== 'WP Shopify JS') {
+   if ($handle !== 'WPS Vendor Commons' && $handle !== 'WPS Fonts' && $handle !== 'modernizr-js' && $handle !== 'WP Shopify JS') {
       return $tag;
    }
 
@@ -259,11 +221,11 @@ add_filter('script_loader_tag', 'add_script_attributes', 10, 2);
 
 function pw_edd_payment_icon($icons) {
 
-   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-mastercard.png'] = 'Mastercard (custom)';
-   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-visa.png'] = 'Visa (custom)';
-   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-ae.png'] = 'American Express (custom)';
-   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-discover.png'] = 'Discover (custom)';
-   $icons['https://wpshopify-web.loc/wp-content/uploads/2019/11/icon-paypal.png'] = 'PayPal (custom)';
+   $icons['/wp-content/uploads/2019/11/icon-mastercard.png'] = 'Mastercard (custom)';
+   $icons['/wp-content/uploads/2019/11/icon-visa.png'] = 'Visa (custom)';
+   $icons['/wp-content/uploads/2019/11/icon-ae.png'] = 'American Express (custom)';
+   $icons['/wp-content/uploads/2019/11/icon-discover.png'] = 'Discover (custom)';
+   $icons['/wp-content/uploads/2019/11/icon-paypal.png'] = 'PayPal (custom)';
 
    return $icons;
 
@@ -272,7 +234,7 @@ function pw_edd_payment_icon($icons) {
 add_filter('edd_accepted_payment_icons', 'pw_edd_payment_icon', 99, 1);
 
 
-function asddasd($one, $label) {
+function purchase_with_paypal_button_text($one, $label) {
 
    $chosen_gateway = edd_get_chosen_gateway();
    
@@ -285,7 +247,7 @@ function asddasd($one, $label) {
 
 }
 
-add_filter('edd_get_checkout_button_purchase_label', 'asddasd', 10, 2);
+add_filter('edd_get_checkout_button_purchase_label', 'purchase_with_paypal_button_text', 10, 2);
 
 
 add_filter( 'edd_subscription_can_update', function() {
@@ -296,9 +258,28 @@ add_action('edd_before_checkout_cart', function() {
 
    if (is_user_logged_in()) {
       $current_user = wp_get_current_user();
-      echo '<p class="wps-checkout-logged-in-as">👋 Hey, ' . $current_user->user_firstname . ' ' . $current_user->user_lastname . '. <a href="' . wp_logout_url('/login?redirect=checkout') . '">Logout?</a></p>';
+      echo '<p class="wps-checkout-logged-in-as">👋 Hey, ' . $current_user->user_firstname . ' ' . $current_user->user_lastname . '. <a href="' . wp_logout_url('/') . '">Logout?</a></p>';
    } else {
       echo '<p class="wps-checkout-logged-in-as">Already have an account? <a href="/login?redirect=checkout">Log in</a></p>';
    }
 
 });
+
+
+
+function edd_auto_register_email_body_custom($default_email_body, $first_name, $username, $password) {
+
+   $default_email_body = str_replace("wpshop.io/wp-login.php", "account.wpshop.io/login", $default_email_body);
+
+   return $default_email_body;
+}
+
+add_filter('edd_auto_register_email_body', 'edd_auto_register_email_body_custom', 10, 4);
+
+
+
+function react_rounter_rewrite_rules() {
+    add_rewrite_rule('^account/(.+)?', 'index.php?pagename=account', 'top');
+}
+
+add_action('init', 'react_rounter_rewrite_rules');

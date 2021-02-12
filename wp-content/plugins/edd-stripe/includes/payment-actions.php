@@ -20,7 +20,6 @@
  * }
  */
 function edds_process_purchase_form( $purchase_data ) {
-
 	// Catch a straight to gateway request.
 	// Remove the error set by the "gateway mismatch" and allow the redirect.
 	if ( isset( $_REQUEST['edd_action'] ) && 'straight_to_gateway' === $_REQUEST['edd_action'] ) {
@@ -58,6 +57,19 @@ function edds_process_purchase_form( $purchase_data ) {
 
 		if ( ! $payment_method_id ) {
 			throw new \Exception( esc_html__( 'Unable to locate Payment Method.', 'edds' ) );
+		}
+
+		// Ensure Payment Method is still valid.
+		$payment_method = edds_api_request( 'PaymentMethod', 'retrieve', $payment_method_id );
+		$card = isset( $payment_method->card ) ? $payment_method->card : null;
+
+		// ...block prepaid cards if option is not enabled.
+		if (
+			$card &&
+			'prepaid' === $card->funding &&
+			false === (bool) edd_get_option( 'stripe_allow_prepaid' )
+		) {
+			throw new \Exception( esc_html__( 'Prepaid cards are not a valid payment method.', 'edds' ) );
 		}
 
 		if ( edds_is_zero_decimal_currency() ) {
@@ -185,7 +197,7 @@ function edds_process_purchase_form( $purchase_data ) {
 							: $value;
 				}
 
-				edd_debug_log( __( 'Charges are no longer directly created in Stripe. Please read the following for more information: https://easydigitaldownloads.com/development/', 'edd-stripe' ), true );
+				edd_debug_log( __( 'Charges are no longer directly created in Stripe. Please read the following for more information: https://easydigitaldownloads.com/development/', 'edds' ), true );
 			}
 		}
 
@@ -289,25 +301,51 @@ function edds_process_purchase_form( $purchase_data ) {
 
 		return wp_send_json_success( array(
 			'intent' => $intent,
+			// Send back a new nonce because the user might have logged in.
+			'nonce'  => wp_create_nonce( 'edd-process-checkout' ),
 		) );
 
 	// Catch card-specific errors to handle rate limiting.
-	} catch ( \Stripe\Error\Card $e ) {
+	} catch ( \Stripe\Exception\CardException $e ) {
 		// Increase the card error count.
 		edd_stripe()->rate_limiting->increment_card_error_count();
+
+		$error = $e->getJsonBody()['error'];
 
 		// Record error in log.
 		edd_record_gateway_error(
 			esc_html__( 'Stripe Error', 'edds' ),
 			sprintf(
 				esc_html__( 'There was an error while processing a Stripe payment. Payment data: %s', ' edds' ), 
-				wp_json_encode( $e->getJsonBody()['error'] )
+				wp_json_encode( $error )
 			),
 			0
 		);
 
 		return wp_send_json_error( array(
-			'message' => $e->getMessage(),
+			'message' => esc_html(
+				edds_get_localized_error_message( $error['code'], $error['message'] )
+			),
+		) );
+
+	// Catch Stripe-specific errors.
+	} catch ( \Stripe\Exception\ApiErrorException $e ) {
+		$error = $e->getJsonBody()['error'];
+
+		// Record error in log.
+		edd_record_gateway_error(
+			esc_html__( 'Stripe Error', 'edds' ),
+			sprintf(
+				esc_html__( 'There was an error while processing a Stripe payment. Payment data: %s', ' edds' ), 
+				wp_json_encode( $error )
+			),
+			0
+		);
+
+		return wp_send_json_error( array(
+			'message' => esc_html(
+				edds_get_localized_error_message( $error['code'], $error['message'] )
+			),
 		) );
 
 	// Catch any remaining error.
@@ -321,7 +359,7 @@ function edds_process_purchase_form( $purchase_data ) {
 		}
 
 		return wp_send_json_error( array(
-			'message' => $e->getMessage(),
+			'message' => esc_html( $e->getMessage() ),
 		) );
 	}
 }
@@ -333,10 +371,33 @@ add_action( 'edd_gateway_stripe', 'edds_process_purchase_form' );
  * @since 2.7.0
  */
 function edds_get_intent() {
+	if ( edd_stripe()->rate_limiting->has_hit_card_error_limit() ) {
+		return wp_send_json_error(
+			array(
+				'message' => __(
+					'We are unable to process your payment at this time, please try again later or contact support.',
+					'edds'
+				),
+			)
+		);
+	}
+
+	// Map and merge serialized `form_data` to $_POST so it's accessible to other functions.
+	_edds_map_form_data_to_request( $_POST );
+
 	$intent_id = isset( $_REQUEST['intent_id'] ) ? sanitize_text_field( $_REQUEST['intent_id'] ) : null;
 	$intent_type = isset( $_REQUEST['intent_type'] ) ? sanitize_text_field( $_REQUEST['intent_type'] ) : 'payment_intent';
 
 	try {
+		if ( false === edds_verify_payment_form_nonce() ) {
+			throw new \Exception(
+				esc_html__(
+					'Error processing purchase. Please reload the page and try again.',
+					'edds'
+				)
+			);
+		}
+
 		if ( 'setup_intent' === $intent_type ) {
 			$intent = edds_api_request( 'SetupIntent', 'retrieve', $intent_id );
 		} else {
@@ -347,6 +408,9 @@ function edds_get_intent() {
 			'intent' => $intent,
 		) );
 	} catch( Exception $e ) {
+		// Increase the card error count when retrieving an intent directly goes wrong.
+		edd_stripe()->rate_limiting->increment_card_error_count();
+
 		return wp_send_json_error( array(
 			'message' => esc_html( $e->getMessage() ),
 		) );
@@ -361,6 +425,17 @@ add_action( 'wp_ajax_nopriv_edds_get_intent', 'edds_get_intent' );
  * @since 2.7.0
  */
 function edds_confirm_intent() {
+	if ( edd_stripe()->rate_limiting->has_hit_card_error_limit() ) {
+		return wp_send_json_error(
+			array(
+				'message' => __(
+					'We are unable to process your payment at this time, please try again later or contact support.',
+					'edds'
+				),
+			)
+		);
+	}
+
 	// Map and merge serialized `form_data` to $_POST so it's accessible to other functions.
 	_edds_map_form_data_to_request( $_POST );
 
@@ -368,6 +443,15 @@ function edds_confirm_intent() {
 	$intent_type = isset( $_REQUEST['intent_type'] ) ? sanitize_text_field( $_REQUEST['intent_type'] ) : 'payment_intent';
 
 	try {
+		if ( false === edds_verify_payment_form_nonce() ) {
+			throw new \Exception(
+				esc_html__(
+					'Error processing purchase. Please reload the page and try again.',
+					'edds'
+				)
+			);
+		}
+
 		// SetupIntent was used if the cart total is $0.
 		if ( 'setup_intent' === $intent_type ) {
 			$intent = edds_api_request( 'SetupIntent', 'retrieve', $intent_id );
@@ -404,12 +488,39 @@ add_action( 'wp_ajax_nopriv_edds_confirm_intent', 'edds_confirm_intent' );
  * @since 2.7.0
  */
 function edds_capture_intent() {
+	if ( edd_stripe()->rate_limiting->has_hit_card_error_limit() ) {
+		return wp_send_json_error(
+			array(
+				'message' => __(
+					'We are unable to process your payment at this time, please try again later or contact support.',
+					'edds'
+				),
+			)
+		);
+	}
+
 	// Map and merge serialized `form_data` to $_POST so it's accessible to other functions.
 	_edds_map_form_data_to_request( $_POST );
 
 	$intent_id = isset( $_REQUEST['intent_id'] ) ? sanitize_text_field( $_REQUEST['intent_id'] ) : null;
 
 	try {
+		// This must happen in the Checkout flow, so validate the Checkout nonce.
+		$nonce = isset( $_POST['edd-process-checkout-nonce'] )
+			? sanitize_text_field( $_POST['edd-process-checkout-nonce'] )
+			: '';
+
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-process-checkout' );
+
+		if ( false === $nonce_verified ) {
+			throw new \Exception(
+				esc_html__(
+					'Error processing purchase. Please reload the page and try again.',
+					'edds'
+				)
+			);
+		}
+
 		$intent = edds_api_request( 'PaymentIntent', 'retrieve', $intent_id );
 
 		/**
@@ -446,12 +557,34 @@ add_action( 'wp_ajax_nopriv_edds_capture_intent', 'edds_capture_intent' );
  * @since 2.7.0
  */
 function edds_update_intent() {
+	if ( edd_stripe()->rate_limiting->has_hit_card_error_limit() ) {
+		return wp_send_json_error(
+			array(
+				'message' => __(
+					'We are unable to process your payment at this time, please try again later or contact support.',
+					'edds'
+				),
+			)
+		);
+	}
+
 	// Map and merge serialized `form_data` to $_POST so it's accessible to other functions.
 	_edds_map_form_data_to_request( $_POST );
 
 	$intent_id = isset( $_REQUEST['intent_id'] ) ? sanitize_text_field( $_REQUEST['intent_id'] ) : null;
 
 	try {
+		if ( false === edds_verify_payment_form_nonce() ) {
+			throw new \Exception(
+				esc_html__(
+					'Error processing purchase. Please reload the page and try again.',
+					'edds'
+				)
+			);
+		}
+
+		$intent = edds_api_request( 'PaymentIntent', 'retrieve', $intent_id );
+
 		/**
 		 * Allows processing before a PaymentIntent is updated.
 		 *
@@ -478,6 +611,9 @@ function edds_update_intent() {
 			'intent' => $intent,
 		) );
 	} catch( Exception $e ) {
+		// Increase the card error count when updating an intent directly goes wrong.
+		edd_stripe()->rate_limiting->increment_card_error_count();
+
 		return wp_send_json_error( array(
 			'message' => esc_html( $e->getMessage() ),
 		) );
@@ -492,6 +628,17 @@ add_action( 'wp_ajax_nopriv_edds_update_intent', 'edds_update_intent' );
  * @since 2.7.0
  */
 function edds_create_payment() {
+	if ( edd_stripe()->rate_limiting->has_hit_card_error_limit() ) {
+		return wp_send_json_error(
+			array(
+				'message' => __(
+					'We are unable to process your payment at this time, please try again later or contact support.',
+					'edds'
+				),
+			)
+		);
+	}
+
 	// Map and merge serialized `form_data` to $_POST so it's accessible to other functions.
 	_edds_map_form_data_to_request( $_POST );
 
@@ -499,6 +646,22 @@ function edds_create_payment() {
 	_edds_fake_process_purchase_step();
 
 	try {
+		// This must happen in the Checkout flow, so validate the Checkout nonce.
+		$nonce = isset( $_POST['edd-process-checkout-nonce'] )
+			? sanitize_text_field( $_POST['edd-process-checkout-nonce'] )
+			: '';
+
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-process-checkout' );
+
+		if ( false === $nonce_verified ) {
+			throw new \Exception(
+				esc_html__(
+					'Error processing purchase. Please reload the page and try again.',
+					'edds'
+				)
+			);
+		}
+
 		$intent = isset( $_REQUEST['intent'] ) ? $_REQUEST['intent'] : array();
 
 		if ( ! isset( $intent['id'] ) ) {
@@ -511,6 +674,17 @@ function edds_create_payment() {
 			throw new \Exception( __( 'Unable to verify purchase session.', 'edds' ) );
 		}
 
+		// Ensure Intent has transitioned to the correct status.
+		if ( 'setup_intent' === $intent['object'] ) {
+			$intent = edds_api_request( 'SetupIntent', 'retrieve', $intent['id'] );
+		} else {
+			$intent = edds_api_request( 'PaymentIntent', 'retrieve', $intent['id'] );
+		}
+
+		if ( ! in_array( $intent->status, array( 'succeeded', 'requires_capture' ), true ) ) {
+			throw new \Exception( __( 'Unable to verify intent status.', 'edds' ) );
+		}
+
 		$payment_data = array(
 			'price'        => $purchase_data['price'],
 			'date'         => $purchase_data['date'],
@@ -521,11 +695,20 @@ function edds_create_payment() {
 			'cart_details' => $purchase_data['cart_details'],
 			'user_info'    => $purchase_data['user_info'],
 			'status'       => 'pending',
-			'gateway'      => 'stripe'
+			'gateway'      => 'stripe',
 		);
+
+		// Ensure $_COOKIE is available without a new HTTP request.
+		if ( class_exists( 'EDD_Auto_Register' ) ) {
+			add_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
+		}
 
 		// Record the pending payment.
 		$payment_id = edd_insert_payment( $payment_data );
+
+		if ( class_exists( 'EDD_Auto_Register' ) ) {
+			remove_action( 'set_logged_in_cookie', 'edds_set_logged_in_cookie_global' );
+		}
 
 		if ( false === $payment_id ) {
 			throw new \Exception( __( 'Unable to create payment.', 'edds' ) );
@@ -535,8 +718,8 @@ function edds_create_payment() {
 		$payment = edd_get_payment( $payment_id );
 
 		// Retrieve the relevant Intent.
-		if ( 'setup_intent' === $intent['object'] ) {
-			$intent = edds_api_request( 'SetupIntent', 'update', $intent['id'], array(
+		if ( 'setup_intent' === $intent->object ) {
+			$intent = edds_api_request( 'SetupIntent', 'update', $intent->id, array(
 				'metadata' => array(
 					'edd_payment_id' => $payment_id,
 				),
@@ -545,7 +728,7 @@ function edds_create_payment() {
 			$payment->add_note( 'Stripe SetupIntent ID: ' . $intent->id );
 			$payment->update_meta( '_edds_stripe_setup_intent_id', $intent->id );
 		} else {
-			$intent = edds_api_request( 'PaymentIntent', 'update', $intent['id'], array(
+			$intent = edds_api_request( 'PaymentIntent', 'update', $intent->id, array(
 				'metadata' => array(
 					'edd_payment_id' => $payment_id,
 				),
@@ -584,6 +767,8 @@ function edds_create_payment() {
 			return wp_send_json_success( array(
 				'intent'  => $intent,
 				'payment' => $payment,
+				// Send back a new nonce because the user might have logged in via Auto Register.
+				'nonce'  => wp_create_nonce( 'edd-process-checkout' ),
 			) );
 		} else {
 			throw new \Exception( esc_html__( 'Unable to create payment.', 'edds' ) );
@@ -610,17 +795,51 @@ add_action( 'wp_ajax_nopriv_edds_create_payment', 'edds_create_payment' );
  * @since 2.7.0
  */
 function edds_complete_payment() {
+	if ( edd_stripe()->rate_limiting->has_hit_card_error_limit() ) {
+		return wp_send_json_error(
+			array(
+				'message' => __(
+					'We are unable to process your payment at this time, please try again later or contact support.',
+					'edds'
+				),
+			)
+		);
+	}
+
 	// Map and merge serialized `form_data` to $_POST so it's accessible to other functions.
 	_edds_map_form_data_to_request( $_POST );
 
 	$intent = isset( $_REQUEST['intent'] ) ? $_REQUEST['intent'] : array();
 
 	try {
+		// This must happen in the Checkout flow, so validate the Checkout nonce.
+		$nonce = isset( $_POST['edd-process-checkout-nonce'] )
+			? sanitize_text_field( $_POST['edd-process-checkout-nonce'] )
+			: '';
+
+		$nonce_verified = wp_verify_nonce( $nonce, 'edd-process-checkout' );
+
+		if ( false === $nonce_verified ) {
+			throw new \Exception(
+				esc_html__(
+					'Error processing purchase. Please reload the page and try again.',
+					'edds'
+				)
+			);
+		}
+
 		if ( ! isset( $intent['id'] ) ) {
 			throw new \Exception( esc_html__( 'Unable to complete payment.', 'edds' ) );
 		}
 
-		$payment = edd_get_payment( $intent['metadata']['edd_payment_id'] );
+		// Retrieve the intent from Stripe again to verify linked payment.
+		if ( 'setup_intent' === $intent['object'] ) {
+			$intent = edds_api_request( 'SetupIntent', 'retrieve', $intent['id'] );
+		} else {
+			$intent = edds_api_request( 'PaymentIntent', 'retrieve', $intent['id'] );
+		}
+
+		$payment = edd_get_payment( $intent->metadata->edd_payment_id );
 
 		if ( ! $payment ) {
 			throw new \Exception( esc_html__( 'Unable to complete payment.', 'edds' ) );
@@ -689,9 +908,35 @@ add_action( 'wp_ajax_nopriv_edds_complete_payment', 'edds_complete_payment' );
  * @since 2.7.0
  */
 function edds_complete_payment_authorization() {
+	if ( edd_stripe()->rate_limiting->has_hit_card_error_limit() ) {
+		return wp_send_json_error(
+			array(
+				'message' => __(
+					'We are unable to process your payment at this time, please try again later or contact support.',
+					'edds'
+				),
+			)
+		);
+	}
+
 	$intent_id = isset( $_REQUEST['intent_id'] ) ? sanitize_text_field( $_REQUEST['intent_id'] ) : null;
 
 	try {
+		$nonce = isset( $_POST['edds-complete-payment-authorization'] )
+			? sanitize_text_field( $_POST['edds-complete-payment-authorization'] )
+			: '';
+
+		$nonce_verified = wp_verify_nonce( $nonce, 'edds-complete-payment-authorization' );
+
+		if ( false === $nonce_verified ) {
+			throw new \Exception(
+				esc_html__(
+					'Error authorizing payment. Please reload the page and try again.',
+					'edds'
+				)
+			);
+		}
+
 		$intent         = edds_api_request( 'PaymentIntent', 'retrieve', $intent_id );
 		$edd_payment_id = $intent->metadata->edd_payment_id ? $intent->metadata->edd_payment_id : false;
 
@@ -740,53 +985,38 @@ add_action( 'wp_ajax_nopriv_edds_complete_payment_authorization', 'edds_complete
  * @param array $purchase_data {
  *
  * }
- * @return \Stripe\Customer
+ * @return \Stripe\Customer|false $customer Stripe Customer if one is created or false on error.
  */
 function edds_checkout_setup_customer( $purchase_data ) {
-	$customer = null;
-
+	$customer           = false;
+	$stripe_customer_id = '';
 	if ( is_user_logged_in() ) {
-		$customer_id = edds_get_stripe_customer_id( get_current_user_id() );
+		$stripe_customer_id = edds_get_stripe_customer_id( get_current_user_id() );
 	}
-
-	if ( empty( $customer_id ) ) {
-		// No customer ID found, let's look one up based on the email
-		$customer_id = edds_get_stripe_customer_id( $purchase_data['user_email'], false );
+	if ( empty( $stripe_customer_id ) ) {
+		// No customer ID found, let's look one up based on the email.
+		$stripe_customer_id = edds_get_stripe_customer_id( $purchase_data['user_email'], false );
 	}
-
-	try {
-		if ( ! empty( $customer_id ) ) {
-			$customer = edds_api_request( 'Customer', 'retrieve', $customer_id );
-
-			// If the Customer was deleted in Stripe, unset $customer_id so we can create one below.
-			if ( isset( $customer->deleted ) && $customer->deleted ) {
-				$customer_id = '';
-			}
-		}
-	} catch( \Exception $e ) {
-		$customer_id = '';
-	}
-
-	if ( empty( $customer_id ) ) {
-		$customer_args = array(
-			'description' => $purchase_data['user_email'],
-			'email'       => $purchase_data['user_email'],
-		);
-
-		/**
-		 * Filters the arguments used to create a Customer in Stripe.
-		 *
-		 * @since unknown
-		 *
-		 * @param array $customer_args Arguments used to create the Customer, based on purchase form data.
-		 * @param array $purchase_data {
-		 *
-		 * }
-		 */
-		$customer_args = apply_filters( 'edds_create_customer_args', $customer_args, $purchase_data );
-
-		$customer = edds_api_request( 'Customer', 'create', $customer_args );
-	}
+	$customer_args = array(
+		'email'       => $purchase_data['user_email'],
+		'description' => $purchase_data['user_email'],
+	);
+	/**
+	 * Filters the arguments used to create a Customer in Stripe.
+	 *
+	 * @since unknown
+	 *
+	 * @param array $customer_args {
+	 *   Arguments to create a Stripe Customer.
+	 *
+	 *   @link https://stripe.com/docs/api/customers/create
+	 * }
+	 * @param array $purchase_data {
+	 *   Cart purchase data if in the checkout context. Empty otherwise.
+	 * }
+	 */
+	$customer_args = apply_filters( 'edds_create_customer_args', $customer_args, $purchase_data );
+	$customer      = edds_get_stripe_customer( $stripe_customer_id, $customer_args );
 
 	return $customer;
 }
@@ -886,7 +1116,7 @@ function edds_charge_preapproved( $payment_id = 0 ) {
 				'off_session'          => true,
 				'confirm'              => true,
 				'description'          => $purchase_summary,
-				'metadata'             => $setup_intent->metadata->__toArray(),
+				'metadata'             => $setup_intent->metadata->toArray(),
 				'statement_descriptor' => $statement_descriptor,
 			);
 		// Process a legacy preapproval. Uses the Customer's default source.
@@ -924,11 +1154,13 @@ function edds_charge_preapproved( $payment_id = 0 ) {
 
 			$retval = $payment->save();
 		}
-	} catch( \Stripe\Error\Base $e ) {
+	} catch( \Stripe\Exception\ApiErrorException $e ) {
 		$error = $e->getJsonBody()['error'];
 
 		$payment->status = 'preapproval_pending';
-		$payment->add_note( esc_html( $e->getMessage() ) );
+		$payment->add_note( esc_html(
+			edds_get_localized_error_message( $error['code'], $error['message'] )
+		) );
 		$payment->add_note( 'Stripe PaymentIntent ID: ' . $error['payment_intent']['id'] );
 		$payment->add_meta( '_edds_stripe_payment_intent_id', $error['payment_intent']['id'] );
 		$payment->save();
@@ -998,7 +1230,14 @@ function edd_stripe_process_refund( $payment_id, $new_status, $old_status ) {
 
 		$refund = edds_api_request( 'Refund', 'create', $args, $sec_args );
 
-		edd_insert_payment_note( $payment_id, sprintf( __( 'Charge refunded in Stripe. Refund ID %s', 'edds' ), $refund->id ) );
+		edd_insert_payment_note(
+			$payment_id,
+			sprintf(
+				/* translators: %s Stripe Refund ID */
+				__( 'Charge refunded in Stripe. Refund ID %s', 'edds' ),
+				$refund->id
+			)
+		);
 
 	} catch ( Exception $e ) {
 		wp_die( $e->getMessage(), __( 'Error', 'edds' ) , array( 'response' => 400 ) );

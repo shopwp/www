@@ -26,7 +26,7 @@
   }
 
   h2 {
-    max-width: 850px;
+    max-width: 920px;
     margin: 3em auto 1em auto;
     padding-top: 3em;
     font-size: 2.2em;
@@ -121,7 +121,8 @@
 }
 
 .testimonial-author-name {
-  font-weight: bold;
+  font-weight: 600;
+  font-family: $font-secondary;
 }
 
 footer .testimonial-author-name {

@@ -57,14 +57,8 @@ function edd_sl_licenses_list() {
 	?>
 	<div class="wrap">
 
-		<div id="icon-edit" class="icon32"><br/></div>
-		<h2><?php _e( 'Easy Digital Download Licenses', 'edd_sl' ); ?></h2>
+		<h1><?php esc_html_e( 'Easy Digital Download Licenses', 'edd_sl' ); ?></h1>
 		<?php edd_sl_show_errors(); ?>
-
-		<style>
-			.column-status, .column-count { width: 100px; }
-			.column-limit { width: 150px; }
-		</style>
 		<form id="licenses-filter" method="get">
 			<input type="hidden" name="post_type" value="download" />
 			<input type="hidden" name="page" value="edd-licenses" />
@@ -255,7 +249,7 @@ function edd_sl_licenses_view( $license ) {
 								<?php
 								$payment_date = esc_html( date( get_option( 'date_format' ), strtotime( $initial_payment->completed_date ) ) );
 
-								if( $license->payment_id && ! $license->post_parent ) {
+								if( $license->payment_id && ! $license->parent ) {
 									$payment_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $license->payment_id );
 									echo '<a href="' . esc_attr( $payment_url ) . '">' . $payment_date . '</a>';
 								} else {
@@ -333,8 +327,8 @@ function edd_sl_licenses_view( $license ) {
 										foreach ( $prices as $id => $price ) {
 											$options[ $id ] = $price['name'];
 										}
-									} else {
-										$child_price_id_label = ' (' . $prices[ $price_id ]['name'] . ')';
+									} elseif ( ! empty( $prices[ $price_id ]['name'] ) ) {
+										$child_price_id_label = $prices[ $price_id ]['name'];
 									}
 
 								}
@@ -350,8 +344,8 @@ function edd_sl_licenses_view( $license ) {
 										'options'          => $options,
 										'selected'         => $price_id,
 									) );
-								} else if ( ! empty( $child_price_id_label ) ) {
-									echo $child_price_id_label;
+								} elseif ( ! empty( $child_price_id_label ) ) {
+									echo ' (' . esc_html( $child_price_id_label ) . ')';
 								}
 								?>
 							</td>
@@ -365,15 +359,15 @@ function edd_sl_licenses_view( $license ) {
 								$limit = $license->license_limit();
 								$data  = '';
 
-								if( $license->post_parent ) {
-									$data .= 'data-parent="' . $license->post_parent . '"';
+								if ( $license->parent ) {
+									$data .= 'data-parent="' . $license->parent . '"';
 								}
 								$active_count = $license->activation_count;
 								$limit_text   = '<span id="edd-sl-' . $license->ID . '-limit" ' . $data . '>' . $limit . '</span>';
 
 								echo '<span class="edd-sl-limit-wrap">' . $active_count . ' / ' . $limit_text . '</span>';
 
-								if( ! $license->post_parent ) {
+								if ( ! $license->parent ) {
 									echo '<span style="margin-left: 15px">';
 									echo '<a href="#" class="edd-sl-adjust-limit button-secondary" data-action="increase" data-id="' . absint( $license->ID ) . '" data-download="' . absint( $license->download_id ) . '">+</a>';
 									echo '&nbsp;<a href="#" class="edd-sl-adjust-limit button-secondary" data-action="decrease" data-id="' . absint( $license->ID ) . '" data-download="' . absint( $license->download_id ) . '">-</a>';
@@ -680,7 +674,7 @@ function edd_sl_licenses_view( $license ) {
 				} else {
 					$upgrades = edd_sl_get_license_upgrades( $license->ID );
 
-					if( $upgrades && ! $license->post_parent ) {
+					if ( $upgrades && ! $license->parent ) {
 						foreach( $upgrades as $upgrade_id => $upgrade ) {
 							echo '<tr>';
 							echo '<td>';
@@ -693,7 +687,7 @@ function edd_sl_licenses_view( $license ) {
 							echo '<td>' . '<input type="text" readonly="readonly" class="edd_sl_upgrade_link" value="' . esc_url( edd_sl_get_license_upgrade_url( $license->ID, $upgrade_id ) ) . '"/></td>';
 							echo '</tr>';
 						}
-					} elseif( $license->post_parent ) {
+					} elseif( $license->parent ) {
 						echo '<tr>';
 						echo '<td colspan="3">&nbsp;&mdash;&nbsp;' . __( 'Bundled licenses can not be upgraded individually', 'edd_sl' ) . '</td>';
 						echo '</tr>';
@@ -708,13 +702,13 @@ function edd_sl_licenses_view( $license ) {
 		</table>
 		<?php if( edd_sl_renewals_allowed() && ! $license->is_lifetime ) : ?>
 			<h3>
-				<?php _e( 'Renewal URL:', 'edd_sl' ); ?>
+				<label for="edd-sl-renewal-url"><?php esc_html_e( 'Renewal URL:', 'edd_sl' ); ?></label>
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php printf( __( 'This URL can be provided to a customer for a direct link to your checkout screen with the license renewal pre-populated.', 'edd_sl' ), strtolower( edd_get_label_singular() ) ); ?>"></span>
 			</h3>
-			<table class="wp-list-table widefat striped" id="edd-sl-renewal-url">
+			<table class="wp-list-table widefat striped">
 				<tbody>
 					<tr>
-						<td><?php echo $license->get_renewal_url(); ?></td>
+						<td><input id="edd-sl-renewal-url" type="text" class="large-text" value="<?php echo esc_url( $license->get_renewal_url() ); ?>" readonly></td>
 					</tr>
 				</tbody>
 			</table>
@@ -722,13 +716,13 @@ function edd_sl_licenses_view( $license ) {
 
 		<?php if( ! $unsubscribed && ! $license->is_lifetime ) : ?>
 			<h3>
-				<?php _e( 'Unsubscribe URL:', 'edd_sl' ); ?>
+				<label for="edd-sl-unsubscribe-url"><?php esc_html_e( 'Unsubscribe URL:', 'edd_sl' ); ?></label>
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'This URL can be provided to a customer in order to unsubscribe from license renewal notification emails.', 'edd_sl' ); ?>"></span>
 			</h3>
-			<table class="wp-list-table widefat striped" id="edd-sl-renewal-url">
+			<table class="wp-list-table widefat striped">
 				<tbody>
 					<tr>
-						<td><?php echo $license->get_unsubscribe_url(); ?></td>
+						<td><input id="edd-sl-unsubscribe-url" type="text" class="large-text" value="<?php echo esc_url( $license->get_unsubscribe_url() ); ?>" readonly></td>
 					</tr>
 				</tbody>
 			</table>

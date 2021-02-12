@@ -105,7 +105,7 @@ class EDD_Recurring_Checkout {
 	 * @return void
 	 */
 	public function display_failed_subscriptions( $payment, $receipt_args ) {
-		$payment = new EDD_Payment( $payment->ID );
+		$payment              = edd_get_payment( $payment->ID );
 		$failed_subscriptions = $payment->get_meta( '_edd_recurring_failed_subscriptions', true );
 
 		if ( empty( $failed_subscriptions ) ) {
@@ -346,7 +346,9 @@ class EDD_Recurring_Checkout {
 	 * @return void
 	 */
 	public function show_single_terms_notice( $download_id, $args ) {
-		if ( ! edd_recurring()->is_recurring( $download_id ) ) {
+		$is_recurring     = edd_recurring()->is_recurring( $download_id );
+		$custom_recurring = defined( 'EDD_CUSTOM_PRICES' ) && edd_recurring()->is_custom_recurring( $download_id );
+		if ( ! $is_recurring && ! $custom_recurring ) {
 			return;
 		}
 
@@ -359,73 +361,47 @@ class EDD_Recurring_Checkout {
 			return;
 		}
 
-		$period        = edd_recurring()->get_period_single( $download_id );
-		$period_ly     = strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) );
-		$period_single = strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) );
-		$times         = edd_recurring()->get_times_single( $download_id );
-
-		if ( defined( 'EDD_CUSTOM_PRICES' ) ) {
-
-			$custom_period    = edd_recurring()->get_custom_period( $download_id );
-			$custom_period_ly = strtolower( edd_recurring()->get_pretty_subscription_frequency( $custom_period ) );
-			$custom_times     = edd_recurring()->get_custom_times( $download_id );
-
-		}
-
-		if ( edd_recurring()->has_free_trial( $download_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
-
-			$trial      = edd_recurring()->get_trial_period( $download_id );
-			$free_trial = $trial['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $trial['unit'] ) );
-
-		}
-
 		ob_start();
-		?>
-		<p class="eddr-notice eddr-terms-notice">
-			<em>
-				<?php if ( empty( $times ) ) : ?>
+		if ( $is_recurring ) :
+			$args = array(
+				'period' => edd_recurring()->get_period_single( $download_id ),
+				'times'  => edd_recurring()->get_times_single( $download_id ),
+			);
+			if ( edd_recurring()->has_free_trial( $download_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+				$trial                = edd_recurring()->get_trial_period( $download_id );
+				$args['trial_period'] = $trial['unit'];
+				$args['trial_unit']   = $trial['quantity'];
+			}
 
-					<?php if ( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), $period_ly ); ?>
-					<?php else: ?>
-						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), $period_ly, $free_trial ); ?>
-					<?php endif; ?>
-
-				<?php else: ?>
-
-					<?php if ( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $period_single, $times ); ?>
-					<?php else: ?>
-						<?php printf( __( 'Billed once per %s, %d times with a %s free trial', 'edd-recurring' ), $period_single, $times, $free_trial ); ?>
-					<?php endif; ?>
-
-				<?php endif; ?>
-			</em>
-		</p>
-		<?php if ( defined( 'EDD_CUSTOM_PRICES' ) && edd_recurring()->is_custom_recurring( $download_id ) ) : ?>
-			<p class="eddr-notice eddr-terms-notice eddr-custom-terms-notice" style="display:none">
+			?>
+			<p class="eddr-notice eddr-terms-notice">
 				<em>
-
-					<?php if ( empty( $custom_times ) ) : ?>
-
-						<?php if ( empty( $free_trial ) ) : ?>
-							<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), $custom_period_ly ); ?>
-						<?php else: ?>
-							<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), $custom_period_ly, $free_trial ); ?>
-						<?php endif; ?>
-
-					<?php else: ?>
-
-						<?php if ( empty( $free_trial ) ) : ?>
-							<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $custom_period, $custom_times ); ?>
-						<?php else: ?>
-							<?php printf( __( 'Billed once per %s, %d times with a %s free trial', 'edd-recurring' ), $custom_period, $custom_times, $free_trial ); ?>
-						<?php endif; ?>
-
-					<?php endif; ?>
+					<?php
+					echo esc_html( $this->get_recurring_price_text( $args ) );
+					?>
 				</em>
 			</p>
-		<?php
+			<?php
+		endif;
+
+		if ( $custom_recurring ) :
+			$custom_args = array(
+				'period' => edd_recurring()->get_custom_period( $download_id ),
+				'times'  => edd_recurring()->get_custom_times( $download_id ),
+			);
+			if ( ! empty( $args['trial_period'] ) ) {
+				$custom_args['trial_period'] = $args['trial_period'];
+				$custom_args['trial_unit']   = $args['trial_unit'];
+			}
+			?>
+			<p class="eddr-notice eddr-terms-notice eddr-custom-terms-notice" style="display:none">
+				<em>
+				<?php
+					echo esc_html( $this->get_recurring_price_text( $custom_args ) );
+				?>
+				</em>
+			</p>
+			<?php
 		endif;
 
 		echo apply_filters( 'edd_recurring_single_terms_notice', ob_get_clean(), $download_id, $args );
@@ -451,18 +427,20 @@ class EDD_Recurring_Checkout {
 		}
 
 		$period        = edd_recurring()->get_period( $price_id, $download_id );
-		$period_ly     = strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) );
-		$period_single = strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) );
+		$period_single = edd_recurring()->get_pretty_singular_subscription_frequency( $period );
 		$times         = edd_recurring()->get_times( $price_id, $download_id );
 
+		$args = array(
+			'period' => edd_recurring()->get_period( $price_id, $download_id ),
+			'times'  => edd_recurring()->get_times( $price_id, $download_id ),
+		);
+
 		if ( ! empty( $price['trial-quantity'] ) && ! empty( $price['trial-unit'] ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
-
-			$free_trial = $price['trial-quantity'] . ' ' . $price['trial-unit'];
-
-		} else if ( edd_recurring()->has_free_trial( $download_id, $price_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
-
-			$trial      = edd_recurring()->get_trial_period( $download_id, $price_id );
-			$free_trial = $trial['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $trial['unit'] ) );
+			$args['trial_period'] = $price['trial-unit'];
+			$args['trial_unit']   = $price['trial-quantity'];
+		} elseif ( edd_recurring()->has_free_trial( $download_id, $price_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
+			$args['trial_period'] = edd_recurring()->get_trial_period( $download_id, $price_id );
+			$args['trial_unit']   = $trial['quantity'];
 
 		}
 
@@ -470,23 +448,9 @@ class EDD_Recurring_Checkout {
 		?>
 		<p class="eddr-notice eddr-terms-notice variable-prices">
 			<em>
-				<?php if ( empty( $times ) ) : ?>
-
-					<?php if ( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), $period_ly ); ?>
-					<?php else: ?>
-						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), $period_ly, $free_trial ); ?>
-					<?php endif; ?>
-
-				<?php else: ?>
-
-					<?php if ( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $period_single, $times ); ?>
-					<?php else: ?>
-						<?php printf( __( 'Billed once per %s, %d times with a %s free trial', 'edd-recurring' ), $period_single, $times, $free_trial ); ?>
-					<?php endif; ?>
-
-				<?php endif; ?>
+				<?php
+					echo esc_html( $this->get_recurring_price_text( $args ) );
+				?>
 			</em>
 		</p>
 		<?php
@@ -521,16 +485,15 @@ class EDD_Recurring_Checkout {
 
 		}
 
-		$period        = edd_recurring()->get_custom_period( $download_id );
-		$period_ly     = strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) );
-		$period_single = strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) );
-		$times         = edd_recurring()->get_custom_times( $download_id );
+		$args = array(
+			'period' => edd_recurring()->get_custom_period( $download_id ),
+			'times'  => edd_recurring()->get_custom_times( $download_id ),
+		);
 
 		if ( edd_recurring()->has_free_trial( $download_id ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
-
-			$trial      = edd_recurring()->get_trial_period( $download_id );
-			$free_trial = $trial['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $trial['unit'] ) );
-
+			$trial                = edd_recurring()->get_trial_period( $download_id );
+			$args['trial_period'] = $trial['unit'];
+			$args['trial_unit']   = $args['trial_period']['quantity'];
 		}
 
 		ob_start();
@@ -538,23 +501,9 @@ class EDD_Recurring_Checkout {
 
 		<p class="eddr-notice eddr-terms-notice eddr-custom-terms-notice" style="display:none">
 			<em>
-				<?php if ( empty( $times ) ) : ?>
-
-					<?php if ( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), $period_ly ); ?>
-					<?php else: ?>
-						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), $period_ly, $free_trial ); ?>
-					<?php endif; ?>
-
-				<?php else: ?>
-
-					<?php if ( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), $period_single, $times ); ?>
-					<?php else: ?>
-						<?php printf( __( 'Billed once per %s, %d times with a %s free trial', 'edd-recurring' ), $period_single, $times, $free_trial ); ?>
-					<?php endif; ?>
-
-				<?php endif; ?>
+				<?php
+					echo esc_html( $this->get_recurring_price_text( $args ) );
+				?>
 			</em>
 		</p>
 		<?php
@@ -583,42 +532,127 @@ class EDD_Recurring_Checkout {
 			return;
 		}
 
-		$period = $item['options']['recurring']['period'];
-		$times  = $item['options']['recurring']['times'];
-
+		$args = array(
+			'period' => $item['options']['recurring']['period'],
+			'times'  => $item['options']['recurring']['times'],
+		);
 		if ( ! empty( $item['options']['recurring']['trial_period']['unit'] ) && ! empty( $item['options']['recurring']['trial_period']['quantity'] ) && ( ! edd_get_option( 'recurring_one_time_trials' ) || ! edd_recurring()->has_trialed( $download_id ) ) ) {
-
-			$free_trial = $item['options']['recurring']['trial_period']['quantity'] . ' ' . strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $item['options']['recurring']['trial_period']['unit'] ) );
-
+			$args['trial_period'] = $item['options']['recurring']['trial_period']['unit'];
+			$args['trial_unit']   = $item['options']['recurring']['trial_period']['quantity'];
 		}
 
 		ob_start();
 		?>
 		<p class="eddr-notice eddr-cart-item-notice">
 			<em>
-				<?php if ( empty( $times ) ) : ?>
-
-					<?php if ( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed %s until cancelled', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) ) ); ?>
-					<?php else: ?>
-						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) ), $free_trial ); ?>
-					<?php endif; ?>
-
-				<?php else: ?>
-
-					<?php if ( empty( $free_trial ) ) : ?>
-						<?php printf( __( 'Billed once per %s, %d times', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_singular_subscription_frequency( $period ) ), $times ); ?>
-					<?php else: ?>
-						<?php printf( __( 'Billed %s until cancelled with a %s free trial', 'edd-recurring' ), strtolower( edd_recurring()->get_pretty_subscription_frequency( $period ) ), $free_trial ); ?>
-					<?php endif; ?>
-
-				<?php endif; ?>
+				<?php
+				echo esc_html( $this->get_recurring_price_text( $args ) );
+				?>
 			</em>
 		</p>
 		<?php
 
 		echo apply_filters( 'edd_recurring_cart_item_notice', ob_get_clean(), $item );
+	}
 
+	/**
+	 * Gets the recurring price text for notices.
+	 *
+	 * @since 2.10
+	 * @param array $details
+	 * @return string
+	 */
+	private function get_recurring_price_text( $details ) {
+		$details = wp_parse_args(
+			$details,
+			array(
+				'period'       => false,
+				'times'        => false,
+				'trial_period' => false,
+				'trial_unit'   => false,
+			)
+		);
+
+		if ( empty( $details['times'] ) ) {
+			/* translators: the billing period */
+			$output = sprintf( __( 'Billed once per %1$s until cancelled', 'edd-recurring' ), $this->get_frequency_label( $details['period'] ) );
+			if ( $details['trial_period'] && $details['trial_unit'] ) {
+				$output = sprintf(
+					/* translators: 1. the billing period 2. the number of trial units 3. the trial period unit (week, month) */
+					__( 'Billed once per %1$s until cancelled, after a %2$s %3$s free trial', 'edd-recurring' ),
+					$this->get_frequency_label( $details['period'] ),
+					$details['trial_unit'],
+					$this->get_frequency_label( $details['trial_period'] )
+				);
+			}
+		} else {
+			$output = sprintf(
+				/* translators: 1. the billing period 2. the number of times it will be billed */
+				_n(
+					'Billed once per %1$s, %2$s time',
+					'Billed once per %1$s, %2$s times',
+					$details['times'],
+					'edd-recurring'
+				),
+				$this->get_frequency_label( $details['period'] ),
+				$details['times']
+			);
+			if ( $details['trial_period'] && $details['trial_unit'] ) {
+				$output = sprintf(
+					/* translators: 1. the billing period 2. the number of times the subscription will be billed 3. the number of trial units 4. the trial period unit (week, month) */
+					_n(
+						'Billed once per %1$s, %2$s time, after a %3$s %4$s free trial',
+						'Billed once per %1$s, %2$s times, after a %3$s %4$s free trial',
+						$details['times'],
+						'edd-recurring'
+					),
+					$this->get_frequency_label( $details['period'] ),
+					$details['times'],
+					$details['trial_unit'],
+					$this->get_frequency_label( $details['trial_period'] )
+				);
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Gets the frequency labels.
+	 *
+	 * @since 2.10
+	 * @param string $period
+	 * @param integer $count
+	 * @return string
+	 */
+	private function get_frequency_label( $period, $count = 1 ) {
+		$frequency = '';
+		// Format period details
+		switch ( $period ) {
+			case 'day':
+				$frequency = _nx( 'day', 'days', $count, 'subscription term', 'edd-recurring' );
+				break;
+			case 'week':
+				$frequency = _nx( 'week', 'weeks', $count, 'subscription term', 'edd-recurring' );
+				break;
+			case 'month':
+				$frequency = _nx( 'month', 'months', $count, 'subscription term', 'edd-recurring' );
+				break;
+			case 'quarter':
+				$frequency = _x( 'quarter', 'subscription term', 'edd-recurring' );
+				break;
+			case 'semi-year':
+				$frequency = _x( 'six months', 'subscription term', 'edd-recurring' );
+				break;
+			case 'year':
+				$frequency = _nx( 'year', 'years', $count, 'subscription term', 'edd-recurring' );
+				break;
+			default:
+				$frequency = $period;
+				break;
+		}
+
+		return $frequency;
 	}
 
 	/**

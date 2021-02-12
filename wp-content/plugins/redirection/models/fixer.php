@@ -3,6 +3,8 @@
 require_once dirname( REDIRECTION_FILE ) . '/database/database.php';
 
 class Red_Fixer {
+	const REGEX_LIMIT = 200;
+
 	public function get_json() {
 		return [
 			'status' => $this->get_status(),
@@ -12,17 +14,18 @@ class Red_Fixer {
 
 	public function get_debug() {
 		$status = new Red_Database_Status();
+		$ip = [];
+
+		foreach ( Redirection_Request::get_ip_headers() as $var ) {
+			$ip[ $var ] = isset( $_SERVER[ $var ] ) ? $_SERVER[ $var ] : false;
+		}
 
 		return [
 			'database' => [
 				'current' => $status->get_current_version(),
 				'latest' => REDIRECTION_DB_VERSION,
 			],
-			'ip_header' => [
-				'HTTP_CF_CONNECTING_IP' => isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ? $_SERVER['HTTP_CF_CONNECTING_IP'] : false,
-				'HTTP_X_FORWARDED_FOR' => isset( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : false,
-				'REMOTE_ADDR' => isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : false,
-			],
+			'ip_header' => $ip,
 		];
 	}
 
@@ -35,6 +38,9 @@ class Red_Fixer {
 				if ( $value === $upgrade['version'] ) {
 					$status->finish();
 					$status->save_db_version( $value );
+
+					// Switch to prompt mode
+					red_set_options( [ 'plugin_update' => 'prompt' ] );
 					break;
 				}
 			}
@@ -51,7 +57,7 @@ class Red_Fixer {
 		$monitor_group = $options['monitor_post'];
 		$valid_monitor = Red_Group::get( $monitor_group ) || $monitor_group === 0;
 
-		return [
+		$status = [
 			array_merge( [
 				'id' => 'db',
 				'name' => __( 'Database tables', 'redirection' ),
@@ -76,6 +82,18 @@ class Red_Fixer {
 			],
 			$this->get_http_settings(),
 		];
+
+		$regex_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}redirection_items WHERE regex=1" );
+		if ( $regex_count > self::REGEX_LIMIT ) {
+			$status[] = [
+				'name' => __( 'Regular Expressions', 'redirection' ),
+				'id' => 'regex',
+				'message' => __( 'Too many regular expressions may impact site performance', 'redirection' ),
+				'status' => 'problem',
+			];
+		}
+
+		return $status;
 	}
 
 	private function get_database_status( $database ) {
@@ -110,6 +128,7 @@ class Red_Fixer {
 			if ( $item['status'] !== 'good' ) {
 				$fixer = 'fix_' . $item['id'];
 
+				$result = true;
 				if ( method_exists( $this, $fixer ) ) {
 					$result = $this->$fixer();
 				}

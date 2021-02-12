@@ -6,7 +6,7 @@
  * @since 2.7.0
  *
  * @throws \EDD_Stripe_Utils_Exceptions_Stripe_Object_Not_Found When attempting to call an object or method that is not available.
- * @throws \Stripe\Error                                        When any Stripe-related error occurs.
+ * @throws \Stripe\Exception
  *
  * @param string $object Name of the Stripe object to request.
  * @param string $method Name of the API operation to perform during the request.
@@ -17,6 +17,27 @@ function edds_api_request( $object, $method, $args = null ) {
 	$api = new EDD_Stripe_API();
 
 	return call_user_func_array( array( $api, 'request' ), func_get_args() );
+}
+
+/**
+ * Converts a truthy value (e.g. '1', 'yes') to a bool.
+ *
+ * @since 2.8.0
+ *
+ * @param mixed $truthy_value Truthy value.
+ * @return bool
+ */
+function edds_truthy_to_bool( $truthy_value ) {
+	$truthy = array(
+		'yes',
+		1,
+		'1',
+		'true',
+	);
+
+	return is_bool( $truthy_value )
+		? $truthy_value
+		: in_array( strtolower( $truthy_value ), $truthy, true );
 }
 
 /**
@@ -78,6 +99,10 @@ function edd_stripe_get_existing_cards( $user_id = 0 ) {
 			$sources = array_merge( $payment_methods->data, $cards->data );
 
 			foreach ( $sources as $source ) {
+				if ( ! in_array( $source->object, array( 'payment_method', 'card' ), true ) ) {
+					continue;
+				}
+
 				$source_data     = new stdClass();
 				$source_data->id = $source->id;
 
@@ -119,14 +144,6 @@ function edd_stripe_get_existing_cards( $user_id = 0 ) {
 		}
 	}
 
-	// Put default card first.
-	usort(
-		$customer_cards,
-		function( $a, $b ) {
-			return ! $a['default'];
-		}
-	);
-	
 	// Show only the latest version of card for duplicates.
 	$fingerprints = array();
 	foreach ( $customer_cards as $key => $customer_card ) {
@@ -137,6 +154,14 @@ function edd_stripe_get_existing_cards( $user_id = 0 ) {
 			unset( $customer_cards[ $key ] );
 		}
 	}
+
+	// Put default card first.
+	usort(
+		$customer_cards,
+		function( $a, $b ) {
+			return ! $a['default'];
+		}
+	);
 
 	$existing_cards[ $user_id ] = $customer_cards;
 
@@ -371,4 +396,37 @@ function edds_get_registry( $name ) {
 	}
 
 	return $registry;
+}
+
+/**
+ * Attempts to verify a nonce from various payment forms when the origin
+ * of the action isn't explicitly known.
+ *
+ * This could be coming from the Checkout, Payment Authorization,
+ * or Update Payment Method (Recurring) form.
+ *
+ * @since 2.8.0
+ *
+ * @return bool
+ */
+function edds_verify_payment_form_nonce() {
+	// Checkout.
+	$nonce = isset( $_POST['edd-process-checkout-nonce'] )
+		? sanitize_text_field( $_POST['edd-process-checkout-nonce'] )
+		: '';
+
+	if ( ! empty( $nonce ) ) {
+		return wp_verify_nonce( $nonce, 'edd-process-checkout' );
+	}
+
+	// Update Payment Method.
+	$nonce = isset( $_POST['edd_recurring_update_nonce'] )
+		? sanitize_text_field( $_POST['edd_recurring_update_nonce'] )
+		: '';
+
+	if ( ! empty( $nonce ) ) {
+		return wp_verify_nonce( $nonce, 'update-payment' );
+	}
+
+	return false;
 }

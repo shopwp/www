@@ -1,15 +1,15 @@
 <?php
-/*
-Plugin Name: Easy Digital Downloads - Software Licensing
-Plugin URL: https://easydigitaldownloads.com/downloads/software-licensing/
-Description: Adds a software licensing system to Easy Digital Downloads
-Version: 3.6.11
-Author: Easy Digital Downloads
-Author URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, cklosows
-Text Domain: edd_sl
-Domain Path: languages
-*/
+/**
+ * Plugin Name: Easy Digital Downloads - Software Licensing
+ * Plugin URL: https://easydigitaldownloads.com/downloads/software-licensing/
+ * Description: Adds a software licensing system to Easy Digital Downloads
+ * Version: 3.7
+ * Author: Sandhills Development, LLC
+ * Author URI: https://sandhillsdev.com/
+ * Contributors: easydigitaldownloads, mordauk, cklosows
+ * Text Domain: edd_sl
+ * Domain Path: languages
+ */
 
 if ( ! defined( 'EDD_SL_PLUGIN_DIR' ) ) {
 	define( 'EDD_SL_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -24,7 +24,7 @@ if ( ! defined( 'EDD_SL_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_SL_VERSION' ) ) {
-	define( 'EDD_SL_VERSION', '3.6.11' );
+	define( 'EDD_SL_VERSION', '3.7' );
 }
 
 class EDD_Software_Licensing {
@@ -124,7 +124,7 @@ class EDD_Software_Licensing {
 		if( is_admin() ) {
 
 			if( class_exists( 'EDD_License' ) ) {
-				$edd_sl_license = new EDD_License( __FILE__, 'Software Licensing', EDD_SL_VERSION, 'Easy Digital Downloads', 'edd_sl_license_key' );
+				$edd_sl_license = new EDD_License( __FILE__, 'Software Licensing', EDD_SL_VERSION, 'Easy Digital Downloads', 'edd_sl_license_key', null, 4916 );
 			}
 
 			include_once( EDD_SL_PLUGIN_DIR . 'includes/admin/customers.php' );
@@ -140,6 +140,7 @@ class EDD_Software_Licensing {
 			include_once( EDD_SL_PLUGIN_DIR . 'includes/admin/classes/class-sl-retroactive-licensing.php' );
 			include_once( EDD_SL_PLUGIN_DIR . 'includes/admin/classes/class-sl-list-table.php' );
 			include_once( EDD_SL_PLUGIN_DIR . 'includes/admin/classes/class-sl-admin-notices.php' );
+			include_once( EDD_SL_PLUGIN_DIR . 'includes/admin/deprecated-admin-functions.php' );
 			$EDD_SL_Retroactive_Licensing = new EDD_SL_Retroactive_Licensing();
 		}
 
@@ -391,40 +392,92 @@ class EDD_Software_Licensing {
 	 * Generates ( if needed ) a license key for the buyer at time of purchase
 	 * This key will be used to activate all products for this purchase
 	 *
-	 * @access      private
+	 * @access      public
 	 * @since       1.5
+	 * @uses EDD_Software_Licensing::generate_new_license
 	 *
-	 * @param int $download_id
-	 * @param int $payment_id
-	 * @param string $type
-	 * @param array $cart_item
-	 * @param mixed $cart_index
+	 * @param int     $download_id The download ID for the license.
+	 * @param int     $payment_id  The associated payment ID.
+	 * @param string  $type        The type of product (default/bundle).
+	 * @param array   $cart_item   The information about the item in the cart.
+	 * @param mixed   $cart_index  The position of the item in the cart.
 	 *
 	 * @return      mixed
 	*/
+	public function generate_license( $download_id = 0, $payment_id = 0, $type = 'default', $cart_item = array(), $cart_index = 0 ) {
 
-	function generate_license( $download_id = 0, $payment_id = 0, $type = 'default', $cart_item = array(), $cart_index = 0 ) {
+		$args = array(
+			'download_id' => $download_id,
+			'payment_id'  => $payment_id,
+			'type'        => $type,
+			'cart_item'   => $cart_item,
+			'cart_index'  => $cart_index,
+		);
+
+		return $this->generate_new_license( $args );
+	}
+
+	/**
+	 * Generates a new license.
+	 *
+	 * @since 3.7
+	 *
+	 * @param array  $args {
+	 *     @type int     $download_id The download ID for the license.
+	 *     @type int     $payment_id  The associated payment ID.
+	 *     @type string  $type        The type of product (default/bundle).
+	 *     @type array   $cart_item   The information about the item in the cart.
+	 *     @type mixed   $cart_index  The position of the item in the cart.
+	 *     @type boolean $retroactive Whether the license is being generated retroactively (default false).
+	 *                                If true, licenses will be generated for upgrade payment, rather than the original.
+	 * }
+	 * @return array       An array of newly generated license keys.
+	 */
+	public function generate_new_license( $args = array() ) {
+
+		$args = wp_parse_args(
+			$args,
+			array(
+				'download_id' => 0,
+				'payment_id'  => 0,
+				'type'        => 'default',
+				'cart_item'   => array(),
+				'cart_index'  => 0,
+				'retroactive' => false,
+			)
+		);
 
 		$keys = array();
 
-		// Bail if this cart item is for a renewal
-		if( ! empty( $cart_item['item_number']['options']['is_renewal'] ) ) {
+		// Bail if the download ID or payment ID is missing.
+		if ( empty( $args['download_id'] ) || empty( $args['payment_id'] ) ) {
 			return $keys;
 		}
 
-		// Bail if this cart item is for an upgrade
-		if( ! empty( $cart_item['item_number']['options']['is_upgrade'] ) ) {
+		// Bail if this cart item is for a renewal.
+		if ( ! empty( $args['cart_item']['item_number']['options']['is_renewal'] ) ) {
 			return $keys;
 		}
 
-		$purchased_download = new EDD_SL_Download( $download_id );
+		// Bail if the license is not being generated retroactively and is an upgrade.
+		if ( empty( $args['retroactive'] ) && ! empty( $args['cart_item']['item_number']['options']['is_upgrade'] ) ) {
+			return $keys;
+		}
+
+		// If the related payment was upgraded, we should not generate a key.
+		$upgraded = edd_get_payment_meta( $args['payment_id'], '_edd_sl_upgraded_to_payment_id', true );
+		if ( $upgraded ) {
+			return $keys;
+		}
+
+		$purchased_download = new EDD_SL_Download( $args['download_id'] );
 		if ( ! $purchased_download->is_bundled_download() && ! $purchased_download->licensing_enabled() ) {
 			return $keys;
 		}
 
 		$license  = new EDD_SL_License();
-		$price_id = isset( $cart_item['item_number']['options']['price_id'] ) ? $cart_item['item_number']['options']['price_id'] : false;
-		$license->create( $download_id, $payment_id, $price_id, $cart_index, array() );
+		$price_id = isset( $args['cart_item']['item_number']['options']['price_id'] ) ? $args['cart_item']['item_number']['options']['price_id'] : false;
+		$license->create( $args['download_id'], $args['payment_id'], $price_id, $args['cart_index'], array() );
 
 		if ( ! empty( $license->ID ) ) {
 			$keys[] = $license->ID;
@@ -432,13 +485,12 @@ class EDD_Software_Licensing {
 			$child_licenses = $license->get_child_licenses();
 			if ( ! empty( $child_licenses ) ) {
 				$child_ids = wp_list_pluck( $child_licenses, 'ID' );
-				$keys = array_merge( $keys, $child_ids );
+				$keys      = array_merge( $keys, $child_ids );
 			}
 		}
 
 		return $keys;
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------
@@ -456,11 +508,12 @@ class EDD_Software_Licensing {
 		global $edd_options;
 
 		$defaults = array(
-			'key'        => '',
-			'item_name'  => '',
-			'item_id'    => 0,
-			'expiration' => current_time( 'timestamp' ), // right now
-			'url'        => ''
+			'key'         => '',
+			'item_name'   => '',
+			'item_id'     => 0,
+			'expiration'  => current_time( 'timestamp' ), // right now
+			'url'         => '',
+			'environment' => 'production',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -469,33 +522,22 @@ class EDD_Software_Licensing {
 		// Remove any leading or trailing whitespace from the values in the arguments. See GH#1452
 		$args = array_map( 'trim', $args );
 
-		extract( $args, EXTR_SKIP );
+		$license   = $this->get_license( $args['key'], true );
+		$item_name = html_entity_decode( $args['item_name'] );
 
-		/**
-		 * Setup type hinting for the extracted args.
-		 *
-		 * @var string $key
-		 * @var string $item_name
-		 * @var int $item_id
-		 * @var int $expiration
-		 * @var string $url
-		 */
-		$license   = $this->get_license( $key, true );
-		$item_name = html_entity_decode( $item_name );
-
-		if ( empty( $url ) && ! edd_software_licensing()->force_increase() ) {
+		if ( empty( $args['url'] ) && ! edd_software_licensing()->force_increase() ) {
 
 			// Attempt to grab the URL from the user agent if no URL is specified
 			$domain = array_map( 'trim', explode( ';', $_SERVER['HTTP_USER_AGENT'] ) );
 
 			if ( ! empty( $domain[1] ) ) {
-				$url = trim( $domain[1] );
+				$args['url'] = trim( $domain[1] );
 			}
 
 		}
 
 		$bypass_local = isset( $edd_options['edd_sl_bypass_local_hosts'] );
-		$is_local_url = empty( $bypass_local ) ? false : $this->is_local_url( $url );
+		$is_local_url = empty( $bypass_local ) ? false : $this->is_local_url( $args['url'], $args['environment'] );
 
 		$license_id  = false !== $license ? $license->ID : 0;
 		$download_id = false !== $license ? $license->download_id : 0;
@@ -512,7 +554,7 @@ class EDD_Software_Licensing {
 
 		} else {
 
-			if ( empty( $url ) && ! $this->force_increase( $license_id ) ) {
+			if ( empty( $args['url'] ) && ! $this->force_increase( $license_id ) ) {
 				$result['success'] = false;
 				$result['error']   = 'missing_url';
 			}
@@ -536,7 +578,7 @@ class EDD_Software_Licensing {
 			}
 
 			// no activations left
-			if( $result['success'] && ( $license->is_at_limit() && ! $is_local_url ) && ( $this->force_increase() || ! $license->is_site_active( $url ) ) ) {
+			if ( $result['success'] && ( $license->is_at_limit() && ! $is_local_url ) && ( $this->force_increase() || ! $license->is_site_active( $args['url'] ) ) ) {
 
 				$result['success']   = false;
 				$result['error']     = 'no_activations_left';
@@ -545,7 +587,7 @@ class EDD_Software_Licensing {
 			}
 
 			// this license has expired'
-			if ( $result['success'] && ( ! $license->is_lifetime &&  $license->expiration < $expiration ) ) {
+			if ( $result['success'] && ( ! $license->is_lifetime &&  $license->expiration < $args['expiration'] ) ) {
 
 				$result['success'] = false;
 				$result['error']   = 'expired';
@@ -554,7 +596,7 @@ class EDD_Software_Licensing {
 			}
 
 			// keys don't match
-			if ( $result['success'] && $key != $license->key ) {
+			if ( $result['success'] && $args['key'] !== $license->key ) {
 
 				$result['success'] = false;
 				$result['error']   = 'key_mismatch';
@@ -563,7 +605,7 @@ class EDD_Software_Licensing {
 
 			if( ! empty( $args['item_id'] ) && $result['success'] ) {
 
-				if( ! $this->is_download_id_valid_for_license( $args['item_id'], $key ) ) {
+				if ( ! $this->is_download_id_valid_for_license( $args['item_id'], $args['key'] ) ) {
 					$result['success']   = false;
 					$result['error']     = 'invalid_item_id';
 				}
@@ -585,7 +627,7 @@ class EDD_Software_Licensing {
 		if( $result['success'] ) {
 
 			// activate the site for the license
-			$license->add_site( $url );
+			$license->add_site( $args['url'], $args['environment'] );
 
 			// activate the license
 			$license->status = 'active';
@@ -625,18 +667,20 @@ class EDD_Software_Licensing {
 	 * @param array $data
 	 * @return void
 	 */
-	function remote_license_activation( $data ) {
+	public function remote_license_activation( $data ) {
 
 		$item_id     = ! empty( $data['item_id'] ) ? absint( $data['item_id'] ) : false;
 		$item_name   = ! empty( $data['item_name'] ) ? rawurldecode( $data['item_name'] ) : false;
 		$license     = ! empty( $data['license'] ) ? urldecode( $data['license'] ) : false;
 		$url         = isset( $data['url'] ) ? urldecode( $data['url'] ) : '';
+		$environment = empty( $data['environment'] ) ? 'production' : $data['environment'];
 
 		$args = array(
-			'item_name' => $item_name,
-			'key'       => $license,
-			'url'       => $url,
-			'item_id'   => $item_id
+			'item_name'   => $item_name,
+			'key'         => $license,
+			'url'         => $url,
+			'item_id'     => $item_id,
+			'environment' => $environment,
 		);
 
 		$result   = $this->activate_license( $args );
@@ -670,9 +714,9 @@ class EDD_Software_Licensing {
 		), $result );
 
 		$license_id = false !== $license ? $license->ID : 0;
-		header( 'Content-Type: application/json' );
-		echo json_encode( apply_filters( 'edd_remote_license_activation_response', $result, $args, $license_id ) );
-		exit;
+		$result     = apply_filters( 'edd_remote_license_activation_response', $result, $args, $license_id );
+
+		$this->send_response( $result );
 	}
 
 
@@ -691,11 +735,12 @@ class EDD_Software_Licensing {
 		global $edd_options;
 
 		$defaults = array(
-			'key'        => '',
-			'item_name'  => '',
-			'item_id'    => 0,
-			'expiration' => current_time( 'timestamp' ), // right now
-			'url'        => ''
+			'key'         => '',
+			'item_name'   => '',
+			'item_id'     => 0,
+			'expiration'  => current_time( 'timestamp' ), // right now
+			'url'         => '',
+			'environment' => 'production',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -704,38 +749,26 @@ class EDD_Software_Licensing {
 		// Remove any leading or trailing whitespace from the values in the arguments. See GH#1452
 		$args = array_map( 'trim', $args );
 
-		extract( $args, EXTR_SKIP );
-
-		/**
-		 * Setup type hinting for the extracted args.
-		 *
-		 * @var string $key
-		 * @var string $item_name
-		 * @var int $item_id
-		 * @var int $expiration
-		 * @var string $url
-		 */
-		$license = $this->get_license( $key, true );
+		$license = $this->get_license( $args['key'], true );
 
 		if ( false === $license ) {
 			return false;
 		}
 
-		$item_name = html_entity_decode( $item_name );
+		$item_name = html_entity_decode( $args['item_name'] );
 
-		if ( empty( $url ) && ! edd_software_licensing()->force_increase() ) {
+		if ( empty( $args['url'] ) && ! edd_software_licensing()->force_increase() ) {
 
 			// Attempt to grab the URL from the user agent if no URL is specified
 			$domain = array_map( 'trim', explode( ';', $_SERVER['HTTP_USER_AGENT'] ) );
 
 			if ( ! empty( $domain[1] ) ) {
-				$url = trim( $domain[1] );
+				$args['url'] = trim( $domain[1] );
 			}
-
 		}
 
 		$bypass_local = isset( $edd_options['edd_sl_bypass_local_hosts'] );
-		$is_local_url = empty( $bypass_local ) ? false : $this->is_local_url( $url );
+		$is_local_url = empty( $bypass_local ) ? false : $this->is_local_url( $args['url'], $args['environment'] );
 
 		do_action( 'edd_sl_pre_deactivate_license', $license->ID, $license->download_id );
 
@@ -752,11 +785,11 @@ class EDD_Software_Licensing {
 		}
 
 		// don't deactivate if expired
-		if ( ! $license->is_lifetime && $license->expiration < $expiration ) {
+		if ( ! $license->is_lifetime && $license->expiration < $args['expiration'] ) {
 			return false; // this license has expired
 		}
 
-		if ( $key != $license->key ) {
+		if ( $args['key'] !== $license->key ) {
 			return false; // keys don't match
 		}
 
@@ -777,7 +810,7 @@ class EDD_Software_Licensing {
 		}
 
 		// deactivate the site for the license
-		$removed = $license->remove_site( $url );
+		$removed = $license->remove_site( trailingslashit( $args['url'] ) );
 
 		if ( ! $is_local_url ) {
 
@@ -795,19 +828,20 @@ class EDD_Software_Licensing {
 	 * @param array $data
 	 * @return void
 	 */
-	function remote_license_deactivation( $data ) {
-
+	public function remote_license_deactivation( $data ) {
 
 		$item_id     = ! empty( $data['item_id'] ) ? absint( $data['item_id'] ) : false;
 		$item_name   = ! empty( $data['item_name'] ) ? rawurldecode( $data['item_name'] ) : false;
 		$license     = urldecode( $data['license'] );
 		$url         = isset( $data['url'] ) ? urldecode( $data['url'] ) : '';
+		$environment = empty( $data['environment'] ) ? 'production' : $data['environment'];
 
 		$args = array(
-			'item_id'   => $item_id,
-			'item_name' => $item_name,
-			'key'       => $license,
-			'url'       => $url,
+			'item_id'     => $item_id,
+			'item_name'   => $item_name,
+			'key'         => $license,
+			'url'         => $url,
+			'environment' => $environment,
 		);
 
 		$result   = $this->deactivate_license( $args );
@@ -833,8 +867,6 @@ class EDD_Software_Licensing {
 			$item_name = get_the_title( $item_id );
 		}
 
-		header( 'Content-Type: application/json' );
-
 		$response = array_merge( array(
 			'success'   => (bool) $result,
 			'license'   => $status,
@@ -843,9 +875,9 @@ class EDD_Software_Licensing {
 			'checksum'  => $checksum,
 		), $response );
 
-		echo json_encode( apply_filters( 'edd_remote_license_deactivation_response', $response, $args, $license->ID ) );
+		$response = apply_filters( 'edd_remote_license_deactivation_response', $response, $args, $license->ID );
 
-		exit;
+		$this->send_response( $response );
 
 	}
 
@@ -979,10 +1011,9 @@ class EDD_Software_Licensing {
 		), $response );
 
 		$license_id = ! empty( $license->ID ) ? $license->ID : false;
-		header( 'Content-Type: application/json' );
-		echo json_encode( apply_filters( 'edd_remote_license_check_response', $response, $args, $license_id ) );
+		$response   = apply_filters( 'edd_remote_license_check_response', $response, $args, $license_id );
 
-		exit;
+		$this->send_response( $response );
 
 	}
 
@@ -1072,7 +1103,7 @@ class EDD_Software_Licensing {
 		// Verify the initial payment is at least completed
 		$payment_id = $this->get_payment_id( $license_id );
 		$payment    = new EDD_Payment( $payment_id );
-		if ( 'publish' !== $payment->status ) {
+		if ( 'publish' !== $payment->status && 'complete' !== $payment->status ) {
 			$ret = false;
 		}
 		return apply_filters( 'edd_sl_can_extend_license', $ret, $license_id );
@@ -1095,7 +1126,7 @@ class EDD_Software_Licensing {
 		// Verify the initial payment is at least completed
 		$payment_id = $this->get_payment_id( $license_id );
 		$payment    = new EDD_Payment( $payment_id );
-		if ( 'publish' !== $payment->status ) {
+		if ( 'publish' !== $payment->status && 'complete' !== $payment->status ) {
 			$ret = false;
 		}
 		return apply_filters( 'edd_sl_can_renew_license', $ret, $license_id );
@@ -1143,7 +1174,7 @@ class EDD_Software_Licensing {
 				while ( $key >= 0 ) {
 					$previous_payment = new EDD_Payment( $license->payment_ids[ $key ] );
 
-					if ( 'publish' === $previous_payment->status ) {
+					if ( 'publish' === $previous_payment->status || 'complete' === $previous_payment->status ) {
 						break;
 					}
 
@@ -1198,7 +1229,7 @@ class EDD_Software_Licensing {
 
 		$payment = new EDD_Payment( $payment_id );
 
-		if( 'publish' !== $payment->status && 'revoked' !== $payment->status ) {
+		if( ( 'publish' !== $payment->status && 'complete' !== $payment->status ) && 'revoked' !== $payment->status ) {
 			return;
 		}
 
@@ -1308,19 +1339,18 @@ class EDD_Software_Licensing {
 			'banners'        => array(),
 		);
 
-		// set content type of response
-		header( 'Content-Type: application/json' );
+		$bypass_name_check = defined( 'EDD_BYPASS_NAME_CHECK' ) && EDD_BYPASS_NAME_CHECK;
 
-		if( empty( $item_id ) && empty( $item_name ) && ( ! defined( 'EDD_BYPASS_NAME_CHECK' ) || ! EDD_BYPASS_NAME_CHECK ) ) {
+		if ( empty( $item_id ) && empty( $item_name ) && ! $bypass_name_check ) {
 			$response['msg'] = __( 'No item provided', 'edd_sl' );
-			echo json_encode( $response ); exit;
+			$this->send_response( $response );
 		}
 
 		if( empty( $item_id ) ) {
 
 			if( empty( $license ) && empty( $item_name ) ) {
 				$response['msg'] = __( 'No item provided', 'edd_sl' );
-				echo json_encode( $response ); exit;
+				$this->send_response( $response );
 			}
 
 			$check_by_name_first = apply_filters( 'edd_sl_force_check_by_name', false );
@@ -1339,26 +1369,30 @@ class EDD_Software_Licensing {
 
 		$download = new EDD_SL_Download( $item_id );
 
-		if( ! $download ) {
+		if ( ! $download ) {
 
-			if( empty( $license ) || $check_by_name_first ) {
+			if ( empty( $license ) || $check_by_name_first ) {
+				/* translators: the singular download label */
 				$response['msg'] = sprintf( __( 'Item name provided does not match a valid %s', 'edd_sl' ), edd_get_label_singular() );
 			} else {
+				/* translators: the singular download label */
 				$response['msg'] = sprintf( __( 'License key provided does not match a valid %s', 'edd_sl' ), edd_get_label_singular() );
 			}
 
-			echo json_encode( $response ); exit;
+			$this->send_response( $response );
 
 		}
 
+		$message               = '';
 		$is_valid_for_download = $this->is_download_id_valid_for_license( $download->ID, $license );
-		if ( ! empty( $license ) && ( ! defined( 'EDD_BYPASS_NAME_CHECK' ) || ! EDD_BYPASS_NAME_CHECK ) && ( ! $is_valid_for_download || ( ! empty( $item_name ) && ! $this->check_item_name( $download->ID, $item_name, $license ) ) ) ) {
-
-			$download_name   = ! empty( $item_name ) ? $item_name : $download->get_name();
+		if ( empty( $license ) ) {
+			$message = __( 'No license key has been provided.', 'edd_sl' );
+		} elseif ( ! $bypass_name_check && ( ! $is_valid_for_download || ( ! empty( $item_name ) && ! $this->check_item_name( $download->ID, $item_name, $license ) ) ) ) {
+			$download_name = ! empty( $item_name ) ? $item_name : $download->get_name();
+			/* translators: the download name */
 			$response['msg'] = sprintf( __( 'License key is not valid for %s', 'edd_sl' ), $download_name );
 
-			echo json_encode( $response ); exit;
-
+			$this->send_response( $response );
 		}
 
 		$stable_version = $version = $this->get_latest_version( $item_id );
@@ -1367,9 +1401,9 @@ class EDD_Software_Licensing {
 		$changelog      = $download->get_changelog( true );
 
 		$download_beta = false;
-		if ( $beta && $download->has_beta()  ) {
+		if ( $beta && $download->has_beta() ) {
 			$version_beta = $this->get_beta_download_version( $item_id );
-			if ( version_compare( $version_beta, $stable_version, '>') ) {
+			if ( version_compare( $version_beta, $stable_version, '>' ) ) {
 				$changelog     = $download->get_beta_changelog();
 				$version       = $version_beta;
 				$download_beta = true;
@@ -1392,14 +1426,18 @@ class EDD_Software_Licensing {
 					'changelog'   => wpautop( strip_tags( stripslashes( $changelog ), '<p><li><ul><ol><strong><a><em><span><br>' ) ),
 				)
 			),
-			'banners' => serialize(
+			'banners'        => serialize(
 				array(
 					'high' => get_post_meta( $item_id, '_edd_readme_plugin_banner_high', true ),
 					'low'  => get_post_meta( $item_id, '_edd_readme_plugin_banner_low', true )
 				)
 			),
-			'icons' => array()
+			'icons'          => array(),
 		);
+
+		if ( $message ) {
+			$response['msg'] = $message;
+		}
 
 		if ( has_post_thumbnail( $download->ID ) ) {
 			$thumb_id  = get_post_thumbnail_id( $download->ID );
@@ -1431,8 +1469,7 @@ class EDD_Software_Licensing {
 			$response['sections'] = serialize( array_map('wp_encode_emoji', $sections ) );
 		}
 
-		echo json_encode( $response );
-		exit;
+		$this->send_response( $response );
 	}
 
 	/**
@@ -1753,6 +1790,53 @@ class EDD_Software_Licensing {
 	}
 
 	/**
+	 * Gets the download name for display with a license key.
+	 * Prepends name for child licenses with --
+	 * Appends the variation name if applicable.
+	 *
+	 * @param object \EDD_SL_License $license
+	 * @return string
+	 */
+	public function get_license_download_display_name( $license ) {
+		$license_title = $this->get_download_name( $license->ID );
+
+		// Return the title if this is a single product license and does not have a variation/price ID.
+		if ( ! $license->parent && ! $license->price_id ) {
+			return $license_title;
+		}
+
+		// If this is a child license, prepend the title with a --
+		if ( $license->parent ) {
+			$license_title = '&#8212;&nbsp;' . $license_title;
+		}
+
+		// Return the title if there is definitely no price ID.
+		if ( ! $license->price_id ) {
+			return $license_title;
+		}
+
+		// Final checks to see if the price ID truly should be shown, or was erroneously assigned.
+		$show_price_id = true;
+		if ( $license->parent ) {
+			$download_id   = $this->get_download_id( $license->parent );
+			$download      = new EDD_SL_Download( $download_id );
+			$bundled_items = $download->get_bundled_downloads();
+			// Loose comparison because the ID is an integer, bundled items are strings.
+			if ( in_array( $license->download_id, $bundled_items ) ) {
+				$show_price_id = false;
+			}
+		}
+		if ( $license->price_id && $show_price_id ) {
+			$license_title .= sprintf(
+				'<span class="edd_sl_license_price_option">&ndash;&nbsp;%s</span>',
+				esc_html( edd_get_price_option_name( $license->get_download()->ID, $license->price_id ) )
+			);
+		}
+
+		return $license_title;
+	}
+
+	/**
 	 * Returns the download ID of a license key
 	 * @since 2.7
 	 * @param int $license_id
@@ -1822,21 +1906,35 @@ class EDD_Software_Licensing {
 	 *
 	 * @return array|bool
 	 */
-	function get_licenses_of_purchase( $payment_id ) {
-		global $wpdb;
+	public function get_licenses_of_purchase( $payment_id ) {
 
-		// Get licenses where this payment ID was the initial purchase.
-		$licenses = self::$instance->licenses_db->get_licenses( array(
-			'number'     => - 1,
-			'payment_id' => $payment_id,
-		) );
-
-		if ( ! empty( $licenses ) ) {
-			return $licenses;
+		$number = 99999;
+		// If 0 is provided as the payment ID, limit the number of licenses returned.
+		if ( 0 === $payment_id ) {
+			$number = 10;
 		}
 
-		return false;
+		// Get licenses where this payment ID was the initial purchase.
+		$licenses = self::$instance->licenses_db->get_licenses(
+			array(
+				'number'     => $number,
+				'payment_id' => $payment_id,
+				'parent'     => 0,
+			)
+		);
 
+		if ( empty( $licenses ) ) {
+			return false;
+		}
+		foreach ( $licenses as $index => $license ) {
+			$child_licenses = $license->get_child_licenses();
+			if ( ! empty( $child_licenses ) ) {
+				array_unshift( $child_licenses, $license );
+				array_splice( $licenses, $index, 1, $child_licenses );
+			}
+		}
+
+		return $licenses;
 	}
 
 	/**
@@ -1885,7 +1983,7 @@ class EDD_Software_Licensing {
 	 *
 	 * @param int  $user_id The user ID to get licenses for
 	 * @param bool $include_child_licenses If true (default) we will get all licenses including children of a bundle
-	 *                                     when false, the method will only return licenses without a post_parent
+	 *                                     when false, the method will only return licenses without a parent
 	 *
 	 * @since 3.4
 	 * @param  $user_id     int The ID of the user to filter by
@@ -2525,12 +2623,18 @@ class EDD_Software_Licensing {
 	 *
 	 * @since  3.2.7
 	 *
-	 * @param  string $url The URL Provided
+	 * @param string $url A URL that possibly represents a local environment.
+	 * @param string $environment The current site environment. Default production.
+	 *                            Always production in WordPress < 5.5
 	 *
 	 * @return boolean      If we're considering the URL local or not
 	 */
-	function is_local_url( $url = '' ) {
+	public function is_local_url( $url = '', $environment = 'production' ) {
 		$is_local_url = false;
+
+		if ( 'production' !== $environment ) {
+			return apply_filters( 'edd_sl_is_local_url', true, $url, $environment );
+		}
 
 		// Trim it up
 		$url = strtolower( trim( $url ) );
@@ -2569,7 +2673,7 @@ class EDD_Software_Licensing {
 
 			if ( substr_count( $host, '.' ) > 1 ) {
 				$subdomains_to_check = apply_filters( 'edd_sl_url_subdomains', array(
-					'dev.', '*.staging.', '*.test.', 'staging-*.',
+					'dev.', '*.staging.', '*.test.', 'staging-*.', '*.wpengine.com',
 				) );
 
 				foreach ( $subdomains_to_check as $subdomain ) {
@@ -2585,7 +2689,7 @@ class EDD_Software_Licensing {
 			}
 		}
 
-		return apply_filters( 'edd_sl_is_local_url', $is_local_url, $url );
+		return apply_filters( 'edd_sl_is_local_url', $is_local_url, $url, $environment );
 	}
 
 	/**
@@ -2625,6 +2729,24 @@ class EDD_Software_Licensing {
 		$emails   = array_unique( $emails );
 
 		return apply_filters( 'edd_sl_get_emails_for_license', $emails, $license_id );
+	}
+
+	/**
+	 * Send the API response data as a JSON response, and define the JSON_REQUEST and WP_REDIS_DISABLE_COMMENT constants.
+	 *
+	 * @since 3.6.12
+	 * @param array $response_data The data to send to the api.
+	 */
+	private function send_response( $response_data = array() ) {
+		if ( ! defined( 'JSON_REQUEST' ) ) {
+			define( 'JSON_REQUEST', true );
+		}
+
+		if ( ! defined( 'WP_REDIS_DISABLE_COMMENT' ) ) {
+			define( 'WP_REDIS_DISABLE_COMMENT', true );
+		}
+
+		wp_send_json( $response_data );
 	}
 }
 

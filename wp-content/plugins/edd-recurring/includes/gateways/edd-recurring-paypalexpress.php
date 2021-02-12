@@ -117,7 +117,7 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 	 */
 	public function complete_signup() {
 
-		$payment      = new EDD_Payment( $this->payment_id );
+		$payment      = edd_get_payment( $this->payment_id );
 		$item_titles  = array();
 		$item_total   = 0;
 		$tax          = 0;
@@ -222,7 +222,7 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 			$payment_id = $auto_confirm ? absint( $_GET['payment_id'] ) : absint( $_POST['payment_id'] );
 			$details    = $this->get_checkout_details( $token );
 			$payer_id   = $details['PAYERID'];
-			$payment    = new EDD_Payment( $payment_id );
+			$payment    = edd_get_payment( $payment_id );
 
 			if( empty( $details['free_trial'] ) ) {
 
@@ -282,6 +282,10 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 				} else {
 
 					foreach( $details['subscriptions'] as $subscription ) {
+
+						/**
+						 * @var EDD_Subscription $subscription
+						 */
 
 						// Successful payment, now create the recurring profile
 
@@ -407,6 +411,14 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 									$status = ! empty( $details['free_trial'] ) ? 'trialling' : 'active';
 									$subscription->update( array( 'profile_id' => $body['PROFILEID'], 'status' => $status ) );
 
+									if ( ! empty( $details['free_trial'] ) ) {
+										if ( function_exists( 'edd_add_customer_meta' ) ) {
+											edd_add_customer_meta( $subscription->customer_id, 'edd_recurring_trials', $subscription->product_id );
+										} else {
+											$subscription->customer->add_meta( 'edd_recurring_trials', $subscription->product_id );
+										}
+									}
+
 								} else {
 
 									$subscription->update( array( 'profile_id' => $body['PROFILEID'] ) );
@@ -504,8 +516,8 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 				}
 			}
 
-			$payment = new EDD_Payment( $_GET['payment_id'] );
-			$body['payment_key']   = $payment->key;
+			$payment             = edd_get_payment( $_GET['payment_id'] );
+			$body['payment_key'] = $payment->key;
 
 			return $body;
 
@@ -1203,7 +1215,7 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 		if( ! empty( $profile_id ) ) {
 			$html     = '<a href="%s" target="_blank">' . $profile_id . '</a>';
 
-			$payment  = new EDD_Payment( $subscription->parent_payment_id );
+			$payment  = edd_get_payment( $subscription->parent_payment_id );
 			$base_url = 'live' === $payment->mode ? 'https://www.paypal.com' : 'https://www.sandbox.paypal.com';
 			$link     = esc_url( $base_url . '/cgi-bin/webscr?cmd=_profile-recurring-payments&encrypted_profile_id=' . $profile_id );
 

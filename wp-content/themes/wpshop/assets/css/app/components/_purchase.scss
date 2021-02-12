@@ -14,9 +14,6 @@
 
   p {
     font-size: 18px;
-    @include device(1500, 'max') {
-      font-size: 17px;
-    }
 
     @include device(700, 'max') {
       font-size: 16px;
@@ -27,7 +24,7 @@
 }
 
 .purchase .component-purchase {
-  margin: -2em auto 0 auto;
+  margin: -3em auto 0 auto;
   padding: 7em 0 4em 0;
 
   @include device(1500, 'max') {
@@ -85,7 +82,7 @@
 
 .plan-name {
   font-size: 22px;
-  font-weight: bold;
+  font-family: $font-secondary;
 
   @include device(1500, 'max') {
     font-size: 20px;
@@ -109,11 +106,11 @@
 .plan-terms {
   text-align: center;
   margin-top: 0px;
-  font-style: italic;
   color: #636363;
+  margin-left: -5px;
   font-size: 19px;
   font-weight: 100;
-  margin-left: 0px;
+  font-family: $font-secondary;
 
   @include device(700, 'max') {
     font-size: 16px;
@@ -121,10 +118,11 @@
 }
 
 .plan-description {
-  font-size: 15px;
+  font-size: 16px;
   color: #6b6b6b;
   margin-left: 15px;
   margin-top: 5px;
+  font-family: $font-secondary;
 }
 
 .price-toggle-label-wrapper {
@@ -153,7 +151,8 @@
 
   .price-toggle-label {
     margin: 0 10px;
-    font-size: 15px;
+    font-size: 18px;
+    font-family: $font-secondary;
   }
 }
 
@@ -197,17 +196,18 @@
 
   ul {
     text-align: left;
-    max-width: 315px;
+    max-width: 330px;
     margin: 0 auto;
     padding: 0 0 0 25px;
     list-style: none;
   }
   li {
     margin-top: 2px;
-    font-size: 15px;
+    font-size: 16px;
     position: relative;
     padding-left: 13px;
     margin-bottom: 10px;
+    font-family: $font-primary;
 
     &:before {
       position: absolute;

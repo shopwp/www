@@ -85,8 +85,6 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 	 */
 	public function complete_signup() {
 
-		Twocheckout::sandbox( edd_is_test_mode() );
-
 		// Get the success url
 		$return_url = add_query_arg( array(
 			'payment-confirmation' => '2checkout',
@@ -139,21 +137,16 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 
 		}
 
+		if ( edd_is_test_mode() ) {
+			$args['demo'] = 'Y';
+		}
+
 		$args = apply_filters( 'edd_recurring_2checkout_redirect_args', $args, $this );
 
-		try {
+		$redirect = add_query_arg( $args, 'https://www.2checkout.com/checkout/purchase' );
 
-			edd_empty_cart();
-
-			$charge = Twocheckout_Charge::redirect( $args );
-
-			exit;
-
-		} catch ( Twocheckout_Error $e ) {
-
-			edd_set_error( '2checkout_error', $e->getMessage() );
-
-		}
+		wp_redirect( $redirect );
+		exit;
 
 	}
 
@@ -315,7 +308,7 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 							$sub->cancel();
 
 							$payment_id      = $sub->parent_payment_id;
-							$initial_payment = new EDD_Payment( $payment_id );
+							$initial_payment = edd_get_payment( $payment_id );
 
 							$initial_payment->update_status( 'revoked' );
 							$initial_payment->add_note( __( '2Checkout fraud review failed.', 'edd-recurring' ) );
@@ -330,7 +323,7 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 							$sub->update( $args );
 
 							$payment_id      = $sub->parent_payment_id;
-							$initial_payment = new EDD_Payment( $payment_id );
+							$initial_payment = edd_get_payment( $payment_id );
 
 							$initial_payment->update_status( 'pending' );
 							$initial_payment->add_note( __( '2Checkout fraud review in progress.', 'edd-recurring' ) );
@@ -344,7 +337,7 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 							$sub->update( $args );
 
 							$payment_id      = $sub->parent_payment_id;
-							$initial_payment = new EDD_Payment( $payment_id );
+							$initial_payment = edd_get_payment( $payment_id );
 
 							$initial_payment->update_status( 'complete' );
 							$initial_payment->add_note( __( '2Checkout fraud review passed.', 'edd-recurring' ) );
@@ -371,7 +364,7 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 							$sub->update( $args );
 
 							$payment_id      = $sub->parent_payment_id;
-							$initial_payment = new EDD_Payment( $payment_id );
+							$initial_payment = edd_get_payment( $payment_id );
 
 							$initial_payment->update_status( 'complete' );
 							$initial_payment->add_note( __( '2Checkout Invoice status set to deposited.', 'edd-recurring' ) );
@@ -427,13 +420,13 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 				case 'REFUND_ISSUED' :
 
 					$payment_id      = $sub->parent_payment_id;
-					$initial_payment = new EDD_Payment( $payment_id );
+					$initial_payment = edd_get_payment( $payment_id );
 					$cart_count      = count( $initial_payment->cart_details );
 
 					// Look for the new refund line item
-					if( isset( $_POST['item_list_amount_' . $cart_count + 1 ] ) && $_POST['item_list_amount_' . $cart_count + 1 ] < $payment->total ) {
+					if( isset( $_POST['item_list_amount_' . ( $cart_count + 1 ) ] ) && $_POST['item_list_amount_' . ( $cart_count + 1 ) ] < $payment->total ) {
 
-						$refunded = edd_sanitize_amount( $_POST['item_list_amount_' . $cart_count + 1 ] );
+						$refunded = edd_sanitize_amount( $_POST['item_list_amount_' . ( $cart_count + 1 ) ] );
 						$payment->add_note( sprintf( __( 'Partial refund for %s processed in 2Checkout' ), edd_currency_filter( $refunded ) ) );
 
 					} else {
@@ -552,7 +545,7 @@ class EDD_Recurring_2Checkout extends EDD_Recurring_Gateway {
 		if( ! empty( $profile_id ) ) {
 			$html     = '<a href="%s" target="_blank">' . $profile_id . '</a>';
 
-			$payment  = new EDD_Payment( $subscription->parent_payment_id );
+			$payment  = edd_get_payment( $subscription->parent_payment_id );
 			$base_url = 'live' === $payment->mode ? 'https://2checkout.com/' : 'https://sandbox.2checkout.com/sandbox/';
 			$url      = '<a href="%s" target="_blank">' . $profile_id . '</a>';
 			$link     = esc_url( $base_url . 'sales/detail?sale_id=' . $payment->transaction_id );

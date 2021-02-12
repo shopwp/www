@@ -13,9 +13,16 @@ class ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa
     );
 
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Stripe\\' => 7,
+            'Sample\\' => 7,
+        ),
         'P' => 
         array (
             'Psr\\Http\\Message\\' => 17,
+            'PayPalHttp\\' => 11,
+            'PayPalCheckoutSdk\\' => 18,
         ),
         'G' => 
         array (
@@ -30,9 +37,25 @@ class ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa
     );
 
     public static $prefixDirsPsr4 = array (
+        'Stripe\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
+        ),
+        'Sample\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paypal/paypal-checkout-sdk/samples',
+        ),
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'PayPalHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paypal/paypalhttp/lib/PayPalHttp',
+        ),
+        'PayPalCheckoutSdk\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paypal/paypal-checkout-sdk/lib/PayPalCheckoutSdk',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -62,12 +85,17 @@ class ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa
         ),
     );
 
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit988a5849821873ad4ae832c0ff4c47fa::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -3,7 +3,7 @@
 Plugin Name: Easy Digital Downloads - Stripe Payment Gateway
 Plugin URL: https://easydigitaldownloads.com/downloads/stripe-gateway/
 Description: Adds a payment gateway for Stripe.com
-Version: 2.7.7
+Version: 2.8.0
 Author: Easy Digital Downloads
 Author URI: https://easydigitaldownloads.com
 Text Domain: edds
@@ -63,10 +63,10 @@ class EDD_Stripe {
 			define( 'EDDSTRIPE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		}
 
-		define( 'EDD_STRIPE_VERSION', '2.7.7' );
+		define( 'EDD_STRIPE_VERSION', '2.8.0' );
 
 		// To be used with \Stripe\Stripe::setApiVersion.
-		define( 'EDD_STRIPE_API_VERSION', '2019-08-14' );
+		define( 'EDD_STRIPE_API_VERSION', '2020-03-02' );
 
 		// To be used with \Stripe\Stripe::setAppInfo.
 		define( 'EDD_STRIPE_PARTNER_ID', 'pp_partner_DKh7NDe3Y5G8XG' );
@@ -82,11 +82,13 @@ class EDD_Stripe {
 		require_once EDDS_PLUGIN_DIR . '/includes/deprecated.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/compat.php';
 
+		require_once EDDS_PLUGIN_DIR . '/includes/utils/modal.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/utils/exceptions/class-attribute-not-found.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/utils/exceptions/class-stripe-object-not-found.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/utils/interface-static-registry.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/utils/class-registry.php';
 
+		require_once EDDS_PLUGIN_DIR . '/includes/i18n.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/emails.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/payment-receipt.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/card-actions.php';
@@ -100,6 +102,10 @@ class EDD_Stripe {
 		require_once EDDS_PLUGIN_DIR . '/includes/template-functions.php';
 		require_once EDDS_PLUGIN_DIR . '/includes/class-edd-stripe-rate-limiting.php';
 
+		// Payment Methods.
+		require_once EDDS_PLUGIN_DIR . '/includes/payment-methods/payment-request/index.php';
+		require_once EDDS_PLUGIN_DIR . '/includes/payment-methods/buy-now/index.php';
+
 		if ( is_admin() ) {
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/class-notices-registry.php';
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/class-notices.php';
@@ -107,6 +113,7 @@ class EDD_Stripe {
 
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/admin-actions.php';
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/admin-filters.php';
+			require_once EDDS_PLUGIN_DIR . '/includes/admin/settings/stripe-connect.php';
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/settings.php';
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/upgrade-functions.php';
 			require_once EDDS_PLUGIN_DIR . '/includes/admin/reporting/class-stripe-reports.php';
@@ -114,6 +121,14 @@ class EDD_Stripe {
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once EDDS_PLUGIN_DIR . '/includes/integrations/wp-cli.php';
+		}
+
+		if ( defined( 'EDD_ALL_ACCESS_VER' ) && EDD_ALL_ACCESS_VER ) {
+			require_once EDDS_PLUGIN_DIR . '/includes/integrations/edd-all-access.php';
+		}
+
+		if ( class_exists( 'EDD_Auto_Register' ) ) {
+			require_once EDDS_PLUGIN_DIR . '/includes/integrations/edd-auto-register.php';
 		}
 
 	}
@@ -134,21 +149,21 @@ class EDD_Stripe {
 		$did_upgrade = false;
 		$version     = get_option( 'edds_stripe_version' );
 
-		if( ! $version || version_compare( $version, EDD_STRIPE_VERSION, '<' ) ) {
-
+		if ( ! $version || version_compare( $version, EDD_STRIPE_VERSION, '<' ) ) {
 			$did_upgrade = true;
 
-			switch( EDD_STRIPE_VERSION ) {
-
+			switch ( EDD_STRIPE_VERSION ) {
 				case '2.5.8' :
 					edd_update_option( 'stripe_checkout_remember', true );
 					break;
-
+				case '2.8.0':
+					edd_update_option( 'stripe_allow_prepaid', true );
+					break;
 			}
 
 		}
 
-		if( $did_upgrade ) {
+		if ( $did_upgrade ) {
 			update_option( 'edds_stripe_version', EDD_STRIPE_VERSION );
 		}
 	}

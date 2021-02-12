@@ -334,10 +334,13 @@ function edd_recurring_subscription_details() {
 													<div style="padding-left: 10px; border-left: 1px solid #e5e5e5;">
 														<span><strong><?php _e( 'Tax Rate:', 'edd-recurring' ); ?></strong></span>
 														<?php
+														$initial_tax_rate   = ! empty( $sub->initial_tax_rate ) && is_numeric( $sub->initial_tax_rate ) ? ( $sub->initial_tax_rate * 100 ) : 0.00;
+														$recurring_tax_rate = ! empty( $sub->recurring_tax_rate ) && is_numeric( $sub->recurring_tax_rate ) ? ( $sub->recurring_tax_rate * 100 ) : 0.00;
 														printf(
-															 _x( '%s then %s', 'Inital subscription tax rate then billing cycle and tax rate', 'edd-recurring' ),
-															$sub->initial_tax_rate*100 . '%',
-															$sub->recurring_tax_rate*100 . '% / ' . $frequency
+															/* translators: %1$s Initial tax rate. %2$s Billing tax rate and cycle length */
+															_x( '%1$s then %2$s', 'edd-recurring' ),
+															esc_html( $initial_tax_rate ) . '%',
+															esc_html( $recurring_tax_rate . '% / ' . $frequency )
 														);
 														?>
 													</div>
@@ -349,8 +352,8 @@ function edd_recurring_subscription_details() {
 														<span><strong><?php _e( 'Tax Amount:', 'edd-recurring' ); ?></strong></span>
 														<?php
 														printf(
-															_x( '%s then %s',
-															'Inital subscription tax rate then billing cycle and tax rate', 'edd-recurring' ),
+															/* translators: %1$s Initial tax value. %2$s Billing tax value and cycle length */
+															_x( '%1$s then %2$s', 'Initial subscription tax value then recurring tax value and billing cycle.', 'edd-recurring' ),
 															edd_currency_filter( edd_format_amount( $sub->initial_tax ), $currency_code ),
 															edd_currency_filter( edd_format_amount( $sub->recurring_tax ), $currency_code ) . ' / ' . $frequency
 														);
@@ -397,11 +400,12 @@ function edd_recurring_subscription_details() {
 											// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 											echo EDD()->html->product_dropdown(
 												array(
-													'selected'   => $selected,
-													'chosen'     => true,
-													'name'       => 'product_id',
-													'class'      => 'edd-sub-product-id',
-													'variations' => true,
+													'selected'             => $selected,
+													'chosen'               => true,
+													'name'                 => 'product_id',
+													'class'                => 'edd-sub-product-id',
+													'variations'           => true,
+													'show_variations_only' => true,
 												)
 											);
 
@@ -798,7 +802,7 @@ function edd_recurring_process_subscription_creation() {
 	if( ! empty( $_POST['parent_payment_id'] ) ) {
 
 		$payment_id = absint( $_POST['parent_payment_id'] );
-		$payment    = new EDD_Payment( $payment_id );
+		$payment    = edd_get_payment( $payment_id );
 
 	} else {
 
@@ -807,7 +811,7 @@ function edd_recurring_process_subscription_creation() {
 			$options['price_id'] = absint( $_POST['edd_price_option'] );
 		}
 
-		$payment = new EDD_Payment;
+		$payment = new EDD_Payment();
 		$payment->add_download( absint( $_POST['product_id'] ), $options );
 		$payment->customer_id = $customer_id;
 		$payment->email       = $email;
@@ -1041,7 +1045,10 @@ function edd_recurring_process_subscription_deletion() {
 
 	$subscription = new EDD_Subscription( absint( $_POST['sub_id'] ) );
 
-	delete_post_meta( $subscription->parent_payment_id, '_edd_subscription_payment' );
+	$payment = new EDD_Payment( $subscription->parent_payment_id );
+	if ( $payment ) {
+		$payment->delete_meta( '_edd_subscription_payment' );
+	}
 
 	// Delete subscription from list of trials customer has used
 	$subscription->customer->delete_meta( 'edd_recurring_trials', $subscription->product_id );

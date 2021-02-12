@@ -192,3 +192,10 @@ body.testimonials {
 #password-lost-form-wrap input[type='password'].som-password-input {
   max-width: 100%;
 }
+
+.blog,
+.single-post {
+  #someone-purchased {
+    display: none !important;
+  }
+}

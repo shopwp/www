@@ -5,13 +5,19 @@
 import gulp from 'gulp';
 import config from '../config';
 
-gulp.task('server', (done) => {
+function reload(done) {
+  config.bs.reload();
+  done();
+}
 
+gulp.task('server', (done) => {
   config.bs.init({
     proxy: config.serverName,
-    notify: false
+    port: 5000,
+    notify: false,
   });
 
-  done();
+  gulp.watch(config.files.css, gulp.series('css', reload));
 
+  //done();
 });

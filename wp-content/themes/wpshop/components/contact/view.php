@@ -78,6 +78,7 @@
 
    .component-contact .content-inner h2 {
       font-size: 3em;
+      margin-bottom: 10px;
    }
 
    .col-two {

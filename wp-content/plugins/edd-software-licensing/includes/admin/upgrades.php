@@ -487,19 +487,22 @@ function edd_sl_render_fix_no_url_check_activation_counts() {
 		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
 	</style>
 
+	<?php wp_enqueue_script( 'jquery' ); ?>
 	<script>
-		$( document ).ready(function() {
-			$(document).on("DOMNodeInserted", function (e) {
-				var element = e.target;
+		( function( $ ) {
+			$( document ).ready(function() {
+				$(document).on("DOMNodeInserted", function (e) {
+					var element = e.target;
 
-				if ( element.id === 'edd-batch-success' ) {
-					element = $(element);
-					var element_wrapper = element.parents().eq(4);
-					element_wrapper.find('.dashicons.dashicons-yes').show();
-					$('.edd-sl-fix-license-activations').hide();
-				}
+					if ( element.id === 'edd-batch-success' ) {
+						element = $(element);
+						var element_wrapper = element.parents().eq(4);
+						element_wrapper.find('.dashicons.dashicons-yes').show();
+						$('.edd-sl-fix-license-activations').hide();
+					}
+				});
 			});
-		});
+		}(jQuery) );
 	</script>
 
 	<div class="metabox-holder">

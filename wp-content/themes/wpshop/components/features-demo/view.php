@@ -1,5 +1,4 @@
 <script src="https://cdn.jsdelivr.net/gh/cferdinandi/gumshoe@4/dist/gumshoe.polyfills.min.js"></script>
-
 <script src="https://unpkg.com/in-view@0.6.1/dist/in-view.min.js"></script>
 
 <section class="component component-features-demo">
@@ -315,7 +314,7 @@
       .component-features-demo .nav ul {
          list-style: none;
          margin: 0;
-         overflow: scroll;
+         overflow: auto;
          position: relative;
          height: 100vh;
          padding-bottom: 60px;
@@ -357,6 +356,7 @@
 
       .component-features-demo .nav ul li {
          margin-top: 0;
+             
       }
 
       .component-features-demo .short-description {
@@ -371,9 +371,9 @@
          padding: 13px 0px 13px 45px;
          display: block;
          text-decoration: none;
-         font-weight: bold;
-         font-size: 15px;
+         font-size: 16px;
          position: relative;
+         font-family: Metropolis,helvetica;
       }
 
       .component-features-demo .nav ul li a span {
@@ -513,6 +513,15 @@
          font-size: 20px;
          font-weight: bold;
          line-height: 1.3;
+         font-family: Metropolis,helvetica;
+      }
+
+      .custom-content .wps-component-products-description {
+         line-height: 1.6;
+      }
+
+      .custom-content .wps-component-products-pricing {
+         margin-bottom: 25px;
       }
 
       .wps-btn-cart .wps-icon {

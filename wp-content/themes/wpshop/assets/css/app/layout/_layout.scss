@@ -23,6 +23,7 @@
 .faq .main,
 .examples .main,
 .pro-features .main,
+.features .main,
 .changelog .main,
 .blog .main,
 .login .main,
@@ -116,11 +117,13 @@
   }
 }
 
+.features .page-header h1,
 .pro-features .page-header h1 {
   max-width: 910px;
   margin-bottom: -10px;
 }
 
+.features .page-header + .page-content,
 .pro-features .page-header + .page-content {
   margin-top: 0;
   margin: 0 auto;
@@ -192,6 +195,10 @@
 .l-contain-narrow {
   max-width: 760px;
   margin: 0 auto 0 auto;
+}
+
+.single .main {
+  margin-top: 100px;
 }
 
 .single .main-inner.l-contain-narrow {

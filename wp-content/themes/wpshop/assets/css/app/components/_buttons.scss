@@ -11,15 +11,15 @@ a.button.edd-slg-social-unlink-profile,
 .nav-links a,
 .moretag,
 .affwp-form input[type='submit'] {
-  padding: 0.6em 1.5em 0.7em 1.5em;
+  padding: 0.6em 1.5em;
   color: color(white);
   background-color: color(primary);
   border: none;
   position: relative;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 17px;
-  font-family: $font-primary;
+  font-family: $font-secondary;
   display: inline-block;
   line-height: 1.1;
   border-radius: 0.4em;
@@ -110,11 +110,12 @@ a.button.edd-slg-social-unlink-profile,
 }
 
 .moretag,
-.btn-secondary,
+.btn.btn-secondary,
 #edd-discount-code-wrap .edd-discount-code-field-wrap .edd-apply-discount {
   background-color: transparent;
-  border: 1px solid color(primary);
-  color: color(primary);
+  border: 1px solid black;
+  color: black;
+  font-weight: 600;
 
   &:hover:not([disabled]) {
     background-color: transparent;
@@ -131,6 +132,12 @@ a.button.edd-slg-social-unlink-profile,
   &:focus {
     border: 1px solid color(primary);
     outline: none;
+  }
+}
+
+.mailinglist-email {
+  &[disabled] {
+    border-color: #c5c5c5;
   }
 }
 
@@ -239,9 +246,11 @@ input[type='submit'],
 
 .receipt-account-wrapper .btn {
   font-size: 18px;
+  margin-bottom: 50px;
+  margin-top: -30px;
 
   &:after {
-    content: ' >';
+    content: ' 🤘';
     display: inline-block;
     margin-left: $space-s;
   }

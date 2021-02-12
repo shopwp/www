@@ -1,6 +1,4 @@
 .post {
-  margin-top: 4em;
-
   .wp-block-code {
     padding: 1em;
   }
@@ -120,6 +118,7 @@
 .single-post {
   .entry-title {
     margin-top: 0;
+    line-height: 1.2;
     font-size: 46px;
 
     @include device(900, 'max') {
@@ -202,6 +201,16 @@
 
 .author-name {
   margin: 0 10px;
+
+  a {
+    color: #1f1f23;
+    font-family: $font-secondary;
+
+    &:hover {
+      color: #1f1f23;
+      text-decoration: underline;
+    }
+  }
 }
 
 .post-logo {
@@ -555,8 +564,9 @@
 }
 
 .post-single-header {
-  border-bottom: 1px solid #ddd;
-  margin-top: 10em;
+  margin-top: 0;
   padding-bottom: 2em;
+  padding-top: 3em;
   margin-bottom: 2.5em;
+  background-image: linear-gradient(0deg, #f0f0ff, #fff1f1);
 }

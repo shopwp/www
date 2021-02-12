@@ -1,14 +1,10 @@
-import { initPlugins } from './plugins/plugins';
 import { initForms } from './forms/forms';
 import { initMailinglist } from './mailinglist/mailinglist';
-import { initAccount } from './account/account';
 import { initMobile } from './mobile/mobile';
-import { initDriftTracking, initDownloadTracking } from './analytics/analytics';
 import { initFAQs } from './faqs/faqs';
+
 (function ($) {
   $(function () {
-    initDriftTracking($);
-
     if (
       window.location.pathname.includes('purchase-confirmation') ||
       window.location.pathname.includes('checkout')
@@ -16,15 +12,9 @@ import { initFAQs } from './faqs/faqs';
       return;
     }
 
-    initPlugins($);
     initForms($);
-    initAccount($);
     initFAQs();
     initMobile($);
-
-    initDownloadTracking();
-
-    jQuery('iframe[src*="youtube"]').parent().fitVids();
 
     // grab an element
     var myElement = document.querySelector('.header');
@@ -130,11 +120,13 @@ import { initFAQs } from './faqs/faqs';
       jQuery(this).closest('.component-purchase').toggleClass('is-monthly');
     });
 
-    wp.hooks.addAction('after.cart.ready', 'wpshopify', function (cartState) {
-      jQuery('.chart-label-anchor-open-cart').on('click', function (e) {
-        e.preventDefault();
-        wp.hooks.doAction('cart.toggle', 'open');
+    if (!wpshopifyMarketing.misc.dequeued) {
+      wp.hooks.addAction('after.cart.ready', 'wpshopify', function (cartState) {
+        jQuery('.chart-label-anchor-open-cart').on('click', function (e) {
+          e.preventDefault();
+          wp.hooks.doAction('cart.toggle', 'open');
+        });
       });
-    });
+    }
   });
 })(jQuery);

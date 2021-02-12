@@ -67,15 +67,3 @@ function wps_empty_cart_text()
 }
 
 add_filter('edd_empty_cart_message', 'wps_empty_cart_text');
-
-/*
-
-wps_custom_login_lostpassword_url
-
-*/
-function wps_custom_login_lostpassword_url()
-{
-   return '/login';
-}
-
-add_filter('lostpassword_url', 'wps_custom_login_lostpassword_url');

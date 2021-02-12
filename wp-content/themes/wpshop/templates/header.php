@@ -40,30 +40,12 @@
 
         <div class="header-account l-row l-row-right l-col-center">
 
-          <?php if (is_user_logged_in() && !current_user_can('administrator') ) { 
-
-            $user = wp_get_current_user();
-            $affiliate_id = affwp_get_affiliate_id( $user->ID );
-
-            $customer = new EDD_Customer($user->ID, true );
-
-            if (empty($customer->email) && $affiliate_id) {
-               $account_link = '/affiliates';
-               $login_link = '/affiliate-login';
-
-            } else {
-               $account_link = '/account';
-               $login_link = '/login';
-            }
-
-             
-             ?>
-            <a href="<?= $account_link; ?>" class="btn btn-account">My Account</a>
-            <a href="<?php echo wp_logout_url($login_link); ?>" class="link-account">Logout</a>
-
+          <?php if (is_user_logged_in()) {  ?>
+            <a href="/account" class="btn btn-account">My Account</a>
+            <a href="<?= wp_logout_url('/login'); ?>" class="menu-item-manual">Logout</a>
           <?php } else { ?>
             <span class="btn btn-download-free getting-started-trigger" target="_blank">Start for free</span>
-            <a href="/login" class="menu-item-manual">Log In</a>
+            <a href="/login" class="menu-item-manual">Login</a>
           <?php } ?>
 
         </div>
