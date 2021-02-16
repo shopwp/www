@@ -14,14 +14,15 @@
 
       .component-demo {
          background: white;
-         margin: 7em 0;         
+         margin: 7em auto;
+         max-width: 1120px;
       }
       .component-demo .row {
          display: flex;
       }
 
       .component-demo .demo {
-         width: 57%;
+         width: 470px;
       }
 
       .component-demo .content > .btn {
@@ -42,11 +43,6 @@
 
       .wps-item .wps-thumbnails-wrapper {
          margin-top: 13px !important;
-      }
-
-      .component-demo .wps-items {
-         position: relative;
-         left: 5vw;         
       }
 
       .wpshopify-variant-buttons button {

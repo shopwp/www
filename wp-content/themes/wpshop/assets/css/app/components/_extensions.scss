@@ -2,6 +2,10 @@
   background: none;
   margin-top: 50px;
 
+  .l-row.l-contain {
+    justify-content: center;
+  }
+
   &[data-is-styled='1'] {
     text-align: center;
     background: #fff1f1;
@@ -88,6 +92,7 @@
       padding: 0;
       margin: 0 0 0 7px;
       line-height: 1;
+      font-family: $font-secondary;
     }
 
     .l-row {
@@ -112,7 +117,7 @@
 
   .extension-price {
     text-align: right;
-    font-weight: bold;
+    font-family: $font-secondary;
   }
 
   .extension-name,
@@ -123,7 +128,8 @@
 
   .extension-name {
     font-size: 42px;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+    font-weight: bold;
 
     &:hover {
       cursor: text;

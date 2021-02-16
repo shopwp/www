@@ -96,15 +96,32 @@ EDD
   }
 }
 
+#edd-gateway-option-paypalexpress {
+  position: relative;
+  color: white;
+
+  &:after {
+    content: '';
+    width: 100px;
+    height: 40px;
+    background-image: url('../imgs/PayPal-logo.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 18px;
+    right: 12px;
+  }
+}
+
 .edd_form {
   label {
-    margin-bottom: $space-s;
+    margin-bottom: 5px;
     display: block;
-    font-weight: 400;
+    font-size: 16px;
     font-family: $font-secondary;
 
     + .edd-description {
-      margin-bottom: $space-m;
+      margin-bottom: 15px;
     }
   }
 
@@ -793,7 +810,7 @@ select + .is-valid:after {
 
 .edd-discount-loader.edd-loading {
   margin: 0 0 0 auto;
-  top: 55%;
+  top: 4px;
   left: auto;
   right: -45px;
   z-index: 9;
@@ -975,7 +992,7 @@ Gravity Forms
   text-align: center;
   margin-bottom: 3em;
   position: absolute;
-  top: 0;
+  top: -87px;
   right: 0;
   font-size: 16px;
 
@@ -1113,7 +1130,7 @@ Affiliate WP
 
   input[type='submit'],
   .edd-submit {
-    font-size: 1.2em;
+    font-size: 18px;
     width: auto;
   }
 
@@ -1284,6 +1301,7 @@ Checkout icons
   text-align: center;
   margin: 0;
   padding: 1em 10px 1em 0;
+  font-size: 18px;
 }
 
 #edd-payment-mode-wrap .edd-gateway {
@@ -1292,7 +1310,7 @@ Checkout icons
   margin-right: 10px;
   padding: 1em;
   position: relative;
-  top: -2px;
+  top: 1px;
 }
 
 #edd-stripe-update-billing-address {

@@ -111,12 +111,12 @@ Author URI:     https://simpleblend.net
 
 @keyframes slideIn {
   0% {
-    transform: translateY(50px);
+    transform: translateY(50px) translateZ(0px);
     opacity: 0.4;
   }
 
   100% {
-    transform: translateY(0);
+    transform: translateY(0) translateZ(0px);
     opacity: 1;
   }
 }

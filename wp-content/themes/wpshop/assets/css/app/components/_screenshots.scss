@@ -133,7 +133,7 @@
     position: absolute;
     width: 80%;
     height: 96.4%;
-    left: 12.5%;
+    left: 0;
     border-radius: 15px;
   }
 
@@ -199,6 +199,7 @@
     border-radius: 10px;
     display: inline-block !important;
     position: relative;
+    margin-top: 0;
     font-family: $font-secondary;
 
     @include device(1500, 'max') {
@@ -207,6 +208,11 @@
 
     a {
       text-decoration: none;
+    }
+
+    &.video {
+      margin-top: 10px;
+      font-weight: normal;
     }
 
     &:hover {
@@ -250,7 +256,7 @@
   height: 750px;
   background: transparent;
   position: relative;
-  left: 36px;
+  left: 0;
   top: -50px;
   //   box-shadow: 0 0 31px -10px rgba(0, 0, 0, 0.25);
   background-size: cover;

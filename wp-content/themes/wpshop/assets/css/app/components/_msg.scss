@@ -2,7 +2,7 @@
 label.error {
   text-align: center;
   color: color(base);
-  font-size: 16px;
+  font-size: 15px;
   margin-top: 10px;
 
   a {
@@ -18,14 +18,211 @@ label.error {
   }
 }
 
+.login .page-content .msg {
+  margin-top: 0;
+}
+
+#edd_login_form {
+  max-width: 500px;
+}
+
+.mailinglist-form .form-label-modal {
+  display: none;
+}
+
+.login {
+  .edd-login-remember {
+    label {
+      font-size: 14px;
+    }
+
+    input {
+      width: 15px;
+      height: 15px;
+    }
+  }
+  .component-contact-container {
+    .content-section {
+      p {
+        margin-bottom: 20px;
+      }
+      h3 {
+        margin-bottom: 10px;
+      }
+      .btn {
+        margin-top: 15px;
+      }
+    }
+
+    .content-inner {
+      svg[data-icon='long-arrow-alt-right'] {
+        display: none;
+      }
+    }
+  }
+}
+
+.login-action-lostpassword,
+.login-action-checkemail,
+.login-action-rp,
+.login-action-resetpass {
+  .msg {
+    z-index: 1;
+  }
+
+  .message a {
+    color: black;
+
+    &:hover {
+      color: color(primary);
+    }
+  }
+  #login_error {
+    font-size: 14px;
+    font-weight: 400 !important;
+  }
+
+  #backtoblog a,
+  #nav a {
+    font-family: $font-primary;
+    color: black;
+    font-size: 14px;
+
+    &:hover {
+      color: #415aff;
+    }
+  }
+
+  #lostpasswordform .submit {
+    display: flex;
+  }
+
+  #login {
+    width: 550px;
+    margin-bottom: 30px;
+    margin-top: 140px;
+    padding-top: 0;
+  }
+
+  #login label[for='user_login'] {
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  #login h1 + .message {
+    background: none;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    font-size: 16px;
+    margin-top: 20px;
+    padding: 0;
+    font-family: $font-primary;
+  }
+
+  #login label[for='user_login'] {
+    font-size: 17px;
+  }
+
+  #login h1 a {
+    display: none;
+  }
+  #login h1:after {
+    content: 'Reset your password';
+    display: block;
+    width: 100%;
+    font-size: 42px;
+  }
+
+  #login input[type='text'] {
+    font-size: 16px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+  }
+}
+
+.login-action-checkemail {
+  #login {
+    margin-bottom: 100px;
+  }
+  #login h1:after {
+    content: 'Great! one more step...';
+    display: block;
+    width: 100%;
+    font-size: 42px !important;
+  }
+
+  #login h1 + .message {
+    background-color: color(success);
+    padding: $space-s $space-m;
+    border-radius: 0.4em;
+    font-weight: normal;
+    margin-bottom: $space-xl;
+    margin-top: $space-m;
+    z-index: 999;
+    animation-duration: 0.5s;
+    text-align: center;
+  }
+  #backtoblog {
+    display: none;
+  }
+}
+
+.login-action-resetpass {
+  #login {
+    margin-bottom: 100px;
+  }
+  #login h1:after {
+    content: "Awesome you're all done!";
+    display: block;
+    width: 100%;
+    font-size: 42px !important;
+  }
+
+  #login h1 + .message {
+    background-color: color(success);
+    padding: $space-s $space-m;
+    border-radius: 0.4em;
+    font-weight: normal;
+    margin-bottom: $space-xl;
+    margin-top: $space-m;
+    z-index: 999;
+    animation-duration: 0.5s;
+    text-align: center;
+  }
+  #backtoblog {
+    display: none;
+  }
+}
+
+.login-action-rp {
+  #login h1:after {
+    content: 'Set your new password';
+    display: block;
+    width: 100%;
+    font-size: 42px;
+  }
+
+  #login form p.submit {
+    display: flex;
+  }
+}
+
+.login .message {
+  font-size: 14px;
+  font-weight: 400 !important;
+}
+
+.login .message,
 .msg-notice {
-  background-color: color(notice);
+  background-color: #e2f7ff;
 }
 
 .msg-success {
   background-color: color(success);
 }
 
+.login-action-lostpassword #login_error,
 .msg-error {
   background-color: color(error);
 }

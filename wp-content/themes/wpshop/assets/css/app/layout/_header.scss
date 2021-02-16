@@ -79,10 +79,11 @@
     width: 290px;
     font-size: 14px;
     padding: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
+    transform: translateY(10px) translateZ(0px);
+    transition: transform 0.3s ease, opacity 0.3s ease;
     visibility: hidden;
     opacity: 0;
+    -webkit-font-smoothing: antialiased;
 
     @include device(1500, 'max') {
       top: 60px;
@@ -96,10 +97,12 @@
 
     a {
       border-radius: 0;
-      transition: none;
+      transform: translateZ(0px);
       font-size: 16px;
       padding: 0.45em 2.1em;
       margin: 0;
+      backface-visibility: hidden;
+      -webkit-font-smoothing: subpixel-antialiased;
 
       @include device(1500, 'max') {
         font-size: 15px;
@@ -155,8 +158,9 @@
     }
   }
   .main {
-    margin-top: -20px;
+    margin-top: -60px;
   }
+
   .header {
     position: static;
 
@@ -184,7 +188,7 @@
   }
 
   .page-header h1 {
-    font-size: 36px;
+    font-size: 42px;
   }
 
   .page-content p:first-of-type {
@@ -228,7 +232,8 @@
   }
 
   #edd_secure_site_wrapper span {
-    font-weight: bold;
+    font-weight: 400;
+    font-family: $font-secondary;
   }
 
   #edd-card-city-wrap,
@@ -298,6 +303,13 @@
   }
 }
 
+.login-action-rp #login h1 + .message,
+.login-action-resetpass #login h1 + .message {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login-action-resetpass #login h1 + .message,
 .msg-success,
 label.success {
   border: 1px solid #84e7a3;
@@ -329,8 +341,6 @@ label.error {
 }
 
 .header-account {
-  width: 250px;
-
   .getting-started-mailinglist-form #email-error {
     margin-top: 0;
   }
@@ -349,10 +359,6 @@ label.error {
 }
 
 .logged-in {
-  .header-account {
-    width: 287px;
-  }
-
   #card_1FEaBpG3eDRabQnA0N6qXGwP-billing-details,
   #card_1FEaBpG3eDRabQnA0N6qXGwP-billing-details + label,
   #card_1FWrQTG3eDRabQnAXk6iyftI-billing-details,

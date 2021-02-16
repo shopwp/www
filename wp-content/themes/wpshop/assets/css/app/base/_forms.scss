@@ -607,6 +607,15 @@ select {
   }
 }
 
+.wps-cart-contents > h2 {
+  font-weight: 400;
+}
+
+.wps-total-amount,
+.wps-total-prefix {
+  font-family: $font-secondary;
+}
+
 .wps-checkout-login-spacer {
   display: none;
   margin-top: 0;
@@ -635,7 +644,9 @@ select {
 
   label {
     margin-top: 2em;
-    font-size: 18px;
+    font-size: 16px;
+    margin-bottom: 0;
+    display: none;
   }
 
   .edd-discount-code-field-wrap {

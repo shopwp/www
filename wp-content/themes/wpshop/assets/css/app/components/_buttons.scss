@@ -10,7 +10,9 @@ a.button.edd-slg-social-unlink-profile,
 #edd-recurring-update-submit,
 .nav-links a,
 .moretag,
-.affwp-form input[type='submit'] {
+.affwp-form input[type='submit'],
+#login .wp-core-ui .button-group.button-large .button,
+#login .wp-core-ui .button.button-large {
   padding: 0.6em 1.5em;
   color: color(white);
   background-color: color(primary);
@@ -105,6 +107,42 @@ a.button.edd-slg-social-unlink-profile,
   }
 }
 
+.login-action-checkemail #login h1 + .message {
+  border: 1px solid #93ecaf !important;
+}
+
+#login label {
+  font-weight: normal !important;
+  font-size: 16px;
+}
+
+.login #pass-strength-result {
+  font-size: 14px;
+}
+
+#login .wp-core-ui .button-group.button-large .button,
+#login .wp-core-ui .button.button-large,
+.wp-core-ui .button-primary {
+  padding: 0.6em 1.5em !important;
+  background: color(primary) !important;
+  border: none !important;
+  position: relative !important;
+  text-decoration: none !important;
+  font-weight: 400 !important;
+  font-size: 17px !important;
+  font-family: $font-secondary !important;
+  display: inline-block !important;
+  line-height: 1.1 !important;
+  border-radius: 0.4em !important;
+  outline: none !important;
+  z-index: 2 !important;
+  text-align: center !important;
+  margin: 0 !important;
+  margin-top: $space-s !important;
+  transition: all 0.18s ease !important;
+  opacity: 1 !important;
+}
+
 .affwp-form input[type='submit'] {
   font-size: 22px;
 }
@@ -143,7 +181,7 @@ a.button.edd-slg-social-unlink-profile,
 
 input[type='submit'],
 .edd-submit {
-  font-size: 21px;
+  font-size: 18px;
 
   @include device(600, 'max') {
     width: 100%;

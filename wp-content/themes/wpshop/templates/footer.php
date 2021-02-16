@@ -67,7 +67,7 @@ if (!is_page('checkout')) {
             <img src="/wp-content/themes/wpshop/assets/imgs/logo-mark-v2.svg" alt="WP Shopify" class="logo-header">
          </a>
 
-         <small>&copy; <?php echo date("Y"); ?> WP Shopfiy &bull; Built with ❤️ in Austin, TX</small>
+         <small>&copy; <?php echo date("Y"); ?> WP Shopfiy &bull; Built with love in Austin, TX</small>
       </section>
 
    </div>

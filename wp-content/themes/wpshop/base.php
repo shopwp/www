@@ -1,26 +1,19 @@
 <?php
 
-$user = wp_get_current_user();
-
 if (is_page('account') && is_user_logged_in()) {   
-   error_log('----- is account and logged in -----');
    get_template_part('templates/account/view');
    exit;
 }
 
 if (is_page('account') && !is_user_logged_in()) {
-   error_log('----- is account and NOT logged in -----');
    wp_redirect('/login');
    exit;
 }
 
-if ( is_page('login') && is_user_logged_in() ) {
-   error_log('----- is login and logged in -----');
+if (is_page('login') && is_user_logged_in() ) {
    wp_redirect('/account');
    exit;
 }
-
-error_log('----- is normal -----');
 
 use Roots\Sage\Setup;
 use Roots\Sage\Extras;

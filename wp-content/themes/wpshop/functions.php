@@ -118,89 +118,6 @@ function is_affiliate() {
 
 }
 
- 
-// function wps_on_login_redirect($redirect_to, $user_id) {
-
-//    $user = get_userdata($user_id);
-
-//    if (strpos($_SERVER['REQUEST_URI'], '?redirect=checkout') !== false) {
-//       return '/checkout';
-//    }
-
-
-//    if (isset($user->roles)) {
-
-//       // Only admins end here
-//       if (is_admin_user($user)) {
-//          return admin_url();
-
-//       }
-
-//       // Only affiliates end here
-//       if (is_affiliate_only($user)) {
-//          return '/affiliates';
-
-//       }
-
-//       // Normal customers and customer affiliates end here
-//       return '/account';
-      
-//    }
-
-//    // Fallback
-//    return '/account';
-
-// }
-
-// add_filter('edd_login_redirect', 'wps_on_login_redirect', 10, 2);
-
-
-
-
-
-// function wps_template_redirect() {
-
-//    $user_d = wp_get_current_user();
-//    $user = get_userdata($user_d->ID);
-
-
-//    if (!is_user_logged_in() && is_page('affiliates')) {
-//       wp_redirect('/affiliate-login');
-//       exit();
-//    }   
-
-//    if (is_user_logged_in() && is_page('become-an-affiliate') && is_affiliate()) {
-//       wp_redirect('/affiliates');
-//       exit();
-//    }   
-
-//    if (is_user_logged_in() && is_page('affiliate-login') && is_affiliate()) {
-//       wp_redirect('/affiliates');
-//       exit();
-//    }   
-
-//    if (is_user_logged_in() && is_page('affiliate-login') && !is_affiliate()) {
-//       wp_redirect('/become-an-affiliate');
-//       exit();
-//    }   
-
-//    if (is_user_logged_in() && is_page('affiliates') && !is_affiliate()) {
-//       wp_redirect('/become-an-affiliate');
-//       exit();
-//    }   
-
-//    if (!is_page('account')) {
-//       return;
-//    }
-
-//    // Only affiliates end here
-//    if (is_affiliate_only($user)) {
-//       wp_redirect('/affiliates');
-//       exit();
-//    }
-// }
-
-// add_action( 'template_redirect', 'wps_template_redirect' );
 
 
 
@@ -283,3 +200,9 @@ function react_rounter_rewrite_rules() {
 }
 
 add_action('init', 'react_rounter_rewrite_rules');
+
+add_filter( 'login_url', 'my_login_page', 10, 3 );
+
+function my_login_page( $login_url, $redirect, $force_reauth ) {
+   return home_url('/login');
+}

@@ -80,8 +80,6 @@ function AccountHeaderDropdown() {
     e.preventDefault();
 
     const [err, resp] = await to(logoutUser());
-    console.log('err', err);
-    console.log('resp', resp);
 
     window.location.href = '/login?logout=true';
   }
@@ -209,35 +207,58 @@ function AccountHeader() {
   return (
     <header css={AccountHeaderCSS}>
       {accountState.customer.info ? (
-        <Tippy
-          content={<AccountHeaderDropdown />}
-          allowHTML={true}
-          interactive={true}
-          theme='light'
-          offset={[5, -10]}
-          hideOnClick='toggle'
-          arrow={false}
-          placement='bottom-end'>
-          <a href='#!' css={AccountHeaderLinkCSS} onClick={onClick}>
-            <AccountIcon avatar={accountState.customer.info.avatar} />
-            {accountState.customer.info.name + ' '}
+        <>
+          {accountState.customer.info.isAdmin && <WordPressAdminLink />}
+          <Tippy
+            content={<AccountHeaderDropdown />}
+            allowHTML={true}
+            interactive={true}
+            theme='light'
+            offset={[5, -10]}
+            hideOnClick='toggle'
+            arrow={false}
+            placement='bottom-end'>
+            <a href='#!' css={AccountHeaderLinkCSS} onClick={onClick}>
+              <AccountIcon avatar={accountState.customer.info.avatar} />
+              {accountState.customer.info.name + ' '}
 
-            <svg
-              css={ArrowCSS}
-              focusable='false'
-              role='img'
-              xmlns='http://www.w3.org/2000/svg'
-              viewBox='0 0 256 512'>
-              <path
-                fill='currentColor'
-                d='M119.5 326.9L3.5 209.1c-4.7-4.7-4.7-12.3 0-17l7.1-7.1c4.7-4.7 12.3-4.7 17 0L128 287.3l100.4-102.2c4.7-4.7 12.3-4.7 17 0l7.1 7.1c4.7 4.7 4.7 12.3 0 17L136.5 327c-4.7 4.6-12.3 4.6-17-.1z'></path>
-            </svg>
-          </a>
-        </Tippy>
+              <svg
+                css={ArrowCSS}
+                focusable='false'
+                role='img'
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 256 512'>
+                <path
+                  fill='currentColor'
+                  d='M119.5 326.9L3.5 209.1c-4.7-4.7-4.7-12.3 0-17l7.1-7.1c4.7-4.7 12.3-4.7 17 0L128 287.3l100.4-102.2c4.7-4.7 12.3-4.7 17 0l7.1 7.1c4.7 4.7 4.7 12.3 0 17L136.5 327c-4.7 4.6-12.3 4.6-17-.1z'></path>
+              </svg>
+            </a>
+          </Tippy>
+        </>
       ) : (
         <ContentLoaderProfile />
       )}
     </header>
+  );
+}
+
+function WordPressAdminLink() {
+  const WordPressAdminLinkCSS = css`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 70px;
+    font-family: 'Metropolis';
+    font-size: 14px;
+    a {
+      position: relative;
+      top: -1px;
+    }
+  `;
+  return (
+    <div css={WordPressAdminLinkCSS}>
+      <a href='/wp-admin'>Go to WP Admin</a>
+    </div>
   );
 }
 

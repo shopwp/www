@@ -92,9 +92,6 @@ function validateMailingListForm($form) {
 
       const [err, resp] = await to(addToMailchimpList($form));
 
-      console.log('resp', resp);
-      console.log('err', err);
-
       if (resp.code === 'rest_cookie_invalid_nonce') {
         return showError($form, resp);
       }

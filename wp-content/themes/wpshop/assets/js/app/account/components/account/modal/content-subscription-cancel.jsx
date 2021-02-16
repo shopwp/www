@@ -36,7 +36,6 @@ function ModalContentSubscriptionCancel({ accountState, accountDispatch }) {
 
     if (error) {
       console.log('error', error);
-      console.log('resp', resp);
     }
 
     setIsBusy(false);

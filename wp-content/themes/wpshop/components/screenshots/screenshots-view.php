@@ -57,7 +57,7 @@
                <li data-type="blocks">Gutenberg Blocks</li>
                <li data-type="customization">Customization</li>
                <li data-type="sync">Always in Sync</li>
-               <li>
+               <li class="video">
                   <a href="https://www.youtube.com/watch/0dmn5Yrzqlw" target="_blank"><i class="far fa-play-circle"></i> Watch plugin demo</a>
                </li>
             </ul>

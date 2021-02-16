@@ -1,5 +1,5 @@
 .nav-primary {
-  padding-left: 180px;
+  padding-left: 160px;
 
   @include device(1300, 'max') {
     display: none;
@@ -161,6 +161,10 @@
     color: color(base);
     padding: 1.2em 1.5em;
 
+    &:focus {
+      outline: none;
+    }
+
     &:hover {
       opacity: 1;
       text-decoration: underline;
@@ -177,12 +181,6 @@
   color: #0f0311;
   padding: 1.2em 1.1em;
 
-  // svg {
-  //    position: absolute;
-  //    right: -13px;
-  //    top: 29px;
-  // }
-
   &:hover {
     opacity: 1;
     text-decoration: underline;
@@ -191,9 +189,6 @@
 
 .nav {
   list-style: none;
-}
-
-.nav-primary {
 }
 
 .nav-primary-sub {
@@ -267,12 +262,12 @@
 
 @keyframes slideInQuick {
   0% {
-    transform: translateY(10px);
+    transform: translateY(10px) translateZ(0px);
     opacity: 0.4;
   }
 
   100% {
-    transform: translateY(0);
+    transform: translateY(0) translateZ(0px);
     opacity: 1;
   }
 }

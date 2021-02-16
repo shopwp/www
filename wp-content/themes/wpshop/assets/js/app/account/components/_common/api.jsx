@@ -59,7 +59,6 @@ async function cancelSubscription(data) {
 async function reactivateSubscription(data) {
   const apiURL = getApiRestURL();
   var saoks = apiURL + 'customers/v1/subscription/reactivate';
-  console.log('saoks', saoks);
 
   const response = await fetch(saoks, {
     body: JSON.stringify(data),

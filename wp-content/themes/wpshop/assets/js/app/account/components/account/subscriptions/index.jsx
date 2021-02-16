@@ -96,15 +96,11 @@ function SubscriptionActionLinks({ subscription }) {
   `;
   return (
     <div>
-      {
-        /* {subscription.status !== 'cancelled' && (
+      {/* {subscription.status !== 'cancelled' && (
         <a href='!#' css={SubscriptionActionCSS} onClick={openPaymentUpdateModal}>
           Update payment method
         </a>
-      )} */
-
-        console.log('subscription', subscription)
-      }
+      )} */}
 
       {subscription.status === 'cancelled' ? (
         subscription.gateway.includes('paypal') || subscription.gateway.includes('manual') ? (
