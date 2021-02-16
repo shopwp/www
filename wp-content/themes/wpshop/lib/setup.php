@@ -179,7 +179,8 @@ function assets()
          'dequeued' => false,
          'userId' => get_current_user_id(),
          'themeUrl' => get_template_directory_uri(),
-         'siteUrl' => get_site_url()
+         'siteUrl' => get_site_url(),
+         'latestVersion' => WP_SHOPIFY_NEW_PLUGIN_VERSION
       ]
    ];
 

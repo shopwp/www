@@ -68,10 +68,14 @@ function showSuccess($form, data) {
 
 function downloadFreeVersion() {
   var anchor = document.createElement('a');
-  anchor.href =
+
+  var link =
     'https://downloads.wordpress.org/plugin/wpshopify.' +
     wpshopifyMarketing.misc.latestVersion +
     '.zip';
+  console.log('link', link);
+
+  anchor.href = link;
   anchor.download = 'WP Shopify';
   anchor.click();
 }

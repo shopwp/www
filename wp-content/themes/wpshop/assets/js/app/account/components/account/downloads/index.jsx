@@ -67,12 +67,14 @@ function AccountDownloads() {
     margin-left: 3px;
   `;
 
+  console.log('accountState.customer.downloads', accountState.customer.downloads);
+
   return (
     <>
       <AccountBodyHeader heading='Downloads' />
       <AccountBodyContent>
         {accountState.customer ? (
-          accountState.customer.downloads.length ? (
+          Object.keys(accountState.customer.downloads).length !== 0 ? (
             <Downloads downloads={accountState.customer.downloads} />
           ) : (
             <Notice type='info'>

@@ -3,7 +3,7 @@
    <path class="st0" d="M0,0c0,0,100,94,481,95C862,94,962,0,962,0v115H0V0z"></path>
    </svg>
 
-  <h2>Over 5,000+ WordPress sites are currently using WP Shopify. Here's what they have to say.</h2>
+  <h2>Over 6,000+ WordPress sites are currently using WP Shopify. Here's what they have to say!</h2>
 
   <div class="testimonials">
      <div class="grid-sizer"></div>
