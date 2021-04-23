@@ -48,6 +48,10 @@ label.error {
       }
       h3 {
         margin-bottom: 10px;
+
+        @media (max-width: 600px) {
+          font-size: 18px;
+        }
       }
       .btn {
         margin-top: 15px;

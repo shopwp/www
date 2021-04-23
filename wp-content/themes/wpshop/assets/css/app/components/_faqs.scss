@@ -39,6 +39,10 @@
     position: relative;
     font-size: 18px;
     font-family: $font-secondary;
+
+    @media (max-width: 600px) {
+      font-size: 15px;
+    }
   }
 
   .fa-plus-square,
@@ -66,11 +70,12 @@
     font-size: $font-m;
     position: relative;
     padding-right: 4em;
+    padding: 1em 2em 1em 0;
 
     .fa-plus-square,
     .fa-minus-square {
       position: absolute;
-      right: -3em;
+      right: -1.7em;
       top: calc(50% - 10px);
     }
   }
@@ -119,6 +124,10 @@
 .faqs-heading {
   font-size: 1.5em;
 
+  @media (max-width: 600px) {
+    font-size: 19px;
+  }
+
   &:before {
     display: block;
     content: ' ';
@@ -166,6 +175,10 @@
 
   + .component-affiliate {
     margin-top: 4em;
+
+    @media (max-width: 700px) {
+      margin-top: 0em;
+    }
   }
 }
 
@@ -175,6 +188,31 @@
 
 .page .component-contact .content-inner .fa-long-arrow-alt-right {
   display: none;
+}
+
+@media (max-width: 900px) {
+  .component-contact .content-inner svg {
+    margin-top: 40px !important;
+    margin-bottom: 15px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .component-contact .content-inner h2 {
+    font-size: 35px !important;
+  }
+
+  .component-contact .intro {
+    font-size: 17px !important;
+  }
+
+  .component-contact .content-inner svg {
+    max-width: 144px !important;
+  }
+
+  .component-contact .l-col-6.col-two {
+    padding-top: 20px !important;
+  }
 }
 
 .faqs-wrap {

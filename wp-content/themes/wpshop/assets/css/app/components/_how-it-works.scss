@@ -7,6 +7,8 @@
 
   @include device(700, 'max') {
     max-width: 90vw;
+    margin-top: 2em;
+    padding-bottom: 0;
   }
 }
 
@@ -92,6 +94,11 @@
     @include device(1100, 'max') {
       padding: 1.3em 1em 2em 1em;
       border: none;
+    }
+
+    @include device(700, 'max') {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
   h3 {
@@ -186,6 +193,10 @@
     margin: 0 auto;
     filter: brightness(0.5);
     z-index: -1;
+
+    @include device(500, 'max') {
+      max-width: 100%;
+    }
   }
 }
 

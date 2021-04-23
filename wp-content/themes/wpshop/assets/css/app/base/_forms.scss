@@ -574,6 +574,10 @@ select {
 
   .edd-login-remember {
     margin-bottom: 0;
+
+    @media (max-width: 600px) {
+      margin-bottom: 15px;
+    }
   }
 
   .edd-login-submit {

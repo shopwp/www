@@ -83,6 +83,33 @@ Author URI:     https://simpleblend.net
 }
 
 .component-demo {
+  @include device(600, 'max') {
+    .row {
+      flex-direction: column;
+
+      .demo {
+        width: auto;
+      }
+    }
+
+    .wps-items {
+      left: 0;
+      max-width: 100%;
+    }
+
+    .wps-items-wrapper {
+      padding: 0;
+    }
+
+    .wpshopify-loading-placeholder + div {
+      left: 0 !important;
+    }
+
+    .wpshopify-loading-placeholder + div div {
+      margin-left: 0 !important;
+    }
+  }
+
   + .component-testimonials {
     margin-top: -2em;
   }
@@ -90,6 +117,12 @@ Author URI:     https://simpleblend.net
   .wps-items-wrapper {
     justify-content: center;
     display: flex;
+  }
+}
+
+.home .component-demo {
+  @include device(600, 'max') {
+    margin-top: 2em;
   }
 }
 
@@ -197,5 +230,37 @@ body.testimonials {
 .single-post {
   #someone-purchased {
     display: none !important;
+  }
+}
+
+.component.component-features-demo {
+  @media (max-width: 700px) {
+    margin: 3em auto;
+
+    .row {
+      flex-direction: column;
+      margin-top: 0;
+    }
+
+    .nav {
+      margin: 0 auto;
+      border-radius: 0;
+      width: 100%;
+
+      ul {
+        height: 30vh;
+        padding-bottom: 60px;
+        margin-bottom: 20px;
+      }
+    }
+
+    .demo-header {
+      margin-bottom: 0;
+    }
+
+    .features {
+      margin-top: 30px;
+      padding: 0 20px;
+    }
   }
 }

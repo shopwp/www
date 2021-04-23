@@ -2,6 +2,11 @@
   background: none;
   margin-top: 50px;
 
+  @media (max-width: 1020px) {
+    padding: 0;
+    max-width: 100%;
+  }
+
   .l-row.l-contain {
     justify-content: center;
   }
@@ -33,6 +38,10 @@
   box-shadow: 0 0 21px -13px rgba(0, 0, 0, 0.42);
   border-radius: 10px;
   margin: 0 10px 0 10px;
+
+  @media (max-width: 1020px) {
+    margin-bottom: 20px;
+  }
 }
 
 .extension-inner {

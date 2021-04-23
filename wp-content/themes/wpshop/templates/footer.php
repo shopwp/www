@@ -44,15 +44,15 @@ if (!is_page('checkout')) {
 
                <section class="footer-social-links">
 
-                  <a href="https://www.youtube.com/c/WPShopify" class="footer-social-link" target="_blank">
+                  <a href="https://www.youtube.com/c/WPShopify" class="footer-social-link" target="_blank" aria-label="Youtube channel link for WP Shopify">
                      <i class="fab fa-youtube"></i>
                   </a>
 
-                  <a href="https://twitter.com/wpshopify" class="footer-social-link" target="_blank">
+                  <a href="https://twitter.com/wpshopify" class="footer-social-link" target="_blank" aria-label="Twitter link for WP Shopify">
                      <i class="fab fa-twitter"></i>
                   </a>
 
-                  <a href="https://github.com/wpshopify" class="footer-social-link" target="_blank">
+                  <a href="https://github.com/wpshopify" class="footer-social-link" target="_blank" aria-label="Github link for WP Shopify">
                      <i class="fab fa-github"></i>
                   </a>
 

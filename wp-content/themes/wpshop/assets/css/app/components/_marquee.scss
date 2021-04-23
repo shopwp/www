@@ -29,8 +29,7 @@
     }
 
     @include device(600, 'max') {
-      position: relative;
-      top: -63px;
+      display: none;
     }
   }
 
@@ -342,6 +341,7 @@
       font-size: 40px;
       margin-top: -1.4em;
       line-height: 1.2;
+      margin-bottom: 12px;
     }
 
     @include device(400, 'max') {

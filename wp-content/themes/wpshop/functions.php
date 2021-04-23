@@ -206,3 +206,15 @@ add_filter( 'login_url', 'my_login_page', 10, 3 );
 function my_login_page( $login_url, $redirect, $force_reauth ) {
    return home_url('/login');
 }
+
+
+// function redirect_non_admin_user() {
+//    if (is_user_logged_in()) {
+//       if (!defined('DOING_AJAX') && !current_user_can('administrator')) {
+//          wp_redirect(site_url() . '/account');
+//          exit;
+//       }
+//    }
+// }
+
+// add_action('admin_init', 'redirect_non_admin_user');

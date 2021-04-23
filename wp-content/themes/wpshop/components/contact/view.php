@@ -1,162 +1,162 @@
 <section class="component component-contact">
 
-<style>
-.contact .main-inner {
-   display:none;
-}
+   <style>
+      .contact .main-inner {
+         display:none;
+      }
 
-.contact .component-contact {
-    margin-top: -3em;   
-}
+      .contact .component-contact {
+         margin-top: -3em;   
+      }
 
-.component-contact {
-   margin: 0 0 2em 0;
-   width: 100%;
-   max-width: 100%;
-   background: none;
-   padding: 0;
-}
-
-.component-contact .l-col-6 {
-   width: 50%;
-   max-width: 50%;
-   flex: 0 0 50%;
-   margin: 0;
-}
-
-.component-contact > h2 {
-   font-size: 42px;
-   margin-bottom: 20px;
-   text-align: center;
-}
-
-.component-contact .intro {
-   font-size: 18px;
-   text-align: center;
-}
-
-.component-contact .inner {
-   max-width: 85vw;
-   margin: 0 auto;
-}
-
-.component-contact-container {
-   margin: 0 0 2em 0;
-   padding: 0 1em;
-   width: 100%;
-   max-width: 100%;
-   border-radius: 0;
-   background-image: linear-gradient(0deg,#f0f0ff 0,#fff1f1);   
-}
-
-
-    
-   .component-contact .col-one {
-      display: flex;
-   }
-
-   .component-contact .content-section {
-      margin-bottom: 2.5em;
-   }
-
-   .component-contact .content-inner {
-      width: 90%;
-      padding: 1em;
-      border-radius: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-   }
-
-   .component-contact .content-inner svg {
-      max-width: 275px;
-      height: auto;
-          margin-top: 0;
-      margin-bottom: 3em;
-   }
-
-   .component-contact .content-inner h2 {
-      font-size: 3em;
-      margin-bottom: 10px;
-   }
-
-   .col-two {
-      padding: 3em 0;
-   }
-
-   .component-contact .btn {
-      margin-top: 0;
-   }
-
-   .component-contact.component-faq-secondary {
-      margin-top: 5em;
-   }
-
-   .component-contact .content-inner .fa-long-arrow-alt-right {
-      margin: 0;
-      height: auto;
-      width: 40px;
-      position: relative;
-      top: -56px;
-      left: -4px;
-   }
-
-
-
-   @media (max-width: 900px) {
-      .component-contact-container {
+      .component-contact {
+         margin: 0 0 2em 0;
+         width: 100%;
+         max-width: 100%;
+         background: none;
          padding: 0;
       }
 
-      .component-contact .inner {
-         flex-direction: column;
+      .component-contact .l-col-6 {
+         width: 50%;
+         max-width: 50%;
+         flex: 0 0 50%;
          margin: 0;
-         max-width: 100%;
       }
 
-      .component-contact .col-one,
-      .component-contact .l-col-6 {
-         display: flex;
+      .component-contact > h2 {
+         font-size: 42px;
+         margin-bottom: 20px;
+         text-align: center;
+      }
+
+      .component-contact .intro {
+         font-size: 18px;
+         text-align: center;
+      }
+
+      .component-contact .inner {
+         max-width: 85vw;
+         margin: 0 auto;
+      }
+
+      .component-contact-container {
+         margin: 0 0 2em 0;
+         padding: 0 1em;
          width: 100%;
          max-width: 100%;
-         flex: 0 0 100%;
+         border-radius: 0;
+         background-image: linear-gradient(0deg,#f0f0ff 0,#fff1f1);   
       }
 
-      .component-contact .content-inner {
-         width: 100%;
-      }
 
-      .component-contact .l-col-6 {
-         display: block;
-      }
+         
+         .component-contact .col-one {
+            display: flex;
+         }
 
-      .component-contact .content-inner svg {
-             max-width: 180px;
-      }
+         .component-contact .content-section {
+            margin-bottom: 2.5em;
+         }
 
-      .component-contact .content-inner h2 {
-             font-size: 42px;
-      }
+         .component-contact .content-inner {
+            width: 90%;
+            padding: 1em;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+         }
 
-      .component-contact .content-inner .fa-long-arrow-alt-right {
-         display: none;
-      }
+         .component-contact .content-inner svg {
+            max-width: 275px;
+            height: auto;
+               margin-top: 0;
+            margin-bottom: 3em;
+         }
 
-      .component-contact .content-section {
-         margin-bottom: 2.5em;
-         max-width: 500px;
-         margin: 0 auto 3em auto;
-      }
+         .component-contact .content-inner h2 {
+            font-size: 3em;
+            margin-bottom: 10px;
+         }
 
-      .component-contact .l-col-6.col-two {
-         padding-bottom: 0;
-         padding-left: 15px;
-         padding-right: 15px;
-      }
+         .col-two {
+            padding: 3em 0;
+         }
 
-   }   
-</style>
+         .component-contact .btn {
+            margin-top: 0;
+         }
+
+         .component-contact.component-faq-secondary {
+            margin-top: 5em;
+         }
+
+         .component-contact .content-inner .fa-long-arrow-alt-right {
+            margin: 0;
+            height: auto;
+            width: 40px;
+            position: relative;
+            top: -56px;
+            left: -4px;
+         }
+
+
+
+         @media (max-width: 900px) {
+            .component-contact-container {
+               padding: 0;
+            }
+
+            .component-contact .inner {
+               flex-direction: column;
+               margin: 0;
+               max-width: 100%;
+            }
+
+            .component-contact .col-one,
+            .component-contact .l-col-6 {
+               display: flex;
+               width: 100%;
+               max-width: 100%;
+               flex: 0 0 100%;
+            }
+
+            .component-contact .content-inner {
+               width: 100%;
+            }
+
+            .component-contact .l-col-6 {
+               display: block;
+            }
+
+            .component-contact .content-inner svg {
+                  max-width: 180px;
+            }
+
+            .component-contact .content-inner h2 {
+                  font-size: 42px;
+            }
+
+            .component-contact .content-inner .fa-long-arrow-alt-right {
+               display: none;
+            }
+
+            .component-contact .content-section {
+               margin-bottom: 2.5em;
+               max-width: 500px;
+               margin: 0 auto 3em auto;
+            }
+
+            .component-contact .l-col-6.col-two {
+               padding-bottom: 0;
+               padding-left: 15px;
+               padding-right: 15px;
+            }
+
+         }   
+   </style>
    <div class="component-contact-container">
 
       <div class="l-row inner">
@@ -186,14 +186,13 @@
             </div>
 
             <div class="content-section">
-               <h3>Schedule a call</h3>
-               <p>Whether you want advice on how to use the plugin or have custom development needs, let's walk through them together!</p>
-               <a href="https://superpeer.com/wpshopify" target="_blank" class="btn">Schedule a 30min call</a>
+               <h3>Everything else</h3>
+               <p>Have a general plugin question? Send us an email at <a href="mailto:hello@wpshop.io">hello@wpshop.io</a></p>
             </div>
 
             <div class="content-section">
-               <h3>Everything else</h3>
-               <p>Have a general plugin question? Send us an email at <a href="mailto:hello@wpshop.io">hello@wpshop.io</a></p>
+               <h3>Still need a Shopify store?</h3>
+               <p>We've got you covered! <a href="https://www.shopify.com/?ref=wps" target="_blank">Try Shopify free for 14 days</a>.</p>
             </div>
 
          </div>

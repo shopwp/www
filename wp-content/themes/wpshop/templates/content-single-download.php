@@ -39,7 +39,7 @@ while (have_posts()) : the_post(); ?>
                </div>
             </div>
 
-            <div class="l-box-3 extension-purchase">
+            <div class="l-box-3 extension-purchase" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                <?php 
                
                if ($id === 203186) {
@@ -59,8 +59,9 @@ while (have_posts()) : the_post(); ?>
                      <?php foreach ($prices as $price) { ?>
                         <div class="l-row extension-button" data-extension-id="<?= $download->ID; ?>" data-extension-index="<?= $price['index']; ?>">
                            <p class="extension-selection-icon <?= $price['index'] === '1' ? 'is-selected' : ''; ?>"></p>
-                           <p class="extension-tier"><?= $price['name']; ?></p>
-                           <p class="extension-price">$<?= $price['amount']; ?> 
+                           <p class="extension-tier" itemprop="description"><?= $price['name']; ?></p>
+                           <p class="extension-price">
+                              <span itemprop="price">$<?= $price['amount']; ?></span> 
                               <span class="extension-interval">/<?= $price['period']; ?></span>
                            </p>
                         </div>
@@ -69,7 +70,7 @@ while (have_posts()) : the_post(); ?>
                   </div>
 
                   <div class="extension-add-to-cart">
-                     <a href="/checkout?edd_action=add_to_cart&download_id=<?= $id; ?>&edd_options[price_id]=1" class="btn btn-l">Purchase</a>
+                     <a href="/checkout?edd_action=add_to_cart&download_id=<?= $id; ?>&edd_options[price_id]=1" class="btn btn-l" itemprop="url">Purchase</a>
                   </div>
 
                   <div class="extension-terms">
@@ -79,6 +80,7 @@ while (have_posts()) : the_post(); ?>
                </div>
                
                <?php if (!empty($notes)) { ?>
+                  <p>Requires an <a href="https://www.shopify.com/?ref=wps" target="_blank">active Shopify store</a>.</p>
                   <div class="extension-notes">
                      <span class="extension-version">Current version: <?= $license_ver; ?></span>
                      <?= $notes; ?>

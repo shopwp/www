@@ -47,6 +47,10 @@ h3 {
   @include device(700, 'max') {
     font-size: $heading-4;
   }
+
+  @include device(500, 'max') {
+    font-size: 1.1em;
+  }
 }
 
 h4 {

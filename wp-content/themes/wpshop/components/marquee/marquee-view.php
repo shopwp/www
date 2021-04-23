@@ -1,3 +1,11 @@
+<?php 
+
+$detect = $GLOBALS['is_mobile'];
+
+$is_mobile = $detect->isMobile();
+
+?>
+
 <section class="component component-marquee l-col">
 
   <div class="marquee-content l-row">
@@ -6,7 +14,7 @@
          
          <div class="logos-wrapper">
             
-            <a class="logos" target="_blank" href="https://www.shopify.com/?ref=wps">
+            <a class="logos" target="_blank" href="https://www.shopify.com/?ref=wps" aria-label="Shopify and WordPress logos">
 
                <svg class="logo wordpress-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 79.7"><path d="M57.4 25.4c-.7-1.5-1.3-3-1.1-4.6.4-3.1 2.3-4.9 5.5-5.5-14.9-13.9-39.5-9.4-48.5 6.3h1.4c2.9-.1 5.6-.2 8.5-.4 1-.1 1.8.2 1.8 1.3.1 1.1-.8 1.4-1.8 1.5-.6 0-1.2.1-1.8.1-1 0-1.4.2-1 1.4C24.3 36.7 28 47.8 31.8 59c.6-.5.6-1 .7-1.5 2-6 4-12 6.1-18 .4-1 .3-1.8-.1-2.9-1.3-3.3-2.6-6.6-3.6-9.9-.6-1.9-1.5-3-3.6-2.8-.9.1-2-.2-1.9-1.4.1-1.4 1.1-1.4 2.2-1.3 4.2.4 8.3.4 12.5.3 1.3-.1 2.5-.2 3.8-.3.9-.1 1.5.4 1.5 1.3.1.8-.5 1.3-1.3 1.4-.6.1-1.4.2-2 .2-1.3 0-1.6.4-1.1 1.7 2.4 7 4.7 13.9 7.1 21 1.4 4 2.7 8 4.1 12 2-5.8 3.9-11.7 5.5-17.6 1-3.9.3-7.6-1.6-11.1-1-1.6-1.9-3.1-2.7-4.7z"/><path d="M78 37.3C77.2 17.5 59.3.9 39.2 1.6c-21.6.7-37.7 18.1-37 40 .6 20 18.7 36.6 38.8 35.8 21.7-.7 37.7-18.2 37-40.1zM40 75.7C20 75.6 3.9 59.3 4 39.4c0-20 16.3-36.1 36.1-36.1 20 0 36.2 16.3 36.2 36.2-.1 20-16.3 36.2-36.3 36.2z"/><path d="M40.7 42.4c2.5 6.7 4.7 12.9 7 19.2.9 2.6 1.8 5.1 2.8 7.7.3.7.2 1.1-.6 1.3-6 1.7-11.9 1.9-17.9.4-1-.3-1.2-.6-.8-1.5 3.3-8.9 6.3-17.9 9.5-27.1zM25.8 68.5c-15.5-7-22.5-26.8-15.3-42.1 5.1 14.1 10.2 28 15.3 42.1zm43.5-43.4c8.3 17 .1 35.3-12.3 41.9-.5-.4-.1-.7.1-1.1 3.3-9.5 6.6-19.1 9.9-28.6 1.2-3.5 1.9-7.1 1.9-10.9-.1-.4-.5-1 .4-1.3z"/><path d="M69.3 25.1c-.6.4-.1 1-.4 1.4-.3-.6-.4-1.4-.2-2.1.4.1.5.3.6.7z"/></svg>
 
@@ -23,76 +31,24 @@
          <div class="btn-group l-row l-row-left">
             <span class="btn btn-download-free getting-started-trigger" target="_blank">Start for free</span>
             <a href="https://wpshopify-web.loc/features" class="btn btn-l btn-secondary">View the demo</a>
-            <p style="margin-top: 10px;color: black;padding-left: 5px;"><a href="https://www.shopify.com/?ref=wps" class="wps-affiliate-marquee-bottom" target="_blank" style="color: black;font-size: 14px;">Still need a Shopify store?</a></p>
+            <p style="margin-top: 10px;color: black;padding-left: 5px;"><a href="https://www.shopify.com/?ref=wps" class="wps-affiliate-marquee-bottom" target="_blank" style="color: black;font-size: 14px;">Try Shopify free for 14 days!</a></p>
          </div>
 
       </div>
 
-      <div class="marquee-right">
+      <?php if (!$is_mobile) { ?>
+         <div class="marquee-right">
 
-      <img class="screen-one" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-<?= rand(1, 5) ?>.jpg" alt="Example product layout for Shopify WordPress plugin">
+            <img class="screen-one" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-<?= rand(1, 5) ?><?= $is_mobile ? '-mobile' : ''; ?>.jpg" alt="Example product layout for Shopify WordPress plugin">
 
-      <img class="screen-two" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-two.jpg" alt="Example product customization options for WordPress eCommerice plugin">
-      <div class="stage"><div class="corner"></div></div>
+            <img class="screen-two" src="<?php echo get_template_directory_uri() ?>/assets/imgs/marquee-right-two.jpg" alt="Example product customization options for WordPress eCommerice plugin">
+      
+            <div class="stage"><div class="corner"></div></div>
       </div>
-  </div>
 
-  
+      <?php } ?>
+  </div>
 
 </div>
 
-
 </section>
-
-<!-- 
-<section class="component component-snippet l-col l-col-center l-row-center">
-
-  <div class="l-contain">
-    <div class="snippet l-row">
-      <div class="snippet-image">
-        <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-brand.svg">
-      </div>
-
-      <div class="l-col l-row-center snippet-content">
-        <h2 class="snippet-heading">Free your brand.</h2>
-        <p class="snippet-copy">Keeping your brand consistent is important to build trust with your customers. Sync your data into WordPress without restrictive iFrames.</p>
-      </div>
-    </div>
-
-  </div>
-
-</section>
-
-<section class="component component-snippet l-col l-col-center l-row-center">
-
-  <div class="l-contain">
-
-    <div class="snippet l-row">
-
-      <div class="l-col l-row-center snippet-content">
-        <h2 class="snippet-heading">Sync what you need,<br>display what you want.</h2>
-        <p class="snippet-copy">You control the data and how it's shown to your users. We provide templates and over 100 + actions and filters.</p>
-
-      </div>
-
-      <div class="snippet-image">
-        <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-sync.svg">
-      </div>
-
-    </div>
-
-    <div class="snippet snippet-made-with-devs l-row">
-      <div class="snippet-image">
-        <img src="<?php echo get_template_directory_uri() ?>/assets/prod/imgs/illustration-code.svg">
-      </div>
-
-      <div class="l-col l-row-center snippet-content">
-        <h2 class="snippet-heading">One plugin for two platforms.</h2>
-        <p class="snippet-copy">Change something in Shopify and watch it automatically appear in WordPress. Webhooks are used to keep your data in sync.</p>
-
-      </div>
-    </div>
-
-  </div>
-
-</section> -->

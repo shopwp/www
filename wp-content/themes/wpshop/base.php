@@ -22,6 +22,8 @@ use Roots\Sage\Wrapper;
 require_once 'lib/Mobile-Detect/Mobile_Detect.php';
 $detect = new Mobile_Detect;
 
+$GLOBALS['is_mobile'] = $detect;
+
 $mobileBodyClass = $detect->isMobile() ? 'is-mobile' : '';
 
 if (is_page('checkout') || is_page('purchase-confirmation')) {

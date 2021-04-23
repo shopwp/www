@@ -26,6 +26,7 @@ function Account({ children }) {
       console.log('uh ohhh');
       return;
     }
+    console.log('customer', customer);
 
     accountDispatch({ type: 'SET_CUSTOMER', payload: customer });
     accountDispatch({ type: 'SET_SUBSCRIPTIONS', payload: customer.subscriptions });

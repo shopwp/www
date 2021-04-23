@@ -32,7 +32,7 @@
   }
 
   @include device(700, 'max') {
-    padding: 2em 0;
+    padding: 3em 0 2em 0;
   }
 }
 
@@ -52,7 +52,8 @@
   }
 
   @include device(600, 'max') {
-    padding: 0 2em;
+    padding: 0;
+    margin-bottom: 0;
   }
 }
 
@@ -70,6 +71,11 @@
     padding: 25px 10px 40px;
     margin-bottom: 1em;
   }
+
+  @include device(600, 'max') {
+    width: calc(100% - 20px);
+    padding-top: 16px;
+  }
 }
 
 .plan-names {
@@ -86,6 +92,10 @@
 
   @include device(1500, 'max') {
     font-size: 20px;
+  }
+
+  @include device(600, 'max') {
+    font-size: 17px;
   }
 }
 
@@ -123,6 +133,10 @@
   margin-left: 15px;
   margin-top: 5px;
   font-family: $font-secondary;
+
+  @include device(600, 'max') {
+    margin-top: 0;
+  }
 }
 
 .price-toggle-label-wrapper {

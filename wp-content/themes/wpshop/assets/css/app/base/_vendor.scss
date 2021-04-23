@@ -307,6 +307,12 @@ EDD
   }
 }
 
+.plan-price-year {
+  @include device(600, 'max') {
+    font-size: 36px;
+  }
+}
+
 .edd_price_option_sep {
   text-align: center;
   display: none;

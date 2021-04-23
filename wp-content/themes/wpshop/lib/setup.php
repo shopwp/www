@@ -169,21 +169,6 @@ Theme assets
 function assets()
 {
 
-   $settings_encoded_string = [
-      'api' => [
-         'namespace' => WPS_API_NAMESPACE,
-         'restUrl' => replace_rest_protocol(),
-         'nonce' => wp_create_nonce( 'wp_rest' )
-      ],
-      'misc' => [
-         'dequeued' => false,
-         'userId' => get_current_user_id(),
-         'themeUrl' => get_template_directory_uri(),
-         'siteUrl' => get_site_url(),
-         'latestVersion' => WP_SHOPIFY_NEW_PLUGIN_VERSION
-      ]
-   ];
-
    if (is_page('account')) {
       wp_enqueue_script('WP Shopify Account', Assets\asset_path('prod/account.min.js'), [], filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/account.min.js'), true);
 
@@ -210,12 +195,24 @@ function assets()
       
    }
 
+   $settings_encoded_string = [
+      'api' => [
+         'namespace' => WPS_API_NAMESPACE,
+         'restUrl' => replace_rest_protocol(),
+         'nonce' => wp_create_nonce( 'wp_rest' )
+      ],
+      'misc' => [
+         'dequeued' => false,
+         'userId' => get_current_user_id(),
+         'themeUrl' => get_template_directory_uri(),
+         'siteUrl' => get_site_url(),
+         'latestVersion' => defined('WP_SHOPIFY_NEW_PLUGIN_VERSION') ? WP_SHOPIFY_NEW_PLUGIN_VERSION : false
+      ]
+   ];
+
    if (is_page_to_dequeue()) {
       dequeue_superfluous_assets();
       $settings_encoded_string['misc']['dequeued'] = true;
-
-   } else {
-      $settings_encoded_string['misc']['latestVersion'] = WP_SHOPIFY_NEW_PLUGIN_VERSION;
    }
 
    $js_string = "const wpshopifyMarketing = " . wp_json_encode($settings_encoded_string) . ";";

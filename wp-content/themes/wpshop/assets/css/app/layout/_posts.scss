@@ -126,7 +126,7 @@
     }
 
     @include device(700, 'max') {
-      font-size: 28px;
+      font-size: 32px;
     }
   }
 
@@ -150,6 +150,10 @@
   .entry-content h3,
   .entry-content h4 {
     font-size: 1.6em;
+
+    @include device(600, 'max') {
+      font-size: 22px !important;
+    }
   }
 }
 
@@ -164,6 +168,12 @@
   h1,
   h2 {
     text-decoration: underline;
+  }
+}
+
+.latest-post-img {
+  @include device(600, 'max') {
+    padding: 0;
   }
 }
 
@@ -254,6 +264,11 @@
   .logo-header {
     max-width: 50px;
     width: 50px;
+
+    @include device(600, 'max') {
+      max-width: 40px;
+      width: 40px;
+    }
   }
 }
 
@@ -305,6 +320,10 @@
 
   .entry-title {
     font-size: 22px;
+  }
+
+  .meta-wrapper {
+    display: none;
   }
 }
 
@@ -376,6 +395,10 @@
   }
 
   @include device(700, 'max') {
+    border: 0;
+    margin-top: 0;
+    padding-bottom: 10px;
+
     .entry-title {
       font-size: 32px;
     }
@@ -395,6 +418,10 @@
   .post-meta-container {
     padding-left: 35px;
     margin-top: 15px;
+
+    @media (max-width: 700px) {
+      padding-left: 0;
+    }
   }
   .meta-wrapper {
     position: absolute;
@@ -511,10 +538,18 @@
     font-weight: bold;
     margin-bottom: 6px;
     font-size: 18px;
+
+    @include device(600, 'max') {
+      font-size: 15px;
+    }
   }
 
   .author-bio-short {
     font-size: 15px;
+
+    @include device(600, 'max') {
+      font-size: 13px;
+    }
   }
 }
 
@@ -547,6 +582,10 @@
   margin-bottom: 40px;
   align-items: center;
   margin-top: 5px;
+
+  @include device(600, 'max') {
+    margin-bottom: 22px;
+  }
 
   .swp_social_panel:not(.swp_social_panelSide) {
     margin: 0 !important;

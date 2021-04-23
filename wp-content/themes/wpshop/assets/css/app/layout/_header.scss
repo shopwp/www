@@ -509,7 +509,7 @@ label.error {
 
   @include device(1300, 'max') {
     position: relative;
-    top: 0px;
+    top: 5px;
     width: 45px;
     margin: 0;
   }
@@ -517,6 +517,19 @@ label.error {
   &:hover {
     opacity: 1;
     transform: scale(1.15);
+  }
+}
+
+.purchase .logo-link {
+  @include device(600, 'max') {
+    top: 1px;
+    width: 39px;
+  }
+}
+
+.contact .logo-link {
+  @include device(1300, 'max') {
+    top: 0;
   }
 }
 

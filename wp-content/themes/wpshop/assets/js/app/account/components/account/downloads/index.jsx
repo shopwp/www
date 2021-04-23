@@ -67,8 +67,6 @@ function AccountDownloads() {
     margin-left: 3px;
   `;
 
-  console.log('accountState.customer.downloads', accountState.customer.downloads);
-
   return (
     <>
       <AccountBodyHeader heading='Downloads' />

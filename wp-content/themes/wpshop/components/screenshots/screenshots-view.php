@@ -1,6 +1,14 @@
+<?php 
+
+$detect = $GLOBALS['is_mobile'];
+
+$is_mobile = $detect->isMobile();
+
+
+?>
+
 <section class="component component-screenshots l-col l-col-center <?= $has_bg ? 'has-background' : ''; ?>">
    
-
    <div class="bg"></div>
 
    <div class="l-row">
@@ -9,13 +17,13 @@
 
       <div class="stage"></div>
 
-         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2020/06/screenshot-cart-example.jpg');" data-type="cart"></div>
+         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2020/06/screenshot-cart-example<?= $is_mobile ? '-256x256' : ''; ?>.jpg');" data-type="cart"></div>
 
-         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2020/06/screenshot-syncing-example-2.jpg');" data-type="sync"></div>
+         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2020/06/screenshot-syncing-example-2<?= $is_mobile ? '-256x256' : ''; ?>.jpg');" data-type="sync"></div>
          
-         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2020/06/screenshot-settings-example.jpg');" data-type="customization"></div>
-         <div class="screenshot-wrapper screenshot-image is-visible" style="background-image:url('/wp-content/uploads/2020/06/screenshot-posts.jpg');" data-type="posts"></div>
-         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2020/06/screenshot-blocks-example-2.jpg');" data-type="blocks"></div>
+         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2020/06/screenshot-settings-example<?= $is_mobile ? '-256x256' : ''; ?>.jpg');" data-type="customization"></div>
+         <div class="screenshot-wrapper screenshot-image is-visible" style="background-image:url('/wp-content/uploads/2020/06/screenshot-posts<?= $is_mobile ? '-256x256' : ''; ?>.jpg');" data-type="posts"></div>
+         <div class="screenshot-wrapper screenshot-image" style="background-image:url('/wp-content/uploads/2020/06/screenshot-blocks-example-2<?= $is_mobile ? '-256x256' : ''; ?>.jpg');" data-type="blocks"></div>
 
       </section>
 
@@ -66,15 +74,4 @@
 
    </div>
 
-
 </section>
-
-
-
-
-
-
-
-
-
-

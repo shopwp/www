@@ -64,7 +64,7 @@
   }
 
   @include device(600, 'max') {
-    margin-top: 175px;
+    margin-top: 145px;
   }
 }
 
@@ -138,10 +138,18 @@
 .faq .component.component-faq {
   margin-top: 3em;
   margin-bottom: 7em;
+
+  @media (max-width: 600px) {
+    margin-top: 1em;
+  }
 }
 
 .contact .component.component-faq-secondary h2 {
   font-size: 36px;
+
+  @media (max-width: 900px) {
+    font-size: 28px;
+  }
 }
 
 .examples .page-content {
@@ -199,6 +207,10 @@
 
 .single .main {
   margin-top: 100px;
+
+  @include device(600, 'max') {
+    margin-top: 76px;
+  }
 }
 
 .single .main-inner.l-contain-narrow {
@@ -208,6 +220,10 @@
 .main-inner {
   @include device(900, 'max') {
     padding: 0 20px;
+  }
+
+  @include device(600, 'max') {
+    padding: 0 10px;
   }
 }
 
@@ -225,6 +241,13 @@
       p {
         font-size: 16px;
       }
+    }
+  }
+
+  .post-single-header {
+    @include device(700, 'max') {
+      margin-top: 0;
+      padding-top: 0;
     }
   }
 }
