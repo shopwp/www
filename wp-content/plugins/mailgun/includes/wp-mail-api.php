@@ -106,8 +106,11 @@ function mg_mutate_to_rcpt_vars_cb($to_addrs)
  *
  * @return	bool	Whether the email contents were sent successfully.
  *
+ * @global PHPMailer\PHPMailer\PHPMailer $phpmailer
+ *
  * @since	0.1
  */
+if (!function_exists('wp_mail')) {
 function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
 {
     // Compact the input, apply the filters, and extract them back out
@@ -254,6 +257,22 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
         }
     }
 
+    /**
+     * Filter tags.
+     *
+     * @param array  $tags        Mailgun tags.
+     * @param string $to          To address.
+     * @param string $subject     Subject line.
+     * @param string $message     Message content.
+     * @param array  $headers     Headers array.
+     * @param array  $attachments Attachments array.
+     * @param string $region      Mailgun region.
+     * @param string $domain      Mailgun domain.
+     *
+     * @return array              Mailgun tags.
+     */
+    $body['o:tag'] = apply_filters( 'mailgun_tags', $body['o:tag'], $to, $subject, $message, $headers, $attachments, $region, $domain );
+
     if (!empty($cc) && is_array($cc)) {
         $body['cc'] = implode(', ', $cc);
     }
@@ -266,7 +285,7 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
     // write the message body to a file and try to determine the mimetype
     // using get_mime_content_type.
     if (!isset($content_type)) {
-        $tmppath = tempnam(sys_get_temp_dir(), 'mg');
+        $tmppath = tempnam(get_temp_dir(), 'mg');
         $tmp = fopen($tmppath, 'w+');
 
         fwrite($tmp, $message);
@@ -294,6 +313,39 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
         error_log('[mailgun] Got unknown Content-Type: ' . $content_type);
         $body['text'] = $message;
         $body['html'] = $message;
+    }
+
+    // Some plugins, such as WooCommerce (@see WC_Email::handle_multipart()), to handle multipart/alternative with html
+    // and plaintext messages hooks into phpmailer_init action to override AltBody property directly in $phpmailer,
+    // so we should allow them to do this, and then get overridden plain text body from $phpmailer.
+    // Partly, this logic is taken from original wp_mail function.
+    if (false !== stripos($content_type, 'multipart')) {
+        global $phpmailer;
+
+        // (Re)create it, if it's gone missing.
+        if (!($phpmailer instanceof PHPMailer\PHPMailer\PHPMailer)) {
+            require_once ABSPATH . WPINC . '/PHPMailer/PHPMailer.php';
+            require_once ABSPATH . WPINC . '/PHPMailer/SMTP.php';
+            require_once ABSPATH . WPINC . '/PHPMailer/Exception.php';
+            $phpmailer = new PHPMailer\PHPMailer\PHPMailer(true);
+
+            $phpmailer::$validator = static function ($email) {
+                return (bool)is_email($email);
+            };
+        }
+
+        /**
+         * Fires after PHPMailer is initialized.
+         *
+         * @param PHPMailer $phpmailer The PHPMailer instance (passed by reference).
+         */
+        do_action_ref_array('phpmailer_init', array(&$phpmailer));
+
+        $plainTextMessage = $phpmailer->AltBody;
+
+        if ($plainTextMessage) {
+            $body['text'] = $plainTextMessage;
+        }
     }
 
     // If we don't have a charset from the input headers
@@ -329,7 +381,7 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
     $payload = '';
 
     // First, generate a boundary for the multipart message.
-    $boundary = base_convert(uniqid('boundary', true), 10, 36);
+    $boundary = sha1(uniqid('', true));
 
     // Allow other plugins to apply body changes before creating the payload.
     $body = apply_filters('mg_mutate_message_body', $body);
@@ -384,7 +436,7 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
     // Mailgun API should *always* return a `message` field, even when
     // $response_code != 200, so a lack of `message` indicates something
     // is broken.
-    if ((int) $response_code != 200 && !isset($response_body->message)) {
+    if ((int) $response_code != 200 || !isset($response_body->message)) {
         // Store response code and HTTP response message in last error.
         $response_message = wp_remote_retrieve_response_message($response);
         $errmsg = "$response_code - $response_message";
@@ -401,6 +453,7 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
     }
 
     return true;
+}
 }
 
 function mg_build_payload_from_body($body, $boundary) {

@@ -1997,11 +1997,19 @@ class EDD_Software_Licensing {
 			$user_id = get_current_user_id();
 		}
 
+      error_log('----- $user_id$user_id -----');
+      error_log(print_r($user_id, true));
+      error_log('----- /$user_id$user_id -----');
+
 		if( empty( $user_id ) ) {
 			return array();
 		}
 
 		$customer = new EDD_Customer( $user_id, true );
+      
+      error_log('----- $customer -----');
+      error_log(print_r($customer, true));
+      error_log('----- /$customer -----');
 
 		$args = array(
 			'number'  => 50,
@@ -2023,6 +2031,8 @@ class EDD_Software_Licensing {
 			$args['parent'] = 0;
 		}
 
+      
+
 		/**
 		 * Filters the arguments for the query to get the license keys of a user.
 		 *
@@ -2030,9 +2040,13 @@ class EDD_Software_Licensing {
 		 * @param int   $user_id The user this query is for.
 		 */
 		$args = apply_filters( 'edd_sl_get_license_keys_of_user_args', $args, $user_id );
-
+error_log('----- $args -----');
+      error_log(print_r($args, true));
+      error_log('----- /$args -----');
 		$license_keys = edd_software_licensing()->licenses_db->get_licenses( $args );
-
+error_log('----- $license_keys -----');
+      error_log(print_r($license_keys, true));
+      error_log('----- /$license_keys -----');
 		// "License" was improperly capitalized. Filter corrected but typo maintained for backwards compatibility
 		$license_keys = apply_filters( 'edd_sl_get_License_keys_of_user', $license_keys, $user_id );
 		return apply_filters( 'edd_sl_get_license_keys_of_user', $license_keys, $user_id );
