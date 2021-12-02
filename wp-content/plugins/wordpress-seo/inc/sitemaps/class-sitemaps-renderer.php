@@ -130,12 +130,11 @@ class WPSEO_Sitemaps_Renderer {
 	/**
 	 * Produce final XML output with debug information.
 	 *
-	 * @param string  $sitemap   Sitemap XML.
-	 * @param boolean $transient Transient cache flag.
+	 * @param string $sitemap   Sitemap XML.
 	 *
 	 * @return string
 	 */
-	public function get_output( $sitemap, $transient ) {
+	public function get_output( $sitemap ) {
 
 		$output = '<?xml version="1.0" encoding="' . esc_attr( $this->output_charset ) . '"?>';
 

@@ -103,6 +103,19 @@ class EDD_Recurring_Gateway {
 	}
 
 	/**
+	 * Whether or not payments should automatically be set to `complete` during `record_signup()`.
+	 *
+	 * Defaults to the opposite of `EDD_Recurring_Gateway::$offsite`.
+	 *
+	 * @since 2.11
+	 *
+	 * @return bool
+	 */
+	protected function should_auto_complete_payment() {
+		return ! $this->offsite;
+	}
+
+	/**
 	 * Creates subscription payment profiles and sets the IDs so they can be stored
 	 *
 	 * @access      public
@@ -180,7 +193,7 @@ class EDD_Recurring_Gateway {
 	 * @since       2.4
 	 * @param       EDD_Subscription $subscription The EDD_Subscription object for the EDD Subscription being cancelled.
 	 * @param       bool             $valid Currently this defaults to be true at all times.
-	 * @return      void
+	 * @return      bool
 	 */
 	public function cancel( $subscription, $valid ) {}
 
@@ -190,11 +203,11 @@ class EDD_Recurring_Gateway {
 	 * @access      public
 	 * @since       2.4
 	 * @param       EDD_Subscription $subscription The EDD_Subscription object for the EDD Subscription being cancelled.
-	 * @return      void
+	 * @return      bool
 	 */
 	public function cancel_immediately( $subscription ) {
 		// Fallback to the original cancel method.
-		$this->cancel( $subscription, true );
+		return $this->cancel( $subscription, true );
 	}
 
 	/**
@@ -452,8 +465,15 @@ class EDD_Recurring_Gateway {
 
 			}
 
-			// Determine tax amount for any fees if it's more than $0
+			/**
+			 * Determine tax amount for any fees if it's more than $0
+			 *
+			 * Fees (at this time) must be exclusive of tax
+			 * @see EDD_Cart::get_tax_on_fees()
+			 */
+			add_filter( 'edd_prices_include_tax', '__return_false' );
 			$fee_tax = $fees > 0 ? edd_calculate_tax( $fees ) : 0;
+			remove_filter( 'edd_prices_include_tax', '__return_false' );
 
 			// Format the tax rate.
 			$tax_rate = round( floatval( $this->purchase_data['tax_rate'] ), 4 );
@@ -512,9 +532,8 @@ class EDD_Recurring_Gateway {
 
 		if ( ! is_user_logged_in() ) {
 			edd_set_error( 'edd_recurring_login', __( 'You must be logged in to purchase a subscription', 'edd-recurring' ) );
-			$redirect_query = '?payment-mode=' . $this->id . '&edd-recurring-login=1';
 
-			edd_send_back_to_checkout( $redirect_query );
+			$this->handle_errors( edd_get_errors() );
 		}
 
 		// Create subscription payment profiles in the gateway
@@ -553,7 +572,7 @@ class EDD_Recurring_Gateway {
 		$errors = edd_get_errors();
 
 		if ( $errors ) {
-			edd_send_back_to_checkout( '?payment-mode=' . $this->id );
+			$this->handle_errors( $errors );
 		}
 
 		// Record the subscriptions and finish up
@@ -567,11 +586,20 @@ class EDD_Recurring_Gateway {
 
 		// We shouldn't usually get here, but just in case a new error was recorded, we need to check for it
 		if ( $errors ) {
-
-			edd_send_back_to_checkout( '?payment-mode=' . $this->id );
-
+			$this->handle_errors( $errors );
 		}
 
+	}
+
+	/**
+	 * Handles errors that occur during checkout processing.
+	 *
+	 * @param array|false $errors
+	 *
+	 * @since 2.11
+	 */
+	protected function handle_errors( $errors = false ) {
+		edd_send_back_to_checkout( '?payment-mode=' . $this->id );
 	}
 
 	/**
@@ -612,7 +640,7 @@ class EDD_Recurring_Gateway {
 		$this->payment_id = edd_insert_payment( $payment_data );
 		$payment          = edd_get_payment( $this->payment_id );
 
-		if ( ! $this->offsite ) {
+		if ( $this->should_auto_complete_payment() ) {
 
 			// Offsite payments get verified via a webhook so are completed in webhooks()
 			$payment->status = 'publish';
@@ -640,7 +668,7 @@ class EDD_Recurring_Gateway {
 			if( isset( $subscription['status'] ) ) {
 				$status  = $subscription['status'];
 			} else {
-				$status  = $this->offsite ? 'pending' : 'active';
+				$status = ! $this->should_auto_complete_payment() ? 'pending' : 'active';
 			}
 
 			$trial_period = ! empty( $subscription['has_trial'] ) ? $subscription['trial_quantity'] . ' ' . $subscription['trial_unit'] : '';
@@ -702,9 +730,20 @@ class EDD_Recurring_Gateway {
 			$args = apply_filters( 'edd_recurring_pre_record_signup_args', $args, $this );
 			$sub = $subscriber->add_subscription( $args );
 
-			if( ! $this->offsite && $trial_period ) {
+			if ( $this->should_auto_complete_payment() && $trial_period ) {
 				$subscriber->add_meta( 'edd_recurring_trials', $subscription['id'] );
 			}
+
+			/**
+			 * Triggers right after a subscription is created.
+			 *
+			 * @param EDD_Subscription      $sub          New subscription object.
+			 * @param array                 $subscription Gateway subscription arguments.
+			 * @param EDD_Recurring_Gateway $this         Gateway object.
+			 *
+			 * @since 2.10.2
+			 */
+			do_action( 'edd_recurring_post_record_signup', $sub, $subscription, $this );
 
 		}
 

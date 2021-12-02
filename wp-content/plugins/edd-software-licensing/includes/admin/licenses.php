@@ -264,20 +264,29 @@ function edd_sl_licenses_view( $license ) {
 							</td>
 							<td>
 								<?php
-								$exp_date       = ucfirst( $license->expiration );
-								$classes        = 'hidden edd-sl-license-exp-date edd_datepicker';
-								$parent_license = $license->parent > 0 ? edd_software_licensing()->get_license( $license->parent ) : false;
+								$exp_date             = ucfirst( $license->expiration );
+								$classes              = 'hidden edd-sl-license-exp-date edd_datepicker';
+								$parent_license       = $license->parent > 0 ? edd_software_licensing()->get_license( $license->parent ) : false;
+								$datepicker_timestamp = '';
 
 								if ( ! $license->is_lifetime ) {
 									if ( $license->parent == 0 ) {
-										$exp_date = esc_html( date_i18n( get_option( 'date_format' ), $exp_date, 1 ) );
+										$datepicker_timestamp = $exp_date;
+										$exp_date             = esc_html( date_i18n( get_option( 'date_format' ), $exp_date, 1 ) );
 									} else {
-										$exp_date       = esc_html( date_i18n( get_option( 'date_format' ), $parent_license->expiration, 1 ) );
+										if ( is_int( $parent_license->expiration ) ) {
+											$datepicker_timestamp = $parent_license->expiration;
+										}
+
+										$exp_date = esc_html( date_i18n( get_option( 'date_format' ), $parent_license->expiration, 1 ) );
 									}
 								}
+								if ( ! empty( $datepicker_timestamp ) ) {
+									$datepicker_timestamp = date( 'm/d/Y', $datepicker_timestamp );
+								}
 								?>
-								<span class="edd-sl-license-exp-date"><?php echo $exp_date; ?></span>
-								<input type="text" name="exp_date" class="<?php echo $classes; ?>" value="<?php echo esc_attr( $exp_date ); ?>" />
+								<span class="edd-sl-license-exp-date"><?php echo esc_html( $exp_date ); ?></span>
+								<input type="text" name="exp_date" class="<?php echo esc_attr( $classes ); ?>" value="<?php echo esc_attr( $datepicker_timestamp ); ?>" />
 
 								<?php if ( $license->parent == 0 ) : ?>
 								<span>&nbsp;&ndash;&nbsp;</span>
@@ -316,9 +325,9 @@ function edd_sl_licenses_view( $license ) {
 									$download_name = trim( substr( $download_name, 0, strrpos( $download_name, ' &#8211; ' ) ) );
 								}
 								$download_name = '<a href="' . admin_url( 'post.php?post=' . $license->download_id . '&action=edit' ) . '">' . $download_name . '</a>';
-								$price_id      = 0;
+								$price_id      = false;
 
-								if( $license->get_download()->has_variable_prices() ) {
+								if ( $license->get_download()->has_variable_prices() ) {
 									$price_id = $license->price_id;
 									$prices   = $license->get_download()->get_prices();
 
@@ -327,10 +336,9 @@ function edd_sl_licenses_view( $license ) {
 										foreach ( $prices as $id => $price ) {
 											$options[ $id ] = $price['name'];
 										}
-									} elseif ( ! empty( $prices[ $price_id ]['name'] ) ) {
+									} elseif ( is_numeric( $price_id ) && ! empty( $prices[ $price_id ]['name'] ) ) {
 										$child_price_id_label = $prices[ $price_id ]['name'];
 									}
-
 								}
 
 								echo $download_name;
@@ -429,7 +437,22 @@ function edd_sl_licenses_view( $license ) {
 										_e( 'Subscribed', 'edd_sl' );
 									}
 									?>
-									<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'This indicates whether this customer will receive the license renewal email notifications configured in the Software Licensing settings tab.', 'edd_sl' ); ?>">
+									<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php _e( 'This indicates whether this customer will receive the license renewal email notifications configured in the Software Licensing settings tab.', 'edd_sl' ); ?>"></span>
+									<?php
+									$button_text   = $unsubscribed ? __( 'Subscribe', 'edd_sl' ) : __( 'Unsubscribe', 'edd_sl' );
+									$subscribe_url = wp_nonce_url(
+										add_query_arg(
+											array(
+												'edd_action'          => 'sl_toggle_license_subscription',
+												'subscription_status' => $unsubscribed ? 'subscribe' : 'unsubscribe',
+												'license_id'          => urlencode( $license->id ),
+											),
+											$base
+										),
+										'edd_sl_update_email_notifications'
+									);
+									?>
+									<a href="<?php echo esc_url( $subscribe_url ); ?>"><?php echo esc_html( $button_text ); ?></a>
 								</td>
 							</tr>
 						<?php endif; ?>

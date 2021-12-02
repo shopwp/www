@@ -10,7 +10,7 @@
 function edd_recurring_admin_scripts( $hook ) {
 	global $post, $edd_recurring;
 
-	if ( ! is_object( $post ) && 'download_page_edd-subscriptions' !== $hook ) {
+	if ( ! is_object( $post ) && ! in_array( $hook, array( 'download_page_edd-subscriptions', 'download_page_edd-payment-history' ), true ) ) {
 		return;
 	}
 
@@ -18,7 +18,7 @@ function edd_recurring_admin_scripts( $hook ) {
 		return;
 	}
 
-	$pages = array( 'post.php', 'post-new.php', 'download_page_edd-subscriptions' );
+	$pages = array( 'post.php', 'post-new.php', 'download_page_edd-subscriptions', 'download_page_edd-payment-history' );
 
 	if ( ! in_array( $hook, $pages ) ) {
 		return;

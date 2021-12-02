@@ -144,7 +144,7 @@ function edds_stripe_connect_test_mode_toggle_redirect() {
 		return;
 	}
 
-	if( ! edd_is_gateway_active( 'stripe' ) ) {
+	if ( false === edds_is_gateway_active() ) {
 		return;
 	}
 

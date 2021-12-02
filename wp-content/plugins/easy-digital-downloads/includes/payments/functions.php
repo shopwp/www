@@ -388,11 +388,11 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  * when refunding or deleting a purchase
  *
  * @since 1.0.8.1
- * @param int $download_id Download (Post) ID
+ * @param int $download_id Download (Post) ID. This should be passed as `false`.
  * @param int $payment_id Payment ID
  * @return void
  */
-function edd_undo_purchase( $download_id = false, $payment_id ) {
+function edd_undo_purchase( $download_id, $payment_id ) {
 
 	/**
 	 * In 2.5.7, a bug was found that $download_id was an incorrect usage. Passing it in
@@ -597,17 +597,9 @@ function edd_count_payments( $args = array() ) {
 	// Limit payments count by date
 	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
 
-		$date_parts = explode( '/', $args['start-date'] );
-		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
-		$day        = ! empty( $date_parts[1] ) && is_numeric( $date_parts[1] ) ? $date_parts[1] : 0;
-		$year       = ! empty( $date_parts[2] ) && is_numeric( $date_parts[2] ) ? $date_parts[2] : 0;
-
-		$is_date    = checkdate( $month, $day, $year );
-		if ( false !== $is_date ) {
-
-			$date   = new DateTime( $args['start-date'] );
+		$date = DateTime::createFromFormat( 'm/d/Y', $args['start-date'] );
+		if ( $date instanceof DateTime ) {
 			$where .= $wpdb->prepare( " AND p.post_date >= '%s'", $date->format( 'Y-m-d' ) );
-
 		}
 
 		// Fixes an issue with the payments list table counts when no end date is specified (partly with stats class)
@@ -619,17 +611,9 @@ function edd_count_payments( $args = array() ) {
 
 	if ( ! empty ( $args['end-date'] ) && false !== strpos( $args['end-date'], '/' ) ) {
 
-		$date_parts = explode( '/', $args['end-date'] );
-
-		$month      = ! empty( $date_parts[0] ) ? $date_parts[0] : 0;
-		$day        = ! empty( $date_parts[1] ) ? $date_parts[1] : 0;
-		$year       = ! empty( $date_parts[2] ) ? $date_parts[2] : 0;
-
-		$is_date    = checkdate( $month, $day, $year );
-		if ( false !== $is_date ) {
-			$date = date( 'Y-m-d', strtotime( '+1 day', mktime( 0, 0, 0, $month, $day, $year ) ) );
-
-			$where .= $wpdb->prepare( " AND p.post_date < '%s'", $date );
+		$date = DateTime::createFromFormat( 'm/d/Y', $args['end-date'] );
+		if ( $date instanceof DateTime ) {
+			$where .= $wpdb->prepare( " AND p.post_date < '%s'", $date->modify( '+1 day' )->format( 'Y-m-d' ) );
 		}
 
 	}

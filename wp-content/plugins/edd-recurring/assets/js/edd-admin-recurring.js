@@ -12,6 +12,7 @@ jQuery( document ).ready( function ( $ ) {
 		init: function () {
 
 			//Recurring select field conditionals
+			this.variable_pricing();
 			this.recurring_select();
 			this.custom_price_toggle();
 			this.free_trial_toggle();
@@ -35,13 +36,22 @@ jQuery( document ).ready( function ( $ ) {
 		},
 
 		/**
+		 * Toggle the single recurring fields when the variable pricing option changes.
+		 */
+		variable_pricing: function () {
+			$( 'body' ).on( 'change', '#edd_variable_pricing', function () {
+				$( '.edd-recurring-single' ).toggle( !$( this ).is( ':checked' ) );
+			} );
+		},
+
+		/**
 		 * Recurring Select
 		 * @description: Ensures that the "period", "times", and "signup fees" fields are disabled/enabled according to the "Recurring" selection yes/no option
 		 */
 		recurring_select: function () {
 			$( 'body' ).on( 'change', '.edd-recurring-enabled select, select#edd_recurring, select#edd_custom_recurring', function () {
 				var $this  = $( this ),
-					fields = $this.parents( '#edd_regular_price_field' ).find( 'select,input[type="number"]' ),
+					fields = $this.parents( '.edd-recurring-single' ).find( 'select,input' ),
 					val    = $( 'option:selected', this ).val();
 
 				if( ! $this.is(':visible') ) {

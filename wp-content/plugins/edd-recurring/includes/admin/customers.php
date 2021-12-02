@@ -102,6 +102,8 @@ add_filter( 'edd_recount_customer_payment_statuses', 'edd_recurring_customer_rec
 /**
  * Allow the customer recount tool to process a subscription payment.
  *
+ * @todo Deprecate after EDD 3.0.
+ *
  * @since  2.4.5
  * @param  bool   $ret      Base status for if the payment should be processed.
  * @param  object $payment  WP_Post object of the payment being checked.
@@ -109,6 +111,7 @@ add_filter( 'edd_recount_customer_payment_statuses', 'edd_recurring_customer_rec
  */
 function edd_recurring_should_process_payment( $ret, $payment ) {
 
+	// This does not need to be updated for EDD 3.0.
 	if ( 'edd_subscription' === $payment->post_status ) {
 		$ret = true;
 	}

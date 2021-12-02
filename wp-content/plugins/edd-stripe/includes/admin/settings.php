@@ -19,17 +19,37 @@ add_filter( 'edd_settings_sections_gateways', 'edds_settings_section' );
  * @since       1.0
  * @return      array
  */
-
 function edds_add_settings( $settings ) {
+	// Output a placeholder setting to help promote Stripe
+	// for non-Pro installs that do not meet PHP requirements.
+	if (
+		false === edds_has_met_requirements( 'php' ) &&
+		false === edds_is_pro()
+	) {
+		return array_merge(
+			$settings,
+			array(
+				'edd-stripe' => array(
+					'edds-requirements-not-met' => array(
+						'id'    => 'edds-requirements-not-met',
+						'name'  => __( 'Unmet Requirements', 'edds' ),
+						'type'  => 'stripe_requirements_not_met',
+						'class' => 'edds-requirements-not-met',
+					),
+				),
+			)
+		);
+	}
+
 	$stripe_settings = array(
-		array(
+		'stripe_connect_button' => array(
 			'id' => 'stripe_connect_button',
 			'name' => __( 'Connection Status', 'edds' ),
 			'desc' => edds_stripe_connect_setting_field(),
 			'type' => 'descriptive_text',
 			'class' => 'edd-stripe-connect-row',
 		),
-		array(
+		'test_publishable_key'  => array(
 			'id'   => 'test_publishable_key',
 			'name'  => __( 'Test Publishable Key', 'edds' ),
 			'desc'  => __( 'Enter your test publishable key, found in your Stripe Account Settings', 'edds' ),
@@ -37,7 +57,7 @@ function edds_add_settings( $settings ) {
 			'size'  => 'regular',
 			'class' => 'edd-hidden edds-api-key-row',
 		),
-		array(
+		'test_secret_key' => array(
 			'id'   => 'test_secret_key',
 			'name'  => __( 'Test Secret Key', 'edds' ),
 			'desc'  => __( 'Enter your test secret key, found in your Stripe Account Settings', 'edds' ),
@@ -45,7 +65,7 @@ function edds_add_settings( $settings ) {
 			'size'  => 'regular',
 			'class' => 'edd-hidden edds-api-key-row',
 		),
-		array(
+		'live_publishable_key' => array(
 			'id'   => 'live_publishable_key',
 			'name'  => __( 'Live Publishable Key', 'edds' ),
 			'desc'  => __( 'Enter your live publishable key, found in your Stripe Account Settings', 'edds' ),
@@ -53,7 +73,7 @@ function edds_add_settings( $settings ) {
 			'size'  => 'regular',
 			'class' => 'edd-hidden edds-api-key-row',
 		),
-		array(
+		'live_secret_key' => array(
 			'id'   => 'live_secret_key',
 			'name'  => __( 'Live Secret Key', 'edds' ),
 			'desc'  => __( 'Enter your live secret key, found in your Stripe Account Settings', 'edds' ),
@@ -61,7 +81,7 @@ function edds_add_settings( $settings ) {
 			'size'  => 'regular',
 			'class' => 'edd-hidden edds-api-key-row',
 		),
-		array(
+		'stripe_webhook_description' => array(
 			'id'    => 'stripe_webhook_description',
 			'type'  => 'descriptive_text',
 			'name'  => __( 'Webhooks', 'edds' ),
@@ -80,11 +100,11 @@ function edds_add_settings( $settings ) {
 			'<p>' . sprintf(
 				/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
 				__( 'See our %1$sdocumentation%2$s for more information.', 'edds' ),
-				'<a href="http://docs.easydigitaldownloads.com/article/405-setup-documentation-for-stripe-payment-gateway" target="_blank" rel="noopener noreferrer">',
+				'<a href="' . esc_url( edds_documentation_route( 'stripe-webhooks' ) ) . '" target="_blank" rel="noopener noreferrer">',
 				'</a>'
 			) . '</p>'
 		),
-		array(
+		'stripe_billing_fields' => array(
 			'id'    => 'stripe_billing_fields',
 			'name'  => __( 'Billing Address Display', 'edds' ),
 			'desc'  => __( 'Select how you would like to display the billing address fields on the checkout form. <p><strong>Notes</strong>:</p><p>If taxes are enabled, this option cannot be changed from "Full address".</p><p>If set to "No address fields", you <strong>must</strong> disable "zip code verification" in your Stripe account.</p>', 'edds' ),
@@ -96,39 +116,31 @@ function edds_add_settings( $settings ) {
 			),
 			'std'   => 'full'
 		),
- 		array(
+ 		'stripe_statement_descriptor' => array(
  			'id'   => 'stripe_statement_descriptor',
  			'name' => __( 'Statement Descriptor', 'edds' ),
  			'desc' => __( 'Choose how charges will appear on customer\'s credit card statements. <em>Max 22 characters</em>', 'edds' ),
  			'type' => 'text',
  		),
- 		array(
+ 		'stripe_use_existing_cards' => array(
 			'id'   => 'stripe_use_existing_cards',
 			'name' => __( 'Show Previously Used Cards', 'edds' ),
 			'desc' => __( 'Provides logged in customers with a list of previous used payment methods for faster checkout.', 'edds' ),
 			'type' => 'checkbox'
 		),
-		array(
-			'id'   => 'stripe_preapprove_only',
-			'name'  => __( 'Preapproved Payments', 'edds' ),
-			'desc'  => __( 'Authorize payments for processing and collection at a future date.', 'edds' ),
-			'type'  => 'checkbox',
-			'tooltip_title' => __( 'What does checking preapprove do?', 'edds' ),
-			'tooltip_desc'  => __( 'If you choose this option, Stripe will not charge the customer right away after checkout, and the payment status will be set to preapproved in Easy Digital Downloads. You (as the admin) can then manually change the status to Complete by going to Payment History and changing the status of the payment to Complete. Once you change it to Complete, the customer will be charged. Note that most typical stores will not need this option.', 'edds' ),
-		),
-		array(
+		'stripe_allow_prepaid' => array(
 			'id'    => 'stripe_allow_prepaid',
 			'name'  => __( 'Prepaid Cards', 'edds' ),
 			'desc'  => __( 'Allow prepaid cards as valid payment method.', 'edds' ),
 			'type'  => 'checkbox',
 		),
-		array(
+		'stripe_split_payment_fields' => array(
 			'id'   => 'stripe_split_payment_fields',
 			'name'  => __( 'Split Credit Card Form', 'edds' ),
 			'desc'  => __( 'Use separate card number, expiration, and CVC fields in payment forms.', 'edds' ),
 			'type'  => 'checkbox',
 		),
-		array(
+		'stripe_restrict_assets' => array(
 			'id' => 'stripe_restrict_assets',
 			'name' => ( __( 'Restrict Stripe Assets', 'edds' ) ),
 			'desc' => ( __( 'Only load Stripe.com hosted assets on pages that specifically utilize Stripe functionality.', 'edds' ) ),
@@ -139,7 +151,7 @@ function edds_add_settings( $settings ) {
 	);
 
 	if ( edd_get_option( 'stripe_checkout' ) ) {
-		$stripe_settings[] = array(
+		$stripe_settings['stripe_checkout'] = array(
 			'id'    => 'stripe_checkout',
 			'name'  => '<strong>' . __( 'Stripe Checkout', 'edds' ) . '</strong>',
 			'type'  => 'stripe_checkout_notice',
@@ -259,6 +271,132 @@ function edd_stripe_checkout_notice_callback( $args ) {
 
 	echo $html;
 }
+
+/**
+ * Outputs information when Stripe has been activated but application requirements are not met.
+ *
+ * @since 2.8.1
+ */
+function edd_stripe_requirements_not_met_callback() {
+	$required_version = 5.6;
+	$current_version  = phpversion();
+
+	echo '<div class="notice inline notice-warning">';
+	echo '<p>';
+	echo wp_kses(
+		sprintf(
+			/* translators: %1$s Future PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate. */
+			__(
+				'Processing credit cards with Stripe requires PHP version %1$s or higher. It looks like you\'re using version %2$s, which means you will need to %3$supgrade your version of PHP before acceping credit card payments%4$s.',
+				'edds'
+			),
+			'<code>' . $required_version . '</code>',
+			'<code>' . $current_version . '</code>',
+			'<strong>',
+			'</strong>'
+		),
+		array(
+			'code'   => true,
+			'strong' => true
+		)
+	);
+	echo '</p>';
+	echo '<p>';
+
+	echo '<strong>';
+	esc_html_e( 'Need help upgrading? Ask your web host!', 'edds' );
+	echo '</strong><br />';
+
+	echo wp_kses(
+		sprintf(
+			/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+			__(
+				'Many web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. If you need to change hosts, please see %1$sour hosting recommendations%2$s.',
+				'edds'
+			),
+			'<a href="https://easydigitaldownloads.com/recommended-wordpress-hosting/" target="_blank" rel="noopener noreferrer">',
+			'</a>'
+		),
+		array(
+			'a' => array(
+				'href'   => true,
+				'target' => true,
+				'rel'    => true,
+			),
+		)
+	);
+	echo '</p>';
+	echo '</div>';
+}
+
+/**
+ * Adds a notice to the "Payment Gateways" selector if Stripe has been activated but does
+ * not meet application requirements.
+ *
+ * @since 2.8.1
+ *
+ * @param string $html Setting HTML.
+ * @param array $args Setting arguments.
+ * @return string
+ */
+function edds_payment_gateways_notice( $html, $args ) {
+	if ( 'gateways' !== $args['id'] ) {
+		return $html;
+	}
+
+	if (
+		true === edds_is_pro() ||
+		true === edds_has_met_requirements( 'php' )
+	) {
+		return $html;
+	}
+
+	$required_version = 5.6;
+	$current_version  = phpversion();
+
+	$html .= '<div id="edds-payment-gateways-stripe-unmet-requirements" class="notice inline notice-info"><p>' .
+		wp_kses(
+			sprintf(
+				/* translators: %1$s PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate. */
+				__(
+					'Processing credit cards with Stripe requires PHP version %1$s or higher. It looks like you\'re using version %2$s, which means you will need to %3$supgrade your version of PHP before acceping credit card payments%4$s.',
+					'edds'
+				),
+				'<code>' . $required_version . '</code>',
+				'<code>' . $current_version . '</code>',
+				'<strong>',
+				'</strong>'
+			),
+			array(
+				'code'   => true,
+				'strong' => true
+			)
+		) .
+	'</p><p><strong>' .
+		esc_html__( 'Need help upgrading? Ask your web host!', 'edds' ) .
+	'</strong><br />' .
+	wp_kses(
+		sprintf(
+			/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+			__(
+				'Many web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. If you need to change hosts, please see %1$sour hosting recommendations%2$s.',
+				'edds'
+			),
+			'<a href="https://easydigitaldownloads.com/recommended-wordpress-hosting/" target="_blank" rel="noopener noreferrer">',
+			'</a>'
+		),
+		array(
+			'a' => array(
+				'href'   => true,
+				'target' => true,
+				'rel'    => true,
+			),
+		)
+	) . '</p></div>';
+
+	return $html;
+}
+add_filter( 'edd_after_setting_output', 'edds_payment_gateways_notice', 10, 2 );
 
 /**
  * Listens for Stripe Connect completion requests and saves the Stripe API keys.

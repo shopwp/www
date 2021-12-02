@@ -1,25 +1,21 @@
 <?php
 
 /**
- * Removes Stripe from active gateways if Recurring version is < 2.9.
+ * Removes Stripe from active gateways if application requirements are not met.
  *
- * @since 2.7.0
+ * @since 2.8.1
  *
  * @param array $enabled_gateways Enabled gateways that allow purchasing.
  * @return array
  */
-function edds_require_recurring_290( $enabled_gateways ) {
-	if ( 
-		isset( $enabled_gateways['stripe'] ) &&
-		defined( 'EDD_RECURRING_VERSION' ) &&
-		! version_compare( EDD_RECURRING_VERSION, '2.9.99', '>' )
-	) {
+function edds_validate_gateway_requirements( $enabled_gateways ) {
+	if ( false === edds_has_met_requirements() ) {
 		unset( $enabled_gateways['stripe'] );
 	}
 
 	return $enabled_gateways;
 }
-add_filter( 'edd_enabled_payment_gateways', 'edds_require_recurring_290', 20 );
+add_filter( 'edd_enabled_payment_gateways', 'edds_validate_gateway_requirements', 20 );
 
 /**
  * Register our new payment status labels for EDD

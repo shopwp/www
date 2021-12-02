@@ -1096,33 +1096,71 @@ function edd_sl_clear_cart_renewal(){
 add_action( 'edd_empty_cart', 'edd_sl_clear_cart_renewal' );
 
 /**
+ * Choose the correct action hook to use for refunds in EDD 3.0/2.x
+ *
+ * @since 3.7.2
+ */
+$hook = 'edd_post_refund_payment';
+if ( function_exists( 'edd_get_order_items' ) ) {
+	$hook = 'edd_refund_order';
+}
+add_action( $hook, 'edd_sl_rollback_expiration_on_renewal_refund' );
+
+/**
  * Rolls a license expiration date back when refunding a renewal payment.
  *
  * @since 3.6
  *
- * @param EDD_Payment $payment Payment object.
+ * @param EDD_Payment|int $payment Payment object (2.x) or order ID (3.0).
  */
 function edd_sl_rollback_expiration_on_renewal_refund( $payment ) {
-	$is_renewal = edd_get_payment_meta( $payment->ID, '_edd_sl_is_renewal', true );
 
-	if ( ! $is_renewal ) {
+	$order_id         = ! empty( $payment->ID ) ? $payment->ID : $payment;
+	$order_is_renewal = edd_get_payment_meta( $order_id, '_edd_sl_is_renewal', true );
+	if ( ! $order_is_renewal ) {
 		return;
 	}
 
-	foreach ( $payment->cart_details as $cart_item ) {
-		if ( is_array( $cart_item['item_number']['options'] ) ) {
+	// EDD 3.0
+	if ( function_exists( 'edd_get_order_items' ) && is_numeric( $payment ) ) {
+		$items = edd_get_order_items(
+			array(
+				'order_id' => $order_id,
+			)
+		);
+		if ( ! $items ) {
+			return;
+		}
+		foreach ( $items as $item ) {
+			// If the item itself has not been refunded, don't tinker with the license.
+			if ( 'refunded' !== $item->status ) {
+				continue;
+			}
+			$is_renewal = edd_get_order_item_meta( $item->id, '_option_is_renewal', true );
+			if ( ! $is_renewal ) {
+				continue;
+			}
+			$license_id = edd_get_order_item_meta( $item->id, '_option_license_id', true );
+			$license    = edd_software_licensing()->get_license( (int) $license_id );
+			if ( false !== $license ) {
+				$license->expiration = strtotime( '-' . $license->license_length(), $license->expiration );
+			}
+		}
+	} else {
 
-			// See if the `is_renewal` key exists and if the license_id exists, since these were added later, they may not on some legacy payments.
-			if ( array_key_exists( 'is_renewal', $cart_item['item_number']['options'] ) && ! empty( $cart_item['item_number']['options']['license_id'] ) ) {
+		foreach ( $payment->cart_details as $cart_item ) {
+			if ( is_array( $cart_item['item_number']['options'] ) ) {
 
-				$license = edd_software_licensing()->get_license( (int) $cart_item['item_number']['options']['license_id'] );
+				// See if the `is_renewal` key exists and if the license_id exists, since these were added later, they may not on some legacy payments.
+				if ( array_key_exists( 'is_renewal', $cart_item['item_number']['options'] ) && ! empty( $cart_item['item_number']['options']['license_id'] ) ) {
 
-				if ( false !== $license ) {
-					$license->expiration = strtotime( '-' . $license->license_length(), $license->expiration );
+					$license = edd_software_licensing()->get_license( (int) $cart_item['item_number']['options']['license_id'] );
+
+					if ( false !== $license ) {
+						$license->expiration = strtotime( '-' . $license->license_length(), $license->expiration );
+					}
 				}
-
 			}
 		}
 	}
 }
-add_action( 'edd_post_refund_payment', 'edd_sl_rollback_expiration_on_renewal_refund' );

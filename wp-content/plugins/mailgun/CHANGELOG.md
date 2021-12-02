@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.7.9 (2021-05-24)
+- API Key description
+
+1.7.8 (2021-05-13)
+- Tested WP 5.7.1
+
 1.7.7 (2021-03-16)
 - Updated assets, tested WP 5.7
 

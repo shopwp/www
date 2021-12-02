@@ -187,9 +187,10 @@ add_action( 'edd_recurring_download_price_row', 'edd_recurring_metabox_times', 9
  */
 function edd_recurring_metabox_signup_fee( $download_id, $price_id, $args ) {
 
-	$recurring  = EDD_Recurring()->is_price_recurring( $download_id, $price_id );
-	$has_trial  = EDD_Recurring()->has_free_trial( $download_id, $price_id );
-	$signup_fee = EDD_Recurring()->get_signup_fee( $price_id, $download_id );
+	$recurring         = EDD_Recurring()->is_price_recurring( $download_id, $price_id );
+	$has_trial         = EDD_Recurring()->has_free_trial( $download_id, $price_id );
+	$signup_fee        = EDD_Recurring()->get_signup_fee( $price_id, $download_id );
+	$currency_position = edd_get_option( 'currency_position', 'before' );
 
 	$disabled = $recurring && ! $has_trial ? '' : 'disabled ';
 
@@ -197,7 +198,19 @@ function edd_recurring_metabox_signup_fee( $download_id, $price_id, $args ) {
 	<div class="edd-form-group edd-form-row__column signup_fee edd-recurring-fee">
 		<label for="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][signup_fee]" class="edd-form-group__label"><?php echo esc_html_x( 'Signup Fee', 'Referring to subscription signup fee', 'edd-recurring' ); ?></label>
 		<div class="edd-form-group__control">
-			<input class="edd-form-group__input small-text" <?php echo $disabled; ?>type="number" step="0.01" name="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][signup_fee]" id="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][signup_fee]" value="<?php echo esc_attr( $signup_fee ); ?>" />
+			<?php
+			if ( 'before' === $currency_position ) {
+				?>
+				<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+				<input type="text" name="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][signup_fee]" id="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][signup_fee]" class="edd-form-group__input edd-price-field" value="<?php echo esc_attr( $signup_fee ); ?>"<?php echo $disabled;?>/>
+				<?php
+			} else {
+				?>
+				<input type="text" name="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][signup_fee]" id="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][signup_fee]" class="edd-form-group__input edd-price-field" value="<?php echo esc_attr( $signup_fee ); ?>"<?php echo $disabled;?>/>
+				<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+				<?php
+			}
+			?>
 		</div>
 	</div>
 	<?php
@@ -293,9 +306,15 @@ add_action( 'edd_meta_box_fields', 'edd_recurring_metabox_colspan', 20 );
  * @return      void
  */
 function edd_recurring_metabox_hook( $download_id ) {
-	do_action( 'edd_recurring_download_metabox', $download_id );
+	$is_variable = edd_has_variable_prices( $download_id );
+	$display     = $is_variable ? ' style="display:none;"' : '';
+	?>
+	<div class="edd-form-row edd-recurring-single"<?php echo $display; ?>>
+		<?php do_action( 'edd_recurring_download_metabox', $download_id ); ?>
+	</div>
+	<?php
 }
-add_action( 'edd_price_field', 'edd_recurring_metabox_hook', 10 );
+add_action( 'edd_after_price_field', 'edd_recurring_metabox_hook', 1 );
 
 
 /**
@@ -310,15 +329,18 @@ function edd_recurring_metabox_single_recurring( $download_id ) {
 	$recurring = EDD_Recurring()->is_recurring( $download_id );
 
 	?>
-	<label><?php _e( 'Recurring', 'edd-recurring' ); ?></label>
-	<select name="edd_recurring" id="edd_recurring">
-		<option value="no" <?php selected( $recurring, false ); ?>><?php echo esc_attr_e( 'No', 'edd-recurring' ); ?></option>
-		<option value="yes" <?php selected( $recurring, true ); ?>><?php echo esc_attr_e( 'Yes', 'edd-recurring' ); ?></option>
-	</select>
+	<div class="edd-form-group edd-form-row__column">
+		<label for="edd_recurring" class="edd-form-group__label"><?php esc_html_e( 'Recurring', 'edd-recurring' ); ?></label>
+		<div class="edd-form-group__control">
+			<select name="edd_recurring" id="edd_recurring" class="edd-form-group__input">
+				<option value="no" <?php selected( $recurring, false ); ?>><?php esc_attr_e( 'No', 'edd-recurring' ); ?></option>
+				<option value="yes" <?php selected( $recurring, true ); ?>><?php esc_attr_e( 'Yes', 'edd-recurring' ); ?></option>
+			</select>
+		</div>
+	</div>
 	<?php
 }
 add_action( 'edd_recurring_download_metabox', 'edd_recurring_metabox_single_recurring' );
-
 
 /**
  * Meta box recurring period field
@@ -332,12 +354,16 @@ function edd_recurring_metabox_single_period( $download_id ) {
 	$periods = EDD_Recurring()->periods();
 	$period  = EDD_Recurring()->get_period_single( $download_id );
 	?>
-	<label><?php _e( 'Period', 'edd-recurring' ); ?></label>
-	<select name="edd_period" id="edd_period">
-		<?php foreach ( $periods as $key => $value ) : ?>
-			<option value="<?php echo $key; ?>" <?php selected( $period, $key ); ?>><?php echo esc_attr( $value ); ?></option>
-		<?php endforeach; ?>
-	</select>
+	<div class="edd-form-group edd-form-row__column">
+		<label for="edd_period" class="edd-form-group__label"><?php esc_html_e( 'Period', 'edd-recurring' ); ?></label>
+		<div class="edd-form-group__control">
+			<select name="edd_period" id="edd_period" class="edd-form-group__input">
+				<?php foreach ( $periods as $key => $value ) : ?>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $period, $key ); ?>><?php echo esc_html( $value ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+	</div>
 	<?php
 }
 add_action( 'edd_recurring_download_metabox', 'edd_recurring_metabox_single_period' );
@@ -355,14 +381,15 @@ function edd_recurring_metabox_single_times( $download_id ) {
 	$times = EDD_Recurring()->get_times_single( $download_id );
 	?>
 
-	<span class="times">
-		<label><?php _e( 'Times', 'edd-recurring' ); ?></label>
-		<input type="number" min="0" step="1" name="edd_times" id="edd_times" size="4" style="width: 40px" value="<?php echo $times; ?>" />
-	</span>
+	<div class="edd-form-group edd-form-row__column">
+		<label for="edd_times" class="edd-form-group__label"><?php esc_html_e( 'Times', 'edd-recurring' ); ?></label>
+		<div class="edd-form-group__control">
+			<input type="number" min="0" step="1" name="edd_times" id="edd_times" class="edd-form-group__input small-text" value="<?php echo esc_attr( $times ); ?>" />
+		</div>
+	</div>
 	<?php
 }
 add_action( 'edd_recurring_download_metabox', 'edd_recurring_metabox_single_times' );
-
 
 /**
  * Meta box recurring signup fee field
@@ -373,15 +400,30 @@ add_action( 'edd_recurring_download_metabox', 'edd_recurring_metabox_single_time
  */
 function edd_recurring_metabox_single_signup_fee( $download_id ) {
 
-	$has_trial  = EDD_Recurring()->has_free_trial( $download_id );
-	$signup_fee = EDD_Recurring()->get_signup_fee_single( $download_id );
-	$disabled   = $has_trial ? ' disabled="disabled"' : '';
+	$has_trial         = EDD_Recurring()->has_free_trial( $download_id );
+	$signup_fee        = EDD_Recurring()->get_signup_fee_single( $download_id );
+	$disabled          = $has_trial ? ' disabled="disabled"' : '';
+	$currency_position = edd_get_option( 'currency_position', 'before' );
 	?>
 
-	<span class="signup_fee">
-		<label><?php _e( 'Signup Fee', 'edd-recurring' ); ?></label>
-		<input type="number" step="0.01" name="edd_signup_fee" id="edd_signup_fee" size="4" style="width: 60px" value="<?php echo $signup_fee; ?>"<?php echo $disabled;?>/>
-	</span>
+	<div class="edd-form-group edd-form-row__column">
+		<label for="edd_signup_fee" class="edd-form-group__label"><?php esc_html_e( 'Signup Fee', 'edd-recurring' ); ?></label>
+		<div class="edd-form-group__control">
+			<?php
+			if ( 'before' === $currency_position ) {
+				?>
+				<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+				<input type="text" name="edd_signup_fee" id="edd_signup_fee" class="edd-form-group__input edd-price-field" value="<?php echo esc_attr( $signup_fee ); ?>"<?php echo $disabled;?>/>
+				<?php
+			} else {
+				?>
+				<input type="text" name="edd_signup_fee" id="edd_signup_fee" class="edd-form-group__input edd-price-field" value="<?php echo esc_attr( $signup_fee ); ?>"<?php echo $disabled;?>/>
+				<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+				<?php
+			}
+			?>
+		</div>
+	</div>
 	<?php
 }
 add_action( 'edd_recurring_download_metabox', 'edd_recurring_metabox_single_signup_fee' );
@@ -415,7 +457,7 @@ function edd_recurring_metabox_trial_options( $download_id ) {
 	$variable_display   = $variable_pricing ? ' style="display:none;"' : '';
 
 	?>
-	<div id="edd_recurring_free_trial_options_wrap"<?php echo $variable_display; ?>>
+	<div id="edd_recurring_free_trial_options_wrap" class="edd-form-group"<?php echo $variable_display; ?>>
 
 		<?php if( edd_is_gateway_active( '2checkout' ) || edd_is_gateway_active( '2checkout_onsite' ) ) : ?>
 			<p><strong><?php _e( '2Checkout does not support free trial periods. Subscriptions purchased through 2Checkout cannot include free trials.', 'edd-recurring' ); ?></strong></p>
@@ -424,72 +466,105 @@ function edd_recurring_metabox_trial_options( $download_id ) {
 		<p>
 			<input type="checkbox" name="edd_recurring_free_trial" id="edd_recurring_free_trial" value="yes"<?php checked( true, $has_trial ); ?>/>
 			<label for="edd_recurring_free_trial">
-				<?php _e( 'Enable free trial for subscriptions', 'edd-recurring' ); ?>
+				<?php esc_html_e( 'Enable free trial for subscriptions', 'edd-recurring' ); ?>
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'Check this box to include a free trial with subscriptions for this product. When signing up for a free trial, the customer\'s payment details will be taken at checkout but the customer will not be charged until the free trial is completed. <strong>Note:</strong> this only applies when purchasing a subscription. If a price option is not set to recurring, this free trial will not be used.', 'edd-recurring' ); echo $one_one_discount_help; ?>"></span>
 			</label>
 		</p>
-		<p id="edd_recurring_free_trial_options"<?php echo $option_display; ?>>
-			<input name="edd_recurring_trial_quantity" id="edd_recurring_trial_quantity" type="number" min="1" step="1" style="width: 60px;" value="<?php echo esc_attr( $quantity ); ?>" placeholder="1"/>
-			<select name="edd_recurring_trial_unit" id="edd_recurring_trial_unit">
-				<?php foreach ( $periods as $key => $value ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $unit, $key ); ?>><?php echo esc_attr( $value ); ?></option>
-				<?php endforeach; ?>
-			</select>
-		</p>
+		<fieldset id="edd_recurring_free_trial_options" class="edd-form-group"<?php echo $option_display; ?>>
+			<legend class="screen-reader-text"><?php esc_html_e( 'Free Trial Options', 'edd-recurring' ); ?></legend>
+			<div class="edd-form-group__control edd-form-group__control--is-inline">
+				<div class="edd-recurring-trial-quantity">
+					<label for="edd_recurring_trial_quantity" class="edd-form-group__label screen-reader-text"><?php esc_html_e( 'Trial Quantity', 'edd-recurring' ); ?></label>
+					<input name="edd_recurring_trial_quantity" id="edd_recurring_trial_quantity" class="edd-form-group__input small-text" type="number" min="1" step="1" value="<?php echo esc_attr( $quantity ); ?>" placeholder="1"/>
+				</div>
+				<div class="edd-recurring-trial-unit">
+					<label for="edd_recurring_trial_unit" class="edd-form-group__label screen-reader-text"><?php esc_html_e( 'Trial Period', 'edd-recurring' ); ?></label>
+					<select name="edd_recurring_trial_unit" id="edd_recurring_trial_unit" class="edd-form-group__input">
+						<?php foreach ( $periods as $key => $value ) : ?>
+							<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $unit, $key ); ?>><?php echo esc_attr( $value ); ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+			</div>
+		</fieldset>
 	</div>
 	<?php
 }
 add_action( 'edd_meta_box_price_fields', 'edd_recurring_metabox_trial_options' );
 
-if( defined( 'EDD_CUSTOM_PRICES' ) ) {
+/**
+ * Recurring options for Custom Prices
+ *
+ * @access      public
+ * @since       2.5
+ * @return      void
+ */
+function edd_recurring_metabox_custom_options( $download_id ) {
 
-	/**
-	 * Recurring options for Custom Prices
-	 *
-	 * @access      public
-	 * @since       2.5
-	 * @return      void
-	 */
-
-	function edd_recurring_metabox_custom_options( $download_id ) {
-
-		$custom     = get_post_meta( $download_id, '_edd_cp_custom_pricing', true );
-		$recurring  = EDD_Recurring()->is_custom_recurring( $download_id );
-		$periods    = EDD_Recurring()->periods();
-		$period     = EDD_Recurring()->get_custom_period( $download_id );
-		$times      = EDD_Recurring()->get_custom_times( $download_id );
-		$signup_fee = EDD_Recurring()->get_custom_signup_fee( $download_id );
-		$display    = $custom ? '' : ' style="display:none;"';
-		?>
-		<div class="edd_recurring_custom_wrap"<?php echo $display; ?>>
-			<p><strong><?php _e( 'Recurring Options for Custom Prices', 'edd-recurring' ); ?></strong></p>
-			<p><?php _e( 'Select the recurring options for customers that pay with a custom price.', 'edd-recurring' ); ?></p>
-			<label><?php _e( 'Recurring', 'edd-recurring' ); ?></label>
-			<select name="edd_custom_recurring" id="edd_custom_recurring">
-				<option value="no" <?php selected( $recurring, false ); ?>><?php echo esc_attr_e( 'No', 'edd-recurring' ); ?></option>
-				<option value="yes" <?php selected( $recurring, true ); ?>><?php echo esc_attr_e( 'Yes', 'edd-recurring' ); ?></option>
-			</select>
-			<label><?php _e( 'Period', 'edd-recurring' ); ?></label>
-			<select name="edd_custom_period" id="edd_custom_period">
-				<?php foreach ( $periods as $key => $value ) : ?>
-					<option value="<?php echo $key; ?>" <?php selected( $period, $key ); ?>><?php echo esc_attr( $value ); ?></option>
-				<?php endforeach; ?>
-			</select>
-			<span class="times">
-				<label><?php _e( 'Times', 'edd-recurring' ); ?></label>
-				<input type="number" min="0" step="1" name="edd_custom_times" id="edd_times" size="4" style="width: 40px" value="<?php echo $times; ?>" />
-			</span>
-			<span class="signup_fee">
-				<label><?php _e( 'Signup Fee', 'edd-recurring' ); ?></label>
-				<input type="number" step="0.01" name="edd_custom_signup_fee" id="edd_signup_fee" size="4" style="width: 60px" value="<?php echo $signup_fee; ?>" />
-			</span>
-			<hr/>
-		</div><!--close .edd_recurring_custom_wrap-->
-		<?php
+	if ( ! defined( 'EDD_CUSTOM_PRICES' ) ) {
+		return;
 	}
-	add_action( 'edd_after_price_field', 'edd_recurring_metabox_custom_options', 10 );
 
+	$custom            = get_post_meta( $download_id, '_edd_cp_custom_pricing', true );
+	$recurring         = EDD_Recurring()->is_custom_recurring( $download_id );
+	$periods           = EDD_Recurring()->periods();
+	$period            = EDD_Recurring()->get_custom_period( $download_id );
+	$times             = EDD_Recurring()->get_custom_times( $download_id );
+	$signup_fee        = EDD_Recurring()->get_custom_signup_fee( $download_id );
+	$display           = $custom ? '' : ' style="display:none;"';
+	$currency_position = edd_get_option( 'currency_position', 'before' );
+	$disabled          = $custom && $recurring ? '' : ' disabled';
+	?>
+	<fieldset id="edd_custom_recurring" class="edd_recurring_custom_wrap edd-form-row"<?php echo $display; ?>>
+		<legend><?php esc_html_e( 'Recurring Options for Custom Prices', 'edd-recurring' ); ?></legend>
+		<p><?php esc_html_e( 'Select the recurring options for customers that pay with a custom price.', 'edd-recurring' ); ?></p>
+		<div class="edd-form-group edd-form-row__column">
+			<label for="edd_custom_recurring" class="edd-form-group__label"><?php esc_html_e( 'Recurring', 'edd-recurring' ); ?></label>
+			<div class="edd-form-group__control">
+				<select name="edd_custom_recurring" id="edd_custom_recurring">
+					<option value="no" <?php selected( $recurring, false ); ?>><?php esc_attr_e( 'No', 'edd-recurring' ); ?></option>
+					<option value="yes" <?php selected( $recurring, true ); ?>><?php esc_attr_e( 'Yes', 'edd-recurring' ); ?></option>
+				</select>
+			</div>
+		</div>
+		<div class="edd-form-group edd-form-row__column">
+			<label for="edd_custom_period" class="edd-form-group__label"><?php esc_html_e( 'Period', 'edd-recurring' ); ?></label>
+			<div class="edd-form-group__control">
+				<select name="edd_custom_period" id="edd_custom_period" class="edd-form-group__input"<?php echo esc_attr( $disabled ); ?>>
+					<?php foreach ( $periods as $key => $value ) : ?>
+						<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $period, $key ); ?>><?php echo esc_html( $value ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		</div>
+		<div class="edd-form-group edd-form-row__column times">
+			<label for="edd_custom_times" class="edd-form-group__label"><?php esc_html_e( 'Times', 'edd-recurring' ); ?></label>
+			<div class="edd-form-group__control">
+				<input type="number" min="0" step="1" name="edd_custom_times" id="edd_custom_times" class="edd-form-group__input small-text" value="<?php echo esc_attr( $times ); ?>"<?php echo esc_attr( $disabled ); ?> />
+			</div>
+		</div>
+		<div class="edd-form-group edd-form-row__column signup_fee">
+			<label for="edd_custom_signup_fee" class="edd-form-group__label"><?php esc_html_e( 'Signup Fee', 'edd-recurring' ); ?></label>
+			<div class="edd-form-group__control">
+				<?php
+				if ( 'before' === $currency_position ) {
+					?>
+					<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+					<input type="text" name="edd_custom_signup_fee" id="edd_custom_signup_fee" class="edd-form-group__input edd-price-field" value="<?php echo esc_attr( $signup_fee ); ?>"<?php echo esc_attr( $disabled ); ?>/>
+					<?php
+				} else {
+					?>
+					<input type="text" name="edd_custom_signup_fee" id="edd_custom_signup_fee" class="edd-form-group__input edd-price-field" value="<?php echo esc_attr( $signup_fee ); ?>"<?php echo esc_attr( $disabled ); ?>/>
+					<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+					<?php
+				}
+				?>
+			</div>
+		</div>
+	</fieldset><!--close .edd_recurring_custom_wrap-->
+	<?php
 }
+add_action( 'edd_after_price_field', 'edd_recurring_metabox_custom_options', 10 );
 
 /**
  * Display Subscription Payment Notice

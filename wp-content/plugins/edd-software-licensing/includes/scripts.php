@@ -149,10 +149,11 @@ function edd_sl_checkout_js( $force = false ) {
 	if ( function_exists( 'wp_add_inline_script' ) ) {
 		wp_add_inline_script( 'edd-ajax', $script );
 	} else {
+		wp_print_scripts( 'jquery' );
 		echo "<script>{$script}</script>";
 	}
 }
-add_action( 'wp_head', 'edd_sl_checkout_js' );
+add_action( 'wp_enqueue_scripts', 'edd_sl_checkout_js' );
 
 function edd_sl_load_edd_admin_scripts( $should_load, $hook ) {
 	if ( 'widgets.php' === $hook ) {

@@ -481,8 +481,15 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 			}
 
-			// Determine tax amount for any fees if it's more than $0
+			/**
+			 * Determine tax amount for any fees if it's more than $0
+			 *
+			 * Fees (at this time) must be exclusive of tax
+			 * @see EDD_Cart::get_tax_on_fees()
+			 */
+			add_filter( 'edd_prices_include_tax', '__return_false' );
 			$fee_tax = $fees > 0 ? edd_calculate_tax( $fees ) : 0;
+			remove_filter( 'edd_prices_include_tax', '__return_false' );
 
 			// Format the tax rate.
 			$tax_rate = round( floatval( $this->purchase_data['tax_rate'] ), 4 );
@@ -633,6 +640,17 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 			// Track newly created \EDD_Subscription in the gateway object.
 			$this->subscriptions[ $key ]['edd_subscription'] = $sub;
+
+			/**
+			 * Triggers right after a subscription is created.
+			 *
+			 * @param EDD_Subscription      $sub          New subscription object.
+			 * @param array                 $subscription Gateway subscription arguments.
+			 * @param EDD_Recurring_Gateway $this         Gateway object.
+			 *
+			 * @since 2.10.2
+			 */
+			do_action( 'edd_recurring_post_record_signup', $sub, $subscription, $this );
 		}
 	}
 
@@ -825,7 +843,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 		$payment    = edd_get_payment( $payment_id );
 
 		if ( edds_is_zero_decimal_currency() ) {
-			$amount = $payment->total;
+			$amount = round( $payment->total, 0 );
 		} else {
 			$amount = round( $payment->total * 100, 0 );
 		}
@@ -989,7 +1007,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 					}
 
 					$args = array(
-						'amount'         => $data->total / 100,
+						'amount'         => $this->stripe_amount_to_edd_amount( $data->total ),
 						'transaction_id' => $data->charge,
 					);
 
@@ -1233,7 +1251,16 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 		}
 
 		$plan_id = $name . '_' . $subscription['recurring_amount'] . '_' . $subscription['period'];
-		$plan_id = sanitize_key( $plan_id );
+		/**
+		 * Allows the Stripe Plan ID to be modified.
+		 * By default the Plan ID is formed by concatenating the Download name, recurring amount, and recurring billing period.
+		 * Changing the Plan ID will cause a new Product and Plan to be created in Stripe and all purchases moving forward will be attributed to the new Plan.
+		 *
+		 * @since 2.10.3
+		 * @param string $plan_id      The ID of the Plan in Stripe. Must be unique across all Plans in your Stripe account.
+		 * @param array  $subscription The array of subscription data.
+		 */
+		$plan_id = sanitize_key( apply_filters( 'edd_recurring_stripe_plan_id', $plan_id, $subscription ) );
 
 		try {
 			$plan     = edds_api_request( 'Plan', 'retrieve', $plan_id );
@@ -1275,7 +1302,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 	 *
 	 * @return array
 	 */
-	public function get_plan_args( $subscription = array(), $name, $plan_id = '' ) {
+	public function get_plan_args( $subscription, $name, $plan_id = '' ) {
 		$statement_descriptor   = $name;
 		$unsupported_characters = array( '<', '>', '"', '\'' );
 		$statement_descriptor   = apply_filters( 'edd_recurring_stripe_statement_descriptor', substr( $statement_descriptor, 0, 22 ), $subscription );
@@ -1303,19 +1330,14 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 		}
 
-		$amount = round( $subscription['recurring_amount'], edd_currency_decimal_filter() );
-
+		$amount = $subscription['recurring_amount'];
 		/**
-		 * Stripe requires the amount to be in a number of 'cents' in the currency, so we have to pad
-		 * the amount by multiplying it by a power of 10 that's equal to the number of decimal places.
-		 *
-		 * For Example
-		 * 200 = 2.00 * 100
-		 * 31  = 3.1 * 10
-		 * 41234 = 4.1234 * 1000
+		 * Stripe requires the amount to be in a number of 'cents' in the currency.
+		 * Additionally, Stripe uses a different list of "zero decimal" currencies
+		 * than EDD core, so whether the amount should be converted uses that logic.
 		 */
-		if ( edd_currency_decimal_filter() > 0 ) {
-			$amount = $amount * ( pow( 10, edd_currency_decimal_filter() ) );
+		if ( ! edds_is_zero_decimal_currency() ) {
+			$amount = round( $amount * 100, 0 );
 		}
 
 		$args = array(
@@ -1879,7 +1901,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 							$payment_id = $subscription->add_payment(
 								array(
 									'transaction_id' => $charge->id,
-									'amount'         => $paid_invoice->total / 100,
+									'amount'         => $this->stripe_amount_to_edd_amount( $paid_invoice->total ),
 									'gateway'        => 'stripe',
 								)
 							);
@@ -1896,6 +1918,26 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Converts a Stripe amount (integer) to an EDD amount for storage.
+	 * Non-zero-decimal currencies get divided by 100.
+	 *
+	 * @uses edds_is_zero_decimal_currency()
+	 *
+	 * @since 2.10.5
+	 *
+	 * @param int $amount Stripe always gives us an integer.
+	 *
+	 * @return float|int
+	 */
+	private function stripe_amount_to_edd_amount( $amount ) {
+		if ( ! edds_is_zero_decimal_currency() ) {
+			$amount /= 100;
+		}
+
+		return $amount;
 	}
 
 	/**
@@ -2032,6 +2074,13 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 		if ( $subscription->gateway !== $this->id ) {
 			return;
 		}
+
+		// Enqueue core scripts.
+		add_filter( 'edd_is_checkout', '__return_true' );
+
+		edd_load_scripts();
+
+		remove_filter( 'edd_is_checkout', '__return_true' );
 
 		edd_stripe_js( true );
 

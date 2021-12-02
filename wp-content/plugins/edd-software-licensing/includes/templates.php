@@ -1,7 +1,9 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 function edd_sl_add_key_column() {
 	echo '<th class="edd_license_key">' . __( 'License Keys', 'edd_sl' ) . '</th>';
@@ -12,47 +14,113 @@ add_action( 'edd_purchase_history_header_after', 'edd_sl_add_key_column' );
  * Displays a Manage Licenses link in purchase history
  *
  * @since 2.7
+ * @param \EDD\Orders\Order|int   $order_or_order_id In EDD 3.0, this is the order object; in 2.x, it is the payment ID.
+ * @param array                   $purchase_data     The array of purchase data (not used in EDD 3.0).
  */
-function edd_sl_site_management_links( $payment_id, $purchase_data ) {
+function edd_sl_site_management_links( $order_or_order_id, $purchase_data = array() ) {
 
 	$is_upgrade_page = isset( $_GET['view'] ) && $_GET['view'] == 'upgrades';
 	$is_manage_page  = isset( $_GET['action'] ) && $_GET['action'] == 'manage_licenses';
 	if ( $is_upgrade_page || $is_manage_page ) {
 		return;
 	}
+	if ( $order_or_order_id instanceof \EDD\Orders\Order ) {
+		$order_id  = $order_or_order_id->id;
+		$downloads = edd_count_order_items(
+			array(
+				'order_id' => $order_id,
+			)
+		);
+	} else {
+		$order_id  = $order_or_order_id;
+		$downloads = edd_get_payment_meta_downloads( $order_id );
+	}
 
-	$licensing = edd_software_licensing();
-	$downloads = edd_get_payment_meta_downloads( $payment_id );
-	if( $downloads) :
-		$manage_licenses_url = esc_url( add_query_arg( array( 'action' => 'manage_licenses', 'payment_id' => $payment_id ) ) );
+	if ( $downloads ) :
+		$licensing           = edd_software_licensing();
+		$manage_licenses_url = add_query_arg(
+			array(
+				'action'     => 'manage_licenses',
+				'payment_id' => urlencode( $order_id ),
+			)
+		);
 		echo '<td class="edd_license_key">';
-			if( edd_is_payment_complete( $payment_id ) && $licensing->get_licenses_of_purchase( $payment_id ) ) {
-				echo '<a href="' . esc_url( $manage_licenses_url ) . '">' . __( 'View Licenses', 'edd_sl' ) . '</a>';
-			} else {
-				echo '-';
-			}
+		if ( edd_is_payment_complete( $order_id ) && $licensing->get_licenses_of_purchase( $order_id ) ) {
+			echo '<a href="' . esc_url( $manage_licenses_url ) . '">' . esc_html__( 'View Licenses', 'edd_sl' ) . '</a>';
+		} else {
+			echo '&ndash;';
+		}
 		echo '</td>';
-	else:
+	else :
 		echo '<td>&mdash;</td>';
 	endif;
 }
-add_action( 'edd_purchase_history_row_end', 'edd_sl_site_management_links', 10, 2 );
+$hook = 'edd_purchase_history_row_end';
+if ( function_exists( 'edd_get_orders' ) ) {
+	$hook = 'edd_order_history_row_end';
+}
+add_action( $hook, 'edd_sl_site_management_links', 10, 2 );
 
 /**
  * Override the content of the purchase history page to show our license management UI
+ *
+ * @param string $content
+ *
+ * @since 2.7
+ *
+ * @return string
+ */
+function edd_sl_override_history_content( $content ) {
+
+	if ( empty( $_GET['action'] ) || 'manage_licenses' != $_GET['action'] ) {
+		return $content;
+	}
+
+	if ( empty( $_GET['payment_id'] ) ) {
+		return $content;
+	}
+
+	if ( ! in_the_loop() ) {
+		return $content;
+	}
+
+	// We only need to run this code once per page.
+	remove_filter( 'edd_get_template_part', 'edd_sl_override_template_part', 10 );
+
+	if ( isset( $_GET['license_id'] ) && isset( $_GET['view'] ) && 'upgrades' == $_GET['view'] ) {
+
+		ob_start();
+		edd_get_template_part( 'licenses', 'upgrades' );
+		$content = ob_get_clean();
+
+	} else {
+
+		$view = isset( $_GET['license_id'] ) ? 'single' : 'overview';
+
+		ob_start();
+		edd_get_template_part( 'licenses', 'manage-' . $view );
+		$content = ob_get_clean();
+
+	}
+
+	return $content;
+
+}
+add_filter( 'the_content', 'edd_sl_override_history_content', 10, 3 );
+
+/**
+ * Override template parts to show our license management UI
+ *
+ * @link https://github.com/easydigitaldownloads/EDD-Software-Licensing/issues/1517
  *
  * @param array       $templates Template stack.
  * @param string      $slug      Template slug.
  * @param string|null $name      Optional. Template name.
  *
- * @since 2.7
- * @since 3.7 - This function no longer hooks into `the_content`, but to `edd_get_template_part` instead.
- *              See issue 1517 on GitHub.
- * @link https://github.com/easydigitaldownloads/EDD-Software-Licensing/issues/1517
- *
+ * @since 3.7.1
  * @return array
  */
-function edd_sl_override_history_content( $templates, $slug, $name ) {
+function edd_sl_override_template_part( $templates, $slug, $name ) {
 
 	if( empty( $_GET['action'] ) || 'manage_licenses' != $_GET['action'] ) {
 		return $templates;
@@ -62,9 +130,22 @@ function edd_sl_override_history_content( $templates, $slug, $name ) {
 		return $templates;
 	}
 
-	if ( 'history' !== $slug && 'purchases' !== $name ) {
+	// Bail if in The Loop. Then `edd_sl_override_history_content()` will run instead.
+	if ( in_the_loop() ) {
 		return $templates;
 	}
+
+	if (
+		// [purchase_history] shortcode
+		( 'history' !== $slug && 'purchases' !== $name ) &&
+		// [edd_license_keys] shortcode
+		( 'license' !== $slug && 'keys' !== $name )
+	) {
+		return $templates;
+	}
+
+	// We only need to run this code once per page.
+	remove_filter( 'edd_get_template_part', 'edd_sl_override_history_content', 10 );
 
 	if( isset( $_GET['license_id'] ) && isset( $_GET['view'] ) && 'upgrades' == $_GET['view'] ) {
 
@@ -87,7 +168,7 @@ function edd_sl_override_history_content( $templates, $slug, $name ) {
 	return $templates;
 
 }
-add_filter( 'edd_get_template_part', 'edd_sl_override_history_content', 10, 3 );
+add_filter( 'edd_get_template_part', 'edd_sl_override_template_part', 10, 3 );
 
 /**
  * Adds our templates dir to the EDD template stack
@@ -109,17 +190,29 @@ add_filter( 'edd_template_paths', 'edd_sl_add_template_stack' );
  *
  * @access      private
  * @since       1.3.6
+ * @param \EDD\Orders\Order|EDD_Payment $order_or_payment Order (EDD 3.0) or payment (2.x) object.
+ * @param array                         $edd_receipt_args Receipt arguments.
  * @return      void
  */
 
-function edd_sl_show_keys_on_receipt( $payment, $edd_receipt_args ) {
+function edd_sl_show_keys_on_receipt( $order_or_payment, $edd_receipt_args ) {
 
-	if( empty( $payment ) || empty( $payment->ID ) ) {
+	if ( empty( $order_or_payment ) ) {
+		return;
+	}
+	if ( $order_or_payment instanceof \EDD\Orders\Order ) {
+		$order_id = $order_or_payment->id;
+		$payment  = edd_get_payment( $order_or_payment->id );
+	} else {
+		$order_id = $order_or_payment->ID;
+		$payment  = $order_or_payment;
+	}
+	if ( empty( $order_id ) || empty( $payment ) ) {
 		return;
 	}
 
 	$licensing = edd_software_licensing();
-	$licenses  = apply_filters( 'edd_sl_licenses_of_purchase', $licensing->get_licenses_of_purchase( $payment->ID ), $payment, $edd_receipt_args );
+	$licenses  = apply_filters( 'edd_sl_licenses_of_purchase', $licensing->get_licenses_of_purchase( $order_id ), $payment, $edd_receipt_args );
 
 	if( ! empty( $licenses ) ) {
 		echo '<tr class="edd_license_keys">';
@@ -146,7 +239,11 @@ function edd_sl_show_keys_on_receipt( $payment, $edd_receipt_args ) {
 		}
 	}
 }
-add_action( 'edd_payment_receipt_after', 'edd_sl_show_keys_on_receipt', 10, 2 );
+$hook = 'edd_payment_receipt_after';
+if ( function_exists( 'edd_get_orders' ) ) {
+	$hook = 'edd_order_receipt_after';
+}
+add_action( $hook, 'edd_sl_show_keys_on_receipt', 10, 2 );
 
 /**
  * Hide download links for expired licenses on purchase receipt page

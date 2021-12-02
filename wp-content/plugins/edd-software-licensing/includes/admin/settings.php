@@ -296,7 +296,7 @@ function edd_sl_process_add_renewal_notice( $data ) {
 	$key       = is_array( $notices ) ? count( $notices ) : 1;
 	$notices[] = array(
 		'subject'     => $subject,
-		'message'     => $notice,
+		'message'     => $message,
 		'send_period' => $period,
 	);
 

@@ -122,7 +122,7 @@ class EDD_Recurring_Subscriber extends EDD_Customer {
 	 *
 	 * @since 2.4
 	 * @param array $args
-	 * @return object EDD_Subscription
+	 * @return EDD_Subscription|false
 	 */
 	public function add_subscription( $args = array() ) {
 
@@ -155,11 +155,14 @@ class EDD_Recurring_Subscriber extends EDD_Customer {
 	 */
 	public function add_payment( $args = array() ) {
 
-		$args = wp_parse_args( $args, array(
-			'subscription_id' => 0,
-			'amount'          => '0.00',
-			'transaction_id'  => '',
-		) );
+		$args = wp_parse_args(
+			$args,
+			array(
+				'subscription_id' => 0,
+				'amount'          => '0.00',
+				'transaction_id'  => '',
+			)
+		);
 
 		if ( empty( $args['subscription_id'] ) ) {
 			return false;

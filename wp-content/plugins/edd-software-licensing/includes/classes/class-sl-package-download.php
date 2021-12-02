@@ -389,7 +389,7 @@ class EDD_SL_Package_Download {
 	 * @param  int $expires         The TTL for this link
 	 * @return string               The URL for the download package
 	 */
-	public function get_download_package( $download_id = 0, $license_key = '', $hash, $expires = 0, $download_beta = false ) {
+	public function get_download_package( $download_id, $license_key, $hash, $expires = 0, $download_beta = false ) {
 
 		$download = new EDD_SL_Download( $download_id );
 

@@ -12,6 +12,7 @@ function edd_sl_add_license_meta_box() {
 	add_meta_box( 'edd_sl_upgrade_paths_box', __( 'License Upgrade Paths', 'edd_sl' ), 'edd_sl_render_license_upgrade_paths_meta_box', 'download', 'normal', 'core' );
 	add_meta_box( 'edd-generate-missing-licenses', __( 'Generate Missing Licenses', 'edd_sl' ), 'edd_sl_missing_keys_metabox', 'download', 'side', 'low' );
 	add_meta_box( 'edd_sl_beta_box', __( 'Beta Version', 'edd_sl' ), 'edd_sl_render_beta_version_meta_box', 'download', 'normal', 'core' );
+	add_meta_box( 'edd_sl_requirements_box', __( 'Download Requirements', 'edd_sl' ), 'edd_sl_requirements_fields', 'download', 'side', 'low' );
 
 }
 add_action( 'add_meta_boxes', 'edd_sl_add_license_meta_box', 100 );
@@ -176,6 +177,7 @@ function edd_sl_render_licenses_meta_box() {
 			echo '</td>';
 		echo '</tr>';
 
+		edd_sl_staged_rollout_fields( $post );
 
 		echo '<tr' . $display_no_bundle . ' class="edd_sl_toggled_row edd_sl_nobundle_row">';
 			echo '<td class="edd_field_type_textarea" colspan="2">';
@@ -239,11 +241,13 @@ function edd_sl_render_license_upgrade_paths_meta_box() {
 				else :
 					?>
 					<div class="edd-repeatable-upgrade-wrapper edd_repeatable_row" data-key="1">
-						<?php do_action( 'edd_sl_render_upgrade_row', 1, array(), 1 ); ?>
+						<?php
+						do_action( 'edd_sl_render_upgrade_row', 1, array(), 1 );
+						?>
 					</div>
 					<?php
 				endif;
-				$edd_is_30 = version_compare( EDD_VERSION, '2.10.99', '>' );
+				$edd_is_30 = function_exists( 'edd_get_orders' );
 				if ( $edd_is_30 ) {
 					?>
 					</div> <!-- edd-sl-upgrade-path-fields edd-repeatables-wrap -->
@@ -318,7 +322,7 @@ function edd_sl_render_upgrade_row( $key, $args, $index ) {
 					array(
 						'name'     => 'edd_sl_upgrade_paths[' . esc_attr( $key ) . '][download_id]',
 						'id'       => 'edd_sl_upgrade_paths_' . esc_attr( $key ),
-						'selected' => esc_attr( $args['download_id'] ),
+						'selected' => ! empty( $args['download_id'] ) ? esc_attr( $args['download_id'] ) : false,
 						'multiple' => false,
 						'chosen'   => true,
 						'class'    => 'edd-sl-upgrade-path-download edd-form-group__input',
@@ -492,17 +496,16 @@ function edd_sl_download_meta_box_save( $post_id ) {
 		delete_post_meta( $post_id, '_edd_sl_version' );
 	}
 
-	if ( isset( $_POST['edd_sl_upgrade_file'] ) && $_POST['edd_sl_upgrade_file'] !== false ) {
+	if ( isset( $_POST['edd_sl_upgrade_file'] ) && false !== $_POST['edd_sl_upgrade_file'] ) {
 
 		$file_id = intval( $_POST['edd_sl_upgrade_file'] );
 		$files   = edd_get_download_files( $post_id );
 
-		if ( $file_id !== '-1' && array_key_exists( $file_id, $files ) ) {
+		if ( '-1' !== $file_id && is_array( $files ) && array_key_exists( $file_id, $files ) ) {
 			update_post_meta( $post_id, '_edd_sl_upgrade_file_key', $file_id );
 		} else {
 			delete_post_meta( $post_id, '_edd_sl_upgrade_file_key' );
 		}
-
 	} else {
 		delete_post_meta( $post_id, '_edd_sl_upgrade_file_key' );
 	}
@@ -607,6 +610,58 @@ function edd_sl_download_meta_box_save( $post_id ) {
 		delete_post_meta( $post_id, '_edd_sl_beta_changelog' );
 	}
 
+	// Required platform versions
+	$required_versions = array();
+	if ( ! empty( $_POST['edd_sl_required_versions'] ) ) {
+		$required_versions = array_filter( array_map( 'sanitize_text_field', $_POST['edd_sl_required_versions'] ) );
+	}
+	if ( ! empty( $required_versions ) ) {
+		update_post_meta( $post_id, '_edd_sl_required_versions', $required_versions );
+	} else {
+		delete_post_meta( $post_id, '_edd_sl_required_versions' );
+	}
+
+	// Staged rollouts
+	if ( isset( $_POST['edd_sr_rollouts_enabled'] ) && isset( $_POST['edd_license_enabled'] ) ) {
+		update_post_meta( $post_id, 'edd_sr_enabled', true );
+	} else {
+		delete_post_meta( $post_id, 'edd_sr_enabled' );
+	}
+
+	if ( isset( $_POST['edd_sr_batch_enabled'] ) && isset( $_POST['edd_sr_rollouts_enabled'] ) ) {
+		update_post_meta( $post_id, 'edd_sr_batch_enabled', true );
+	} else {
+		delete_post_meta( $post_id, 'edd_sr_batch_enabled' );
+	}
+
+	if ( isset( $_POST['edd_sr_version_enabled'] ) && isset( $_POST['edd_sr_rollouts_enabled'] )) {
+		update_post_meta( $post_id, 'edd_sr_version_enabled', true );
+	} else {
+		delete_post_meta( $post_id, 'edd_sr_version_enabled' );
+	}
+
+	// @todo Remove this at a later date.
+	delete_post_meta( $post_id, 'edd_sr_batch_min' );
+
+	if ( isset( $_POST['edd_sr_batch_max'] ) ) {
+		update_post_meta( $post_id, 'edd_sr_batch_max', (int) $_POST['edd_sr_batch_max'] );
+	} else {
+		delete_post_meta( $post_id, 'edd_sr_batch_max' );
+	}
+
+	if ( isset( $_POST['edd_sr_version_limit'] ) ) {
+		$above_below = $_POST['edd_sr_version_limit'] === '1' ? 1 : 0;
+		update_post_meta( $post_id, 'edd_sr_version_limit', $above_below );
+	} else {
+		delete_post_meta( $post_id, 'edd_sr_version_limit' );
+	}
+
+	if ( isset( $_POST['edd_sr_version'] ) ) {
+		update_post_meta( $post_id, 'edd_sr_version', (string) $_POST['edd_sr_version'] );
+	} else {
+		delete_post_meta( $post_id, 'edd_sr_version' );
+	}
+
 }
 add_action( 'save_post', 'edd_sl_download_meta_box_save', 12 ); // Run after default so that we know EDD core has saved.
 
@@ -698,7 +753,7 @@ function edd_sl_payment_details_meta_box( $payment_id = 0 ) {
 			<?php endif; ?>
 			<?php if ( current_user_can( 'manage_licenses' ) ) : ?>
 			<div class="inside">
-				<p><?php _e( 'Use this to generate missing license keys for this purchase. If you add a product to the purchase, click this after saving the payment.', 'edd_sl' ); ?></p>
+				<p><?php esc_html_e( 'Missing license keys for this purchase? Use the Retroactive Licensing Processor tool to create them.', 'edd_sl' ); ?></p>
 				<?php
 				$url = add_query_arg(
 					array(
@@ -758,7 +813,6 @@ function edd_sl_save_readme_metabox($fields) {
 	$fields[] = '_edd_readme_location';
 	$fields[] = '_edd_readme_plugin_homepage';
 	$fields[] = '_edd_readme_plugin_added';
-	$fields[] = '_edd_readme_plugin_last_updated';
 	$fields[] = '_edd_readme_meta';
 	$fields[] = '_edd_readme_sections';
 	$fields[] = '_edd_readme_plugin_banner_high';
@@ -882,7 +936,6 @@ function edd_sl_readme_meta_box_settings( $post_id ) {
 
 	$plugin_homepage     = get_post_meta( $post_id, '_edd_readme_plugin_homepage', true );
 	$plugin_added        = get_post_meta( $post_id, '_edd_readme_plugin_added', true );
-	$plugin_last_updated = get_post_meta( $post_id, '_edd_readme_plugin_last_updated', true );
 
 ?>
 	<p>
@@ -897,12 +950,10 @@ function edd_sl_readme_meta_box_settings( $post_id ) {
 
 	<p><label for="edd_readme_plugin_added"><input type="checkbox" name="_edd_readme_plugin_added" id="edd_readme_plugin_added" value="1" <?php checked(!empty($plugin_added), true); ?> /> <?php _e('Use Download "Published on" date as Plugin Added date?', 'edd_sl' ); ?></label></p>
 
-	<p><label for="edd_readme_plugin_last_updated"><input type="checkbox" name="_edd_readme_plugin_last_updated" id="edd_readme_plugin_last_updated" value="1" <?php checked(!empty($plugin_last_updated), true); ?> /> <?php _e('Use the last time this Download was modified as the "Last Modified" date?', 'edd_sl' ); ?></label></p>
-
 	<?php
 
 	// Release some memory
-	unset( $plugin_last_updated, $plugin_last_updated, $plugin_banner_high, $plugin_banner_low, $plugin_homepage, $output, $readme_location, $readme_sections, $readme_settings );
+	unset( $plugin_banner_high, $plugin_banner_low, $plugin_homepage, $output, $readme_location, $readme_sections, $readme_settings );
 }
 
 /**
@@ -1034,3 +1085,145 @@ function edd_sl_sanitize_file_save( $files ) {
 	return $return;
 }
 add_filter( 'edd_metabox_save_beta_files', 'edd_sl_sanitize_file_save' );
+
+/**
+ * Add new minimum version required fields.
+ *
+ * @since 3.8
+ * @param WP_Post $post The current post object.
+ *
+ * @return void
+ */
+function edd_sl_requirements_fields( $post ) {
+
+	?>
+	<p><?php esc_html_e( 'Optionally set minimum version requirements for your download. Users whose sites/platforms do not meet the minimum requirements will not have access to automatic updates.', 'edd_sl' ); ?></p>
+	<?php
+
+	$requirements = edd_sl_get_platforms();
+	$metadata     = get_post_meta( $post->ID, '_edd_sl_required_versions', true );
+	foreach ( $requirements as $key => $label ) {
+		$value = ! empty( $metadata[ $key ] ) ? $metadata[ $key ] : '';
+		?>
+		<div class="edd-form-group">
+			<div class="edd-form-group__control">
+				<label class="edd-form-group__label" for="edd_sl_required_versions_<?php echo esc_attr( $key ); ?>"><?php printf( __( '%s Version Required:', 'edd_sl' ), $label ); ?></label>
+				<?php
+				echo EDD()->html->text(
+					array(
+						'name'  => 'edd_sl_required_versions[' . $key . ']',
+						'id'    => 'edd_sl_required_versions_' . $key,
+						'value' => esc_html( $value ),
+						'class' => 'edd-form-group__input widefat',
+					)
+				);
+				?>
+			</div>
+		</div>
+		<?php
+	}
+}
+
+/**
+ * Render the staged rollouts information.
+ *
+ * @param WP_Post $post
+ *
+ * @since 3.8
+ */
+function edd_sl_staged_rollout_fields( $post ) {
+
+	$sr_enabled      = get_post_meta( $post->ID, 'edd_sr_enabled', true ) ? true : false;
+	$sl_enabled      = get_post_meta( $post->ID, '_edd_sl_enabled', true ) ? true : false;
+	$batch_enabled   = get_post_meta( $post->ID, 'edd_sr_batch_enabled', true ) ? true : false;
+	$batch_min       = get_post_meta( $post->ID, 'edd_sr_batch_min', true );
+	$batch_max       = get_post_meta( $post->ID, 'edd_sr_batch_max', true );
+	$version_enabled = get_post_meta( $post->ID, 'edd_sr_version_enabled', true ) ? true : false;
+	$version         = get_post_meta( $post->ID, 'edd_sr_version', true );
+	$display         = $sr_enabled ? '' : ' style="display:none;"';
+	$batch_display   = $batch_enabled ? '' : ' style="display:none;"';
+	$version_display = $version_enabled ? '' : ' style="display:none;"';
+	$sr_disabled     = $sl_enabled ? '' : ' disabled';
+
+	// Double call for PHP 5.2 compat
+	$is_above_below = get_post_meta( $post->ID, 'edd_sr_version_limit', true );
+	$is_above_below = empty( $is_above_below );
+
+	?>
+	<tr <?php echo $sl_enabled ? '' : ' style="display: none;"'; ?> class="edd_sl_toggled_row">
+		<td class="edd-form-group" colspan="2">
+			<strong><?php esc_html_e( 'Staged Rollouts', 'edd_sl' ); ?></strong>
+			<div class="edd-form-group__control">
+				<input type="checkbox" name="edd_sr_rollouts_enabled" id="edd_sr_rollouts_enabled" class="edd-form-group__input" value="1" <?php checked( true, $sr_enabled ); echo $sr_disabled; ?>/>&nbsp;
+				<label for="edd_sr_rollouts_enabled"><?php esc_html_e( 'Enable staged rollouts', 'edd_sl' ); ?></label>
+				<?php
+				printf(
+					'<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="' . esc_attr( '%s' ) . '"></span>',
+					__( '<strong>Staged Rollouts</strong>: A Staged Rollout is a method of releasing updates to your software to only a defined percentage of installations, as opposed to releasing the update to all of your customers at the same time. <br /><br /><strong>How does this work?</strong> Staged rollouts uses the Software Licensing update API to determine which installations are shown the update during the staged rollout, based on the settings you define below. Customers will be able to download the staged version from your website immediately for fresh installs.', 'edd_sl' )
+				);
+				?>
+			</div>
+		</td>
+	</tr>
+
+	<tr <?php echo $display; ?> class="edd_sr_toggled_row edd_sl_toggled_row">
+		<td class="edd-form-group" colspan="2">
+			<div class="edd-form-group__control">
+				<input type="checkbox" name="edd_sr_batch_enabled" id="edd_sr_batch_enabled" class="edd-form-group__input" value="1" <?php checked( true, $batch_enabled ); ?>/>&nbsp;
+				<label for="edd_sr_batch_enabled"><?php esc_html_e( 'Release update to a percentage of active installations', 'edd_sl' ); ?></label>
+				<?php
+				printf(
+					'<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="' . esc_attr( '%s' ) . '"></span>',
+					__( '<strong>Percentage</strong>: You can define any number between 1 and 100 here. Once a percentage has been set, a portion of active installations will receive the update. You can gradually increase this number as you progress through \'stages\' of your rollout (update). An increase in percentage will add new installations to the pool. Once you feel confident in the stability of your software, complete your staged rollout by unchecking the Enable Staged Rollouts checkbox.', 'edd_sl' )
+				);
+				?>
+			</div>
+		</td>
+	</tr>
+
+	<tr <?php echo $batch_display; ?> class="edd_sr_batch_row edd_sl_toggled_row">
+		<td class="edd-form-group edd_sr_toggled_row" id="edd_rollouts_batch_wrapper">
+			<div class="edd-form-group__control">
+				<label for="edd_sr_batch_max" class="edd-form-group__label">
+					<?php esc_html_e( 'The percentage of active installations that should be eligible to update to the new version.', 'edd_sl' ); ?>
+				</label>
+				<input type="number" min="1" max="100" id="edd_sr_batch_max" name="edd_sr_batch_max" class="edd-form-group__input small-text" value="<?php echo $batch_max ? (int) $batch_max : 50; ?>"/> %
+			</div>
+		</td>
+	</tr>
+
+	<tr <?php echo $display; ?> class="edd_sr_toggled_row edd_sl_toggled_row">
+		<td class="edd-form-group" colspan="2">
+			<div class="edd-form-group__control">
+				<input type="checkbox" name="edd_sr_version_enabled" id="edd_sr_version_enabled" class="edd-form-group__input" value="1" <?php checked( true, $version_enabled ); ?>/>&nbsp;
+				<label for="edd_sr_version_enabled"><?php esc_html_e( 'Release update by version', 'edd_sl' ); ?></label>
+				<?php
+				printf(
+					'<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="' . esc_attr( '%s' ) . '"></span>',
+					__( '<strong>Version Requirement</strong>: You can further control the release by only allowing customers on specific versions of this download to be presented with the update. For example, you may only want to start showing the update to customers on your most recent previous major version. For other dependency version requirements, use the Download Requirements metabox.', 'edd_sl' )
+				);
+				?>
+			</div>
+		</td>
+	</tr>
+
+	<tr <?php echo $version_display; ?> class="edd_sr_version_row edd_sl_toggled_row">
+		<td>
+			<fieldset class="edd-form-group edd-form-row">
+				<legend><?php esc_html_e( 'Show the new version only to customers whose installed version meets these requirements.', 'edd_sl' ); ?></legend>
+				<div class="edd-form-row__column edd-form-group__control">
+					<label for="edd_sr_version_limit_below" class="edd-form-group__label"><?php esc_html_e( 'Installed version is:', 'edd_sl' ); ?></label>
+					<select id="edd_sr_version_limit_below" name="edd_sr_version_limit" class="edd-form-group__input">
+						<option value="0" <?php echo selected( true, $is_above_below, false ); ?>><?php esc_html_e( 'Less than or equal to', 'edd_sl' ); ?></option>
+						<option value="1" <?php echo selected( false, $is_above_below, false ); ?>><?php esc_html_e( 'Greater than or equal to', 'edd_sl' ); ?></option>
+					</select>
+				</div>
+				<div class="edd-form-group__control edd-form-row__column">
+					<label for="edd_sr_version" class="edd-form-group__label"><?php esc_html_e( 'Version Number:', 'edd_sl' ); ?></label>
+					<input type="text" class="medium-text" name="edd_sr_version" id="edd_sr_version" value="<?php echo esc_attr( $version ); ?>"/>
+				</div>
+			</fieldset>
+		</td>
+	</tr>
+	<?php
+}

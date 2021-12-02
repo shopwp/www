@@ -1,4 +1,100 @@
 <?php
+/**
+ * Functions
+ *
+ * @package EDD_Stripe
+ * @since unknown
+ */
+
+/**
+ * Returns the one true instance of EDD_Stripe
+ *
+ * @since 2.6
+ *
+ * @return void|\EDD_Stripe EDD_Stripe instance or void if Easy Digital
+ *                          Downloads is not active.
+ */
+function edd_stripe() {
+	// Easy Digital Downloads is not active, do nothing.
+	if ( ! function_exists( 'EDD' ) ) {
+		return;
+	}
+
+	return EDD_Stripe::instance();
+}
+
+/**
+ * Determines if the current execution of Stripe is being loaded from the
+ * "Pro" version of the gateway.
+ *
+ * (Currently) when Stripe is packaged with EDD core the bootstrap file is
+ * renamed to `edds_stripe_bootstrap_core()` to prevent collision.
+ *
+ * @since 2.8.1
+ *
+ * @return bool True if the "Pro" version of the gateway is loaded.
+ */
+function edds_is_pro() {
+	return function_exists( 'edd_stripe_bootstrap' );
+}
+
+/**
+ * Determines if the Stripe gateway is active.
+ *
+ * This checks both application requirements being met as
+ * well as the gateway being enabled via Payment Gateways settings.
+ *
+ * @since 2.8.1
+ *
+ * @return bool
+ */
+function edds_is_gateway_active() {
+	if ( false === edds_has_met_requirements() ) {
+		return false;
+	}
+
+	if ( false === edd_is_gateway_active( 'stripe' ) ) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Determines of the application requirements have been met.
+ *
+ * @since 2.8.1
+ *
+ * @param false|string $requirement Specific requirement to check for.
+ *                                  False ensures all requirements are met.
+ *                                  Default false.
+ * @return bool True if the requirement(s) is met.
+ */
+function edds_has_met_requirements( $requirement = false ) {
+	$requirements = array(
+		'php'       => (
+			version_compare( PHP_VERSION, '5.6.0', '>' )
+		),
+		'edd'       => (
+			defined( 'EDD_VERSION' )
+				? version_compare( EDD_VERSION, '2.8.99', '>' )
+				: true
+		),
+		'recurring' => (
+			defined( 'EDD_RECURRING_VERSION' )
+				? version_compare( EDD_RECURRING_VERSION, '2.9.99', '>' )
+				: true
+		),
+	);
+
+	if ( false === $requirement ) {
+		return false === in_array( false, $requirements, true );
+	} else {
+		return isset( $requirements[ $requirement ] )
+			? $requirements[ $requirement ]
+			: true;
+	}
+}
 
 /**
  * Allows preconfigured Stripe API requests to be made.
@@ -11,7 +107,7 @@
  * @param string $object Name of the Stripe object to request.
  * @param string $method Name of the API operation to perform during the request.
  * @param mixed ...$args Additional arguments to pass to the request.
- * @return \Stripe\StripeObject 
+ * @return \Stripe\StripeObject
  */
 function edds_api_request( $object, $method, $args = null ) {
 	$api = new EDD_Stripe_API();
@@ -159,7 +255,7 @@ function edd_stripe_get_existing_cards( $user_id = 0 ) {
 	usort(
 		$customer_cards,
 		function( $a, $b ) {
-			return ! $a['default'];
+			return $a['default'] ? 1 : -1;
 		}
 	);
 
@@ -429,4 +525,26 @@ function edds_verify_payment_form_nonce() {
 	}
 
 	return false;
+}
+
+/**
+ * Routes user to correct support documentation, depending on whether they are using Standard or Pro version of Stripe
+ *
+ * @since 2.8.1
+ * @param string $type The type of Stripe documentation.
+ * @return string
+ */
+function edds_documentation_route( $type ) {
+	$base_url = 'https://docs.easydigitaldownloads.com/standard';
+
+	/**
+	 * Filter to change EDD-Stripe support url.
+	 *
+	 * @since 2.8.1
+	 * @param string $base_url The url string for EDD-Stripe standard.
+	 */
+	$base_url = apply_filters( 'edds_documentation_route_base', $base_url );
+
+	return trailingslashit( $base_url ) . $type;
+
 }

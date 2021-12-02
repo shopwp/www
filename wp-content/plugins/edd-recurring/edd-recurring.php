@@ -5,7 +5,7 @@
  * Description: Sell subscriptions with Easy Digital Downloads
  * Author: Sandhills Development, LLC
  * Author URI: https://sandhillsdev.com
- * Version: 2.10.1
+ * Version: 2.11.3
  * Text Domain: edd-recurring
  * Domain Path: languages
  */
@@ -31,7 +31,7 @@ if ( ! defined( 'EDD_RECURRING_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_RECURRING_VERSION' ) ) {
-	define( 'EDD_RECURRING_VERSION', '2.10.1' );
+	define( 'EDD_RECURRING_VERSION', '2.11.3' );
 }
 
 final class EDD_Recurring {
@@ -185,6 +185,7 @@ final class EDD_Recurring {
 			'paypal'           => 'EDD_Recurring_PayPal',
 			'paypalexpress'    => 'EDD_Recurring_PayPal_Express',
 			'paypalpro'        => 'EDD_Recurring_PayPal_Website_Payments_Pro',
+			'paypal_commerce'  => 'EDD_Recurring_PayPal_Commerce',
 			'stripe'           => 'EDD_Recurring_Stripe',
 		);
 
@@ -216,6 +217,7 @@ final class EDD_Recurring {
 			'plugin-fraud-monitor.php',
 			'deprecated/edd-recurring-customer.php',
 			'logging.php',
+			'functions.php',
 		);
 
 		//Load main files
@@ -225,9 +227,25 @@ final class EDD_Recurring {
 
 		//Load gateway functions
 		foreach ( edd_get_payment_gateways() as $key => $gateway ) {
-			if ( file_exists( EDD_RECURRING_PLUGIN_DIR . 'includes/gateways/' . $key . '/functions.php' ) ) {
-				require_once EDD_RECURRING_PLUGIN_DIR . 'includes/gateways/' . $key . '/functions.php';
+			$potential_files = array(
+				EDD_RECURRING_PLUGIN_DIR . 'includes/gateways/' . $key . '/functions.php',
+				EDD_RECURRING_PLUGIN_DIR . 'includes/gateways/' . str_replace( '_', '-', $key ) . '/functions.php'
+			);
+
+			foreach ( $potential_files as $file_path ) {
+				if ( file_exists( $file_path ) ) {
+					require_once $file_path;
+				}
 			}
+		}
+
+		/*
+		 * Make sure PayPal functions are always loaded.
+		 * In EDD <2.11 this wasn't necessary because `paypal` was always available as a gateway.
+		 * In EDD 2.11, the new gateway is `paypal_commerce`, which means this file wasn't getting loaded.
+		 */
+		if ( ! function_exists( 'edd_recurring_get_paypal_api_credentials' ) ) {
+			require_once EDD_RECURRING_PLUGIN_DIR . 'includes/gateways/paypal/functions.php';
 		}
 
 		//Load gateway classes
@@ -379,9 +397,12 @@ final class EDD_Recurring {
 
 		// Include subscription payments in the calulation of earnings
 		add_filter( 'edd_get_total_earnings_args', array( $this, 'earnings_query' ) );
+		add_filter( 'edd_stats_earnings_args', array( $this, 'earnings_query' ) );
+
+		// Deprecated in EDD 2.7
 		add_filter( 'edd_get_earnings_by_date_args', array( $this, 'earnings_query' ) );
 		add_filter( 'edd_get_sales_by_date_args', array( $this, 'earnings_query' ) );
-		add_filter( 'edd_stats_earnings_args', array( $this, 'earnings_query' ) );
+
 		add_filter( 'edd_get_users_purchases_args', array( $this, 'has_purchased_query' ) );
 
 		// Allow PDF Invoices to be downloaded for subscription payments
@@ -469,17 +490,16 @@ final class EDD_Recurring {
 	 */
 	public function is_payment_complete( $ret, $payment_id, $status ) {
 
-		if ( 'cancelled' == $status ) {
+		if ( 'cancelled' === $status ) {
 
 			$ret = true;
 
-		} elseif ( 'edd_subscription' == $status ) {
+		} elseif ( 'edd_subscription' === $status ) {
 
-			$parent = get_post_field( 'post_parent', $payment_id );
-			if ( edd_is_payment_complete( $parent ) ) {
+			$payment = edd_get_payment( $payment_id );
+			if ( ! empty( $payment->parent_payment ) && edd_is_payment_complete( $payment->parent_payment ) ) {
 				$ret = true;
 			}
-
 		}
 
 		return $ret;
@@ -541,6 +561,9 @@ final class EDD_Recurring {
 	 * @return array
 	 */
 	public function payments_view( $views ) {
+		if ( function_exists( 'edd_count_orders' ) ) {
+			return $views;
+		}
 		$base          = admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
 		$payment_count = wp_count_posts( 'edd_payment' );
 		$current       = isset( $_GET['status'] ) ? $_GET['status'] : '';
@@ -691,6 +714,10 @@ final class EDD_Recurring {
 	 * @return array
 	 */
 	static function add_subscription_cart_details( $cart_item ) {
+
+		if ( empty( $cart_item['id'] ) ) {
+			return $cart_item;
+		}
 
 		$download_id = $cart_item['id'];
 		$price_id    = isset( $cart_item['options']['price_id'] ) ? intval( $cart_item['options']['price_id'] ) : null;
@@ -989,7 +1016,7 @@ final class EDD_Recurring {
 	 * @return bool
 	 */
 
-	static function is_price_recurring( $download_id = 0, $price_id ) {
+	static function is_price_recurring( $download_id, $price_id ) {
 
 		global $post;
 
@@ -1479,13 +1506,17 @@ final class EDD_Recurring {
 	 */
 	public function earnings_query( $args ) {
 
-		$statuses_to_include = array( 'publish', 'revoked', 'cancelled', 'edd_subscription' );
+		$statuses_to_include = array( 'cancelled', 'edd_subscription' );
 
 		// Include post_status in case we are filtering to direct database queries like in the edd_stats_earnings_args filter
-		$args['post_status'] = $statuses_to_include;
+		if ( isset( $args['post_status'] ) && is_array( $args['post_status'] ) ) {
+			$args['post_status'] = array_unique( array_merge( $args['post_status'], $statuses_to_include ) );
+		}
 
 		// Include status in case we are filtering to queries done through edd_get_payments like in the edd_get_total_earnings_args filter
-		$args['status'] = $statuses_to_include;
+		if ( isset( $args['status'] ) && is_array( $args['status'] ) ) {
+			$args['status'] = array_unique( array_merge( $args['status'], $statuses_to_include ) );
+		}
 
 		return $args;
 	}
@@ -1557,6 +1588,7 @@ final class EDD_Recurring {
 			}
 		}
 
+		// This does not appear to need to be updated for EDD 3.0.
 		if ( $query_has_recurring ) {
 			$query->__set( 'post_parent', null );
 		}
@@ -1622,12 +1654,12 @@ final class EDD_Recurring {
 	 */
 	public function is_invoice_allowed( $ret, $payment_id ) {
 
-		$payment_status = get_post_status( $payment_id );
+		$payment_status = edd_get_payment_status( $payment_id );
 
-		if ( 'edd_subscription' == $payment_status ) {
+		if ( 'edd_subscription' === $payment_status ) {
 
-			$parent = get_post_field( 'post_parent', $payment_id );
-			if ( edd_is_payment_complete( $parent ) ) {
+			$payment = edd_get_payment( $payment_id );
+			if ( ! empty( $payment->parent_payment ) && edd_is_payment_complete( $payment->parent_payment ) ) {
 				$ret = true;
 			}
 
@@ -1698,6 +1730,7 @@ final class EDD_Recurring {
 	 */
 	public function maybe_increase_customer_sales( $increase_sales, $payment ) {
 
+		// This does not need to be updated for EDD 3.0.
 		if ( 'edd_subscription' === $payment->post_status ) {
 			$increase_sales = false;
 		}
@@ -2125,6 +2158,7 @@ function edd_recurring_install() {
 			edd_set_upgrade_complete( 'recurring_add_tax_columns_to_subs_table' );
 			edd_set_upgrade_complete( 'recurring_27_subscription_meta' );
 			edd_set_upgrade_complete( 'recurring_increase_transaction_profile_id_cols_and_collate' );
+			edd_set_upgrade_complete( 'recurring_wipe_invalid_paypal_plan_ids' );
 		}
 
 		if ( false === edd_recurring_needs_24_stripe_fix() ) {
@@ -2137,6 +2171,25 @@ function edd_recurring_install() {
 
 		update_option( 'edd_recurring_version', EDD_RECURRING_VERSION );
 
+	}
+
+	if ( class_exists( 'EDD_Recurring_PayPal_Commerce' ) && function_exists( '\\EDD\\Gateways\\PayPal\\Webhooks\\sync_webhook' ) && \EDD\Gateways\PayPal\has_rest_api_connection() ) {
+		try {
+			global $wp_rewrite;
+
+			/*
+			 * If `$wp_rewrite` isn't available, we can't get the REST API endpoint URL, which
+			 * would cause a fatal during webhook syncing.
+			 * @link https://github.com/easydigitaldownloads/edd-recurring/pull/1451#issuecomment-871515068
+			 */
+			if ( empty( $wp_rewrite ) ) {
+				$wp_rewrite = new WP_Rewrite();
+			}
+
+			\EDD\Gateways\PayPal\Webhooks\sync_webhook();
+		} catch ( \Exception $e ) {
+
+		}
 	}
 
 }

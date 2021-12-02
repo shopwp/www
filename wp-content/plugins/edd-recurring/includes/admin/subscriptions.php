@@ -804,6 +804,10 @@ function edd_recurring_process_subscription_creation() {
 		$payment_id = absint( $_POST['parent_payment_id'] );
 		$payment    = edd_get_payment( $payment_id );
 
+		if ( ! $payment ) {
+			/* translators: the existing payment ID. */
+			wp_die( sprintf( esc_html__( 'Payment %s does not exist.', 'edd-recurring' ), absint( $payment_id ) ), esc_html__( 'Error', 'edd-recurring' ), array( 'response' => 400 ) );
+		}
 	} else {
 
 		$options = array();

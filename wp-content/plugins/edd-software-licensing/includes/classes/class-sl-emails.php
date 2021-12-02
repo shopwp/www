@@ -2,15 +2,45 @@
 
 class EDD_SL_Emails {
 
+	/**
+	 * @var bool If true, then exceptions will be thrown on failures.
+	 * @since 3.8.3
+	 */
+	protected $throw_exceptions = false;
+
 	function __construct() {
 
 		add_action( 'edd_add_email_tags', array( $this, 'add_email_tag' ), 100 );
 		add_action( 'template_redirect', array( $this, 'display_renewal_email_preview' ) );
 	}
 
+	/**
+	 * Enables exceptions on errors.
+	 *
+	 * @since 3.8.3
+	 *
+	 * @return $this
+	 */
+	public function with_exceptions() {
+		$this->throw_exceptions = true;
+
+		return $this;
+	}
+
+	/**
+	 * Add {license_keys} Email Tag.
+	 *
+	 * @since 2.4
+	 * @access public
+	 */
 	public function add_email_tag() {
 
-		edd_add_email_tag( 'license_keys', __( 'Show all purchased licenses', 'edd_sl' ), array( $this, 'licenses_tag' ) );
+		edd_add_email_tag(
+			'license_keys',
+			__( 'Show all purchased licenses.', 'edd_sl' ),
+			array( $this, 'licenses_tag' ),
+			__( 'License Keys', 'edd_sl' )
+		);
 
 	}
 
@@ -41,31 +71,47 @@ class EDD_SL_Emails {
 	public function send_renewal_reminder( $license_id = 0, $notice_id = 0 ) {
 
 		if( empty( $license_id ) ) {
+			if ( $this->throw_exceptions ) {
+				throw new \Exception( __( 'Reminder not sent: no license key provided.', 'edd_sl' ) );
+			}
+
 			return false;
 		}
 
 		if( ! edd_get_option( 'edd_sl_send_renewal_reminders', false ) ) {
+			if ( $this->throw_exceptions ) {
+				throw new \Exception( __( 'Reminder not sent: renewal reminders are not enabled.', 'edd_sl' ) );
+			}
+
 			return false;
 		}
 
-		$send    = true;
-		$license = edd_software_licensing()->get_license( $license_id );
+		$send              = true;
+		$license           = edd_software_licensing()->get_license( $license_id );
+		$exception_message = __( 'Reminder not sent: unexpected sending failure.', 'edd_sl' );
 
 		if( $license->is_lifetime ) {
-			$send = false;
+			$exception_message = __( 'License never expires.', 'edd_sl' );
+			$send              = false;
 		}
 
-		if( $this->is_unsubscribed( $license ) ) {
-			$send = false;
+		if ( $this->is_unsubscribed( $license ) ) {
+			$exception_message = __( 'Reminder not sent: customer is not subscribed to reminder emails.', 'edd_sl' );
+			$send              = false;
 		}
 
-		if( 'disabled' === $license->status ) {
-			$send = false;
+		if ( 'disabled' === $license->status ) {
+			$exception_message = __( 'Reminder not sent: this license key is disabled.', 'edd_sl' );
+			$send              = false;
 		}
 
 		$send = apply_filters( 'edd_sl_send_renewal_reminder', $send, $license->ID, $notice_id );
 
 		if( ! $license || ! $send || ! empty( $license->parent ) ) {
+			if ( $this->throw_exceptions ) {
+				throw new \Exception( $exception_message );
+			}
+
 			return false;
 		}
 
@@ -110,13 +156,13 @@ class EDD_SL_Emails {
 
 		}
 
-		if( $sent ) {
-
+		if ( $sent ) {
 			$log_id = $license->add_log( __( 'LOG - Renewal Notice Sent', 'edd_sl' ), __( 'Sent via the send_renewal_reminder method.', 'edd_sl' ), 'renewal_notice' );
 			add_post_meta( $log_id, '_edd_sl_renewal_notice_id', $notice_id );
 
 			$license->update_meta( sanitize_key( '_edd_sl_renewal_sent_' . $notice['send_period'] ), current_time( 'timestamp' ) ); // Prevent renewal notices from being sent more than once
-
+		} elseif ( $this->throw_exceptions ) {
+			throw new \Exception( __( 'Reminder not sent: email failed to send.', 'edd_sl' ) );
 		}
 
 		return $sent;

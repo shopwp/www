@@ -189,7 +189,7 @@ function edd_recurring_v24_migrate_subscriptions() {
 	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(ID) as total_payments FROM $wpdb->posts WHERE post_type = 'edd_payment' AND post_status IN ('publish','revoked','cancelled');";
-		$results   = $wpdb->get_row( $total_sql, 0 );
+		$results   = $wpdb->get_row( $total_sql );
 		$total     = $results->total_payments;
 	}
 
@@ -544,7 +544,7 @@ function edd_recurring_fix_24_stripe_customers() {
 
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(user_id) as total_stripe_customers FROM $wpdb->usermeta WHERE meta_key = '_edd_recurring_id' AND meta_value LIKE '%stripe%'";
-		$results   = $wpdb->get_row( $total_sql, 0 );
+		$results   = $wpdb->get_row( $total_sql );
 		$total     = $results->total_stripe_customers;
 
 		if ( $log_only ) {
@@ -993,7 +993,7 @@ function edd_recurring_27_add_subscription_id_meta() {
 
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(ID) as total_payments FROM $wpdb->posts WHERE post_type = 'edd_payment' AND post_status IN ('edd_subscription','refunded') AND post_parent > 0;";
-		$results   = $wpdb->get_row( $total_sql, 0 );
+		$results   = $wpdb->get_row( $total_sql );
 		$total     = $results->total_payments;
 	}
 
@@ -1071,7 +1071,7 @@ function edd_recurring_paypalproexpress_logs() {
 
 	if ( empty( $total ) || $total <= 1 ) {
 		$total_sql = "SELECT COUNT(ID) as total_error_logs FROM $wpdb->posts WHERE post_title = 'PayPal Express Error' AND post_type = 'edd_log'";
-		$results   = $wpdb->get_row( $total_sql, 0 );
+		$results   = $wpdb->get_row( $total_sql );
 		$total     = $results->total_error_logs;
 
 		// We had no errors, so just mark the upgrade as complete.
@@ -1548,3 +1548,21 @@ function edd_include_subscription_price_id_update_batch_processor( $class ) {
 	}
 
 }
+
+/**
+ * PayPal plan IDs need to be wiped in case they were created with invalid intervals.
+ * @link https://github.com/easydigitaldownloads/edd-recurring/issues/1502
+ *
+ * @since 2.11.2
+ */
+function edd_recurring_wipe_invalid_paypal_plan_ids() {
+	if ( edd_has_upgrade_completed( 'recurring_wipe_invalid_paypal_plan_ids' ) ) {
+		return;
+	}
+
+	delete_option( 'edd_paypal_plans' );
+
+	edd_set_upgrade_complete( 'recurring_wipe_invalid_paypal_plan_ids' );
+}
+
+add_action( 'admin_init', 'edd_recurring_wipe_invalid_paypal_plan_ids' );

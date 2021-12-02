@@ -1,0 +1,12 @@
+.search-form {
+	margin-top: calc($space-xl * 2);
+	text-align: center;
+
+	.screen-reader-text {
+		display: none;
+	}
+}
+
+.search-submit {
+	margin-top: $space-xl;
+}

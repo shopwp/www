@@ -1,0 +1,53 @@
+.sidebar {
+	margin: 0 $space-xxl calc($space-xxl * 2) 0;
+	width: 400px;
+	background: color(white);
+	overflow-x: hidden;
+	overflow-y: visible;
+
+	@include device(1200, 'max') {
+		width: 100%;
+	}
+
+	.logo-wrapper {
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
+
+.sidebar-inner {
+	@include card();
+
+	padding: $space-l;
+	width: inherit;
+	list-style: none;
+	margin: 0;
+	border-radius: 0;
+}
+
+.sidebar-account {
+	margin-top: 0;
+	width: 340px;
+	margin-right: $space-xxxl;
+
+	+ .content {
+		margin-top: 2.4em;
+	}
+}
+
+.account .l-contain {
+	@include device(1300, 'max') {
+		max-width: 97vw;
+
+		.component {
+			padding: 0;
+		}
+	}
+}
+
+.main > .l-fill {
+	@include device(1300, 'max') {
+		flex-direction: column;
+	}
+}

@@ -286,15 +286,34 @@ class EDD_SL_Retroactive_Licensing {
 			return array();
 		}
 
-		// Gather all the payments, and individual download IDs so we can verify licenses exist
-		$args = array(
-			'download' => $products,
-			'number'   => -1,
-			'fields'   => 'ids',
-		);
-		$query    = new EDD_Payments_Query( $args );
-		$payments = $query->get_payments();
-		$payments = wp_list_pluck( $payments, 'ID' );
+		if ( function_exists( 'edd_get_order_items' ) ) {
+			$payment_ids = edd_get_order_items(
+				array(
+					'product_id__in' => $products,
+					'fields'         => 'order_id',
+					'number'         => 99999999,
+				)
+			);
+			$payments    = edd_get_orders(
+				array(
+					'id__in' => $payment_ids,
+					'type'   => 'sale',
+					'number' => 99999999,
+					'fields' => 'id',
+				)
+			);
+		} else {
+
+			// Gather all the payments, and individual download IDs so we can verify licenses exist
+			$args     = array(
+				'download' => $products,
+				'number'   => -1,
+				'fields'   => 'ids',
+			);
+			$query    = new EDD_Payments_Query( $args );
+			$payments = $query->get_payments();
+			$payments = wp_list_pluck( $payments, 'ID' );
+		}
 
 		return $payments;
 	}
@@ -318,16 +337,16 @@ class EDD_SL_Retroactive_Licensing {
 		}
 
 		$payment_id   = intval( $_REQUEST['id'] );
-		$post         = new EDD_Payment( $payment_id );
+		$payment      = edd_get_payment( $payment_id );
 		$download     = intval( $_REQUEST['dl'] );
-		$order_number = empty( $post->number ) ? $post->ID : $post->number;
+		$order_number = empty( $payment->number ) ? $payment->ID : $payment->number;
 
-		if ( ! $post ) {
+		if ( ! $payment ) {
 			/* translators: the order number */
 			die( wp_json_encode( array( 'error' => sprintf( esc_html__( 'Failed Licensing: %s is incorrect post type.', 'edd_sl' ), esc_html( $order_number ) ) ) ) );
 		}
 
-		$number_generated = self::generate_license_keys( $payment_id, $download, $post );
+		$number_generated = self::generate_license_keys( $payment_id, $download, $payment );
 
 		if ( ! empty( $number_generated ) && is_numeric( $number_generated ) ) {
 			/* translators: 1. The number of keys generated 2. The URL for the order 3. The order number */
@@ -368,19 +387,30 @@ class EDD_SL_Retroactive_Licensing {
 			return esc_html__( 'No payment downloads found', 'edd_sl' );
 		}
 
-		$keys_generated = 0;
+		$existing_licenses     = edd_software_licensing()->get_licenses_of_purchase( $payment_id );
+		$generated_keys        = array();
+		$number_keys_generated = 0;
 
 		foreach ( $downloads as $cart_key => $download ) {
 
 			if ( ! empty( $download_id ) && (int) $download['id'] !== (int) $download_id ) {
 				continue; // We've been told to only generate for a specific download, and this wasn't it
 			}
+			$existing_license_count = 0;
+			if ( $existing_licenses ) {
+				foreach ( $existing_licenses as $existing_license ) {
+					if ( $existing_license->cart_index !== $cart_key || $existing_license->download_id != $download['id'] ) {
+						continue;
+					}
+					$existing_license_count++;
+				}
+			}
 
 			$item    = new EDD_Download( $download['id'] );
 			$type    = $item->is_bundled_download() ? 'bundle' : 'default';
 			$license = edd_software_licensing()->get_license_by_purchase( $payment_id, $download['id'], $cart_key, false );
 
-			if( $license ) {
+			if ( $license && $existing_license_count >= $download['quantity'] ) {
 
 				if ( 'bundle' === $type ) {
 
@@ -392,7 +422,7 @@ class EDD_SL_Retroactive_Licensing {
 					);
 
 					// Always generate bundle license keys from the initial payment ID.
-					$keys = $license->create( $download['id'], $license->payment_id, $price_id , $license->cart_index, $options );
+					$generated_keys = $license->create( $download['id'], $license->payment_id, $price_id, $license->cart_index, $options );
 
 				} else {
 					continue; // This product already has keys
@@ -408,15 +438,17 @@ class EDD_SL_Retroactive_Licensing {
 					'cart_index'  => $cart_key,
 					'retroactive' => true,
 				);
-				$keys = edd_software_licensing()->generate_new_license( $args );
 
+				for ( $i = 0; $i <= $download['quantity']; $i++ ) {
+					$generated_keys = array_merge( $generated_keys, edd_software_licensing()->generate_new_license( $args ) );
+				}
 			}
 
-			$keys_generated = $keys_generated + count( $keys );
+			$number_keys_generated = $number_keys_generated + count( $generated_keys );
 
 		}
 
-		return $keys_generated;
+		return $number_keys_generated;
 	}
 
 	/**

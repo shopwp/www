@@ -57,28 +57,31 @@ class EDD_SL_License {
 	protected $post_status = null;
 	protected $old_status  = null;
 
+	/**
+	 * @var null|EDD_SL_License[]
+	 */
 	protected $child_licenses = null;
 
 	/**
 	 * EDD_SL_License constructor.
 	 *
-	 * @param int $license_id The license post_id or license key to instantiate.
+	 * @param int|string|object $license_id_or_object The license ID, key, or full row object from the database.
 	 */
-	public function __construct( $license_id = false ) {
+	public function __construct( $license_id_or_object = false ) {
+		if ( empty( $license_id_or_object ) ) {
+			$this->exists = false;
+			return;
+		}
 
-		if ( ! empty( $license_id ) ) {
-
-			if ( ! is_numeric( $license_id ) ) {
-				$license = edd_software_licensing()->licenses_db->get_column_by( 'id', 'license_key', sanitize_text_field( $license_id ) );
-			} else {
-				$license = edd_software_licensing()->licenses_db->get( $license_id );
-			}
-
-			if ( empty( $license ) ) {
-				$this->exists = false;
-				return;
-			}
+		if ( is_object( $license_id_or_object) ) {
+			$license = $license_id_or_object;
+		} elseif ( ! is_numeric( $license_id_or_object ) ) {
+			$license = edd_software_licensing()->licenses_db->get_column_by( 'id', 'license_key', sanitize_text_field( $license_id_or_object ) );
 		} else {
+			$license = edd_software_licensing()->licenses_db->get( $license_id_or_object );
+		}
+
+		if ( empty( $license ) ) {
 			$this->exists = false;
 			return;
 		}
@@ -169,7 +172,7 @@ class EDD_SL_License {
 	 *
 	 * @since 3.5
 	 *
-	 * @param $license Data from the custom database table.
+	 * @param int|object $license Data from the custom database table.
 	 */
 	private function setup( $license ) {
 
@@ -247,6 +250,15 @@ class EDD_SL_License {
 
 		if ( ! $purchased_download->is_bundled_download() && ! $purchased_download->licensing_enabled() ) {
 			return $keys;
+		}
+
+		// If the correct number of licenses have already been generated for this payment, don't generate another license.
+		if ( ! empty( $options['existing_license_count'] ) ) {
+			foreach ( $payment->downloads as $payment_download ) {
+				if ( $purchased_download->ID == $payment_download['id'] && $options['existing_license_count'] >= $payment_download['quantity'] ) {
+					return $keys;
+				}
+			}
 		}
 
 		if ( $is_bundle ) {
@@ -369,8 +381,13 @@ class EDD_SL_License {
 
 		$existing_licenses = edd_software_licensing()->get_licenses_of_purchase( $payment_id );
 		if ( $is_bundle && $existing_licenses ) {
+			$existing_license_product_ids = array();
+			foreach ( $existing_licenses as $key => $existing_license ) {
+				if ( $cart_index == $existing_license->cart_index ) {
+					$existing_license_product_ids[] = $existing_license->download_id;
+				}
+			}
 			$bundled_products = array_map( 'absint', $purchased_download->get_bundled_downloads() );
-			$existing_license_product_ids = wp_list_pluck( $existing_licenses, 'download_id' );
 
 			foreach ( $bundled_products as $bundled_product_id ) {
 
@@ -471,7 +488,7 @@ class EDD_SL_License {
 	 * @since 3.6 - Updated for custom tables, now that most data is not in meta tables.
 	 *
 	 * @param array $data Key/Value array of property => value
-	 * @return array      If the row was updated
+	 * @return bool If the row was updated
 	 */
 	public function update( $data = array() ) {
 
@@ -645,10 +662,34 @@ class EDD_SL_License {
 		return $updated;
 	}
 
-	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+	/**
+	 * Adds new license meta
+	 *
+	 * @param string $meta_key   The meta key to add.
+	 * @param mixed  $meta_value The meta value to add.
+	 * @param bool   $unique     Whether the same key should not be added. If true, adding meta for a key
+	 *                           that already exists will result in failure (`false` response).
+	 *
+	 * @return bool
+	 */
+	public function add_meta( $meta_key, $meta_value, $unique = false ) {
 		return edd_software_licensing()->license_meta_db->add_meta( $this->ID, $meta_key, $meta_value, $unique );
 	}
 
+	/**
+	 * Deletes license meta.
+	 *
+	 * @param string $meta_key   Meta key to delete.
+	 * @param string $meta_value Optional. Metadata value. Must be serializable if non-scalar.
+	 *                           If specified, only delete metadata entries with this value.
+	 *                           Otherwise, delete all entries with the specified meta_key.
+	 *                           Pass `null`, `false`, or an empty string to skip this check.
+	 * @param false  $delete_all Optional. If true, delete matching metadata entries for all objects,
+	 *                           ignoring the specified object_id. Otherwise, only delete
+	 *                           matching metadata entries for the specified object_id.
+	 *
+	 * @return bool
+	 */
 	public function delete_meta( $meta_key = '', $meta_value = '', $delete_all = false ) {
 		return edd_software_licensing()->license_meta_db->delete_meta( $this->ID, $meta_key, $meta_value, $delete_all );
 	}
@@ -1249,14 +1290,12 @@ class EDD_SL_License {
 	 * Return a list of EDD_SL_License objects for the child licenses
 	 *
 	 * @since 3.5
-	 * @return array Returns an array of EDD_SL_License objects
+	 * @return EDD_SL_License[] Returns an array of EDD_SL_License objects
 	 */
 	public function get_child_licenses() {
 		if ( ! is_null( $this->child_licenses ) ) {
 			return $this->child_licenses;
 		}
-
-		$child_licenses = array();
 
 		$args = array(
 			'parent' => $this->ID,
@@ -1353,8 +1392,8 @@ class EDD_SL_License {
 		if ( ! empty( $download_is_lifetime ) ) {
 			$expiration = 'lifetime';
 		} else {
-			$exp_unit   = $download->get_expiration_unit();
-			$exp_length = $download->get_expiration_length();
+			$exp_unit   = $download->get_expiration_unit( $price_id );
+			$exp_length = $download->get_expiration_length( $price_id );
 
 			if( empty( $exp_unit ) ) {
 				$exp_unit = 'years';
@@ -1400,8 +1439,8 @@ class EDD_SL_License {
 		if ( ! empty( $download_is_lifetime ) ) {
 			$term = __( 'Lifetime', 'edd_sl' );
 		} else {
-			$exp_unit   = $download->get_expiration_unit_nicename();
-			$exp_length = $download->get_expiration_length();
+			$exp_unit   = $download->get_expiration_unit_nicename( $price_id );
+			$exp_length = $download->get_expiration_length( $price_id );
 
 			if( empty( $exp_unit ) ) {
 				$exp_unit = __( 'Years', 'edd_sl' );
@@ -1459,8 +1498,13 @@ class EDD_SL_License {
 		return apply_filters( 'edd_sl_get_license_activations', $activations, $this->ID );
 	}
 
+	/**
+	 * Retrieves the download object associated with this license.
+	 *
+	 * @return EDD_SL_Download
+	 */
 	public function get_download() {
-		if ( ! is_null( $this->download ) && is_object( $this->download ) ) {
+		if ( $this->download instanceof EDD_SL_Download ) {
 			return $this->download;
 		}
 
@@ -1816,7 +1860,7 @@ class EDD_SL_License {
 	 * @since 3.5
 	 * @param $price_id
 	 *
-	 * @return bool|int
+	 * @return bool
 	 */
 	private function set_price_id( $price_id ) {
 		$updated = $this->update( array( 'price_id' => $price_id ) );
@@ -1829,9 +1873,8 @@ class EDD_SL_License {
 
 				foreach ( $this->child_licenses as $child_license ) {
 
-					if ( $child_license->download->has_variable_prices() ) {
-						$child_license->update_meta( '_edd_sl_download_price_id', $price_id );
-						$child_license->reset_activation_limit();
+					if ( $child_license->get_download()->has_variable_prices() ) {
+						$child_license->set_price_id( $price_id );
 					}
 
 				}

@@ -842,7 +842,7 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 	 * @param  EDD_Subscription $subscription The subscription object.
 	 * @param  bool|mixed       $valid        If cancellation is valid.
 	 *
-	 * @return      string
+	 * @return      bool
 	 */
 	public function cancel( $subscription, $valid ) {
 
@@ -1049,7 +1049,7 @@ class EDD_Recurring_PayPal extends EDD_Recurring_Gateway {
 	 *
 	 * @param  EDD_Subscription $subscription The subscription object
 	 *
-	 * @return string Expiration date or WP_Error if something went wrong
+	 * @return string|WP_Error Expiration date or WP_Error if something went wrong
 	 */
 	public function get_expiration( $subscription ) {
 

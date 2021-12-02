@@ -201,8 +201,8 @@ function edd_sl_process_license_exp_update() {
 		return;
 	}
 
-	if ( isset( $_POST['exp_date'] ) ) {
-		$expiration          = strtotime( $_POST[ 'exp_date' ] . ' 23:59:59' );
+	if ( ! empty( $_POST['exp_date'] ) ) {
+		$expiration          = strtotime( $_POST['exp_date'] . ' 23:59:59' );
 		$license->expiration = $expiration;
 	}
 
@@ -245,7 +245,10 @@ add_action( 'edd_update_license', 'edd_sl_process_license_exp_update', 1 );
  * @return void
 */
 function edd_sl_send_renewal_notice() {
-	$return = array( 'success' => false );
+	$return = array(
+		'success' => false,
+		'message' => '',
+	);
 
 	if ( ! empty( $_POST['license_id'] ) ) {
 		$license_id = absint( $_POST['license_id'] );
@@ -258,13 +261,17 @@ function edd_sl_send_renewal_notice() {
 		$emails         = new EDD_SL_Emails;
 		$send_notice_id = absint( $_POST['notice_id'] );
 
-		if ( $emails->send_renewal_reminder( $license_id, $send_notice_id ) ) {
-			$return['success'] = true;
-			$return['url']     = admin_url( 'edit.php?post_type=download&page=edd-licenses&view=overview&license_id=' . $license_id . '&edd-message=send-notice' );
+		try {
+			if ( $emails->with_exceptions()->send_renewal_reminder( $license_id, $send_notice_id ) ) {
+				$return['success'] = true;
+				$return['url']     = admin_url( 'edit.php?post_type=download&page=edd-licenses&view=overview&license_id=' . $license_id . '&edd-message=send-notice' );
+			}
+		} catch ( \Exception $e ) {
+			$return['message'] = $e->getMessage();
 		}
 	}
 
-	echo json_encode( $return );
+	wp_send_json( $return );
 	die();
 }
 add_action( 'wp_ajax_edd_sl_send_renewal_notice', 'edd_sl_send_renewal_notice' );
@@ -544,3 +551,50 @@ function edd_sl_reset_license_queries( $sql, $ids ) {
 
 }
 add_filter( 'edd_reset_add_queries_edd_license_id', 'edd_sl_reset_license_queries', 10, 2 );
+
+/**
+ * Toggle license subscription notices
+ *
+ * @since 3.8
+ * @param  array $args An array of arguments from the GET query.
+ * @return void
+ */
+function edd_sl_toggle_license_subscription( $args ) {
+	// check permissions.
+	if ( ! current_user_can( 'manage_licenses' ) ) {
+		wp_die( esc_html__( 'You do not have permission to edit this license.', 'edd_sl' ), esc_html__( 'Error', 'edd_sl' ), array( 'response' => 403 ) );
+	}
+
+	// verify nonce.
+	if ( empty( $args['_wpnonce'] ) || ! wp_verify_nonce( $args['_wpnonce'], 'edd_sl_update_email_notifications' ) ) {
+		wp_die( esc_html__( 'You do not have permission to perform this action.', 'edd_sl' ), esc_html__( 'Error', 'edd_sl' ), array( 'response' => 403 ) );
+	}
+
+	// check the license id.
+	if ( ! isset( $args['license_id'] ) ) {
+		wp_die( esc_html__( 'No license ID supplied or invalid key provided.', 'edd_sl' ), esc_html__( 'Error', 'edd_sl' ), array( 'response' => 400 ) );
+	}
+
+	// get the license.
+	$license = edd_software_licensing()->get_license( $args['license_id'] );
+	if ( 'subscribe' === $args['subscription_status'] ) {
+		$license->delete_meta( 'edd_sl_unsubscribed' );
+	} elseif ( 'unsubscribe' === $args['subscription_status'] ) {
+		$license->update_meta( 'edd_sl_unsubscribed', current_time( 'timestamp' ) );
+	}
+
+	$message = 'subscribe' === $args['subscription_status'] ? 'license-subscribed' : 'license-unsubscribed';
+
+	$query_args            = array(
+		'post_type'   => 'download',
+		'page'        => 'edd-licenses',
+		'license_id'  => urlencode( $args['license_id'] ),
+		'view'        => 'overview',
+		'edd-message' => urlencode( $message ),
+	);
+	$subscription_redirect = add_query_arg( $query_args, admin_url( 'edit.php' ) );
+	wp_safe_redirect( $subscription_redirect );
+	exit;
+}
+
+add_action( 'edd_sl_toggle_license_subscription', 'edd_sl_toggle_license_subscription' );

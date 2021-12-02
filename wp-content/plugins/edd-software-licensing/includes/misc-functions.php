@@ -130,3 +130,51 @@ function _eddsl_migration_log_payment_ids( $payment_id, $payment_object ) {
 	update_option( 'edd_sl_payments_saved_during_migration', $payments_during_migration );
 }
 add_action( 'edd_payment_saved', '_eddsl_migration_log_payment_ids', 99, 2 );
+
+/**
+ * Returns an array of platforms that can be used with a product's requirements.
+ *
+ * @since 3.8
+ *
+ * @return array Filtered array of required platforms.
+ */
+function edd_sl_get_platforms() {
+	$platforms = array(
+		'php' => 'PHP',
+		'wp'  => 'WordPress',
+	);
+
+	/**
+	 * Modify required platforms
+	 *
+	 * @since 3.8
+	 *
+	 * @param array Array of platforms
+	 */
+	return apply_filters( 'edd_sl_platforms', $platforms );
+}
+
+/**
+ * Gets the license length for a download.
+ *
+ * @since 3.7.3
+ * @param int         $download_id The download ID.
+ * @param boolean|int $price_id    The price ID for the download (optional).
+ *
+ * @return string  Returns "lifetime" or a PHP time string.
+ */
+function edd_sl_get_product_license_length( $download_id, $price_id = false ) {
+	$download = new EDD_SL_Download( $download_id );
+	if ( is_numeric( $price_id ) ) {
+		$is_lifetime = $download->is_price_lifetime( $price_id );
+	} else {
+		$is_lifetime = $download->is_lifetime();
+	}
+	if ( $is_lifetime ) {
+		return 'lifetime';
+	}
+	$exp_unit   = $download->get_expiration_unit( $price_id );
+	$exp_length = $download->get_expiration_length( $price_id );
+
+	return '+' . $exp_length . ' ' . $exp_unit;
+}

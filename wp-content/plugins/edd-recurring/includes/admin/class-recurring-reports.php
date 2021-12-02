@@ -228,7 +228,8 @@ class EDD_Recurring_Reports {
 			'post_status' => array( 'edd_subscription', 'refunded' ),
 			'year'        => $year,
 			'monthnum'    => $month,
-			'meta_key'    => 'subscription_id'
+			'meta_key'    => 'subscription_id',
+			'output'      => 'payments',
 		), $day, $month, $year );
 
 		if ( ! empty( $day ) ) {
@@ -251,7 +252,7 @@ class EDD_Recurring_Reports {
 
 				$amount = edd_get_payment_amount( $renewal->ID );
 
-				switch( $renewal->post_status ) {
+				switch ( $renewal->status ) {
 
 					case 'edd_subscription' :
 
@@ -602,8 +603,13 @@ class EDD_Recurring_Reports {
 	 */
 	public function status_column( $value, $payment_id, $column_name ) {
 
-		if ( 'status' == $column_name && 'edd_subscription' == get_post_status( $payment_id ) ) {
-			$value = __( 'Renewal Payment', 'edd-recurring' );
+		// This is handled automatically in EDD 3.0.
+		if ( function_exists( 'edd_get_orders' ) || 'status' !== $column_name ) {
+			return $value;
+		}
+
+		if ( 'edd_subscription' === edd_get_payment_status( $payment_id ) ) {
+			return __( 'Renewal', 'edd-recurring' );
 		}
 
 		return $value;

@@ -46,7 +46,7 @@ class EDD_Recurring_Manual_Payments extends EDD_Recurring_Gateway {
 	 *
 	 * @access      public
 	 * @since       2.4
-	 * @return      string
+	 * @return      bool
 	 */
 	public function cancel( $subscription, $valid ) {
 

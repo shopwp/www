@@ -183,7 +183,7 @@ class EDD_Subscription {
 	 * Updates a subscription
 	 *
 	 * @since  2.4
-	 * @param  array $args Array of fields to update
+	 * @param  array $args Array of fields to update.
 	 * @return bool
 	 */
 	public function update( $args = array() ) {
@@ -193,11 +193,11 @@ class EDD_Subscription {
 
 		$ret = $this->subs_db->update( $this->id, $args );
 
-		if ( isset( $args['status'] ) ) {
-			$this->set_status( $args['status'] );
-		}
-
 		if ( $ret ) {
+			if ( isset( $args['status'] ) ) {
+				$this->set_status( $args['status'] );
+			}
+
 			if ( isset( $args['product_id'] ) && $current_product != $args['product_id'] ) {
 				$this->add_note( sprintf( __( 'Product ID changed from %d to %d.', 'edd-recurring' ), $current_product, $args['product_id'] ) );
 			}
@@ -248,10 +248,11 @@ class EDD_Subscription {
 	 * Retrieve renewal payments for a subscription
 	 *
 	 * @since  2.4
-	 * @return array
+	 * @return EDD_Payment[]
 	 */
 	public function get_child_payments() {
 
+		// EDD 3.0 maps these to the correct order parameters.
 		$payments = edd_get_payments( array(
 			'post_parent'    => (int) $this->parent_payment_id,
 			'posts_per_page' => '999',
@@ -273,6 +274,23 @@ class EDD_Subscription {
 	 * @return int
 	 */
 	public function get_total_payments() {
+
+		// EDD 3.0
+		if ( function_exists( 'edd_count_orders' ) ) {
+			return edd_count_orders(
+				array(
+					'parent'     => $this->parent_payment_id,
+					'number'     => 999,
+					'type'       => 'sale',
+					'meta_query' => array(
+						array(
+							'key'   => 'subscription_id',
+							'value' => $this->id,
+						),
+					),
+				)
+			) + 1;
+		}
 
 		$args = array(
 			'post_parent'    => (int) $this->parent_payment_id,
@@ -391,12 +409,12 @@ class EDD_Subscription {
 
 		$payment->user_id = $parent->user_id;
 		$payment->address = $parent->address;
-		// In EDD3, use the customer's primary billing address, if set.
-		if ( function_exists( 'edd_get_customer_address' ) ) {
-			$address = edd_get_customer_address( $payment->user_id );
-			if ( $address ) {
-				$payment->address = $address;
-			}
+
+		// If the customer has a primary address set, use that instead.
+		$address       = edd_get_customer_address( $payment->user_id );
+		$address_check = array_filter( $address );
+		if ( ! empty( $address_check ) ) {
+			$payment->address = $address;
 		}
 		$payment->email          = $parent->email;
 		$payment->currency       = $parent->currency;
@@ -405,6 +423,7 @@ class EDD_Subscription {
 		$payment->key            = $parent->key;
 		$payment->total          = edd_sanitize_amount( sanitize_text_field( $args['amount'] ) );
 		$payment->mode           = $parent->mode;
+		$payment->completed_date = current_time( 'mysql' );
 
 		if( empty( $args['gateway'] ) ) {
 
@@ -471,6 +490,22 @@ class EDD_Subscription {
 
 		$payment->save();
 		$payment->update_meta( 'subscription_id', $this->id );
+
+		if ( function_exists( 'edd_get_order' ) ) {
+			$parent_order = edd_get_order( $this->parent_payment_id );
+			if ( $parent_order instanceof \EDD\Orders\Order ) {
+				if ( $parent_order->tax_rate_id ) {
+					edd_update_order( $payment->ID, array(
+						'tax_rate_id' => $parent_order->tax_rate_id
+					) );
+				} else {
+					$custom_tax_rate = edd_get_order_meta( $parent_order->id, 'tax_rate', true );
+					if ( ! empty( $custom_tax_rate ) ) {
+						edd_update_order_meta( $payment->ID, 'tax_rate', sanitize_text_field( $custom_tax_rate ) );
+					}
+				}
+			}
+		}
 
 		if ( function_exists( 'edd_schedule_after_payment_action' ) ) {
 			// Schedule the after payments actions for the payment
@@ -875,7 +910,7 @@ class EDD_Subscription {
 	 * Determines if subscription is active
 	 *
 	 * @since  2.4
-	 * @return void
+	 * @return bool
 	 */
 	public function is_active() {
 
@@ -907,7 +942,7 @@ class EDD_Subscription {
 	 * Determines if subscription is expired
 	 *
 	 * @since  2.4
-	 * @return void
+	 * @return bool
 	 */
 	public function is_expired() {
 
@@ -1062,7 +1097,6 @@ class EDD_Subscription {
 	 * @return bool
 	 */
 	public function payment_exists( $txn_id = '' ) {
-		global $wpdb;
 
 		if ( empty( $txn_id ) ) {
 			return false;
@@ -1070,13 +1104,14 @@ class EDD_Subscription {
 
 		$txn_id = esc_sql( $txn_id );
 
-		$purchase = $wpdb->get_var( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '{$txn_id}' LIMIT 1" );
-
-		if ( $purchase != null ) {
-			return true;
+		if ( function_exists( 'edd_get_order_transaction_by' ) ) {
+			$purchase = edd_get_order_transaction_by( 'transaction_id', $txn_id );
+		} else {
+			global $wpdb;
+			$purchase = $wpdb->get_var( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '{$txn_id}' LIMIT 1" );
 		}
 
-		return false;
+		return ! empty( $purchase );
 	}
 
 	/**

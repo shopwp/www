@@ -646,16 +646,19 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 
 			$posted = apply_filters( 'edd_recurring_ipn_post', $_POST ); // allow $_POST to be modified
 
+			/**
+			 * Note: Amounts get more properly sanitized on insert.
+			 * @see EDD_Subscription::add_payment()
+			 */
 			if( isset( $posted['amount'] ) ) {
-				$amount = number_format( (float) $posted['amount'], 2 );
+				$amount = (float) $posted['amount'];
 			} elseif( isset( $posted['mc_gross'] ) ) {
-				$amount = number_format( (float) $posted['mc_gross'], 2 );
+				$amount = (float) $posted['mc_gross'];
 			} else {
 				$amount = 0;
 			}
 
 			$txn_type        = isset( $posted['txn_type'] ) ? $posted['txn_type'] : '';
-			$payment_status  = isset( $posted['payment_status'] ) ? $posted['payment_status'] : '';
 			$currency_code   = isset( $posted['mc_currency'] ) ? $posted['mc_currency'] : $posted['currency_code'];
 			$transaction_id  = isset( $posted['txn_id'] ) ? $posted['txn_id'] : '';
 
@@ -930,7 +933,7 @@ class EDD_Recurring_PayPal_Express extends EDD_Recurring_Gateway {
 	 *
 	 * @access      public
 	 * @since       2.4
-	 * @return      string
+	 * @return      bool
 	 */
 	public function cancel( $subscription, $valid ) {
 

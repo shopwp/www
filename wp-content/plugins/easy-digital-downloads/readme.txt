@@ -3,11 +3,11 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee
 Donate link: https://easydigitaldownloads.com/donate/
-Tags: ecommerce, sell, checkout, payments, stripe
+Tags: ecommerce, sell, checkout, digital store, stripe
 Requires at least: 4.4
-Tested up to: 5.7
+Tested up to: 5.8.1
 Requires PHP: 5.3
-Stable Tag: 2.10.3
+Stable Tag: 2.11.3.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -54,17 +54,14 @@ The internet has made it possible for anyone to sell their products to a world-w
 
 Payment gateways supported in the free Easy Digital Downloads plugin:
 
-* Stripe **[new]**
-* PayPal Standard
+* Stripe
+* PayPal
 * Amazon Payments
 
 Payment gateways supported through free or premium extensions:
 
 * Stripe Pro (reduced fees and preapproved payments functionality)
-* PayPal Pro
-* PayPal Express
-* PayPal Payments Advanced
-* PayPal Adaptive Payments
+* PayPal Commerce Pro (unbranded card payments and additional payment methods)
 * Braintree
 * Authorize.net
 * 2Checkout
@@ -85,7 +82,7 @@ Easy Digital Downloads is a verified member of the [Stripe partner program](http
 With add-on plugins from our [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your digital store. Some of our extension highlights include:
 
 * [Stripe Pro](https://easydigitaldownloads.com/downloads/stripe-gateway/?utm_source=extension&utm_medium=description_tab&utm_content=stripe-pro&utm_campaign=readme) removes the additional 2% processing fee as well as adds the ability to accept pre-approved payments (extension must be installed and activated)
-
+* [PayPal Commerce Pro](https://easydigitaldownloads.com/downloads/paypal-commerce-pro/?utm_source=extension&utm_medium=description_tab&utm_content=paypal-commerce-pro&utm_campaign=readme) allows customers to pay by debit or credit card as well as alternative payments such as Sofort, iDEAL, Bancontact, and Giropay (extension must be installed and activated)
 * [Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) provides a complete solution for selling software license keys and distributing software updates to customers
 * [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=extension&utm_medium=description_tab&utm_content=recurring-payments&utm_campaign=readme) allows store owners to sell recurring subscriptions for digital products using payment gateways like Stripe and PayPal
 * [Frontend Submissions](https://easydigitaldownloads.com/downloads/frontend-submissions/?utm_source=extension&utm_medium=description_tab&utm_content=frontend-submissions&utm_campaign=readme) transforms your store into a full-featured multi-vendor marketplace
@@ -245,23 +242,109 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 9. Apple Pay purchase buttons
 10. Checkout screen
 11. Google Pay checkout
+12. PayPal button on checkout page
+13. Pay with PayPal modal
 
 == Changelog ==
+= 2.11.3.1, November 1, 2021 =
+* Fix: Fatal error in PHP versions lower than 7.3.
+
+= 2.11.3, November 1, 2021 =
+* New: Add contextual EDD header to relevant pages.
+* New: Add quick link to EDD reports in the Dashboard menu.
+* Improvement: Update styling for settings tabs.
+* Improvement: Rename and reorganize some settings menu items.
+* Improvement: Adjust formatting of plugins list in system info file.
+* Improvement: License key fields now use a password input.
+* Fix: Undefined index: post_data error.
+* Fix: Upgrade notice not appearing after enabling sequential order numbers.
+* Fix: PayPal - Disconnecting PayPal account not working.
+* Fix: PayPal - Improve check for declined payments.
+* Fix: PayPal - Unable to switch payment gateway after opening then closing PayPal modal.
+* Fix: PayPal - Purchase can't be completed when you have a long product title.
+* Fix: Unable to use discount deactivate/activate hover actions.
+* Fix: `_edd_deprecated_function()` - only trigger error with backtrace if there is a backtrace provided.
+* Fix: API requests have unexpected output when using Query Monitor.
+* Dev: Updated `EDD_SL_Plugin_Updater` to version 1.9.1.
+
+= 2.11.2.1, October 18, 2021 =
+* Security: Fix authenticated reflected XSS on payment history list table.
+
+= 2.11.2, September 29, 2021 =
+* Improvement: PayPal - Product names now appear in PayPal.
+* Improvement: File download token validation has been reworked to be more compatible with caching.
+* Fix: PayPal - Ensure all numbers are rounded when sending price data to PayPal. This prevents errors due to rounding issues.
+* Fix: PayPal - Excessive error text when triggering a validation error on a mobile device.
+* Fix: PayPal - Multiple "Buy Now" buttons not working on the same page.
+* Fix: JavaScript error if the checkout button has been customized to not have an `id` attribute.
+* Fix: WP-CLI - `price_id` parameter not working with `wp edd payments create` command.
+* Fix: Stripe - Transaction link not working if the payment is pre-approved.
+* Fix: Stripe - Connect not working with certain countries.
+* Fix: Stripe - Numeric product name causes error.
+* Fix: Stripe - Payments able to be marked for preapproval when they shouldn't be.
+* Refactor: SendWP - Update link to account area.
+
+= 2.11.1, August 30, 2021 =
+* Improved: Better compatibility with caching when using PayPal Commerce.
+* Improved: Made it more clear when PayPal Commerce is successfully connected, but not set as an active gaetway.
+* Fix: PayPal Commerce - Rely on end-user locale when loading the PayPal Javascript SDK.
+* Fix: The download history shortcode was not aware of bundles with variable prices.
+
+= 2.11, August 19, 2021 =
+* New: Introducing the new PayPal Commerce gateway integration.
+* New: System info page now shows Plugin Author or Update URI
+* New: Improved support for caching pages that contain add to cart buttons by using a custom token verification instead of nonces.
+* Improved: The extension updater class has been updated to version 1.9.0.
+* Fix: Download Notes could be duplicated in the email receipt.
+* Fix: The Paypal transaction ID links were using an older format.
+* Fix: The edd_items_in_cart cookie wasn't setting the correct attributes on sites with SSLs.
+* Fix: Some bundled images hadn't been optimized.
+* Fix: The discounts API endpoint could not filter a discount by ID.
+* Fix: When making an EDD Wallet deposit, the cart HTML would be removed when taxes were enabled.
+
+= 2.10.6, June 22, 2021 =
+* New: Added license upgrade notices to EDD admin pages.
+* Improvement: The discount API endpoint now includes `excluded_products`.
+* Improvement: The Hummingbird cache plugin is now detected in `edd_is_caching_plugin_active()`.
+* Fix: Currency symbol was prefixed with minus sign in PHP 8 on some interfaces.
+* Fix: Prevent multi purchase mode from reporting as enabled if a product does not have variable pricing turned on.
+* Fix: Deprecation notices in PHP 8.
+* Improvement: Stripe - When using the filter to adjust Stripe Element styles, we now merge those styles with the default generated ones.
+* Improvement: Stripe - The `edds_is_zero_decimal_currency()` function now accepts an optional `$currency` parameter, so you can check any currency instead of just the shop's selected currency.
+* Fix: Stripe - Fatal error when attempting to perform old database upgrades.
+* Fix: Stripe - Undefined index notice with Stripe Connect.
+
+= 2.10.5, May 20, 2021 =
+* Fix: Unexpected checkout fields may become required when they weren't before, after a discount code is applied.
+* Fix: Deprecation notices in PHP 8.
+* New: Stripe - Added UGX to zero decimal currency list.
+* Improvement: Stripe - The Express Checkout gateway option is now completely hidden until eligibility is confirmed, whereas before it was shown and then hidden if determined to be ineligible. This should remove the sudden "flash" of the gateway option disappearing.
+* Improvement: Stripe - Express Checkout settings are now disabled if taxes are enabled for the store.
+* Fix: Stripe - The "Buy Now" modal visible on the page if Buy Now is enabled but the Stripe gateway isn't active.
+* Fix: Stripe - Incorrect get_current_user() function usage.
+* Fix: Stripe - Express Checkout not using custom price (from the Custom Prices add-on).
+* Fix: Stripe - Undefined variable $purchase_data when making purchase that only contains fees.
+* Dev: Stripe - Update refund logic to use new refunds API in EDD 3.0.
+* Dev: Stripe - Remove composer/installer version lock.
+
+= 2.10.4, May 4, 2021 =
+* Security Fix: Reflected XSS.
+
 = 2.10.3, April 14, 2021 =
 * Security Fix: Fix nonce logic when disconnecting from Stripe Connect.
 * Fix: Not enough padding on file upload field.
 
 = 2.10.2, April 5, 2021 =
-Fix: Stripe - Some Stripe errors were not localized.
-Fix: Stripe - The pre-approval payment status was being registered when it was not supported.
-Fix: Stripe - Use of the array_key_first function was only available in PHP 7.3+.
-Fix: Registration form was not validating all fields.
-Fix: Batch Download importer was using GLOB_BRACE which is not available on all containerized platforms.
-Tweak: Re-Organized the gateway list in settings.
-Tweak: Adjust SendWP setting description.
-Tweak: Removed Jilt callout in Advanced Email settings.
-New: Inform store owners of Recapture for abandoned cart recovery.
-New: Add link to Termageddon for Terms of Agreement and Privacy Policy fields within Easy Digital Downloads settings.
+* Fix: Stripe - Some Stripe errors were not localized.
+* Fix: Stripe - The pre-approval payment status was being registered when it was not supported.
+* Fix: Stripe - Use of the array_key_first function was only available in PHP 7.3+.
+* Fix: Registration form was not validating all fields.
+* Fix: Batch Download importer was using GLOB_BRACE which is not available on all containerized platforms.
+* Tweak: Re-Organized the gateway list in settings.
+* Tweak: Adjust SendWP setting description.
+* Tweak: Removed Jilt callout in Advanced Email settings.
+* New: Inform store owners of Recapture for abandoned cart recovery.
+* New: Add link to Termageddon for Terms of Agreement and Privacy Policy fields within Easy Digital Downloads settings.
 
 = 2.10.1, March 9, 2021 =
 * Fix: Removed incorrect inclusion of license key field for the Stripe integration when the Stripe Pro Payment Gateway extension is not active.

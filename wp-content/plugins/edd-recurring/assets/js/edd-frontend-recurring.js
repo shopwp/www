@@ -33,7 +33,28 @@ jQuery(document).ready(function($) {
 	});
 
 	if( edd_recurring_vars.has_trial ) {
+		setTrialTotal();
+
+		$( document.body ).on( 'edd_discount_applied', setTrialTotal );
+		$( document.body ).on( 'edd_discount_removed', setTrialTotal );
+		$( document.body ).on( 'edd_taxes_recalculated', setTrialTotal );
+	}
+
+	/**
+	 * Sets the total order amount in the UI for a trial. (`0.00` in the store currency)
+	 *
+	 * @since 2.11
+	 */
+	function setTrialTotal( e, data ) {
+		// This sets the amount due today.
 		$('.edd_cart_amount').html( edd_recurring_vars.total );
+
+		// This sets the recurring amount (after a trial).
+		if ( 'undefined' !== typeof data && data.response && data.response.total ) {
+			$( 'body' ).find( '.edd_recurring_total_after_trial' ).each( function () {
+				$( this ).html( data.response.total );
+			} );
+		}
 	}
 
 	// Look to see if the customer has purchased a free trial after email is entered on checkout

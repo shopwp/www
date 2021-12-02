@@ -35,7 +35,7 @@ class EDD_Recurring_Emails {
 		}
 	}
 
-	public function send_payment_received( $subscription_id= 0, $expiration = '0000-00-00 00:00:00', EDD_Subscription $subscription, $payment_id = 0 ) {
+	public function send_payment_received( $subscription_id, $expiration, EDD_Subscription $subscription, $payment_id = 0 ) {
 
 		// Since it's possible to renew a subscription without a payment, we should not send an email if none is specified.
 		if ( empty( $payment_id ) ) {
@@ -47,6 +47,7 @@ class EDD_Recurring_Emails {
 
 		$email_to = $this->subscription->customer->email;
 		$subject  = apply_filters( 'edd_recurring_payment_received_subject', edd_get_option( 'payment_received_subject' ) );
+		$subject  = $this->payment_received_template_tags( $subject, $payment->total );
 		$message  = apply_filters( 'edd_recurring_payment_received_message', edd_get_option( 'payment_received_message' ) );
 		$message  = $this->payment_received_template_tags( $message, $payment->total );
 
@@ -60,6 +61,7 @@ class EDD_Recurring_Emails {
 
 		$email_to = $subscription->customer->email;
 		$subject  = apply_filters( 'edd_recurring_payment_failed_subject', edd_get_option( 'payment_failed_subject' ) );
+		$subject  = $this->payment_received_template_tags( $subject, $subscription->recurring_amount );
 		$message  = apply_filters( 'edd_recurring_payment_failed_message', edd_get_option( 'payment_failed_message' ) );
 		$message  = $this->payment_received_template_tags( $message, $subscription->recurring_amount );
 
@@ -67,7 +69,7 @@ class EDD_Recurring_Emails {
 
 	}
 
-	public function send_subscription_cancelled( $subscription_id = 0, EDD_Subscription $subscription ) {
+	public function send_subscription_cancelled( $subscription_id, EDD_Subscription $subscription ) {
 
 		$this->subscription = new EDD_Subscription( $subscription_id );
 
@@ -83,7 +85,7 @@ class EDD_Recurring_Emails {
 
 	}
 
-	public function send_subscription_cancelled_admin( $subscription_id = 0, EDD_Subscription $subscription ) {
+	public function send_subscription_cancelled_admin( $subscription_id, EDD_Subscription $subscription ) {
 
 		$this->subscription = new EDD_Subscription( $subscription_id );
 

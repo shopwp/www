@@ -1,15 +1,15 @@
-# Copyright (C) 2021 Easy Digital Downloads
+# Copyright (C) 2021 Sandhills Development, LLC
 # This file is distributed under the same license as the Easy Digital Downloads - Stripe Payment Gateway plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads - Stripe Payment Gateway 2.8.0\n"
+"Project-Id-Version: Easy Digital Downloads - Stripe Payment Gateway 2.8.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/edd-stripe\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-01-07T15:30:15+00:00\n"
+"POT-Creation-Date: 2021-02-25T13:31:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: edds\n"
@@ -23,20 +23,11 @@ msgid "Adds a payment gateway for Stripe.com"
 msgstr ""
 
 #. Author of the plugin
-msgid "Easy Digital Downloads"
+msgid "Sandhills Development, LLC"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://easydigitaldownloads.com"
-msgstr ""
-
-#: edd-stripe.php:54
-msgid "Your version of PHP is below the minimum version of PHP required by Easy Digital Downloads - Stripe Payment Gateway. Please contact your host and request that your version be upgraded to 5.6.0 or greater."
-msgstr ""
-
-#: edd-stripe.php:201
-#: includes/template-functions.php:107
-msgid "Credit Card"
+msgid "https://sandhillsdev.com"
 msgstr ""
 
 #: includes/admin/admin-actions.php:63
@@ -69,17 +60,17 @@ msgid "Yes"
 msgstr ""
 
 #: includes/admin/admin-filters.php:57
-#: includes/gateway-filters.php:31
+#: includes/gateway-filters.php:27
 msgid "Preapproved"
 msgstr ""
 
 #: includes/admin/admin-filters.php:58
-#: includes/gateway-filters.php:32
+#: includes/gateway-filters.php:28
 msgid "Preapproval Pending"
 msgstr ""
 
 #: includes/admin/admin-filters.php:59
-#: includes/gateway-filters.php:33
+#: includes/gateway-filters.php:29
 msgid "Cancelled"
 msgstr ""
 
@@ -88,8 +79,8 @@ msgid "Process"
 msgstr ""
 
 #: includes/admin/admin-filters.php:109
-#: includes/template-functions.php:575
-#: includes/template-functions.php:615
+#: includes/template-functions.php:597
+#: includes/template-functions.php:637
 msgid "Cancel"
 msgstr ""
 
@@ -97,49 +88,63 @@ msgstr ""
 msgid "A message must be specified for each notice."
 msgstr ""
 
-#: includes/admin/notices.php:36
-#: includes/admin/settings/stripe-connect.php:459
+#: includes/admin/notices.php:39
+#: includes/admin/settings/stripe-connect.php:518
 #: includes/payment-methods/payment-request/apple-pay.php:22
 msgid "Unable to locate registry"
 msgstr ""
 
-#: includes/admin/notices.php:61
+#: includes/admin/notices/edd-recurring-requirement.php:18
+#: includes/admin/notices/edd-requirement.php:18
+#: includes/admin/notices/php-requirement.php:21
 msgid "Credit card payments with Stripe are currently disabled."
 msgstr ""
 
-#. translators: %s Required Recurring Payments plugin version.
-#: includes/admin/notices.php:66
-msgid "To continue accepting credit card payments with Stripe please update the Recurring Payments extension to version %s"
+#. translators: %1$s Opening strong tag, do not translate. %2$s Closing strong tag, do not translate. %3$s Opening code tag, do not translate. %4$s Closing code tag, do not translate.
+#: includes/admin/notices/edd-recurring-requirement.php:26
+msgid "To continue accepting credit card payments with Stripe please update %1$sEasy Digital Downloads - Recurring Payments%2$s to version %3$s2.10%4$s or higher."
 msgstr ""
 
-#: includes/admin/notices/php-56-requirement.php:14
-msgid "Easy Digital Downloads Stripe Payment Gateway is increasing its PHP version requirement."
+#. translators: %1$s Opening strong tag, do not translate. %2$s Closing strong tag, do not translate. %3$s Opening code tag, do not translate. %4$s Closing code tag, do not translate.
+#: includes/admin/notices/edd-requirement.php:26
+msgid "To continue accepting credit card payments with Stripe please update %1$sEasy Digital Downloads%2$s to version %3$s2.9%4$s or higher."
+msgstr ""
+
+#: includes/admin/notices/edd-stripe-core.php:28
+msgid "Accept credit card payments with Stripe"
+msgstr ""
+
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. %3$s Opening anchor tag, do not translate. %4$s Closing anchor tag, do not translate.
+#: includes/admin/notices/edd-stripe-core.php:34
+msgid "Easy Digital Downloads now lets you accept credit card payments using Stripe, including Apple Pay and Google Pay support. %1$sEnable Stripe%2$s now or %3$slearn more%4$s about the benefits of using Stripe."
 msgstr ""
 
 #. translators: %1$s Future PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate. %5$s Opening anchor tag, do not translate. %6$s Closing anchor tag, do not translate.
-#: includes/admin/notices/php-56-requirement.php:22
-msgid "Easy Digital Downloads Stripe Payment Gateway will be increasing its PHP requirement to version %1$s or higher in an upcoming release. It looks like you're using version %2$s, which means you will need to %3$supgrade your version of PHP to allow the plugin to continue to function%4$s. Newer versions of PHP are both faster and more secure. The version you're using %5$sno longer receives security updates%6$s, which is another great reason to update."
+#: includes/admin/notices/php-requirement.php:29
+msgid "Easy Digital Downloads Stripe Payment Gateway requires PHP version %1$s or higher. It looks like you're using version %2$s, which means you will need to %3$supgrade your version of PHP to allow the plugin to continue to function%4$s. Newer versions of PHP are both faster and more secure. The version you're using %5$sno longer receives security updates%6$s, which is another great reason to update."
 msgstr ""
 
-#: includes/admin/notices/php-56-requirement.php:44
+#: includes/admin/notices/php-requirement.php:51
 msgid "Read More"
 msgstr ""
 
-#: includes/admin/notices/php-56-requirement.php:58
+#: includes/admin/notices/php-requirement.php:65
 msgid "Which version should I upgrade to?"
 msgstr ""
 
 #. translators: %1$s Future PHP version requirement.
-#: includes/admin/notices/php-56-requirement.php:66
-msgid "In order to be compatible with future versions of the Stripe payment gateway, you should update your PHP version to %1$s, <code>7.0</code>, <code>7.1</code>, or <code>7.2</code>. On a normal WordPress site, switching to PHP %1$s should never cause issues. We would however actually recommend you switch to PHP <code>7.1</code> or higher to receive the full speed and security benefits provided to more modern and fully supported versions of PHP. However, some plugins may not be fully compatible with PHP <code>7.x</code>, so more testing may be required."
+#: includes/admin/notices/php-requirement.php:73
+msgid "In order to be compatible with future versions of the Stripe payment gateway, you should update your PHP version to at least %1$s; however we recommend using version <code>7.4</code> if possible to receive the full speed and security benefits provided to more modern and fully supported versions of PHP. However, some plugins may not be fully compatible with PHP <code>7.4</code>, so more testing may be required."
 msgstr ""
 
-#: includes/admin/notices/php-56-requirement.php:77
+#: includes/admin/notices/php-requirement.php:84
+#: includes/admin/settings.php:307
+#: includes/admin/settings.php:376
 msgid "Need help upgrading? Ask your web host!"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
-#: includes/admin/notices/php-56-requirement.php:85
+#: includes/admin/notices/php-requirement.php:92
 msgid "Many web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. %1$sRead more about updating PHP%2$s."
 msgstr ""
 
@@ -151,168 +156,169 @@ msgstr ""
 msgid "Stripe"
 msgstr ""
 
-#: includes/admin/settings.php:27
+#: includes/admin/settings.php:35
+msgid "Unmet Requirements"
+msgstr ""
+
+#: includes/admin/settings.php:47
 msgid "Connection Status"
 msgstr ""
 
-#: includes/admin/settings.php:34
+#: includes/admin/settings.php:54
 msgid "Test Publishable Key"
 msgstr ""
 
-#: includes/admin/settings.php:35
+#: includes/admin/settings.php:55
 msgid "Enter your test publishable key, found in your Stripe Account Settings"
 msgstr ""
 
-#: includes/admin/settings.php:42
+#: includes/admin/settings.php:62
 msgid "Test Secret Key"
 msgstr ""
 
-#: includes/admin/settings.php:43
+#: includes/admin/settings.php:63
 msgid "Enter your test secret key, found in your Stripe Account Settings"
 msgstr ""
 
-#: includes/admin/settings.php:50
+#: includes/admin/settings.php:70
 msgid "Live Publishable Key"
 msgstr ""
 
-#: includes/admin/settings.php:51
+#: includes/admin/settings.php:71
 msgid "Enter your live publishable key, found in your Stripe Account Settings"
 msgstr ""
 
-#: includes/admin/settings.php:58
+#: includes/admin/settings.php:78
 msgid "Live Secret Key"
 msgstr ""
 
-#: includes/admin/settings.php:59
+#: includes/admin/settings.php:79
 msgid "Enter your live secret key, found in your Stripe Account Settings"
 msgstr ""
 
-#: includes/admin/settings.php:67
+#: includes/admin/settings.php:87
 msgid "Webhooks"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
-#: includes/admin/settings.php:71
+#: includes/admin/settings.php:91
 msgid "In order for Stripe to function completely, you must configure your Stripe webhooks. Visit your %1$saccount dashboard%2$s to configure them. Please add a webhook endpoint for the URL below."
 msgstr ""
 
 #. translators: %s Webhook URL. Do not translate.
-#: includes/admin/settings.php:77
+#: includes/admin/settings.php:97
 msgid "Webhook URL: %s"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Opening anchor tag, do not translate.
-#: includes/admin/settings.php:82
-#: includes/payment-methods/payment-request/admin/settings.php:38
+#: includes/admin/settings.php:102
+#: includes/payment-methods/payment-request/admin/settings.php:48
 msgid "See our %1$sdocumentation%2$s for more information."
 msgstr ""
 
-#: includes/admin/settings.php:89
+#: includes/admin/settings.php:109
 msgid "Billing Address Display"
 msgstr ""
 
-#: includes/admin/settings.php:90
+#: includes/admin/settings.php:110
 msgid "Select how you would like to display the billing address fields on the checkout form. <p><strong>Notes</strong>:</p><p>If taxes are enabled, this option cannot be changed from \"Full address\".</p><p>If set to \"No address fields\", you <strong>must</strong> disable \"zip code verification\" in your Stripe account.</p>"
 msgstr ""
 
-#: includes/admin/settings.php:93
+#: includes/admin/settings.php:113
 msgid "Full address"
 msgstr ""
 
-#: includes/admin/settings.php:94
+#: includes/admin/settings.php:114
 msgid "Zip / Postal Code and Country only"
 msgstr ""
 
-#: includes/admin/settings.php:95
+#: includes/admin/settings.php:115
 msgid "No address fields"
 msgstr ""
 
-#: includes/admin/settings.php:101
+#: includes/admin/settings.php:121
 msgid "Statement Descriptor"
 msgstr ""
 
-#: includes/admin/settings.php:102
+#: includes/admin/settings.php:122
 msgid "Choose how charges will appear on customer's credit card statements. <em>Max 22 characters</em>"
 msgstr ""
 
-#: includes/admin/settings.php:107
+#: includes/admin/settings.php:127
 msgid "Show Previously Used Cards"
 msgstr ""
 
-#: includes/admin/settings.php:108
+#: includes/admin/settings.php:128
 msgid "Provides logged in customers with a list of previous used payment methods for faster checkout."
 msgstr ""
 
-#: includes/admin/settings.php:113
-msgid "Preapproved Payments"
-msgstr ""
-
-#: includes/admin/settings.php:114
-msgid "Authorize payments for processing and collection at a future date."
-msgstr ""
-
-#: includes/admin/settings.php:116
-msgid "What does checking preapprove do?"
-msgstr ""
-
-#: includes/admin/settings.php:117
-msgid "If you choose this option, Stripe will not charge the customer right away after checkout, and the payment status will be set to preapproved in Easy Digital Downloads. You (as the admin) can then manually change the status to Complete by going to Payment History and changing the status of the payment to Complete. Once you change it to Complete, the customer will be charged. Note that most typical stores will not need this option."
-msgstr ""
-
-#: includes/admin/settings.php:121
+#: includes/admin/settings.php:133
 msgid "Prepaid Cards"
 msgstr ""
 
-#: includes/admin/settings.php:122
+#: includes/admin/settings.php:134
 msgid "Allow prepaid cards as valid payment method."
 msgstr ""
 
-#: includes/admin/settings.php:127
+#: includes/admin/settings.php:139
 msgid "Split Credit Card Form"
 msgstr ""
 
-#: includes/admin/settings.php:128
+#: includes/admin/settings.php:140
 msgid "Use separate card number, expiration, and CVC fields in payment forms."
 msgstr ""
 
-#: includes/admin/settings.php:133
+#: includes/admin/settings.php:145
 msgid "Restrict Stripe Assets"
 msgstr ""
 
-#: includes/admin/settings.php:134
+#: includes/admin/settings.php:146
 msgid "Only load Stripe.com hosted assets on pages that specifically utilize Stripe functionality."
 msgstr ""
 
-#: includes/admin/settings.php:136
+#: includes/admin/settings.php:148
 msgid "Loading Javascript from Stripe"
 msgstr ""
 
-#: includes/admin/settings.php:137
+#: includes/admin/settings.php:149
 msgid "Stripe advises that their Javascript library be loaded on every page to take advantage of their advanced fraud detection rules. If you are not concerned with this, enable this setting to only load the Javascript when necessary. Read more about Stripe's recommended setup here: https://stripe.com/docs/web/setup."
 msgstr ""
 
-#: includes/admin/settings.php:144
+#: includes/admin/settings.php:156
 msgid "Stripe Checkout"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
-#: includes/admin/settings.php:149
+#: includes/admin/settings.php:161
 msgid "To ensure your website is compliant with the new %1$sStrong Customer Authentication%2$s (SCA) regulations, the legacy Stripe Checkout modal is no longer supported. Payments are still securely accepted through through Stripe on the standard Easy Digital Downloads checkout page. \"Buy Now\" buttons will also automatically redirect to the standard checkout page."
 msgstr ""
 
-#: includes/admin/settings.php:171
+#: includes/admin/settings.php:183
 msgid "You have disabled the \"Test Mode\" option. Once you have saved your changes, please verify your Stripe connection, especially if you have not previously connected in with \"Test Mode\" disabled."
 msgstr ""
 
+#. translators: %1$s Future PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate.
+#. translators: %1$s PHP version requirement. %2$s Current PHP version. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not translate.
+#: includes/admin/settings.php:289
+#: includes/admin/settings.php:361
+msgid "Processing credit cards with Stripe requires PHP version %1$s or higher. It looks like you're using version %2$s, which means you will need to %3$supgrade your version of PHP before acceping credit card payments%4$s."
+msgstr ""
+
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
-#: includes/admin/settings.php:293
+#: includes/admin/settings.php:313
+#: includes/admin/settings.php:381
+msgid "Many web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. If you need to change hosts, please see %1$sour hosting recommendations%2$s."
+msgstr ""
+
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate.
+#: includes/admin/settings.php:431
 msgid "There was an error getting your Stripe credentials. Please %1$stry again%2$s. If you continue to have this problem, please contact support."
 msgstr ""
 
 #: includes/admin/settings/stripe-connect.php:197
-#: includes/admin/settings/stripe-connect.php:403
-#: includes/admin/settings/stripe-connect.php:465
+#: includes/admin/settings/stripe-connect.php:462
+#: includes/admin/settings/stripe-connect.php:524
 msgid "Connect with Stripe"
 msgstr ""
 
@@ -341,77 +347,82 @@ msgstr ""
 msgid "Unable to retrieve account information."
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:293
+#: includes/admin/settings/stripe-connect.php:295
 msgctxt "Stripe Connect mode"
 msgid "test"
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:294
+#: includes/admin/settings/stripe-connect.php:296
 msgctxt "Stripe Connect mode"
 msgid "live"
 msgstr ""
 
 #. translators: %1$s Stripe payment mode. %2$s Opening anchor tag for reconnecting to Stripe, do not translate. %3$s Opening anchor tag for disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not translate.
-#: includes/admin/settings/stripe-connect.php:300
+#: includes/admin/settings/stripe-connect.php:302
 msgid "Your Stripe account is connected in %1$s mode. %2$sReconnect in %1$s mode%4$s, or %3$sdisconnect this account%4$s."
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:321
-msgid "You are currently connected to an unsaved Stripe account."
-msgstr ""
-
-#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate
+#. translators: %1$s Opening bold tag, do not translate. %2$s Closing bold tag, do not translate.
 #: includes/admin/settings/stripe-connect.php:324
-msgid "Please %1$ssave your account in Stripe%2$s before continuing."
+msgid "You are currently connected to a %1$stemporary%2$s Stripe test account, which can only be used for testing purposes. You cannot manage this account in Stripe."
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:328
-msgid "You will not be able to reconnect to this account unless it is saved."
+#: includes/admin/settings/stripe-connect.php:334
+msgid "Webhooks cannot be configured for recurring purchases with this account."
+msgstr ""
+
+#. translators: %1$s Opening link tag, do not translate. %2$s Closing link tag, do not translate.
+#: includes/admin/settings/stripe-connect.php:341
+msgid "%1$sRegister a Stripe account%2$s for full access."
 msgstr ""
 
 #. translators: %1$s Opening anchor tag for disconnecting Stripe, do not translate. %2$s Closing anchor tag, do not translate.
-#: includes/admin/settings/stripe-connect.php:333
+#: includes/admin/settings/stripe-connect.php:352
 msgid "%1$sDisconnect this account%2$s."
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:377
+#: includes/admin/settings/stripe-connect.php:408
+msgid "Pay as you go pricing: 2% per-transaction fee + Stripe fees."
+msgstr ""
+
+#: includes/admin/settings/stripe-connect.php:428
 msgid "Administrator (Owner)"
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:388
+#: includes/admin/settings/stripe-connect.php:439
 msgid "The API keys provided do not match the Stripe Connect account associated with this installation. If you have manually modified these values after connecting your account, please reconnect below or update your API keys."
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:406
+#: includes/admin/settings/stripe-connect.php:465
 msgid "It is highly recommended to Connect with Stripe for easier setup and improved security."
 msgstr ""
 
 #. translators: %1$s Stripe payment mode.
-#: includes/admin/settings/stripe-connect.php:419
+#: includes/admin/settings/stripe-connect.php:478
 msgid "Your manually managed %1$s mode API keys are valid."
 msgstr ""
 
 #. translators: %1$s Stripe payment mode.
-#: includes/admin/settings/stripe-connect.php:435
+#: includes/admin/settings/stripe-connect.php:494
 msgid "Your manually managed %1$s mode API keys are invalid."
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:475
+#: includes/admin/settings/stripe-connect.php:534
 msgid "Start accepting payments with Stripe by connecting your account. Stripe Connect helps ensure easier setup and improved security."
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:486
+#: includes/admin/settings/stripe-connect.php:545
 msgctxt "gateway test mode status"
 msgid "enabled"
 msgstr ""
 
-#: includes/admin/settings/stripe-connect.php:487
+#: includes/admin/settings/stripe-connect.php:546
 msgctxt "gateway test mode status"
 msgid "disabled"
 msgstr ""
 
 #. translators: %s Test mode status. Enabled or disabled.
-#: includes/admin/settings/stripe-connect.php:496
+#: includes/admin/settings/stripe-connect.php:555
 msgid "\"Test Mode\" has been %s. Please verify your Stripe connection status."
 msgstr ""
 
@@ -433,7 +444,7 @@ msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
 #: includes/admin/upgrade-functions.php:57
-#: includes/payment-actions.php:1243
+#: includes/payment-actions.php:1430
 msgid "Error"
 msgstr ""
 
@@ -493,12 +504,21 @@ msgstr ""
 msgid "Card successfully added."
 msgstr ""
 
+#: includes/class-edd-stripe.php:239
+#: includes/template-functions.php:125
+msgid "Credit Card"
+msgstr ""
+
+#: includes/class-stripe-api.php:51
+msgid "Unable to process request: Unmet Stripe payment gateway requirements. Please contact the website administrator."
+msgstr ""
+
 #. translators: %1$s Stripe API class name. %2$s Stripe API method name.
-#: includes/class-stripe-api.php:61
+#: includes/class-stripe-api.php:69
 msgid "Unable to call %1$s::%2$s"
 msgstr ""
 
-#: includes/compat.php:208
+#: includes/compat.php:216
 msgid "Your cart is empty."
 msgstr ""
 
@@ -546,7 +566,7 @@ msgstr ""
 msgid "Outputs a line stating what charges will appear as on customer's credit card statements."
 msgstr ""
 
-#: includes/gateway-filters.php:76
+#: includes/gateway-filters.php:72
 msgid "Please enter a name for the credit card."
 msgstr ""
 
@@ -626,81 +646,71 @@ msgstr ""
 msgid "No user records were found that needed to be migrated."
 msgstr ""
 
-#: includes/payment-actions.php:41
-#: includes/payment-actions.php:377
-#: includes/payment-actions.php:431
-#: includes/payment-actions.php:494
-#: includes/payment-actions.php:563
-#: includes/payment-actions.php:634
-#: includes/payment-actions.php:801
-#: includes/payment-actions.php:914
+#: includes/payment-actions.php:42
 #: includes/template-functions.php:26
 msgid "We are unable to process your payment at this time, please try again later or contact support."
 msgstr ""
 
-#: includes/payment-actions.php:59
-msgid "Unable to locate Payment Method."
+#: includes/payment-actions.php:63
+msgid "Unable to locate payment method. Please try again with a new payment method."
 msgstr ""
 
-#: includes/payment-actions.php:72
-msgid "Prepaid cards are not a valid payment method."
+#: includes/payment-actions.php:81
+msgid "Prepaid cards are not a valid payment method. Please try again with a new payment method."
 msgstr ""
 
-#: includes/payment-actions.php:85
-msgid "Customer creation failed while processing a payment."
+#: includes/payment-actions.php:99
+msgid "Unable to create customer. Please try again."
 msgstr ""
 
-#: includes/payment-actions.php:200
+#: includes/payment-actions.php:218
 msgid "Charges are no longer directly created in Stripe. Please read the following for more information: https://easydigitaldownloads.com/development/"
 msgstr ""
 
-#: includes/payment-actions.php:317
-#: includes/payment-actions.php:337
-#: includes/payment-actions.php:779
-#: includes/payment-actions.php:892
+#: includes/payment-actions.php:336
+#: includes/payment-actions.php:356
+#: includes/payment-actions.php:374
+#: includes/payment-actions.php:450
+#: includes/payment-actions.php:532
+#: includes/payment-actions.php:620
+#: includes/payment-actions.php:707
+#: includes/payment-actions.php:916
+#: includes/payment-actions.php:1059
 msgid "Stripe Error"
 msgstr ""
 
-#: includes/payment-actions.php:394
-#: includes/payment-actions.php:448
-#: includes/payment-actions.php:517
-#: includes/payment-actions.php:579
-#: includes/payment-actions.php:658
-#: includes/payment-actions.php:824
-msgid "Error processing purchase. Please reload the page and try again."
+#: includes/payment-actions.php:416
+#: includes/payment-actions.php:426
+#: includes/payment-actions.php:485
+#: includes/payment-actions.php:495
+#: includes/payment-actions.php:566
+#: includes/payment-actions.php:583
+#: includes/payment-actions.php:654
+#: includes/payment-actions.php:664
+#: includes/payment-actions.php:742
+#: includes/payment-actions.php:759
+#: includes/payment-actions.php:771
+#: includes/payment-actions.php:783
+#: includes/payment-actions.php:800
+#: includes/payment-actions.php:835
+#: includes/payment-actions.php:950
+#: includes/payment-actions.php:967
+#: includes/payment-actions.php:977
+#: includes/payment-actions.php:996
+#: includes/payment-actions.php:1044
+#: includes/payment-actions.php:1090
+#: includes/payment-actions.php:1106
+#: includes/payment-actions.php:1119
+#: includes/payment-actions.php:1153
+msgid "An error occurred, but your payment may have gone through. Please contact the site administrator."
 msgstr ""
 
-#: includes/payment-actions.php:668
-msgid "Unable to verify intent."
-msgstr ""
-
-#: includes/payment-actions.php:674
-msgid "Unable to verify purchase session."
-msgstr ""
-
-#: includes/payment-actions.php:685
-msgid "Unable to verify intent status."
-msgstr ""
-
-#: includes/payment-actions.php:714
-#: includes/payment-actions.php:774
+#: includes/payment-actions.php:901
 msgid "Unable to create payment."
 msgstr ""
 
-#: includes/payment-actions.php:832
-#: includes/payment-actions.php:845
-#: includes/payment-actions.php:887
-#: includes/payment-actions.php:944
-#: includes/payment-actions.php:971
-msgid "Unable to complete payment."
-msgstr ""
-
-#: includes/payment-actions.php:933
-msgid "Error authorizing payment. Please reload the page and try again."
-msgstr ""
-
 #. translators: %s Stripe Refund ID
-#: includes/payment-actions.php:1237
+#: includes/payment-actions.php:1424
 msgid "Charge refunded in Stripe. Refund ID %s"
 msgstr ""
 
@@ -710,7 +720,7 @@ msgid "Unable to add item to cart."
 msgstr ""
 
 #: includes/payment-methods/buy-now/checkout.php:81
-#: includes/payment-methods/payment-request/checkout.php:247
+#: includes/payment-methods/payment-request/checkout.php:269
 msgid "Please enter a valid email address"
 msgstr ""
 
@@ -726,32 +736,32 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
-#: includes/payment-methods/payment-request/admin/settings.php:21
+#: includes/payment-methods/payment-request/admin/settings.php:31
 msgid "Apple Pay/Google Pay"
 msgstr ""
 
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Opening anchor tag, do not translate. %3$s Closing anchor tag, do not translate.
-#: includes/payment-methods/payment-request/admin/settings.php:26
+#: includes/payment-methods/payment-request/admin/settings.php:36
 msgid "\"Express Checkout\" via Apple Pay, Google Pay, or Microsoft Pay digital wallets. By using Apple Pay, you agree to %1$sStripe%3$s and %2$sApple's%3$s terms of service."
 msgstr ""
 
-#: includes/payment-methods/payment-request/admin/settings.php:32
+#: includes/payment-methods/payment-request/admin/settings.php:42
 msgid "This feature is not available when taxes are enabled."
 msgstr ""
 
-#: includes/payment-methods/payment-request/admin/settings.php:36
+#: includes/payment-methods/payment-request/admin/settings.php:46
 msgid "Apple Pay is not available in Test Mode."
 msgstr ""
 
-#: includes/payment-methods/payment-request/admin/settings.php:59
+#: includes/payment-methods/payment-request/admin/settings.php:69
 msgid "Single %s"
 msgstr ""
 
-#: includes/payment-methods/payment-request/admin/settings.php:64
+#: includes/payment-methods/payment-request/admin/settings.php:74
 msgid "%s Archive (includes <code>[downloads]</code> shortcode)"
 msgstr ""
 
-#: includes/payment-methods/payment-request/admin/settings.php:67
+#: includes/payment-methods/payment-request/admin/settings.php:77
 msgid "Checkout"
 msgstr ""
 
@@ -772,35 +782,51 @@ msgstr ""
 msgid "Please %1$smanually add your domain%2$s %3$s to use Apple Pay."
 msgstr ""
 
-#: includes/payment-methods/payment-request/checkout.php:45
+#: includes/payment-methods/payment-request/checkout.php:68
 msgid "Express Checkout (Apple Pay/Google Pay)"
 msgstr ""
 
-#: includes/payment-methods/payment-request/checkout.php:46
+#: includes/payment-methods/payment-request/checkout.php:69
 msgid "Express Checkout"
 msgstr ""
 
-#: includes/payment-methods/payment-request/checkout.php:294
+#: includes/payment-methods/payment-request/checkout.php:316
 msgid "Missing nonce when loading the gateway fields. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/payment-methods/payment-request/functions.php:135
-#: includes/payment-methods/payment-request/functions.php:181
+#: includes/payment-methods/payment-request/functions.php:146
+#: includes/payment-methods/payment-request/functions.php:192
 msgid "Total"
 msgstr ""
 
-#: includes/payment-methods/payment-request/functions.php:150
-#: includes/payment-methods/payment-request/functions.php:207
+#: includes/payment-methods/payment-request/functions.php:161
+#: includes/payment-methods/payment-request/functions.php:218
 msgid " × %d"
 msgstr ""
 
-#: includes/payment-methods/payment-request/template.php:178
+#: includes/payment-methods/payment-request/template.php:198
 msgctxt "payment request button divider"
 msgid "or"
 msgstr ""
 
 #: includes/payment-receipt.php:52
 msgid "To finalize your preapproved purchase, please confirm your payment method."
+msgstr ""
+
+#: includes/pro/admin/settings/preapproval.php:27
+msgid "Preapproved Payments"
+msgstr ""
+
+#: includes/pro/admin/settings/preapproval.php:28
+msgid "Authorize payments for processing and collection at a future date."
+msgstr ""
+
+#: includes/pro/admin/settings/preapproval.php:30
+msgid "What does checking preapprove do?"
+msgstr ""
+
+#: includes/pro/admin/settings/preapproval.php:31
+msgid "If you choose this option, Stripe will not charge the customer right away after checkout, and the payment status will be set to preapproved in Easy Digital Downloads. You (as the admin) can then manually change the status to Complete by going to Payment History and changing the status of the payment to Complete. Once you change it to Complete, the customer will be charged. Note that most typical stores will not need this option."
 msgstr ""
 
 #: includes/scripts.php:78
@@ -835,164 +861,164 @@ msgstr ""
 msgid "Credit Card Info"
 msgstr ""
 
-#: includes/template-functions.php:47
+#: includes/template-functions.php:65
 msgid "This is a secure SSL encrypted payment."
 msgstr ""
 
-#: includes/template-functions.php:84
+#: includes/template-functions.php:102
 msgid "Adding new payment methods is currently unavailable."
 msgstr ""
 
-#: includes/template-functions.php:94
+#: includes/template-functions.php:112
 msgid "Name on the Card"
 msgstr ""
 
-#: includes/template-functions.php:97
+#: includes/template-functions.php:115
 msgid "The name printed on the front of your credit card."
 msgstr ""
 
-#: includes/template-functions.php:98
+#: includes/template-functions.php:116
 msgid "Card name"
 msgstr ""
 
-#: includes/template-functions.php:105
+#: includes/template-functions.php:123
 msgid "Credit Card Number"
 msgstr ""
 
-#: includes/template-functions.php:131
+#: includes/template-functions.php:149
 msgid "Expiration"
 msgstr ""
 
-#: includes/template-functions.php:140
+#: includes/template-functions.php:158
 msgid "CVC"
 msgstr ""
 
 #. translators: %1$s Card type. %2$s Card last 4.
-#: includes/template-functions.php:222
+#: includes/template-functions.php:240
 msgid "Update card billing address for %1$s •••• %2$s"
 msgstr ""
 
-#: includes/template-functions.php:250
+#: includes/template-functions.php:268
 msgid "We are unable to process your payment at this time, please try again later or contacts support."
 msgstr ""
 
 #. translators: %1$s Card type. %2$s Card last 4.
-#: includes/template-functions.php:283
-#: includes/template-functions.php:368
+#: includes/template-functions.php:301
+#: includes/template-functions.php:390
 msgid "%1$s •••• %2$s"
 msgstr ""
 
-#: includes/template-functions.php:308
+#: includes/template-functions.php:326
 msgid "Expired"
 msgstr ""
 
-#: includes/template-functions.php:320
-#: includes/template-functions.php:586
+#: includes/template-functions.php:338
+#: includes/template-functions.php:608
 msgid "Add New Card"
 msgstr ""
 
-#: includes/template-functions.php:345
+#: includes/template-functions.php:367
 msgid "Payment method management is currently unavailable."
 msgstr ""
 
-#: includes/template-functions.php:358
+#: includes/template-functions.php:380
 msgid "Manage Payment Methods"
 msgstr ""
 
-#: includes/template-functions.php:382
+#: includes/template-functions.php:404
 msgid "Default"
 msgstr ""
 
-#: includes/template-functions.php:387
+#: includes/template-functions.php:409
 msgid "Expires"
 msgstr ""
 
-#: includes/template-functions.php:403
+#: includes/template-functions.php:425
 msgid "Update"
 msgstr ""
 
-#: includes/template-functions.php:409
+#: includes/template-functions.php:431
 msgid "Set as Default"
 msgstr ""
 
-#: includes/template-functions.php:419
+#: includes/template-functions.php:441
 msgid "Delete"
 msgstr ""
 
-#: includes/template-functions.php:427
-#: includes/template-functions.php:721
+#: includes/template-functions.php:449
+#: includes/template-functions.php:747
 msgid "Billing Details"
 msgstr ""
 
-#: includes/template-functions.php:435
+#: includes/template-functions.php:457
 msgid "Address Line 1"
 msgstr ""
 
-#: includes/template-functions.php:449
+#: includes/template-functions.php:471
 msgid "Address Line 2"
 msgstr ""
 
-#: includes/template-functions.php:463
+#: includes/template-functions.php:485
 msgid "City"
 msgstr ""
 
-#: includes/template-functions.php:477
+#: includes/template-functions.php:499
 msgid "ZIP Code"
 msgstr ""
 
-#: includes/template-functions.php:488
-#: includes/template-functions.php:497
+#: includes/template-functions.php:510
+#: includes/template-functions.php:519
 msgid "Country"
 msgstr ""
 
-#: includes/template-functions.php:510
+#: includes/template-functions.php:532
 msgid "State"
 msgstr ""
 
-#: includes/template-functions.php:532
+#: includes/template-functions.php:554
 msgid "Expiration (MM/YY)"
 msgstr ""
 
-#: includes/template-functions.php:570
-#: includes/template-functions.php:611
+#: includes/template-functions.php:592
+#: includes/template-functions.php:633
 msgid "Please Wait…"
 msgstr ""
 
-#: includes/template-functions.php:571
-#: includes/template-functions.php:572
+#: includes/template-functions.php:593
+#: includes/template-functions.php:594
 msgid "Update Card"
 msgstr ""
 
-#: includes/template-functions.php:612
-#: includes/template-functions.php:613
+#: includes/template-functions.php:634
+#: includes/template-functions.php:635
 msgid "Add new card"
 msgstr ""
 
-#: includes/template-functions.php:724
+#: includes/template-functions.php:750
 msgid "Billing Country"
 msgstr ""
 
-#: includes/template-functions.php:729
+#: includes/template-functions.php:755
 msgid "The country for your billing address."
 msgstr ""
 
-#: includes/template-functions.php:748
+#: includes/template-functions.php:774
 msgid "Billing Zip / Postal Code"
 msgstr ""
 
-#: includes/template-functions.php:753
+#: includes/template-functions.php:779
 msgid "The zip or postal code for your billing address."
 msgstr ""
 
-#: includes/template-functions.php:754
+#: includes/template-functions.php:780
 msgid "Zip / Postal Code"
 msgstr ""
 
-#: includes/template-functions.php:820
+#: includes/template-functions.php:846
 msgid "Please enter your zip / postal code"
 msgstr ""
 
-#: includes/template-functions.php:825
+#: includes/template-functions.php:851
 msgid "Please select your billing country"
 msgstr ""
 

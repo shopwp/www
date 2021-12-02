@@ -220,7 +220,7 @@ add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
  * @param string $amount_override a custom amount that over rides the 'edd_price' meta, used for variable prices
  * @return string - the price of the download
  */
-function edd_get_download_final_price( $download_id = 0, $user_purchase_info, $amount_override = null ) {
+function edd_get_download_final_price( $download_id, $user_purchase_info, $amount_override = null ) {
 	if ( is_null( $amount_override ) ) {
 		$original_price = get_post_meta( $download_id, 'edd_price', true );
 	} else {
@@ -608,7 +608,7 @@ function edd_get_download_sales_stats( $download_id = 0 ) {
  * @param string|null $sale_date The date of the sale
  * @return void
 */
-function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = false, $sale_date = null ) {
+function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false, $sale_date = null ) {
 	global $edd_logs;
 
 	$log_data = array(
@@ -641,7 +641,7 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
  * @param int $price_id Price ID, if any
  * @return void
  */
-function edd_record_download_in_log( $download_id = 0, $file_id, $user_info, $ip, $payment_id, $price_id = false ) {
+function edd_record_download_in_log( $download_id, $file_id, $user_info, $ip, $payment_id, $price_id = false ) {
 	global $edd_logs;
 
 	$log_data = array(
@@ -720,7 +720,7 @@ function edd_decrease_purchase_count( $download_id = 0, $quantity = 1 ) {
  * @param int $amount Earnings
  * @return bool|int
  */
-function edd_increase_earnings( $download_id = 0, $amount ) {
+function edd_increase_earnings( $download_id, $amount ) {
 	$download = new EDD_Download( $download_id );
 	return $download->increase_earnings( $amount );
 }
@@ -733,7 +733,7 @@ function edd_increase_earnings( $download_id = 0, $amount ) {
  * @param int $amount Earnings
  * @return bool|int
  */
-function edd_decrease_earnings( $download_id = 0, $amount ) {
+function edd_decrease_earnings( $download_id, $amount ) {
 	$download = new EDD_Download( $download_id );
 	return $download->decrease_earnings( $amount );
 }
@@ -985,7 +985,7 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
  * @param string $file_key File Key
  * @return string - the price ID if restricted, "all" otherwise
  */
-function edd_get_file_price_condition( $download_id = 0, $file_key ) {
+function edd_get_file_price_condition( $download_id, $file_key ) {
 	$download = new EDD_Download( $download_id );
 	return $download->get_file_price_condition( $file_key );
 }
@@ -1249,34 +1249,35 @@ function edd_validate_url_token( $url = '' ) {
 
 		wp_parse_str( $parts['query'], $query_args );
 
-		// These are the only URL parameters that are allowed to affect the token validation
-		$allowed = apply_filters( 'edd_url_token_allowed_params', array(
-			'eddfile',
-			'file',
-			'ttl',
-			'token'
-		) );
-
-		// Parameters that will be removed from the URL before testing the token
-		$remove = array();
-
-		foreach( $query_args as $key => $value ) {
-			if( false === in_array( $key, $allowed ) ) {
-				$remove[] = $key;
-			}
-		}
-
-		if( ! empty( $remove ) ) {
-
-			$url = remove_query_arg( $remove, $url );
-
-		}
-
+		// If the TTL is in the past, die out before we go any further.
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 
 			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
+
+		// These are the only URL parameters that are allowed to affect the token validation.
+		$allowed = apply_filters(
+			'edd_url_token_allowed_params',
+			array(
+				'eddfile',
+				'ttl',
+				'file',
+				'token',
+			)
+		);
+
+		// Collect the allowed tags in proper order, remove all tags, and re-add only the allowed ones.
+		$allowed_args = array();
+
+		foreach ( $allowed as $key ) {
+			if ( true === array_key_exists( $key, $query_args ) ) {
+				$allowed_args[ $key ] = $query_args[ $key ];
+			}
+		}
+
+		// strtok allows a quick clearing of existing query string parameters, so we can re-add the allowed ones.
+		$url = add_query_arg( $allowed_args, strtok( $url, '?' ) );
 
 		if ( isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $url ) ) ) {
 

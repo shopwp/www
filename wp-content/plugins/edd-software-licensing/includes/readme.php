@@ -94,6 +94,12 @@ function edd_sl_readme_modify_license_response( $original_response = array(), $d
 		@send_nosniff_header();
 	}
 */
+
+	// Do nothing if readme parsing is not enabled.
+	if ( ! edd_get_option( 'edd_sl_readme_parsing' ) ) {
+		return $original_response;
+	}
+
 	// Get the URL to use in the WP.org validator
 	$readme_url = get_post_meta( $download->ID, '_edd_readme_location', true );
 
@@ -199,8 +205,10 @@ function edd_sl_readme_modify_license_response( $original_response = array(), $d
 		$response['added'] = date( 'Y-m-d', strtotime( $download->post_date_gmt, current_time( 'timestamp' ) ) );
 	}
 
-	if ( get_post_meta( $download->ID, '_edd_readme_plugin_last_updated', true ) ) {
-		$response['last_updated'] = apply_filters( 'edd_sl_readme_last_updated', human_time_diff( strtotime( $download->post_modified_gmt, current_time( 'timestamp' ) ), current_time( 'timestamp', 1 ) ) . ' ago', $download );
+	// The `edd_sl_readme_last_updated` is here for backwards compatibility.
+	$last_updated = apply_filters( 'edd_sl_readme_last_updated', false, $download );
+	if ( $last_updated ) {
+		$response['last_updated'] = $last_updated;
 	}
 
 	// Filter this if you want to.

@@ -1,0 +1,651 @@
+/*!
+
+Author:         Andrew M Robbins
+Author URI:     https://simpleblend.net
+
+*/
+
+// Vendor
+@import '../vendor/modular-scale';
+
+// Utilities
+@import 'utils/mixins';
+@import 'utils/variables/fonts';
+@import 'utils/variables/opacities';
+@import 'utils/variables/breakpoints';
+@import 'utils/variables/animations';
+@import 'utils/variables/grid';
+@import 'utils/variables/colors';
+@import 'utils/variables/spacing';
+@import 'utils/functions';
+
+// Base
+@import 'base/resets';
+@import 'base/vendor';
+@import 'base/global';
+@import 'base/typography';
+@import 'base/tables';
+@import 'base/forms';
+
+// Layout
+@import 'layout/grid';
+@import 'layout/header';
+@import 'layout/footer';
+@import 'layout/layout';
+@import 'layout/sidebar';
+@import 'layout/nav';
+@import 'layout/posts';
+
+// Modules
+@import 'components/buttons';
+@import 'components/spinner';
+@import 'components/seperator';
+@import 'components/modal';
+@import 'components/cards';
+@import 'components/marquee';
+@import 'components/products';
+@import 'components/account';
+@import 'components/icons';
+@import 'components/steps';
+@import 'components/msg';
+@import 'components/code';
+@import 'components/search';
+@import 'components/purchase';
+@import 'components/accordion';
+@import 'components/support';
+@import 'components/home';
+@import 'components/snippet';
+@import 'components/mailinglist';
+@import 'components/faqs';
+@import 'components/changelog';
+@import 'components/downloads';
+@import 'components/notices';
+@import 'components/screenshots';
+@import 'components/changelogs';
+@import 'components/divider';
+@import 'components/affiliate';
+@import 'components/pro';
+@import 'components/how-it-works';
+@import 'components/pro-features';
+@import 'components/comparison-chart';
+@import 'components/checkout';
+@import 'components/testimonials';
+@import 'components/current-version';
+@import 'components/getting-started-inline';
+@import 'components/extensions';
+
+// State
+@import 'state/state';
+
+.marquee-content h1 .letter {
+	display: inline-block;
+	line-height: 1em;
+}
+
+.component-demo {
+	@include device(600, 'max') {
+		.row {
+			flex-direction: column;
+
+			.demo {
+				width: auto;
+			}
+		}
+
+		.wps-items {
+			left: 0;
+			max-width: 100%;
+		}
+
+		.wps-items-wrapper {
+			padding: 0;
+		}
+
+		.wpshopify-loading-placeholder + div {
+			left: 0 !important;
+		}
+
+		.wpshopify-loading-placeholder + div div {
+			margin-left: 0 !important;
+		}
+	}
+
+	+ .component-testimonials {
+		margin-top: -2em;
+	}
+
+	.wps-items-wrapper {
+		justify-content: center;
+		display: flex;
+	}
+}
+
+.home .component-demo {
+	@include device(600, 'max') {
+		margin-top: 2em;
+	}
+}
+
+.component-how-it-works + .component-demo {
+	margin-top: -2em;
+	margin-bottom: 10em;
+}
+
+.wps-cart-icon-fixed {
+	display: none !important;
+}
+
+.marquee-content .callout {
+	animation-duration: 0.5s;
+	animation-iteration-count: 1;
+	transform-origin: bottom;
+	animation-name: slideIn;
+}
+
+@keyframes slideIn {
+	0% {
+		transform: translateY(50px) translateZ(0px);
+		opacity: 0.4;
+	}
+
+	100% {
+		transform: translateY(0) translateZ(0px);
+		opacity: 1;
+	}
+}
+
+.logo-partner {
+	width: 25px;
+	position: relative;
+	height: 25px;
+	top: 7px;
+	margin-right: 6px;
+}
+
+.callout {
+	text-decoration: none;
+	color: #1d144f;
+	margin-top: 3em;
+	display: block;
+
+	@include device(400, 'max') {
+		font-size: 13px;
+	}
+
+	span {
+		border-bottom: 1px solid #1d144f;
+		padding-bottom: 3px;
+	}
+
+	svg {
+		margin-left: 5px;
+	}
+}
+
+body.testimonials {
+	height: auto !important;
+}
+
+#wps-input-terms {
+	width: auto;
+	margin: 0px;
+}
+
+.component-testimonials + .component-faq-secondary {
+	margin-top: 4.5em;
+}
+
+.edd-payment-icons {
+	top: 94px;
+}
+
+#password-lost-form-wrap {
+	max-width: 700px;
+	margin: 0 auto;
+	padding: 0 10px;
+}
+
+#password-lost-form-wrap label {
+	text-align: left;
+}
+
+#password-lost-form-wrap .lostpassword-submit {
+	margin-top: 0;
+}
+
+#password-lost-form-wrap .som-password-sent-message {
+	background-color: #415aff;
+	max-width: 700px;
+	margin: 0 auto;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 8px;
+}
+
+#password-lost-form-wrap input[type='password'].som-password-input {
+	max-width: 100%;
+}
+
+.blog,
+.single-post {
+	#someone-purchased {
+		display: none !important;
+	}
+}
+
+.component.component-features-demo {
+	@media (max-width: 700px) {
+		margin: 3em auto;
+
+		.row {
+			flex-direction: column;
+			margin-top: 0;
+		}
+
+		.nav {
+			margin: 0 auto;
+			border-radius: 0;
+			width: 100%;
+
+			ul {
+				height: 30vh;
+				padding-bottom: 60px;
+				margin-bottom: 20px;
+			}
+		}
+
+		.demo-header {
+			margin-bottom: 0;
+		}
+
+		.features {
+			margin-top: 30px;
+			padding: 0 20px;
+		}
+	}
+}
+
+// Can remove
+.component-testimonials {
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+body.testimonials {
+	height: auto !important;
+}
+
+#wps-input-terms {
+	width: auto;
+	margin: 0px;
+}
+
+.component-testimonials + .component-faq-secondary {
+	margin-top: 4.5em;
+}
+
+.edd-payment-icons {
+	top: 94px;
+}
+
+.purchase .component-purchase {
+	background-image: linear-gradient(0deg, #fdf0ff 0, #f0f0ff);
+}
+
+.page-template-template-narrow-php .main {
+	max-width: 700px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 9em;
+}
+
+.page-template-template-narrow-php .main p,
+.page-template-template-narrow-php .main h2,
+.page-template-template-narrow-php .main h3,
+.page-template-template-narrow-php .main ul,
+.page-template-template-narrow-php .main ol {
+	text-align: left;
+}
+
+.page-template-template-narrow-php .main h2 {
+	font-size: 1.65em;
+}
+
+.page-template-template-narrow-php .main h3 {
+	font-size: 1.24em;
+}
+
+#password-lost-form-wrap {
+	max-width: 700px;
+	margin: 0 auto;
+	padding: 0 10px;
+}
+
+#password-lost-form-wrap label {
+	text-align: left;
+}
+
+#password-lost-form-wrap .lostpassword-submit {
+	margin-top: 0;
+}
+
+#password-lost-form-wrap .som-password-sent-message {
+	background-color: #415aff;
+	max-width: 700px;
+	margin: 0 auto;
+	padding: 5px 10px;
+	border: none;
+	border-radius: 8px;
+}
+
+#password-lost-form-wrap input[type='password'].som-password-input {
+	max-width: 100%;
+}
+
+.getting-started-mailinglist-form .form-error.is-visible #email-error {
+	padding-top: 0;
+}
+
+#menu-primary-navigation > .menu-item {
+	padding: 0 !important;
+}
+
+.header .menu-item a {
+	padding: 0.9em 1.1em !important;
+}
+
+.header .sub-menu a {
+	padding: 0.65em 2.1em !important;
+}
+
+.blog #someone-purchased,
+.single-post #someone-purchased {
+	display: none !important;
+}
+
+.author-name a {
+	color: #1f1f23;
+	text-decoration: none;
+}
+
+.author-name a:hover {
+	color: #1f1f23;
+	text-decoration: underline;
+	opacity: 1;
+}
+
+.byline.author .logo-header {
+	top: -1px;
+}
+
+.single-post .post .l-contain-narrow {
+	max-width: 730px;
+}
+
+.single-post .entry-content h2 {
+	font-size: 28px;
+}
+
+.single-post .entry-content h3 {
+	font-size: 23px;
+}
+
+.single-post .entry-content h4 {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.single-post .entry-content .wp-block-image {
+	margin-left: 0;
+}
+
+.extension-purchase {
+	position: sticky;
+	top: 20px;
+}
+
+.menu-item-202382 a:after,
+.menu-item-202382 a:before {
+	display: none;
+}
+
+.is-showing-notices.features .component-notice {
+	display: none;
+}
+
+.features.is-showing-notices > .header {
+	margin-top: 0;
+}
+
+div[data-tippy-root] div.tippy-box[data-theme~='dark'] {
+	background-color: #16151e;
+}
+
+div[data-tippy-root] div.tippy-box[data-theme~='dark'] .tippy-arrow {
+	color: #16151e;
+}
+
+.edd_discount_remove[data-code='COVID2020'] {
+	left: 236px;
+}
+
+@media (max-width: 2000px) {
+	.is-showing-notices.single-download .main {
+		margin-top: 170px;
+	}
+}
+
+.component-testimonials .btn {
+	margin-top: 30px;
+}
+
+.page-content .receipt-account-wrapper {
+	margin-top: 1em;
+}
+
+.author-info-wrap {
+	margin-top: -4px;
+}
+
+.post-affiliate {
+	margin: 2em auto 2em;
+}
+
+.post .entry-content p + ul > li:first-of-type,
+.post .entry-content p + ol > li:first-of-type {
+	margin-top: -1em;
+}
+
+.post .entry-content p code {
+	background: #ececec;
+	padding: 5px 12px;
+	font-size: 15px;
+}
+
+.post .entry-content a {
+	color: #000;
+}
+
+#edd_checkout_form_wrap #edd_sl_renewal_form {
+	display: none;
+}
+
+.component-pro-features {
+	margin-top: 3em;
+}
+
+.mailinglist-form-inline .form-messages {
+	max-width: 425px;
+}
+
+.wpshopify-products-variant-buttons {
+	margin: 1em 0 !important;
+}
+
+.css-17mhk3u-ClearSelectionsCSS-slideInFromTop-ClearSelections,
+.css-1hqkrt6-ClearSelectionsCSS-slideInFromTop-ClearSelections {
+	text-align: right !important;
+	margin-top: 10px !important;
+}
+
+.css-18jk3bw-labelStyles {
+	display: inline-block !important;
+	width: auto !important;
+	align-self: flex-start;
+}
+
+.component-marquee + .component-testimonials {
+	margin-top: 10em;
+}
+
+.page-template-template-narrow-php.faq .main {
+	margin-top: 180px;
+}
+
+.is-showing-notices.home .main,
+.is-showing-notices.testimonials .main {
+	margin: 165px 0 0;
+}
+
+.page-template-template-narrow-php.checkout .main {
+	margin-top: -60px;
+}
+
+.is-showing-notices.purchase .component-purchase {
+	margin: -1em auto 0;
+}
+
+figcaption {
+	font-size: 13px;
+	color: #8f8d8d;
+	text-align: center;
+}
+
+.post-categories {
+	background: #c9e0fa;
+}
+
+.post .entry-content p code {
+	padding: 2px 8px 3px 8px;
+}
+
+.post .entry-content p {
+	margin: 1.1em 0;
+}
+
+.post .entry-content li,
+.post .entry-content li + li {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.post .entry-content li:first-of-type {
+	margin-top: 20px;
+}
+
+.blog .post .meta-wrapper {
+	display: none;
+}
+
+.component-marquee [data-tippy-root],
+.header [data-tippy-root] {
+	display: none !important;
+}
+
+.plan-features ul {
+	max-width: 360px;
+}
+
+.extension-single .extension-notes {
+	margin-top: 40px;
+}
+
+.extension-single .extension-single-header {
+	padding-top: 45px;
+	background-image: linear-gradient(0deg, #fdf0ff 0, #f0f0ff);
+}
+
+.checkout .header .menu-item a {
+	font-size: 16px;
+}
+
+.checkout .header {
+	height: 70px;
+}
+
+.page-template-template-narrow-php.checkout .main {
+	margin-top: 0px;
+}
+
+.checkout .page-content .wps-checkout-logged-in-as:first-of-type {
+	text-align: center;
+}
+
+.logged-in.edd-checkout #edd_secure_site_wrapper {
+	font-size: 14px;
+	top: -85px;
+	right: -9px;
+}
+
+.shopwp-radio-text .css-1hpq27b-PriceCSS.css-1hpq27b-PriceCSS {
+	font-weight: normal;
+	width: 100px;
+}
+
+.shopwp-selling-group-content .css-1j3e5h3-SellingGroupLabelCSS,
+.shopwp-selling-group-content .css-1htc524-SellingGroupLabelCSS {
+	margin-bottom: 0;
+}
+
+.shopwp-selling-group-content
+	.css-coc6bq-SubscriptionLabelTextCSS.css-coc6bq-SubscriptionLabelTextCSS {
+	font-weight: normal;
+}
+
+.shopwp-radio-text .css-14caosd-SaveInlineCSS {
+	margin-left: 20px;
+	position: relative;
+	top: 1px;
+}
+
+.wps-cart-lineitem-price-total-wrapper .css-100dltp-DiscountSubCSS {
+	text-align: right;
+}
+
+.wps-product-options
+	.css-1grq585-ClearSelectionsCSS-slideInFromBottom-ClearSelections {
+	text-align: right;
+}
+
+.single .main {
+	margin-top: 90px;
+}
+
+.wps-account #shopwp-root {
+	display: none;
+}
+
+.shopwp-skeleton-product-buy-button-value {
+	margin: 0 !important;
+}
+
+.wps-product-options [class*='ClearSelections'] {
+	text-align: right;
+}
+
+.page-id-194205 .component-changelog.wrap.l-contain-narrow {
+	max-width: 1000px;
+	padding: 0;
+}
+
+.page-id-194205.page-template-template-narrow-php .main h2 {
+	font-size: 22px;
+	margin-bottom: 8px;
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+}
+
+.page-id-194205.page-template-template-narrow-php .main h2 + ul li {
+	font-family: Metropolis, helvetica;
+	font-size: 16px;
+}

@@ -632,6 +632,7 @@ class EDD_SL_List_Table extends WP_List_Table {
 		if ( ! $licenses ) {
 			return $licenses_data;
 		}
+
 		foreach ( $licenses as $index => $license ) {
 			if ( empty( $license->parent ) ) {
 				continue;
@@ -684,7 +685,7 @@ class EDD_SL_List_Table extends WP_List_Table {
 	 * @return boolean
 	 */
 	private function is_main_view() {
-		$search = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$search = ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		$view   = isset( $_GET['view'] ) ? sanitize_text_field( $_GET['view'] ) : false;
 
 		return ! $search && ! $view;
@@ -701,15 +702,19 @@ class EDD_SL_List_Table extends WP_List_Table {
 	private function get_licenses_data_args( $license, $parent = false ) {
 		$payment_id   = $parent ? $parent->payment_id : $license->payment_id;
 		$order_number = $license->payment_id;
+		$date         = esc_html__( 'Unknown Date', 'edd_sl' );
+
 		if ( function_exists( 'edd_date_i18n' ) && function_exists( 'edd_get_order' ) ) {
 			$order = edd_get_order( $license->payment_id );
-			$date  = array(
-				esc_html( edd_date_i18n( $order->date_created ) ),
-				esc_html( edd_date_i18n( $order->date_created, 'time' ) . ' ' . edd_get_timezone_abbr() ),
-			);
-			$date  = implode( '<br />', $date );
-			if ( ! empty( $order->order_number ) ) {
-				$order_number = $order->order_number;
+			if ( ! empty( $order ) ) {
+				$date = array(
+					esc_html( edd_date_i18n( $order->date_created ) ),
+					esc_html( edd_date_i18n( $order->date_created, 'time' ) . ' ' . edd_get_timezone_abbr() ),
+				);
+				$date = implode( '<br />', $date );
+				if ( ! empty( $order->order_number ) ) {
+					$order_number = $order->order_number;
+				}
 			}
 		} else {
 			$date = esc_html( get_the_time( get_option( 'date_format' ), $license->payment_id ) );
@@ -800,7 +805,7 @@ class EDD_SL_List_Table extends WP_List_Table {
 	 * @return array $args The updated args
 	 */
 	private function build_search_args( $args ) {
-		$search = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
+		$search = ! empty( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : '';
 		// check to see if we are searching
 		if ( ! $search ) {
 			return $args;

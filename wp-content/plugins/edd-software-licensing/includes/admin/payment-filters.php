@@ -63,3 +63,34 @@ function edd_sl_payment_count_filters( $join = '' ) {
 	return $join;
 }
 add_filter( 'edd_count_payments_join', 'edd_sl_payment_count_filters', 10, 1 );
+
+/**
+ * Modifies the orders list table query in EDD 3.0 to filter by renewal or upgrade.
+ *
+ * @param array                       $clauses Query clauses.
+ * @param \EDD\Database\Queries\Order $query   Query class.
+ *
+ * @since 3.7.1
+ * @return array
+ */
+function edd_sl_filter_orders_list_table_query( $clauses, $query ) {
+	// Make sure we only run this on the orders admin table.
+	if ( ! function_exists( 'edd_is_admin_page' ) || ! edd_is_admin_page( 'payments', 'list-table' ) ) {
+		return $clauses;
+	}
+
+	$meta_key = ! empty( $_GET['meta_key'] ) ? sanitize_key( $_GET['meta_key'] ) : false;
+	if ( empty( $meta_key ) || ! in_array( $meta_key, array( '_edd_sl_upgraded_payment_id', '_edd_sl_is_renewal' ) ) ) {
+		return $clauses;
+	}
+
+	global $wpdb;
+
+	$clauses['join'] .= $wpdb->prepare(
+		" INNER JOIN {$wpdb->edd_ordermeta} sl_om ON sl_om.meta_key = %s AND sl_om.edd_order_id = {$query->table_alias}.id ",
+		$meta_key
+	);
+
+	return $clauses;
+}
+add_filter( 'edd_orders_query_clauses', 'edd_sl_filter_orders_list_table_query', 10, 2 );

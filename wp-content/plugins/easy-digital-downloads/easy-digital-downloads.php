@@ -3,9 +3,9 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: The easiest way to sell digital products with WordPress.
- * Author: Sandhills Development, LLC
- * Author URI: https://sandhillsdev.com
- * Version: 2.10.3
+ * Author: Easy Digital Downloads
+ * Author URI: https://easydigitaldownloads.com
+ * Version: 2.11.3.1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -24,8 +24,8 @@
  *
  * @package EDD
  * @category Core
- * @author Pippin Williamson
- * @version 2.10.3
+ * @author Easy Digital Downloads
+ * @version 2.11.3.1
  */
 
 // Exit if accessed directly.
@@ -206,7 +206,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.10.3' );
+			define( 'EDD_VERSION', '2.11.3.1' );
 		}
 
 		// Plugin Folder Path.
@@ -287,6 +287,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
+		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 
 		$stripe = EDD_PLUGIN_DIR . 'includes/gateways/stripe/edd-stripe.php';
@@ -319,12 +320,14 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
@@ -353,10 +356,14 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/downgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
+
+			require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/promos/class-promo-handler.php';
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';

@@ -40,9 +40,27 @@ function edds_credit_card_form( $echo = true ) {
 		<?php if( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<span class="padlock">
+				<?php
+				if ( function_exists( 'edd_get_payment_icon' ) ) {
+					echo edd_get_payment_icon(
+						array(
+							'icon'    => 'lock',
+							'width'   => 18,
+							'height'  => 28,
+							'classes' => array(
+								'edd-icon',
+								'edd-icon-lock',
+							),
+						)
+					);
+				} else {
+					?>
 					<svg class="edd-icon edd-icon-lock" xmlns="http://www.w3.org/2000/svg" width="18" height="28" viewBox="0 0 18 28" aria-hidden="true">
 						<path d="M5 12h8V9c0-2.203-1.797-4-4-4S5 6.797 5 9v3zm13 1.5v9c0 .828-.672 1.5-1.5 1.5h-15C.672 24 0 23.328 0 22.5v-9c0-.828.672-1.5 1.5-1.5H2V9c0-3.844 3.156-7 7-7s7 3.156 7 7v3h.5c.828 0 1.5.672 1.5 1.5z"/>
 					</svg>
+					<?php
+				}
+				?>
 				</span>
 				<span><?php _e( 'This is a secure SSL encrypted payment.', 'edds' ); ?></span>
 			</div>
@@ -196,7 +214,7 @@ function edd_stripe_update_billing_address_field() {
 	<p class="edd-stripe-update-billing-address-current">
 		<?php
 		if ( $default_card ) :
-			$address_fields = array( 
+			$address_fields = array(
 				'line1'   => isset( $default_card->address_line1 ) ? $default_card->address_line1 : null,
 				'line2'   => isset( $default_card->address_line2 ) ? $default_card->address_line2 : null,
 				'city'    => isset( $default_card->address_city ) ? $default_card->address_city : null,
@@ -331,6 +349,10 @@ function edd_stripe_existing_card_field_radio( $user_id = 0 ) {
  * @return void
  */
 function edd_stripe_manage_cards() {
+	if ( false === edds_is_gateway_active() ) {
+		return;
+	}
+
 	$enabled = edd_stripe_existing_cards_enabled();
 	if ( ! $enabled ) {
 		return;
@@ -387,7 +409,7 @@ function edd_stripe_manage_cards() {
 						<span class="card-expiration"><span class="card-expiration-label"><?php _e( 'Expires', 'edds' ); ?>: </span><span class="card-expiration-date"><?php echo $source->exp_month; ?>/<?php echo $source->exp_year; ?></span></span>
 						<span class="card-address">
 							<?php
-							$address_fields = array( 
+							$address_fields = array(
 								'line1'   => isset( $source->address_line1 ) ? $source->address_line1 : '',
 								'zip'     => isset( $source->address_zip ) ? $source->address_zip : '',
 								'country' => isset( $source->address_country ) ? $source->address_country : '',
@@ -419,7 +441,7 @@ function edd_stripe_manage_cards() {
 							<a href="#" class="edd-stripe-delete-card delete" data-source="<?php echo esc_attr( $source->id ); ?>"><?php _e( 'Delete', 'edds' ); ?></a>
 						</span>
 						<?php endif; ?>
-						
+
 						<span style="display: none;" class="edd-loading-ajax edd-loading"></span>
 					</span>
 
@@ -635,6 +657,10 @@ add_action( 'edd_profile_editor_after', 'edd_stripe_manage_cards' );
  * @since 2.8.0
  */
 function edd_stripe_maybe_hide_profile_editor_billing_address() {
+	if ( false === edds_is_gateway_active() ) {
+		return;
+	}
+
 	// Only hide if Stripe is the only active gateway.
 	$active_gateways = edd_get_enabled_payment_gateways();
 

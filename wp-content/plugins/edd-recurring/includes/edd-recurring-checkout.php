@@ -682,14 +682,22 @@ class EDD_Recurring_Checkout {
 			return;
 		}
 
-?>
+		$message = __( 'Your account will be automatically charged when the free trial is completed.', 'edd-recurring' );
+		if ( 1 === count( edd_get_cart_contents() ) ) {
+			$message = sprintf(
+				/* Translators: %s the amount charged */
+				__( 'Your account will be automatically charged %s when the free trial is completed.', 'edd-recurring' ),
+				'<span class="edd_recurring_total_after_trial">' . edd_currency_filter( edd_sanitize_amount( edd_get_cart_total() ) ) . '</span>'
+			);
+		}
+		?>
 		<p id="edd_final_total_wrap">
 			<strong><?php _e( 'Total Due Today:', 'edd-recurring' ); ?></strong>
 			<span class="edd_recurring_trial_total"><?php echo edd_currency_filter( edd_format_amount( 0.00 ) ); ?></span>
 			<span class="edd_recurring_trial_total_sep">&ndash;</span>
-			<span class="edd_recurring_trial_total_note"><?php _e( 'Your account will be automatically charged when the free trial is completed.', 'edd-recurring' ); ?></span>
+			<span class="edd_recurring_trial_total_note"><?php echo wp_kses( $message, array( 'span' => array( 'class' => true ) ) ); ?></span>
 		</p>
-<?php
+		<?php
 	}
 
 	/**

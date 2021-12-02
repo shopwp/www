@@ -22,7 +22,7 @@
  * @return      void
  */
 function edd_stripe_js( $force_load_scripts = false ) {
-	if ( false === edd_is_gateway_active( 'stripe' ) ) {
+	if ( false === edds_is_gateway_active() ) {
 		return;
 	}
 
@@ -100,7 +100,7 @@ function edd_stripe_js( $force_load_scripts = false ) {
 add_action( 'wp_enqueue_scripts', 'edd_stripe_js', 100 );
 
 function edd_stripe_css( $force_load_scripts = false ) {
-	if ( false === edd_is_gateway_active( 'stripe' ) ) {
+	if ( false === edds_is_gateway_active() ) {
 		return;
 	}
 

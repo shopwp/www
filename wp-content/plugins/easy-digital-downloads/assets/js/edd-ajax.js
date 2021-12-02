@@ -174,6 +174,8 @@ jQuery(document).ready(function ($) {
 			price_ids : item_price_ids,
 			post_data: $(form).serialize(),
 			nonce: nonce,
+			timestamp: $this.data( 'timestamp' ),
+			token: $this.data( 'token' )
 		};
 
 		$.ajax({
@@ -398,6 +400,7 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 
 		var complete_purchase_val = $(this).val();
+		$(this).attr('data-original-value', complete_purchase_val);
 
 		$(this).val(edd_global_vars.purchase_loading);
 
@@ -512,7 +515,7 @@ function edd_load_gateway( payment_mode ) {
 	jQuery('.edd-cart-ajax').show();
 	jQuery('#edd_purchase_form_wrap').html('<span class="edd-loading-ajax edd-loading"></span>');
 
-	var nonce = jQuery('#edd-gateway-' + payment_mode).data(payment_mode+'-nonce');
+	var nonce = document.getElementById( 'edd-gateway-' + payment_mode ).getAttribute( 'data-' + payment_mode + '-nonce' );
 	var url   = edd_scripts.ajaxurl;
 
 	if ( url.indexOf( '?' ) > 0 ) {
