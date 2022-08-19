@@ -205,7 +205,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Get the success url
 		$return_url = add_query_arg( array(
 				'payment-confirmation' => 'paypal',
-				'payment-id' => $payment
+				'payment-id'           => urlencode( $payment ),
 			), get_permalink( edd_get_option( 'success_page', false ) ) );
 
 		// Get the PayPal redirect uri
@@ -225,10 +225,10 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			'charset'       => get_bloginfo( 'charset' ),
 			'custom'        => $payment,
 			'rm'            => '2',
-			'return'        => $return_url,
-			'cancel_return' => edd_get_failed_transaction_uri( '?payment-id=' . $payment ),
-			'notify_url'    => $listener_url,
-			'image_url'     => edd_get_paypal_image_url(),
+			'return'        => esc_url_raw( $return_url ),
+			'cancel_return' => esc_url_raw( edd_get_failed_transaction_uri( '?payment-id=' . sanitize_key( $payment ) ) ),
+			'notify_url'    => esc_url_raw( $listener_url ),
+			'image_url'     => esc_url_raw( edd_get_paypal_image_url() ),
 			'cbt'           => get_bloginfo( 'name' ),
 			'bn'            => 'EasyDigitalDownloads_SP'
 		);
@@ -332,7 +332,7 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
 
 		// Redirect to PayPal
-		wp_redirect( $paypal_redirect );
+		wp_redirect( esc_url_raw( $paypal_redirect ) );
 		exit;
 	}
 
@@ -555,7 +555,10 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
 
 	// Collect payment details
-	$purchase_key   = isset( $data['invoice'] ) ? $data['invoice'] : $data['item_number'];
+	$purchase_key = isset( $data['invoice'] ) ? $data['invoice'] : false;
+	if ( ! $purchase_key && ! empty( $data['item_number'] ) ) {
+		$purchase_key = $data['item_number'];
+	}
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
@@ -1104,7 +1107,7 @@ function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 
 	$payment         = new EDD_Payment( $payment_id );
 	$sandbox         = 'test' === $payment->mode ? 'sandbox.' : '';
-	$paypal_base_url = 'https://www.' . $sandbox . 'paypal.com/activity/payment/';
+	$paypal_base_url = 'https://' . $sandbox . 'paypal.com/activity/payment/';
 	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
 
 	return apply_filters( 'edd_paypal_link_payment_details_transaction_id', $transaction_url );

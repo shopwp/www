@@ -16,6 +16,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * EDD_Discount Class
  *
  * @since 2.7
+ *
+ * @property int    $ID
+ * @property string $name
+ * @property string $code
+ * @property string $status
+ * @property string $type
+ * @property float  $amount
+ * @property array  $product_reqs
+ * @property array  $excluded_products
+ * @property string $product_condition
+ * @property string $start
+ * @property string $expiration
+ * @property int    $uses
+ * @property int    $max_uses
+ * @property float  $min_price
+ * @property bool   $is_single_use
+ * @property bool   $is_not_global
+ * @property string $post_date
+ * @property string $post_modified
  */
 class EDD_Discount {
 	/**
@@ -1979,6 +1998,16 @@ class EDD_Discount {
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
-		return esc_url( add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $this->ID ), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+		return esc_url(
+			add_query_arg(
+				array(
+					'post_type'  => 'download',
+					'page'       => 'edd-discounts',
+					'edd-action' => 'edit_discount',
+					'discount'   => absint( $this->ID ),
+				),
+				admin_url( 'edit.php' )
+			)
+		);
 	}
 }

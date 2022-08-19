@@ -1,11 +1,3 @@
-<?php 
-
-if (!is_page('checkout')) {
-   include(locate_template('components/getting-started-inline/view.php'));
-}
-
-?>
-
 <footer class="footer">
   <div class="footer-wrapper">
       <nav class="nav-footer l-row l-row-center l-fill l-contain">
@@ -44,15 +36,15 @@ if (!is_page('checkout')) {
 
                <section class="footer-social-links">
 
-                  <a href="https://www.youtube.com/c/WPShopify" class="footer-social-link" target="_blank" aria-label="Youtube channel link for ShopWP">
+                  <a href="https://www.youtube.com/c/WPShopify" class="footer-social-link" target="_blank" aria-label="Youtube channel link for ShopWP" rel="noreferrer">
                      <i class="fab fa-youtube"></i>
                   </a>
 
-                  <a href="https://twitter.com/wpshopify" class="footer-social-link" target="_blank" aria-label="Twitter link for ShopWP">
+                  <a href="https://twitter.com/andrewfromtx" class="footer-social-link" target="_blank" aria-label="Twitter link for ShopWP" rel="noreferrer">
                      <i class="fab fa-twitter"></i>
                   </a>
 
-                  <a href="https://github.com/wpshopify" class="footer-social-link" target="_blank" aria-label="Github link for ShopWP">
+                  <a href="https://github.com/shopwp" class="footer-social-link" target="_blank" aria-label="Github link for ShopWP" rel="noreferrer">
                      <i class="fab fa-github"></i>
                   </a>
 
@@ -64,10 +56,9 @@ if (!is_page('checkout')) {
 
       <section class="footer-attr">
          <a class="logo-link" href="<?= esc_url(home_url('/')); ?>">
-            <img src="/wp-content/themes/shopwp/assets/imgs/logo-mark-v2.svg" alt="ShopWP" class="logo-header">
+            <img src="/wp-content/uploads/2022/01/icon-logo-bw-opt.svg" alt="ShopWP" class="logo-header" width="33" height="33">
          </a>
-
-         <small>&copy; <?php echo date("Y"); ?> WP Shopfiy &bull; Built with love in Austin, TX</small>
+         <small>&copy; <?php echo date("Y"); ?> ShopWP &bull; Built with love in Austin, TX</small>
       </section>
 
    </div>

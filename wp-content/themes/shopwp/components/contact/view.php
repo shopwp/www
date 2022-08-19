@@ -5,12 +5,8 @@
          display:none;
       }
 
-      .contact .component-contact {
-         margin-top: -3em;   
-      }
-
       .component-contact {
-         margin: 0 0 2em 0;
+         margin: 0;
          width: 100%;
          max-width: 100%;
          background: none;
@@ -41,121 +37,121 @@
       }
 
       .component-contact-container {
-         margin: 0 0 2em 0;
+         margin: 0;
          padding: 0 1em;
          width: 100%;
          max-width: 100%;
          border-radius: 0;
-         background-image: linear-gradient(0deg,#f0f0ff 0,#fff1f1);   
+         background-color: #f0f5ff;
+      }
+         
+      .component-contact .col-one {
+         display: flex;
       }
 
+      .component-contact .content-section {
+         margin-bottom: 2em;
+      }
 
+      .component-contact .content-inner {
+         position: relative;
+         width: 90%;
+         padding: 1em;
+         border-radius: 0;
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         top: -21px;
+      }
+
+      .component-contact .content-inner svg {
+         max-width: 620px;
+         height: auto;
+            margin-top: 0;
+         margin-bottom: -1em;
+      }
+
+      .component-contact .content-inner h2 {
+         font-size: 3em;
+         margin-bottom: 10px;
+      }
+
+      .col-two {
+         padding: 3em 0;
+      }
+
+      .component-contact .btn {
+         margin-top: 0;
+      }
+
+      .component-contact.component-faq-secondary {
+         margin-top: 5em;
+      }
+
+      .component-contact .content-inner .fa-long-arrow-alt-right {
+         margin: 0;
+         height: auto;
+         width: 40px;
+         position: relative;
+         top: -56px;
+         left: -4px;
+      }
+
+      @media (max-width: 900px) {
          
-         .component-contact .col-one {
-            display: flex;
+         .component-contact-container {
+            padding: 0;
          }
 
-         .component-contact .content-section {
-            margin-bottom: 2.5em;
+         .component-contact .inner {
+            flex-direction: column;
+            margin: 0;
+            max-width: 100%;
+         }
+
+         .component-contact .col-one,
+         .component-contact .l-col-6 {
+            display: flex;
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
          }
 
          .component-contact .content-inner {
-            width: 90%;
-            padding: 1em;
-            border-radius: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            width: 100%;
+         }
+
+         .component-contact .l-col-6 {
+            display: block;
          }
 
          .component-contact .content-inner svg {
-            max-width: 275px;
-            height: auto;
-               margin-top: 0;
-            margin-bottom: 3em;
+               max-width: 380px;
          }
 
          .component-contact .content-inner h2 {
-            font-size: 3em;
-            margin-bottom: 10px;
-         }
-
-         .col-two {
-            padding: 3em 0;
-         }
-
-         .component-contact .btn {
-            margin-top: 0;
-         }
-
-         .component-contact.component-faq-secondary {
-            margin-top: 5em;
+               font-size: 42px;
          }
 
          .component-contact .content-inner .fa-long-arrow-alt-right {
-            margin: 0;
-            height: auto;
-            width: 40px;
-            position: relative;
-            top: -56px;
-            left: -4px;
+            display: none;
          }
 
+         .component-contact .content-section {
+            margin-bottom: 2em;
+            max-width: 500px;
+            margin: 0 auto 3em auto;
+         }
 
+         .component-contact .l-col-6.col-two {
+            padding-bottom: 0;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 0;
+         }
 
-         @media (max-width: 900px) {
-            .component-contact-container {
-               padding: 0;
-            }
-
-            .component-contact .inner {
-               flex-direction: column;
-               margin: 0;
-               max-width: 100%;
-            }
-
-            .component-contact .col-one,
-            .component-contact .l-col-6 {
-               display: flex;
-               width: 100%;
-               max-width: 100%;
-               flex: 0 0 100%;
-            }
-
-            .component-contact .content-inner {
-               width: 100%;
-            }
-
-            .component-contact .l-col-6 {
-               display: block;
-            }
-
-            .component-contact .content-inner svg {
-                  max-width: 180px;
-            }
-
-            .component-contact .content-inner h2 {
-                  font-size: 42px;
-            }
-
-            .component-contact .content-inner .fa-long-arrow-alt-right {
-               display: none;
-            }
-
-            .component-contact .content-section {
-               margin-bottom: 2.5em;
-               max-width: 500px;
-               margin: 0 auto 3em auto;
-            }
-
-            .component-contact .l-col-6.col-two {
-               padding-bottom: 0;
-               padding-left: 15px;
-               padding-right: 15px;
-            }
-
-         }   
+      }
    </style>
    <div class="component-contact-container">
 
@@ -164,7 +160,7 @@
          <div class="l-col-6 col-one">
 
             <div class="content-inner">
-               <svg id="ace05a6f-f1ac-4978-a3bb-3e2345b819e7" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="767.65456" height="595.99576" viewBox="0 0 767.65456 595.99576"><path d="M682.61225,523.03207l-1.25114,14.70664a6.50753,6.50753,0,0,1-7.0276,5.92562l-122.57092-10.4275a6.50753,6.50753,0,0,1-5.92562-7.02759l1.25115-14.70664a6.50751,6.50751,0,0,1,7.02759-5.92562l122.57092,10.4275A6.50753,6.50753,0,0,1,682.61225,523.03207Z" transform="translate(-216.17273 -152.0021)" fill="#6c63ff"/><path d="M707.04188,594.76651l-13.5758,5.7921c-3.29649,1.40644-6.68936.88483-7.56294-1.16272l-29.9841-70.2782c-.87359-2.04755,1.09775-4.85779,4.39424-6.26424l13.5758-5.7921c3.29649-1.40644,6.68936-.88483,7.563,1.16272l29.9841,70.2782C712.30971,590.54982,710.33837,593.36006,707.04188,594.76651Z" transform="translate(-216.17273 -152.0021)" fill="#6c63ff"/><path d="M635.17273,571.99786H405.28351a95.00238,95.00238,0,1,0-94.11078,82,94.76382,94.76382,0,0,0,34-6.27246v92.27246a8,8,0,0,0,8,8h282a8,8,0,0,0,8-8v-160A8,8,0,0,0,635.17273,571.99786Z" transform="translate(-216.17273 -152.0021)" fill="#e6e6e6"/><path d="M652.17271,726.9979h-282a9.01016,9.01016,0,0,1-9-9v-160a9.01016,9.01016,0,0,1,9-9h282a9.01016,9.01016,0,0,1,9,9v160A9.01016,9.01016,0,0,1,652.17271,726.9979Zm-282-176a7.00818,7.00818,0,0,0-7,7v160a7.00818,7.00818,0,0,0,7,7h282a7.00818,7.00818,0,0,0,7-7v-160a7.00818,7.00818,0,0,0-7-7Z" transform="translate(-216.17273 -152.0021)" fill="#3f3d56"/><path d="M652.61225,534.03207l-1.25114,14.70664a6.50753,6.50753,0,0,1-7.0276,5.92562l-122.57092-10.4275a6.50753,6.50753,0,0,1-5.92562-7.02759l1.25115-14.70664a6.50751,6.50751,0,0,1,7.02759-5.92562l122.57092,10.4275A6.50753,6.50753,0,0,1,652.61225,534.03207Z" transform="translate(-216.17273 -152.0021)" fill="#6c63ff"/><path d="M677.04188,605.76651l-13.5758,5.7921c-3.29649,1.40644-6.68936.88483-7.56294-1.16272l-29.9841-70.2782c-.87359-2.04755,1.09775-4.85779,4.39424-6.26424l13.5758-5.7921c3.29649-1.40644,6.68936-.88483,7.563,1.16272l29.9841,70.2782C682.30971,601.54982,680.33837,604.36006,677.04188,605.76651Z" transform="translate(-216.17273 -152.0021)" fill="#6c63ff"/><rect x="881.40957" y="159.51212" width="32" height="32" transform="translate(-137.98952 429.73239) rotate(-37.44104)" fill="#6c63ff"/><circle cx="540.54098" cy="180.1523" r="22" fill="#ff6584"/><path d="M751.06926,347.81191a23,23,0,1,1,32.24425,4.2788A23.02588,23.02588,0,0,1,751.06926,347.81191Zm34.93509-26.74957a21,21,0,1,0-3.90673,29.44041A21.0239,21.0239,0,0,0,786.00435,321.06234Z" transform="translate(-216.17273 -152.0021)" fill="#3f3d56"/><path d="M902.05033,199.66752l-20.67012-26.9953,26.9953-20.67012,20.67012,26.9953Zm-17.86627-26.62323,18.23834,23.81938,23.81938-18.23834L908.00344,154.806Z" transform="translate(-216.17273 -152.0021)" fill="#3f3d56"/><rect x="936.19123" y="337.97492" width="32" height="32" transform="translate(-235.19888 499.80362) rotate(-37.44104)" fill="#6c63ff"/><path d="M956.832,378.13032,936.16187,351.135l26.9953-20.67012,20.67012,26.9953Zm-17.86627-26.62323,18.23834,23.81938,23.81938-18.23834L962.7851,333.26875Z" transform="translate(-216.17273 -152.0021)" fill="#3f3d56"/><rect x="0.99998" y="572.99579" width="624" height="2" fill="#3f3d56"/><path d="M324.17271,628.9979a96,96,0,1,1,96-96A96.10874,96.10874,0,0,1,324.17271,628.9979Zm0-190a94,94,0,1,0,94,94A94.10645,94.10645,0,0,0,324.17271,438.9979Z" transform="translate(-216.17273 -152.0021)" fill="#3f3d56"/><circle cx="316.42142" cy="185.00645" r="53.51916" fill="#6c63ff"/><path d="M540.46971,356.84454l-.05566-2c3.7207-.10351,7.001-.33691,9.46582-2.13769a6.148,6.148,0,0,0,2.38134-4.52832,3.51431,3.51431,0,0,0-1.15283-2.89453c-1.63623-1.38184-4.269-.93457-6.188-.05469l-1.65478.75879,3.17334-23.19043,1.98144.27148-2.69921,19.72656c2.60742-.7666,5.02343-.43652,6.67822.96094a5.471,5.471,0,0,1,1.86035,4.49219,8.13264,8.13264,0,0,1-3.2002,6.07324C547.89256,356.63653,543.77684,356.75177,540.46971,356.84454Z" transform="translate(-216.17273 -152.0021)" fill="#2f2e41"/><rect x="342.04698" y="172.76822" width="10.77148" height="2" fill="#2f2e41"/><rect x="308.04698" y="172.76822" width="10.77148" height="2" fill="#2f2e41"/><path d="M609.17271,551.4979h-126a4.50492,4.50492,0,0,1-4.5-4.5V445.77719A46.33163,46.33163,0,0,1,524.952,399.4979h41.2207a4.50529,4.50529,0,0,1,4.49951,4.4248l43.00049,143.002v.07325A4.50493,4.50493,0,0,1,609.17271,551.4979Z" transform="translate(-216.17273 -152.0021)" fill="#2f2e41"/><path d="M525.47529,440.45264l14.75882.116a6.50753,6.50753,0,0,1,6.44872,6.55088l-.96658,123.00987a6.50753,6.50753,0,0,1-6.55087,6.44873l-14.75883-.116a6.50753,6.50753,0,0,1-6.44872-6.55088l.96658-123.00987A6.50753,6.50753,0,0,1,525.47529,440.45264Z" transform="translate(-216.17273 -152.0021)" fill="#6c63ff"/><path d="M510.67271,435.4979a22,22,0,1,1,44,0v49h-44Z" transform="translate(-216.17273 -152.0021)" fill="#2f2e41"/><path d="M516.78472,311.80158c5.06888-5.21551,12.43274-6.11235,19.36224-5.5448,7.42071.60778,14.452,3.07282,21.73106,4.44394,7.17984,1.35243,14.96391,1.95823,21.82646-1.03737a20.09144,20.09144,0,0,0,11.72323-15.979,29.03592,29.03592,0,0,0-5.257-20.47853c-4.7-6.64121-11.37734-11.50575-18.31814-15.589-14.96175-8.802-31.64438-16.50389-49.15015-17.92771-15.80435-1.28544-32.563,3.08229-43.68061,14.88551-10.42169,11.06441-14.85811,26.506-15.78063,41.37629-1.17743,18.97911,3.2519,37.722,4.85473,56.54079,1.24718,14.64319.78012,32.22265-11.11218,42.73862-10.519,9.30159-26.53626,9.19063-38.93809,4.10945-14.741-6.03956-25.08444-19.59752-32.90776-32.9229-1.99162-3.39231-3.86369-6.85277-5.67931-10.342-.8915-1.71327-3.48138-.19808-2.59041,1.51416,7.32148,14.07023,15.83772,28.12423,28.64444,37.8742,11.19745,8.52481,26.13832,12.63128,39.97878,9.02829a32.25043,32.25043,0,0,0,17.098-10.80463c4.74351-5.91016,7.233-13.18243,8.27145-20.62227,1.11153-7.96315.724-15.98758-.08116-23.95954-.96937-9.59732-2.5146-19.12452-3.573-28.71137-1.80249-16.32711-2.05082-33.2722,4.4005-48.69846a48.551,48.551,0,0,1,12.63135-17.97966A46.21559,46.21559,0,0,1,501.324,243.66126c16.9591-3.51936,34.19917,1.24561,49.55139,8.426a139.42789,139.42789,0,0,1,22.1571,12.43257c6.19746,4.43557,11.96927,10.24516,14.3566,17.65293,2.05742,6.38406,1.88616,13.94139-2.21567,19.508-4.38377,5.94925-11.98089,7.43475-18.94639,7.07658-14.30661-.73566-28.72417-9.05-43.11964-4.30484a20.74419,20.74419,0,0,0-8.444,5.22776c-1.34634,1.38529.77277,3.50888,2.12132,2.12132Z" transform="translate(-216.17273 -152.0021)" fill="#2f2e41"/></svg>
+               <svg version="1.1" id="Layer" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 1986 1352.92" style="enable-background:new 0 0 1986 1352.92" xml:space="preserve"><style>.st1{fill:#fff}.st2{fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10}.st4{fill:#f490a4}.st5,.st6{fill:none;stroke:#170c2c;stroke-width:3;stroke-miterlimit:10}.st6{stroke-linejoin:bevel}.st7{fill:#c64f4b}.st8{fill:#030207}.st10{fill:#fff;stroke:#170c2c;stroke-width:3;stroke-miterlimit:10}.st11{fill:#170c2c}.st13{fill:#fff;stroke:#170c2c;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:10}</style><path style="fill:#0068a8" d="M959.05 365.28H1181v171.08H959.05z"/><ellipse transform="rotate(-24.476 1034.188 488.489)" class="st1" cx="1034.24" cy="488.49" rx="17.49" ry="13.94"/><path class="st2" d="M959.05 458.31c35.4-.92 70.77-4.21 73.14-13.55 3.38-13.33-39.11-37.55-39.11-37.55s83.96 17.25 96.07-4.48c5.12-9.18-20.17-24.39-47.11-37.44"/><path d="M1181 468.58c-25.93-10.84-86.76-33.65-100.82-15.58-12.65 16.26 12.13 56.18 32.08 83.36" style="fill:none;stroke:#fff;stroke-width:2;stroke-miterlimit:10"/><path class="st2" d="M1118.23 365.28c-1.06 1.41-1.77 2.82-2.05 4.2-2.92 14.62 64.82 23.61 64.82 23.61"/><path class="st4" d="m546.16 497.02-51.82-86.91c-17.4-29.19 3.63-66.22 37.61-66.22h103.63c33.98 0 55.02 37.03 37.61 66.22l-51.82 86.91c-16.97 28.49-58.23 28.49-75.21 0z"/><path class="st2" d="M678.2 398c-21.52-8.36-76-27.42-86.39-10.49-8.68 14.14 28.77 42.17 58.08 61.2M662.56 353.13c-3.52.84-5.89 2.15-6.79 4.05-4.09 8.66 12.65 26.78 23.19 36.98"/><path class="st5" d="M879.46 317.28h221.95v171.08H879.46z"/><path class="st6" d="m879.46 488.36 79.59 48M1101.41 488.36l79.59 48M1101.41 317.28l79.59 48"/><path class="st7" d="m1055.49 344 8.18-80.07s32.58-12.69 29.25-35.48c-3.33-22.78-27.01-15.17-27.01-15.17s-7.73-31.55-40.31-37.25c-32.58-5.7-50.92 11.31-57.69 36.79-11.74 44.24 10.93 60.94 59.31 66.01l-3.42 52.92"/><path class="st8" d="M1081.55 213.13s13.44-33.66-28.38-53.87c-41.81-20.21-52.89-6.33-67.44-19.01-14.55-12.68-44 35.28 2.85 55.04s46.04 16.28 46.04 16.28-5.4 22.17 7.59 24.17 23.37-19.63 23.37-19.63"/><path class="st5" d="m985.59 236.22-8.67 17.71"/><circle class="st8" cx="1000.54" cy="235.15" r="5.36"/><circle class="st8" cx="973.98" cy="234.35" r="5.36"/><path class="st8" d="M1049.99 563.39c46.16 0 86.21 28.84 96.54 69.54l133.5 525.64s57.96-8.03 78.2 11.23l-154.94 82.95-147.34-547.62-66.79 239.04-3.45 308.59H808.97s28.14-37.51 77.1-47.69c0 0-14.76-206.84 2.74-311.97 9.83-59.04 46.81-181.32 64.11-258 9.43-41.74 50-71.71 97.07-71.71z"/><path d="M1471.57 332.27c-54.61 0-98.88 44.27-98.88 98.87 0 54.61 44.27 98.87 98.88 98.87 54.6 0 98.87-44.26 98.87-98.87 0-54.6-44.27-98.87-98.87-98.87zm0 140.31c-22.89 0-41.44-18.55-41.44-41.44 0-22.88 18.55-41.43 41.44-41.43 22.88 0 41.43 18.55 41.43 41.43 0 22.89-18.55 41.44-41.43 41.44z" style="fill:#fcce44"/><path class="st10" d="M1851.92 366.32c-71.6 0-129.64 58.04-129.64 129.64h131.71M153.77 337.52l111.64 187.25H153.77"/><path class="st6" d="M1141.21 311.85c32.41.62 129.03 104.92 129.03 104.92s-17.95-99.28-31.79-117.74c-13.85-18.46 31.18-70.72 35.79-69.18 4.62 1.54-15.08 28-4.92 32.31 2.61 1.11 64.77-42.62 70.46-37.54 3.25 2.9-47.08 41.38-45.23 42.92 1.85 1.54 59.38-46.31 64.62-40.15 5.23 6.15-55.08 48.15-53.54 50.92 1.54 2.77 48.31-28.15 52-24.46 3.69 3.69-62.46 53.69-62.46 53.69"/><path class="st6" d="M1312.69 297.38s36.88 170.87 10.15 188.92c-46.46 31.38-193.54-83.49-193.54-83.49M870.74 333.28l-71.12 17.5s49.03-101.94 54.57-115.86c5.24-13.19-15.72-52.87-23.34-52.77-7.61.1 4.3 28.85-4.52 30.11-11.18 1.59-52.1-39.64-57.33-34.15-5.06 5.32 27.33 31.19 25.69 33.43-1.64 2.23-55.23-40.15-61.07-33.64-5.23 5.83 54.88 47.57 52.53 50.74s-49.23-28.89-53.45-24.08c-4.79 5.45 50.64 48.37 50.64 48.37S677.48 416.12 707.1 433.12c29.63 17 170.88-25.37 170.88-25.37"/><path class="st1" d="m803.87 651.54 44.25-44.25v88.49z"/><path class="st11" d="M846.62 610.91v81.25L806 651.54l40.62-40.63m3-7.24-47.87 47.87 47.87 47.87v-95.74z"/><path class="st1" d="m1246.02 607.29 44.24 44.25-44.24 44.24z"/><path class="st11" d="m1247.52 610.91 40.62 40.62-40.62 40.62v-81.24m-3-7.24v95.73l47.87-47.87-47.87-47.86z"/><path class="st6" d="M786.02 1252.74h598.32"/><path class="st7" d="M726.85 1075.23H588.39l32-220.3-32-107.7-32 107.7 32 220.3H449.92s12.35-35.69 38.18-41.23c0 0-35.71-123.07-33.87-172.31C456.08 812.46 509 635.23 509 635.23h158.77s52.92 177.23 54.77 226.46c1.85 49.24-33.86 172.31-33.86 172.31 25.82 5.54 38.17 41.23 38.17 41.23z"/><path class="st4" d="M1408.39 1075.23h164.31s-18.46-26.46-30.77-28.31l14.49-322.71c2.16-48.15-36.29-88.37-84.49-88.37-52.06 0-91.76 46.58-83.5 97.98l49.49 308.17c0 .01-24 14.16-29.53 33.24z"/><path style="fill:none;stroke:#fff;stroke-width:3;stroke-miterlimit:10" d="m1493.31 1075.23-9.23-356.31"/><path class="st13" d="M172.66 653.85c32.64 2.93 58.42 28.95 61.05 61.61l27.44 340.08c11.08-2.46 40.62-2.46 40.62-2.46l-70.15 22.15-54.15-312M1834.08 774.92s5.15 96.62 5.77 136c.62 39.38 10.85 164.31 10.85 164.31h-70.15s16.62-11.08 35.08-11.69l-53.54-395.69 88.62-10.66"/><path class="st2" d="M1501.96 459.3c-1.7 27.05-1.14 52.55-5.54 53.09-8.96 1.11-22-24.28-30.91-21.62-8.88 2.65-16.76 21.48-21.46 35.37M1570.88 430.8c-16.69-21.27-35.4-39.26-48.35-34.57-6.09 2.2-10.36 8.63-13.41 17.41M539.41 485.72c21.13.09 39.13-3.14 43.31-13.57 11.38-28.37-74.4-89.42-69.26-96.83 5.14-7.42 32.76-.23 36.71-8.66 2.37-5.06.12-13.75-3.63-22.66M1434.2 413.21c-12.23-11.4-27-30.28-38.32-45.69M1490.79 334.15c1.49 20.46.76 38.07-5.7 40.52-11.48 4.35-37.53-23.73-37.53-23.73s8.54 21.03 11.73 40.63M1375.95 405.87c9.4 19.19 22.42 53.06 20.15 90.1"/></svg>
                <h2>Hey there!</h2>   
                <p class="intro">We're excited to help. What do you need?</p>
 
@@ -177,22 +173,18 @@
          <div class="l-col-6 col-two">
 
             <div class="content-section">
+
                <h3>Plugin Support</h3>
                
-               <p>Solutions to the most common plugin issues (including syncing problems) can be found in our extensive <a href="https://docs.wpshop.io/#/getting-started/common-issues" target="_blank">plugin documentation</a>.</p>
+               <p>Solutions to the most common plugin issues (including syncing problems) can be found in our extensive <a href="https://docs.wpshop.io/guides/common-issues/" rel="noreferrer" target="_blank">plugin documentation</a>.</p>
                
-               <p>If you need more help, we have a <a href="https://wpshop.io/purchase">private Slack channel</a> for Pro customers only. We're online M-F 9am-4pm CST to help solve any issues you have.</p>
+               <p>If you need more help, we have a <a href="/purchase/">private Slack channel</a> for Pro customers only. We're online M-F 9am-4pm CST to help solve any issues you have.</p>
 
             </div>
 
             <div class="content-section">
-               <h3>Everything else</h3>
+               <h3>General support</h3>
                <p>Have a general plugin question? Send us an email at <a href="mailto:hello@wpshop.io">hello@wpshop.io</a></p>
-            </div>
-
-            <div class="content-section">
-               <h3>Still need a Shopify store?</h3>
-               <p>We've got you covered! <a href="https://www.shopify.com/?ref=wps" target="_blank">Try Shopify free for 14 days</a>.</p>
             </div>
 
          </div>

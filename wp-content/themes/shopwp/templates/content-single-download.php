@@ -45,12 +45,22 @@ while (have_posts()) : the_post(); ?>
                if ($id === 203186) {
                   $link = 'https://www.wpbeaverbuilder.com/?fla=4036';
 
-               } else {
-                  $link = 'https://elementor.com/?ref=17221';
-               }
+               } else if ($id === 233990) {
+				$link = 'https://www.yotpo.com/platform/reviews/';
+                  
+               } else if ($id === 209061) {
+				$link = 'https://elementor.com/?ref=17221';
+
+			  } else if ($id === 229781) {
+				$link = 'https://rechargepayments.com/';
+
+			  } else {
+				$link = '#!';
+
+			  }
                
                ?>
-               <a class="post-thumb" href="<?= $link; ?>" target="_blank" style="background-image: url('<?= get_the_post_thumbnail_url($id, 'full'); ?>');"></a>
+               <a class="post-thumb" href="<?= $link; ?>" target="_blank" rel="noreferrer" style="background-image: url('<?= get_the_post_thumbnail_url($id, 'full'); ?>');"></a>
 
                <div class="extension-purchase-inner">
 
@@ -74,13 +84,15 @@ while (have_posts()) : the_post(); ?>
                   </div>
 
                   <div class="extension-terms">
-                     <p>Every extension requires <a href="/purchase">ShopWP Pro</a>. All purchase options are billed yearly. You may cancel your subscription at any time.</p>
+                     <p>Every extension requires <a href="/purchase">ShopWP Pro</a>. All extensions are billed yearly. Cancel your subscription at any time.</p>
+
+                     <p>Requires an <a href="https://shopify.pxf.io/5bPL0L" target="_blank" rel="noreferrer">active Shopify store</a>.</p>
                   </div>
 
                </div>
                
                <?php if (!empty($notes)) { ?>
-                  <p>Requires an <a href="https://www.shopify.com/?ref=wps" target="_blank">active Shopify store</a>.</p>
+
                   <div class="extension-notes">
                      <span class="extension-version">Current version: <?= $license_ver; ?></span>
                      <?= $notes; ?>

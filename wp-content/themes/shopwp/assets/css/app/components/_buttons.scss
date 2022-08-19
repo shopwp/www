@@ -29,13 +29,9 @@ a.button.edd-slg-social-unlink-profile,
 	z-index: 2;
 	text-align: center;
 	margin: 0;
-	margin-top: $space-s;
+	margin-top: 10px;
 	transition: all 0.18s ease;
 	opacity: 1;
-
-	@include device(500, 'max') {
-		//  font-size: 1.3em;
-	}
 
 	&:hover:not([disabled]) {
 		cursor: pointer;
@@ -44,6 +40,17 @@ a.button.edd-slg-social-unlink-profile,
 		color: white;
 		box-shadow: 0px 0px 0px 0.24em #cad6ff;
 		background-color: #2d45e6;
+	}
+
+	&.btn-light {
+		background-color: rgb(145 143 255 / 23%);
+		border: 1px solid hsl(246deg 100% 76% / 56%);
+
+		&:focus,
+		&:hover:not([disabled]) {
+			box-shadow: none;
+			background-color: rgb(145 143 255 / 15%);
+		}
 	}
 
 	&:focus {
@@ -56,7 +63,7 @@ a.button.edd-slg-social-unlink-profile,
 		background-color: #ececec;
 
 		&:hover {
-			opacity: 0.4;
+			opacity: 1;
 			background-color: #ececec;
 			transform: scale(1);
 			box-shadow: none;
@@ -138,7 +145,7 @@ a.button.edd-slg-social-unlink-profile,
 	z-index: 2 !important;
 	text-align: center !important;
 	margin: 0 !important;
-	margin-top: $space-s !important;
+	margin-top: 10px !important;
 	transition: all 0.18s ease !important;
 	opacity: 1 !important;
 }
@@ -149,11 +156,11 @@ a.button.edd-slg-social-unlink-profile,
 
 .moretag,
 .btn.btn-secondary,
-#edd-discount-code-wrap .edd-discount-code-field-wrap .edd-apply-discount {
+#edd-discount-code-wrap .edd-discount-code-field-wrap .edd-apply-discount,
+.edd_download_file_link {
 	background-color: transparent;
 	border: 1px solid black;
 	color: black;
-	font-weight: 600;
 
 	&:hover:not([disabled]) {
 		background-color: transparent;
@@ -173,6 +180,10 @@ a.button.edd-slg-social-unlink-profile,
 	}
 }
 
+.btn.btn-secondary {
+	font-weight: 400;
+}
+
 .mailinglist-email {
 	&[disabled] {
 		border-color: #c5c5c5;
@@ -183,7 +194,7 @@ input[type='submit'],
 .edd-submit {
 	font-size: 18px;
 
-	@include device(600, 'max') {
+	@include device(500, 'max') {
 		width: 100%;
 		margin-top: 0;
 	}
@@ -197,7 +208,7 @@ input[type='submit'],
 		margin-right: $space-m;
 	}
 
-	@include device(600, 'max') {
+	@include device(500, 'max') {
 		flex-direction: column;
 
 		.btn {
@@ -209,11 +220,7 @@ input[type='submit'],
 
 .button-l,
 .btn-l {
-	font-size: $font-xl;
-
-	@include device(1500, 'max') {
-		font-size: 1.2em;
-	}
+	font-size: 19px !important;
 }
 
 .btn-m,
@@ -272,7 +279,7 @@ input[type='submit'],
 			font-family: 'FontAwesome';
 			content: '\f217';
 			display: inline-block;
-			margin-left: $space-s;
+			margin-left: 10px;
 			display: none;
 		}
 	}
@@ -283,14 +290,20 @@ input[type='submit'],
 }
 
 .receipt-account-wrapper .btn {
-	font-size: 18px;
+	font-size: 16px;
 	margin-bottom: 50px;
 	margin-top: -30px;
 
-	&:after {
-		content: ' 🤘';
+	+ span {
 		display: inline-block;
-		margin-left: $space-s;
+		margin: 0 12px 0px 10px;
+		font-size: 17px;
+	}
+
+	svg {
+		width: 13px;
+		height: 13px;
+		margin-left: 4px;
 	}
 }
 

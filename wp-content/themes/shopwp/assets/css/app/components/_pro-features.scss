@@ -13,9 +13,17 @@
 		font-size: 18px;
 	}
 
-	@include device(700, 'max') {
-		max-width: 90vw;
+	@include device(900, 'max') {
+		flex-direction: column;
 
+		.how-wrapper {
+			width: 100%;
+			max-width: 100%;
+			flex: 1;
+		}
+	}
+
+	@include device(700, 'max') {
 		p {
 			font-size: 16px;
 		}
@@ -25,7 +33,7 @@
 		}
 
 		.how-content h2 {
-			font-size: 1.4em;
+			font-size: 20px !important;
 		}
 	}
 }

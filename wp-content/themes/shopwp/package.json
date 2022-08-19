@@ -9,7 +9,7 @@
 	"private": true,
 	"scripts": {
 		"dev": "webpack --config webpack.config.babel.js --mode development",
-		"prod": "NODE_ENV=prod webpack --config webpack.config.babel.js --p --progress"
+		"prod": "NODE_ENV=prod webpack --config webpack.config.babel.js --mode production --progress"
 	},
 	"author": "ShopWP https://wpshop.io",
 	"license": "MIT",
@@ -44,7 +44,7 @@
 		"babel-preset-minify": "^0.5.1",
 		"browser-sync": "^2.27.7",
 		"browser-sync-webpack-plugin": "^2.3.0",
-		"core-js": "^3.19.2",
+		"core-js": "^3.19.3",
 		"cssnano": "^5.0.12",
 		"del": "^6.0.0",
 		"gulp": "^4.0.2",
@@ -61,8 +61,9 @@
 		"react-dom": "^17.0.2",
 		"regenerator-runtime": "^0.13.9",
 		"sass": "^1.44.0",
-		"sass-loader": "^12.3.0",
-		"webpack": "^5.64.4",
+		"sass-loader": "^12.4.0",
+		"webpack": "^5.65.0",
+		"webpack-cli": "^4.10.0",
 		"webpack-stream": "^7.0.0"
 	},
 	"dependencies": {
@@ -75,12 +76,12 @@
 		"clipboard-copy": "^4.0.1",
 		"confetti-js": "0.0.18",
 		"customize-cra": "^1.0.0",
-		"html-react-parser": "^1.4.1",
+		"html-react-parser": "^1.4.2",
 		"immutability-helper": "^3.1.1",
 		"loaders.css": "^0.1.2",
 		"postcss": "^8.4.4",
 		"react-app-rewired": "^2.1.8",
-		"react-content-loader": "^6.0.3",
+		"react-content-loader": "^6.1.0",
 		"react-country-region-selector": "^3.4.0",
 		"react-credit-card-input": "^1.1.5",
 		"react-loaders": "^3.0.1",

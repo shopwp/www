@@ -25,7 +25,7 @@ if ( empty( $subscriptions ) ) {
 }
 ?>
 
-<h3><?php _e( 'Subscription Details', 'edd-recurring' ); ?></h3>
+<h3><?php esc_html_e( 'Subscription Details', 'edd-recurring' ); ?></h3>
 
 <?php do_action( 'edd_subscription_receipt_before_table', $payment ); ?>
 

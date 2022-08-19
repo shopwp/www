@@ -78,8 +78,8 @@ class EDD_SL_Download extends EDD_Download {
 	public function get_price_activation_limit( $price_id ) {
 		$prices = $this->get_prices();
 
-		if ( isset( $prices[ $price_id ][ 'license_limit' ] ) ) {
-			return absint( $prices[ $price_id ][ 'license_limit' ] );
+		if ( isset( $prices[ $price_id ]['license_limit'] ) && is_numeric( $prices[ $price_id ]['license_limit'] ) ) {
+			return absint( $prices[ $price_id ]['license_limit'] );
 		}
 
 		return false;

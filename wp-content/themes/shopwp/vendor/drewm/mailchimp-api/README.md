@@ -58,7 +58,7 @@ $result = $MailChimp->get('lists');
 print_r($result);
 ```
 
-Subscribe someone to a list (with a `post` to the `list/{listID}/members` method):
+Subscribe someone to a list (with a `post` to the `lists/{listID}/members` method):
 
 ```php
 $list_id = 'b1234346';
@@ -75,7 +75,7 @@ Update a list member with more information (using `patch` to update):
 
 ```php
 $list_id = 'b1234346';
-$subscriber_hash = $MailChimp->subscriberHash('davy@example.com');
+$subscriber_hash = MailChimp::subscriberHash('davy@example.com');
 
 $result = $MailChimp->patch("lists/$list_id/members/$subscriber_hash", [
 				'merge_fields' => ['FNAME'=>'Davy', 'LNAME'=>'Jones'],
@@ -89,7 +89,7 @@ Remove a list member using the `delete` method:
 
 ```php
 $list_id = 'b1234346';
-$subscriber_hash = $MailChimp->subscriberHash('davy@example.com');
+$subscriber_hash = MailChimp::subscriberHash('davy@example.com');
 
 $MailChimp->delete("lists/$list_id/members/$subscriber_hash");
 ```
@@ -161,6 +161,8 @@ When your batch is finished, you can download the results from the URL given in 
 Webhooks
 --------
 
+**Note:** Use of the Webhooks functionality requires at least PHP 5.4.
+
 MailChimp [webhooks](http://kb.mailchimp.com/integrations/other-integrations/how-to-set-up-webhooks) enable your code to be notified of changes to lists and campaigns.
 
 When you set up a webhook you specify a URL on your server for the data to be sent to. This wrapper's Webhook class helps you catch that incoming webhook in a tidy way. It uses a subscription model, with your code subscribing to whichever webhook events it wants to listen for. You provide a callback function that the webhook data is passed to.
@@ -210,6 +212,8 @@ print_r($MailChimp->getLastRequest());
 ```
 
 If your server's CA root certificates are not up to date you may find that SSL verification fails and you don't get a response. The correction solution for this [is not to disable SSL verification](http://snippets.webaware.com.au/howto/stop-turning-off-curlopt_ssl_verifypeer-and-fix-your-php-config/). The solution is to update your certificates. If you can't do that, there's an option at the top of the class file. Please don't just switch it off without at least attempting to update your certs -- that's lazy and dangerous. You're not a lazy, dangerous developer are you?
+
+If you have **high-level implementation questions about your project** ("How do I add this to WordPress", "I've got a form that takes an email address...") please **take them to somewhere like StackOverflow**. If you think you've found a bug, or would like to discuss a change or improvement, feel free to raise an issue and we'll figure it out between us.
 
 Contributing
 ------------

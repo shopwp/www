@@ -11,7 +11,7 @@ if ($faqs_type === 'primary') {
    );
 
    $categories = get_categories( $args2 );
-   $faqs = [];
+   $faqs_all = [];
 
    foreach ( $categories as $cat ) {
 
@@ -27,7 +27,7 @@ if ($faqs_type === 'primary') {
          )
          );
 
-      $faqs[$cat->name] = get_posts($args);
+      $faqs_all[$cat->name] = get_posts($args);
 
    }
 
@@ -36,6 +36,12 @@ if ($faqs_type === 'primary') {
 } else {
 
    $faqs_selected = get_sub_field('faqs');
+
+   $faqs = get_posts([
+      'post__in'  => $faqs_selected,
+      'post_type' => 'faqs',
+      'nopaging'  => true
+   ]);
 
    include(locate_template('components/faqs/secondary.php'));
 }

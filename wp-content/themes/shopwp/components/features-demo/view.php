@@ -4,7 +4,7 @@
 <section class="component component-features-demo">
 
    <header class="demo-header" id="component-features-demo">
-      <h3>Demo ShopWP Features 🎮 </h3>
+      <h3>Demo the features of ShopWP</h3>
       <p>Click one of the ShopWP product features below to see a live example of how they work.</p>
    </header>
    <div class="row">
@@ -76,7 +76,7 @@
       
       <section class="features">
          <div id="filter-by">
-            <h4>Filter Products Demo</h4>
+            <h4>Filter Products </h4>
             <div class="short-description">
                <p>ShopWP allows you to filter products by title, tags, vendors, product types, and collections. You can also combine these to make complex searches. For example, "show products with X tag and Y vendor". Below we're showing a product filtered by the title: "Super awesome t-shirt".</p>
             </div>
@@ -85,7 +85,7 @@
             </div>
          </div>
          <div id="sort-by">
-            <h4>Sort Products Demo</h4>
+            <h4>Sort Products </h4>
             <div class="short-description">
                <p>In addition to filtering, ShopWP allows you to sort products based on title, price, "best selling" and more. Below is an example of sorting products by price; lowest to highest.</p>
             </div>
@@ -94,7 +94,7 @@
             </div>
          </div>
          <div id="variant-dropdowns">
-            <h4>Variant Dropdowns Demo</h4>
+            <h4>Variant Dropdowns </h4>
             <div class="short-description">
                <p>ShopWP allows you to show product variants in a dropdown by default. The dropdown button colors can easily be customized to your liking to match your WordPress theme.</p>
             </div>
@@ -103,7 +103,7 @@
             </div>
          </div>
          <div id="link-to-shopify">
-            <h4>Link to Shopify Demo</h4>
+            <h4>Link to Shopify </h4>
             <div class="short-description">
                <p>Using the "link to" feature, you can force your products to link directly to Shopify. This is a great strategy if you wish to simply show your products on a WordPress blog, while still keeping your Shopify storefront.</p>
             </div>
@@ -113,7 +113,7 @@
          </div>
 
          <div id="sale-price">
-            <h4>Sale Pricing Demo</h4>
+            <h4>Sale Pricing </h4>
             <div class="short-description">
                <p>Let customers know when your products are on sale by displaying effective sale pricing. ShopWP will allow you to display the "compare at" price next to your standard price quickly and easily.</p>
             </div>
@@ -122,7 +122,7 @@
             </div>
          </div>
          <div id="range-price">
-            <h4>Range Pricing Demo</h4>
+            <h4>Range Pricing </h4>
             <div class="short-description">
                <p>Sometimes you may want to let customers know that a product is sold in a wide range of prices. ShopWP allows you to do this with range pricing. You can also combine this with sale pricing to give customers even more information.</p>
             </div>
@@ -132,7 +132,7 @@
          </div>
 
          <div id="pagination">
-            <h4>Pagination Demo</h4>
+            <h4>Pagination </h4>
             <div class="short-description">
                <p>Pagination is handled by ShopWP with a simple load more button. You can easily turn this on or off on a per shortcode basis.</p>
             </div>
@@ -142,7 +142,7 @@
          </div>
 
          <div id="layout-excludes">
-            <h4>Excludes Demo</h4>
+            <h4>Excludes </h4>
             <div class="short-description">
                <p>Sometimes you may not want to show all the product information in a given layout. ShopWP provides the flexibility to easiy hide various parts of the product info including images, title, description, pricing, and buy button.</p>
             </div>
@@ -166,7 +166,7 @@
          </div>
 
          <div id="out-of-stock-notice">
-            <h4>Out of stock Notice Demo</h4>
+            <h4>Out of stock Notice </h4>
             <div class="short-description">
                <p>Let your customers know when a product is out of stock. ShopWP provides effective and simple "out of stock" messaging for you with no setup.</p>
             </div>
@@ -186,7 +186,7 @@
          </div>
 
          <div id="image-zoom">
-            <h4>Image Zoom Demo</h4>
+            <h4>Image Zoom </h4>
             <div class="short-description">
                <p>Let customers see your beautiful product photos with the <a href="/purchase" target="_blank">ShopWP Pro</a> image zoom functionality. Compatible on both desktop and mobile, customers can hover or tap to take a closer look at each photo.</p>
             </div>
@@ -195,7 +195,7 @@
             </div>
          </div>
          <div id="carousel">
-            <h4>Carousel Demo</h4>
+            <h4>Carousel </h4>
             <div class="short-description">
                <p>Showcase your products in a simple carousel without taking up precious space in your existing page layout. The <a href="/purchase" target="_blank">ShopWP Pro</a> products carousel comes with a ton of options including the ability to custoimze previous / next arrows, number of slides to show, and more. <a href="https://docs.wpshop.io/#/shortcodes/wps_products?id=carousel?utm_medium=marketing-site&utm_source=component-features-demo&utm_campaign=info">See the docs</a>.</p>
             </div>
@@ -204,7 +204,7 @@
             </div>
          </div>
          <div id="direct-checkout">
-            <h4>Direct Checkout Demo</h4>
+            <h4>Direct Checkout </h4>
             <div class="short-description">
                <p>By pass the cart altogether with the <a href="/purchase" target="_blank">ShopWP Pro</a> direct checkout feature. Enabling this will redirect the user to the Shopify checkout page instead of adding to cart.</p>
             </div>
@@ -214,7 +214,7 @@
          </div>
          
          <div id="variant-buttons">
-            <h4>Variant Buttons Demo</h4>
+            <h4>Variant Buttons </h4>
             <div class="short-description">
                <p><a href="/purchase" target="_blank">ShopWP Pro</a> allows you to filter products by tags, vendors, product types, and collections. You can also filter by the product's title.</p>
             </div>
@@ -224,7 +224,7 @@
          </div>
 
          <div id="left-in-stock">
-            <h4>Left in Stock Notice Demo</h4>
+            <h4>Left in Stock Notice </h4>
             <div class="short-description">
                <p>Develop urgency in your customers by showing them an effective "left in stock" message when product inventory is low.</p>
                <p>Select the variants below to see an example.</p>
@@ -235,7 +235,7 @@
          </div>
 
          <div id="html-templates">
-            <h4>HTML Templates Demo</h4>
+            <h4>HTML Templates </h4>
             <div class="short-description">
                <p><a href="/purchase" target="_blank">ShopWP Pro</a> allows you to customize the layout of products by using custom PHP templates. Just add a special <code>wps-templates</code> folder inside your WordPress theme and start building! <a href="https://docs.wpshop.io/#/guides/template-overriding" target="_blank">Learn more here</a>.</p>
             </div>
@@ -245,7 +245,7 @@
          </div>
 
          <div id="subscriptions">
-            <h4>Subscriptions Demo</h4>
+            <h4>Subscriptions </h4>
             <div class="short-description">
                <p>We've <a href="/extensions/recharge/">partnered with Recharge</a>--one of the most popular subscription platforms--to provide a seamless way to display and sell subscription products using ShopWP.</p>
             </div>
@@ -255,7 +255,7 @@
          </div>
 
          <div id="next-image-on-hover">
-            <h4>Next Image on Hover Demo</h4>
+            <h4>Next Image on Hover </h4>
             <div class="short-description">
                <p>Show the next image automatically when the user hovers over the featured image</p>
             </div>
@@ -323,11 +323,11 @@
       
 
       .component-features-demo .nav {
-         width: 350px;
-         margin-left: 115px;
+         width: 480px;
+         padding-left: 0;
          border-top-right-radius: 20px;
-         border-top-left-radius: 20px;
-         background-image: linear-gradient(0deg,#fff1f1 0,#f0f0ff);
+         border-top-left-radius: 0;
+         background-color: #f5f5ff;
       }
 
       .component-features-demo .nav-inner {
@@ -473,7 +473,7 @@
 
       .component-features-demo .features > div h4 {
          font-weight: bold;
-         font-size: 20px;
+         font-size: 34px;
       }
       .component-features-demo .features > div p {
          max-width: 700px;

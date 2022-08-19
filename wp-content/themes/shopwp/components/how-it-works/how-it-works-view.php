@@ -7,7 +7,7 @@
          <div class="inner">
          <h2><span class="num">1</span><span itemprop="name">Download</span></h2>
          <div itemprop="itemListElement" itemscope itemtype="http://schema.org/HowToDirection">
-            <p itemprop="text">Begin by <a href="#!" class="getting-started-trigger">downloading the ShopWP plugin</a> and installing it on your WordPress site.</p>
+            <p itemprop="text">Begin by <a href="/purchase">downloading the ShopWP plugin</a> and installing it on your WordPress site.</p>
          </div>
             </div>
       </div>

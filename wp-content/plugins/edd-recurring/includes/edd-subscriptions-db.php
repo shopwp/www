@@ -354,7 +354,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 		if ( ! empty( $args['gateway'] ) ) {
 			$gateway = sanitize_text_field( $args['gateway'] );
 
-			if ( version_compare(EDD_VERSION, '3.0.0-beta1', '<') ) {
+			if ( ! function_exists( 'edd_get_order' ) ) {
 
 				// Pre EDD 3.0 join
 				$join  .= " LEFT JOIN {$wpdb->prefix}postmeta m1 ON t1.parent_payment_id = m1.post_id ";
@@ -696,7 +696,7 @@ class EDD_Subscriptions_DB extends EDD_DB {
 
 		if( $count === false ) {
 
-			$sql   = "SELECT COUNT($this->primary_key) FROM " . $this->table_name . " t1" . "{$join}" . "{$where}";
+			$sql   = "SELECT COUNT(t1.$this->primary_key) FROM " . $this->table_name . " t1" . "{$join}" . "{$where}";
 			$count = $wpdb->get_var( $sql );
 
 			wp_cache_set( $cache_key, $count, 'edd_subscriptions', 3600 );

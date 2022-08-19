@@ -1,4 +1,6 @@
 .nav-primary {
+	padding-left: 75px;
+
 	@include device(1300, 'max') {
 		display: none;
 	}
@@ -94,7 +96,7 @@
 	left: 7px;
 	> a {
 		svg {
-			margin-left: 10px !important;
+			margin-left: 5px !important;
 			width: 13px !important;
 			position: relative !important;
 			top: 2px !important;
@@ -113,7 +115,7 @@
 			.menu-item a:hover {
 				box-shadow: none;
 				text-decoration: none;
-				color: #415aff;
+				background: whitesmoke;
 			}
 
 			.menu-item {
@@ -298,7 +300,7 @@
 
 .link-account {
 	margin-top: 0;
-	margin-left: $space-s;
+	margin-left: 10px;
 }
 
 .header .current-menu-item {

@@ -55,7 +55,7 @@ function edd_load_scripts() {
 		wp_enqueue_script( 'edd-checkout-global' );
 
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
-			'ajaxurl'               => edd_get_ajax_url(),
+			'ajaxurl'               => esc_url_raw( edd_get_ajax_url() ),
 			'checkout_nonce'        => wp_create_nonce( 'edd_checkout_nonce' ),
 			'checkout_error_anchor' => '#edd_purchase_submit',
 			'currency_sign'         => edd_currency_filter(''),
@@ -81,7 +81,7 @@ function edd_load_scripts() {
 		wp_enqueue_script( 'edd-ajax' );
 
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
-			'ajaxurl'                 => edd_get_ajax_url(),
+			'ajaxurl'                 => esc_url_raw( edd_get_ajax_url() ),
 			'position_in_cart'        => isset( $position ) ? $position : -1,
 			'has_purchase_links'      => $has_purchase_links,
 			'already_in_cart_message' => __('You have already added this item to your cart','easy-digital-downloads' ), // Item already in the cart message
@@ -237,6 +237,14 @@ function edd_load_admin_scripts( $hook ) {
 		'wait'                        => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
 	));
 
+	wp_register_script( 'alpinejs', $js_dir . 'alpine.min.js', array(), '3.4.2', false );
+	wp_register_script( 'edd-admin-notifications', $js_dir . 'admin-notifications.js', array( 'alpinejs' ), EDD_VERSION, false );
+	wp_enqueue_script( 'edd-admin-notifications' );
+	wp_localize_script( 'edd-admin-notifications', 'eddNotificationsVars', array(
+		'restBase'  => rest_url( \EDD\API\v3\Endpoint::$namespace ),
+		'restNonce' => wp_create_nonce( 'wp_rest' ),
+	) );
+
 	/*
 	 * This bit of JavaScript is to facilitate #2704, in order to not break backwards compatibility with the old Variable Price Rows
 	 * while we transition to an entire new markup. They should not be relied on for long-term usage.
@@ -276,6 +284,17 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_style( 'edd-admin' );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
+
+/**
+ * Add `defer` to the AlpineJS script tag.
+ */
+add_filter( 'script_loader_tag', function( $url ) {
+	if ( false !== strpos( $url, EDD_PLUGIN_URL . 'assets/js/alpine.min.js' ) ) {
+		$url = str_replace( ' src', ' defer src', $url );
+	}
+
+	return $url;
+} );
 
 /**
  * Admin Downloads Icon

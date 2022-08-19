@@ -2,12 +2,12 @@
 # This file is distributed under the same license as the Plugins - Redirection - Stable (latest release) package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2021-03-13 12:13:14+0000\n"
+"PO-Revision-Date: 2022-07-13 05:52:21+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: GlotPress/3.0.0-alpha.2\n"
+"X-Generator: GlotPress/4.0.0-alpha.1\n"
 "Language: fr\n"
 "Project-Id-Version: Plugins - Redirection - Stable (latest release)\n"
 
@@ -113,7 +113,7 @@ msgstr "(Niveau de journalisation des IP)"
 
 #: redirection-strings.php:428
 msgid "Are you sure you want to delete the selected items?"
-msgstr "Confirmez-vous vouloir supprimer les éléments sélectionnés ?"
+msgstr "Confirmez-vous vouloir supprimer les éléments sélectionnés ?"
 
 #: redirection-strings.php:378
 msgid "View Redirect"
@@ -550,7 +550,7 @@ msgstr "500 - Erreur interne du serveur"
 
 #: redirection-strings.php:84
 msgid "451 - Unavailable For Legal Reasons"
-msgstr "451 - Indisponible pour des raisons légales"
+msgstr "451 - Unavailable For Legal Reasons (Indisponible pour des raisons légales)"
 
 #: redirection-strings.php:66 matches/language.php:9
 msgid "URL and language"
@@ -783,7 +783,7 @@ msgstr "Lisez ce guide de l’API REST pour plus d’informations."
 
 #: redirection-strings.php:109
 msgid "URL options / Regex"
-msgstr "Options d’URL / Regex"
+msgstr "Options d’URL/Regex"
 
 #: redirection-strings.php:324
 msgid "Export 404"
@@ -1180,15 +1180,15 @@ msgstr "Décrivez le but de cette redirection (facultatif)"
 
 #: redirection-strings.php:83
 msgid "418 - I'm a teapot"
-msgstr "418 - Je suis une théière"
+msgstr "418 - I’m a teapot (Je suis une théière)"
 
 #: redirection-strings.php:80
 msgid "403 - Forbidden"
-msgstr "403 - Interdit"
+msgstr "403 - Forbidden (Interdit)"
 
 #: redirection-strings.php:78
 msgid "400 - Bad Request"
-msgstr "400 - mauvaise requête"
+msgstr "400 - Bad Request (Mauvaise requête)"
 
 #: redirection-strings.php:75
 msgid "304 - Not Modified"
@@ -1839,7 +1839,7 @@ msgstr "Pos"
 
 #: redirection-strings.php:82
 msgid "410 - Gone"
-msgstr "410 – Gone"
+msgstr "410 - Gone (N’existera plus jamais)"
 
 #: redirection-strings.php:104 redirection-strings.php:540
 msgid "Position"
@@ -1997,11 +1997,11 @@ msgstr "308 – Redirigé de façon permanente"
 
 #: redirection-strings.php:79
 msgid "401 - Unauthorized"
-msgstr "401 – Non-autorisé"
+msgstr "401 - Unauthorized (Non-autorisé)"
 
 #: redirection-strings.php:81
 msgid "404 - Not Found"
-msgstr "404 – Introuvable"
+msgstr "404 - Not Found (Introuvable)"
 
 #: redirection-strings.php:111 redirection-strings.php:536
 msgid "Title"
@@ -2067,7 +2067,7 @@ msgstr "Page courante"
 
 #: redirection-strings.php:667
 msgid "of %(page)s"
-msgstr "de %(page)s"
+msgstr "de % (page)s"
 
 #: redirection-strings.php:668
 msgid "Next page"
@@ -2177,7 +2177,7 @@ msgstr "Journaux"
 
 #: redirection-strings.php:444
 msgid "Selecting this option will delete all redirections, all logs, and any options associated with the Redirection plugin.  Make sure this is what you want to do."
-msgstr "Sélectionner cette option supprimera toutes les redirections, les journaux et toutes les options associées à l&rsquo;extension Redirection. Soyez sûr que c&rsquo;est ce que vous voulez&nbsp;!"
+msgstr "Sélectionner cette option supprimera toutes les redirections, les journaux et toutes les options associées à l’extension Redirection. Soyez sûr que c’est ce que vous voulez !"
 
 #: redirection-strings.php:443
 msgid "Delete Redirection"
@@ -2185,7 +2185,7 @@ msgstr "Supprimer Redirection"
 
 #: redirection-strings.php:296 redirection-strings.php:612
 msgid "Upload"
-msgstr "Mettre en ligne"
+msgstr "Téléverser"
 
 #: redirection-strings.php:307
 msgid "Import"

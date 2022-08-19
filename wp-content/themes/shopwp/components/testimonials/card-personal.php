@@ -2,7 +2,7 @@
 
    <blockquote class="testimonial-wrapper">
       <footer class="testimonial-footer">
-         <a class="testimonials-author-link" href="<?= $testimonial_author_link ? $testimonial_author_link : '/testimonials'; ?>">
+         <a class="testimonials-author-link" href="<?= $testimonial_author_link ? $testimonial_author_link : '/testimonials'; ?>" rel="noreferrer">
             <img class="testimonials-author-avatar" src="<?= $testimonial_author_image['url']; ?>" alt="<?= $testimonial_author_image['alt']; ?>" />
             <cite class="testimonial-author" id="baseref">
                <span class="testimonial-author-name"><?= $testimonial_author_name; ?></span> 

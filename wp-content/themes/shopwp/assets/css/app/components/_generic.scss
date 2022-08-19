@@ -1,0 +1,73 @@
+.component-generic {
+	padding: 1em 3em;
+	margin-top: -60px;
+	background-color: #fff;
+	border: 1px solid #cbcbcb;
+	box-shadow: 0 0 21px -10px rgb(9 35 58 / 25%);
+
+	.generic-heading {
+		margin-bottom: 0;
+	}
+
+	.generic-content {
+		margin-top: 10px;
+	}
+
+	#icon-pointer {
+		width: 217px;
+		position: absolute;
+		left: -243px;
+		top: 45px;
+	}
+
+	strong {
+		font-family: Metropolis, helvetica;
+	}
+}
+
+.generic-short-description {
+	margin-top: -10px;
+	margin-bottom: 30px;
+}
+
+#winding2 {
+	width: 189px;
+	position: absolute;
+	left: 177px;
+	top: 371px;
+	z-index: 1;
+
+	.st0 {
+		fill: #fcce44;
+	}
+	.st2 {
+		fill: #0083c8;
+	}
+	.st3 {
+		fill: #c64f4b;
+	}
+	.st5 {
+		fill: #191a1e;
+	}
+	.st6 {
+		fill: none;
+		stroke: #170c2c;
+		stroke-width: 3;
+		stroke-linejoin: bevel;
+	}
+	.st7 {
+		fill: #fff;
+	}
+	.st10,
+	.st8 {
+		fill: none;
+		stroke: #fff;
+	}
+	.st8 {
+		stroke-width: 2;
+		stroke-miterlimit: 10;
+	}
+	.st10 {
+		stroke-linejoin: round;
+	}
+}

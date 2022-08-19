@@ -28,10 +28,15 @@ class ShopWP_Compatibility
             'wps-beaver-builder/wps-beaver-builder.php',
             'wps-elementor/wps-elementor.php',
             'shopwp-pro/shopwp.php',
+            'shopwp-pro.6.0-beta/shopwp.php',
             'shopwp/shopwp.php',
+            'wpshopify/shopwp.php',
             'shopwp-beaver-builder/shopwp-beaver-builder.php',
             'shopwp-elementor/shopwp-elementor.php',
-            'shopwp-recharge/shopwp-recharge.php'
+            'shopwp-recharge/shopwp-recharge.php',
+            'shopwp-yotpo-reviews/shopwp-yotpo-reviews.php',
+            'shopwp-datasync/shopwp-datasync.php',
+            'shopwp-data-sync-beta/shopwp-datasync.php',
         ];
     }
 
@@ -62,12 +67,7 @@ class ShopWP_Compatibility
 
     public function shopwp_disable_theme($stylesheet_dir)
     {
-        $force_enable_theme = apply_filters(
-            'shopwp_compatibility_enable_theme',
-            false
-        );
-
-        if ($this->is_shopwp_call() && !$force_enable_theme) {
+        if ($this->is_shopwp_call()) {
             if (!defined('SHOPWP_PLUGIN_DIR')) {
                 $plugins_path = WP_PLUGIN_DIR;
             } else {

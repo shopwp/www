@@ -37,10 +37,16 @@
 	@include device(1300, 'max') {
 		max-width: 94vw;
 	}
+
+	@include device(800, 'max') {
+		max-width: 100%;
+		margin: 0 auto;
+		width: calc(100% - 40px);
+	}
 }
 
 .l-contain-wide {
-	max-width: 1400px;
+	max-width: 1360px;
 	width: 100%;
 	margin: 0 auto;
 }
@@ -78,8 +84,9 @@ E.g., 2 === one half, 3 === one third, 4 === one fourth, etc
 .l-box-2 {
 	@include row($cols-2);
 
-	@include device(600, 'max') {
+	@include device(800, 'max') {
 		@include row($cols-1);
+		padding-left: 20px !important;
 	}
 }
 

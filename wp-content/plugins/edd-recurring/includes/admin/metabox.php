@@ -571,6 +571,7 @@ add_action( 'edd_after_price_field', 'edd_recurring_metabox_custom_options', 10 
  *
  * @description Adds a subscription payment indicator within the single payment view "Update Payment" metabox (top)
  * @since       2.4
+ * @todo remove when minimum EDD version is 3.0
  *
  * @param $payment_id
  *
@@ -592,7 +593,7 @@ function edd_display_subscription_payment_meta( $payment_id ) {
 				<?php foreach( $subs as $sub ) : ?>
 					<?php $sub_url = admin_url( 'edit.php?post_type=download&page=edd-subscriptions&id=' . $sub->id ); ?>
 					<p>
-						<span class="label"><span class="dashicons dashicons-update"></span> <?php printf( __( 'Subscription ID: <a href="%s">#%d</a>', 'edd_recurring' ), $sub_url, $sub->id ); ?></span>&nbsp;
+						<span class="label"><span class="dashicons dashicons-update"></span> <?php printf( __( 'Subscription ID: <a href="%s">#%d</a>', 'edd_recurring' ), $sub_url, $sub->id ); ?></span> (<?php echo esc_html( $sub->get_status_label() ); ?>)
 					</p>
 					<?php $payments = $sub->get_child_payments(); ?>
 					<?php if( $payments ) : ?>
@@ -623,43 +624,118 @@ function edd_display_subscription_payment_meta( $payment_id ) {
 add_action( 'edd_view_order_details_sidebar_before', 'edd_display_subscription_payment_meta', 10, 1 );
 
 /**
+ * Adds a section for order subscriptions to EDD 3.0.
+ *
+ * @since 2.12
+ * @param array     $sections
+ * @param EDD_Order $order
+ * @return array
+ */
+function edd_recurring_subscription_section( $sections, $order ) {
+	if ( ! edd_is_add_order_page() ) {
+		$is_parent_order  = edd_get_order_meta( $order->id, '_edd_subscription_payment', true );
+		$is_renewal_order = ! empty( $order->parent ) && 'sale' === $order->type;
+		if ( $is_parent_order || $is_renewal_order ) {
+			$sections[] = array(
+				'id'       => 'subscriptions',
+				'label'    => __( 'Subscriptions', 'edd-recurring' ),
+				'icon'     => 'update',
+				'callback' => 'edd_recurring_display_subscription_order_details',
+			);
+		}
+	}
+
+	return $sections;
+}
+add_filter( 'edd_get_order_details_sections', 'edd_recurring_subscription_section', 10, 2 );
+
+/**
+ * Outputs the subscription details in EDD 3.0.
+ *
+ * @since 2.12
+ * @param EDD_Order $order
+ * @return void
+ */
+function edd_recurring_display_subscription_order_details( $order ) {
+	remove_action( 'edd_view_order_details_sidebar_before', 'edd_display_subscription_payment_meta' );
+	remove_action( 'edd_view_order_details_sidebar_before', 'edd_recurring_display_parent_payment' );
+	$is_parent_order = edd_get_order_meta( $order->id, '_edd_subscription_payment', true );
+	$subs_db         = new EDD_Subscriptions_DB();
+	if ( $is_parent_order ) {
+		$subs = $subs_db->get_subscriptions( array( 'parent_payment_id' => $order->id, 'order' => 'ASC' ) );
+		foreach ( $subs as $sub ) {
+			include 'views/orders/order-details.php';
+		}
+	} else {
+		$sub_id = edd_get_order_meta( $order->id, 'subscription_id', true );
+		if ( $sub_id ) {
+			$sub = new EDD_Subscription( $sub_id );
+		} else {
+			$subs = $subs_db->get_subscriptions( array( 'parent_payment_id' => $order->parent, 'order' => 'ASC' ) );
+			$sub  = reset( $subs );
+		}
+		include 'views/orders/order-details.php';
+	}
+}
+
+/**
  * List subscription (sub) payments of a particular parent payment
  *
  * The parent payment ID is the very first payment made. All payments made after for the profile are sub.
  *
  * @since  1.0
+ * @param int $payment_id The current payment ID.
+ * @todo remove when minimum EDD version is 3.0
  * @return void
  */
 function edd_recurring_display_parent_payment( $payment_id = 0 ) {
 
 	$payment = edd_get_payment( $payment_id );
+	if ( ! $payment->parent_payment ) {
+		return;
+	}
 
-	if( $payment->parent_payment ) :
-
-		$parent_payment = edd_get_payment( $payment->parent_payment );
-		$sub_id = $payment->get_meta( 'subscription_id', true );
-		if( ! $sub_id ) {
-			$subs_db = new EDD_Subscriptions_DB;
-			$subs    = $subs_db->get_subscriptions( array( 'parent_payment_id' => $payment->parent_payment, 'order' => 'ASC' ) );
-			$sub     = reset( $subs );
-			$sub_id  = $sub->id;
-		}
-		$parent_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $payment->parent_payment );
-?>
-		<div id="edd-order-subscription-payments" class="postbox">
-			<h3 class="hndle">
-				<span><?php _e( 'Subscription', 'edd-recurring' ); ?></span>
-			</h3>
-			<div class="inside">
-				<?php $sub_url = admin_url( 'edit.php?post_type=download&page=edd-subscriptions&id=' . $sub_id ); ?>
-				<p>
-					<span class="label"><span class="dashicons dashicons-update"></span> <?php printf( __( 'Subscription ID: <a href="%s">#%d</a>', 'edd_recurring' ), $sub_url, $sub_id ); ?></span>&nbsp;
-				</p>
-				<p><?php printf( __( 'Parent Payment: <a href="%s">%s</a>' ), $parent_url, $parent_payment->number ); ?></p>
-			</div><!-- /.inside -->
-		</div><!-- /#edd-order-subscription-payments -->
-<?php
-	endif;
+	$sub_id = $payment->get_meta( 'subscription_id', true );
+	if ( $sub_id ) {
+		$sub = new EDD_Subscription( $sub_id );
+	} else {
+		$subs_db = new EDD_Subscriptions_DB();
+		$subs    = $subs_db->get_subscriptions( array( 'parent_payment_id' => $payment->parent_payment, 'order' => 'ASC' ) );
+		$sub     = reset( $subs );
+	}
+	if ( ! $sub ) {
+		return;
+	}
+	$parent_url = add_query_arg(
+		array(
+			'post_type' => 'download',
+			'page'      => 'edd-payment-history',
+			'view'      => 'view-order-details',
+			'id'        => urlencode( $payment->parent_payment ),
+		),
+		admin_url( 'edit.php' )
+	);
+	$sub_url    = add_query_arg(
+		array(
+			'post_type' => 'download',
+			'page'      => 'edd-subscriptions',
+			'id'        => urlencode( $sub->id ),
+		),
+		admin_url( 'edit.php' )
+	);
+	?>
+	<div id="edd-order-subscription-payments" class="postbox">
+		<h3 class="hndle">
+			<span><?php esc_html_e( 'Subscription', 'edd-recurring' ); ?></span>
+		</h3>
+		<div class="inside">
+			<p>
+				<span class="label"><span class="dashicons dashicons-update"></span> <?php esc_html_e( 'Subscription ID', 'edd_recurring' ); ?>: <?php printf( '<a href="%s">#%d</a>', esc_url( $sub_url ), (int) $sub->id ); ?></span> (<?php echo esc_html( $sub->get_status_label() ); ?>)
+			</p>
+			<p><?php esc_html_e( 'Parent Payment', 'edd-recurring' ); ?>: <?php printf( '<a href="%s">%s</a>', esc_url( $parent_url ), esc_html( edd_get_payment_number( $payment->parent_payment ) ) ); ?></p>
+		</div><!-- /.inside -->
+	</div><!-- /#edd-order-subscription-payments -->
+	<?php
 }
 add_action( 'edd_view_order_details_sidebar_before', 'edd_recurring_display_parent_payment', 10 );
 

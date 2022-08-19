@@ -225,6 +225,11 @@ class EDD_Recurring_Reminders {
 
 				foreach ( $subscriptions as $subscription ) {
 
+					if ( 'renewal' === $type && 'cancelled' === $subscription->get_status() ) {
+						edd_debug_log( 'Ignored renewal notice for subscription ID ' . $subscription->id . ' due to subscription being cancelled.' );
+						continue;
+					}
+
 					// Ensure the subscription should renew based on payments made and bill times.
 					if ( 'renewal' == $type && 0 != $subscription->bill_times && $subscription->get_total_payments() >= $subscription->bill_times ) {
 						edd_debug_log( 'Ignored renewal notice for subscription ID ' . $subscription->id . ' due being billing times being complete.' );

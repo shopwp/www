@@ -23,13 +23,15 @@ function Download({ download }) {
 		download && (
 			<tr>
 				<Td extraCSS={widerTD}>
-					{download.name === 'ShopWP' ? 'ShopWP Pro' : download.name}
+					{download.name === 'ShopWP' || download.name === 'WP Shopify Pro'
+						? 'ShopWP Pro'
+						: download.name}
 				</Td>
 				<Td>{download.latest_version}</Td>
 				<Td>
 					<ButtonLink
 						download={true}
-						text='Download'
+						text={'Download (' + download.latest_version + ')'}
 						href={download.files.file}
 						icon={<IconDownload />}
 					/>

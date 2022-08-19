@@ -1,14 +1,14 @@
-# Copyright (C) 2021 Easy Digital Downloads
+# Copyright (C) 2022 Easy Digital Downloads
 # This file is distributed under the same license as the Easy Digital Downloads - Software Licensing package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads - Software Licensing 3.8.3\n"
+"Project-Id-Version: Easy Digital Downloads - Software Licensing 3.8.6\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/support/\n"
-"POT-Creation-Date: 2021-12-02 15:16:36+00:00\n"
+"POT-Creation-Date: 2022-06-17 20:39:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Easy Digital Downloads, LLC "
 "(https://easydigitaldownloads.com/support/)\n"
 "Language-Team: Easy Digital Downloads, LLC "
@@ -24,14 +24,14 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: grunt-wp-i18n 1.0.3\n"
+"X-Generator: grunt-wp-i18n1.0.2\n"
 
 #: edd-software-licenses.php:230
 msgid "This plugin is not fully active."
 msgstr ""
 
 #: includes/admin/add-renewal-notice.php:18
-#: includes/admin/add-renewal-notice.php:72 includes/admin/settings.php:185
+#: includes/admin/add-renewal-notice.php:72 includes/admin/settings.php:191
 msgid "Add Renewal Notice"
 msgstr ""
 
@@ -164,11 +164,11 @@ msgstr ""
 #: includes/admin/license-actions.php:293
 #: includes/admin/license-actions.php:565
 #: includes/admin/license-actions.php:570
-#: includes/admin/license-actions.php:575 includes/admin/settings.php:224
-#: includes/admin/settings.php:228 includes/admin/settings.php:276
-#: includes/admin/settings.php:280 includes/admin/settings.php:337
-#: includes/admin/settings.php:341 includes/admin/settings.php:402
-#: includes/admin/settings.php:406 includes/admin/settings.php:410
+#: includes/admin/license-actions.php:575 includes/admin/settings.php:230
+#: includes/admin/settings.php:234 includes/admin/settings.php:282
+#: includes/admin/settings.php:286 includes/admin/settings.php:343
+#: includes/admin/settings.php:347 includes/admin/settings.php:408
+#: includes/admin/settings.php:412 includes/admin/settings.php:416
 #: includes/classes/class-sl-package-download.php:29
 #: includes/classes/class-sl-package-download.php:235
 #: includes/classes/class-sl-package-download.php:239
@@ -242,12 +242,12 @@ msgid "Activated URLs"
 msgstr ""
 
 #: includes/admin/classes/class-sl-fix-license-activation-counts.php:79
-#: includes/classes/class-edd-software-licensing.php:1602
+#: includes/classes/class-edd-software-licensing.php:1628
 msgid "LOG - License Activated: "
 msgstr ""
 
 #: includes/admin/classes/class-sl-fix-license-activation-counts.php:81
-#: includes/classes/class-edd-software-licensing.php:1612
+#: includes/classes/class-edd-software-licensing.php:1638
 msgid "LOG - License Deactivated: "
 msgstr ""
 
@@ -303,13 +303,14 @@ msgstr ""
 
 #: includes/admin/classes/class-sl-list-table.php:92
 #: includes/admin/license-actions.php:421 includes/admin/licenses.php:388
-#: includes/classes/class-sl-license.php:1347
+#: includes/classes/class-sl-license.php:1364 templates/license-keys.php:80
+#: templates/licenses-manage-overview.php:69
 msgid "Unlimited"
 msgstr ""
 
 #: includes/admin/classes/class-sl-list-table.php:98
 #: includes/admin/metabox.php:104 includes/admin/metabox.php:445
-#: includes/classes/class-sl-license.php:1440
+#: includes/classes/class-sl-license.php:1457
 #: templates/licenses-manage-overview.php:72
 msgid "Lifetime"
 msgstr ""
@@ -362,17 +363,17 @@ msgid "All"
 msgstr ""
 
 #: includes/admin/classes/class-sl-list-table.php:285
-#: includes/classes/class-sl-license.php:1232
+#: includes/classes/class-sl-license.php:1249
 msgid "Active"
 msgstr ""
 
 #: includes/admin/classes/class-sl-list-table.php:291
-#: includes/classes/class-sl-license.php:1236
+#: includes/classes/class-sl-license.php:1253
 msgid "Inactive"
 msgstr ""
 
 #: includes/admin/classes/class-sl-list-table.php:297
-#: includes/classes/class-sl-license.php:1240
+#: includes/classes/class-sl-license.php:1257
 msgid "Expired"
 msgstr ""
 
@@ -405,7 +406,7 @@ msgstr ""
 
 #: includes/admin/classes/class-sl-list-table.php:371
 #: includes/admin/classes/class-sl-list-table.php:541
-#: includes/admin/license-functions.php:58 includes/admin/settings.php:178
+#: includes/admin/license-functions.php:58 includes/admin/settings.php:184
 msgid "Delete"
 msgstr ""
 
@@ -579,7 +580,7 @@ msgstr ""
 
 #: includes/admin/customers.php:99 includes/admin/licenses.php:598
 #: includes/admin/licenses.php:652 includes/admin/metabox.php:718
-#: includes/admin/settings.php:166 templates/licenses-manage-single.php:36
+#: includes/admin/settings.php:172 templates/licenses-manage-single.php:36
 #: templates/licenses-upgrades.php:29
 msgid "Actions"
 msgstr ""
@@ -626,7 +627,7 @@ msgstr ""
 msgid "Edit Renewal Notice"
 msgstr ""
 
-#: includes/admin/edit-renewal-notice.php:49 includes/admin/settings.php:177
+#: includes/admin/edit-renewal-notice.php:49 includes/admin/settings.php:183
 msgid "Preview"
 msgstr ""
 
@@ -699,9 +700,9 @@ msgstr ""
 msgid "Failed to generate a new license key."
 msgstr ""
 
-#: includes/admin/license-actions.php:194 includes/admin/settings.php:224
-#: includes/admin/settings.php:280 includes/admin/settings.php:341
-#: includes/admin/settings.php:406
+#: includes/admin/license-actions.php:194 includes/admin/settings.php:230
+#: includes/admin/settings.php:286 includes/admin/settings.php:347
+#: includes/admin/settings.php:412
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -789,7 +790,7 @@ msgstr ""
 msgid "Expiration Date:"
 msgstr ""
 
-#: includes/admin/licenses.php:293 includes/admin/settings.php:175
+#: includes/admin/licenses.php:293 includes/admin/settings.php:181
 #: includes/scripts.php:53
 msgid "Edit"
 msgstr ""
@@ -962,11 +963,11 @@ msgid "Deactivate Site"
 msgstr ""
 
 #: includes/admin/licenses.php:616
-msgid "This license has not been activated on any sites"
+msgid "This license has not been activated on any sites."
 msgstr ""
 
 #: includes/admin/licenses.php:621
-msgid "New site URL (including http://)"
+msgid "New site URL (including https://)"
 msgstr ""
 
 #: includes/admin/licenses.php:625 templates/licenses-manage-single.php:66
@@ -1157,7 +1158,7 @@ msgid "Months"
 msgstr ""
 
 #: includes/admin/metabox.php:114 includes/classes/class-sl-download.php:174
-#: includes/classes/class-sl-license.php:1446
+#: includes/classes/class-sl-license.php:1463
 msgid "Years"
 msgstr ""
 
@@ -1175,7 +1176,7 @@ msgid ""
 "product."
 msgstr ""
 
-#: includes/admin/metabox.php:141 includes/admin/settings.php:108
+#: includes/admin/metabox.php:141 includes/admin/settings.php:97
 msgid "Renewal Discount"
 msgstr ""
 
@@ -1185,11 +1186,11 @@ msgid ""
 "the global value."
 msgstr ""
 
-#: includes/admin/metabox.php:148 includes/admin/settings.php:112
+#: includes/admin/metabox.php:148 includes/admin/settings.php:101
 msgid "When is this renewal discount used?"
 msgstr ""
 
-#: includes/admin/metabox.php:149 includes/admin/settings.php:32
+#: includes/admin/metabox.php:149 includes/admin/settings.php:30
 msgid ""
 "When the user is on the checkout page renewing their license, this discount "
 "will be automatically applied to their renewal purchase."
@@ -1283,9 +1284,9 @@ msgstr ""
 #: includes/admin/metabox.php:436
 msgid ""
 "For each variable pricing option, set the number of activations allowed per "
-"license. Use 0 for unlimited. If your product is a bundle, the activation "
-"limits set here will override the activation limits set on the individual "
-"products."
+"license. Use 0 or leave empty for unlimited. If your product is a bundle, "
+"the activation limits set here will override the activation limits set on "
+"the individual products."
 msgstr ""
 
 #: includes/admin/metabox.php:445
@@ -1606,11 +1607,11 @@ msgstr ""
 msgid "Upgrade Earnings"
 msgstr ""
 
-#: includes/admin/settings.php:4 includes/admin/settings.php:40
+#: includes/admin/settings.php:4
 msgid "Software Licensing"
 msgstr ""
 
-#: includes/admin/settings.php:23
+#: includes/admin/settings.php:24
 msgid ""
 "Checking this will give customers the ability to enter their license key on "
 "the checkout page and renew it. They'll also get renewal reminders to their "
@@ -1620,7 +1621,7 @@ msgid ""
 "renew even if this option is disabled."
 msgstr ""
 
-#: includes/admin/settings.php:25
+#: includes/admin/settings.php:26
 msgid ""
 "When the user is on the checkout page renewing their license, this discount "
 "will be automatically applied to their renewal purchase. NOTE: If the "
@@ -1628,19 +1629,7 @@ msgid ""
 "active, it will automatically renew with this discount applied."
 msgstr ""
 
-#: includes/admin/settings.php:27
-msgid ""
-"Renewal Reminders are emails that are automatically sent out to the "
-"customer when their license key is about to expire. These emails will "
-"remind the customer that they need to renew. You can configure those emails "
-"below. NOTE: If the product is a Recurring product and the customer's "
-"subscription is still active, the Renewal Reminders on this page will not "
-"be sent. Instead, the emails on the 'Recurring Payments' page will be used "
-"(see 'Recurring Payments' above). However, if the customer's subscription "
-"is cancelled or expired, they will be sent these emails."
-msgstr ""
-
-#: includes/admin/settings.php:30
+#: includes/admin/settings.php:28
 msgid ""
 "Checking this will give customers the ability to enter their license key on "
 "the checkout page and renew it. They'll also get renewal reminders to their "
@@ -1648,29 +1637,21 @@ msgid ""
 "[edd_license_keys] shortcode)."
 msgstr ""
 
-#: includes/admin/settings.php:34
-msgid ""
-"Renewal Reminders are emails that are automatically sent out to the "
-"customer when their license key is about to expire. These emails will "
-"remind the customer that they need to renew. You can configure those emails "
-"below."
-msgstr ""
-
-#: includes/admin/settings.php:47
+#: includes/admin/settings.php:36
 msgid "Disable URL Checking?"
 msgstr ""
 
-#: includes/admin/settings.php:48
+#: includes/admin/settings.php:37
 msgid ""
 "Check this box if your software is not tied to URLs. If you sell desktop "
 "software, check this."
 msgstr ""
 
-#: includes/admin/settings.php:50
+#: includes/admin/settings.php:39
 msgid "What is URL Checking?"
 msgstr ""
 
-#: includes/admin/settings.php:51
+#: includes/admin/settings.php:40
 msgid ""
 "Software Licensing will typically require the software to pass a URL along "
 "with a license to check the license limit. Note that if you sell desktop "
@@ -1679,41 +1660,41 @@ msgid ""
 "more on this please see the documentation."
 msgstr ""
 
-#: includes/admin/settings.php:55
+#: includes/admin/settings.php:44
 msgid "Ignore Local Host URLs?"
 msgstr ""
 
-#: includes/admin/settings.php:56
+#: includes/admin/settings.php:45
 msgid ""
 "Allow local development domains and IPs to be activated without counting "
 "towards the activation limit totals. The URL will still be logged."
 msgstr ""
 
-#: includes/admin/settings.php:58
+#: includes/admin/settings.php:47
 msgid "What is a Local Host?"
 msgstr ""
 
-#: includes/admin/settings.php:59
+#: includes/admin/settings.php:48
 msgid ""
 "People who are in the developmental stages of their website will often "
 "build it offline using their own computer. This is called a Local Host. "
 msgstr ""
 
-#: includes/admin/settings.php:63
+#: includes/admin/settings.php:52
 msgid "Selling WordPress Plugins?"
 msgstr ""
 
-#: includes/admin/settings.php:64
+#: includes/admin/settings.php:53
 msgid ""
 "Check this box if you are selling WordPress plugins and wish to enable "
 "advanced ReadMe.txt file parsing."
 msgstr ""
 
-#: includes/admin/settings.php:66
+#: includes/admin/settings.php:55
 msgid "What is ReadMe.txt?"
 msgstr ""
 
-#: includes/admin/settings.php:67
+#: includes/admin/settings.php:56
 msgid ""
 "Properly built WordPress plugins will include a ReadMe.txt file which "
 "includes things like the version, license, author, description, and more. "
@@ -1723,47 +1704,47 @@ msgid ""
 "plugins."
 msgstr ""
 
-#: includes/admin/settings.php:71
+#: includes/admin/settings.php:60
 msgid "Display Inline Upgrade Links"
 msgstr ""
 
-#: includes/admin/settings.php:72
+#: includes/admin/settings.php:61
 msgid ""
 "Check this box if you want to display inline upgrade links for customers "
 "who have upgradable purchases."
 msgstr ""
 
-#: includes/admin/settings.php:74
+#: includes/admin/settings.php:63
 msgid "Where are upgrade links displayed?"
 msgstr ""
 
-#: includes/admin/settings.php:75
+#: includes/admin/settings.php:64
 msgid ""
 "Inline upgrade links are displayed below the 'Add To Cart' button in "
 "products lists and on on individual product pages."
 msgstr ""
 
-#: includes/admin/settings.php:79
+#: includes/admin/settings.php:68
 msgid "Proration Method"
 msgstr ""
 
-#: includes/admin/settings.php:80
+#: includes/admin/settings.php:69
 msgid "Specify how to calculate proration for license upgrade."
 msgstr ""
 
-#: includes/admin/settings.php:83
+#: includes/admin/settings.php:72
 msgid "Cost-Based Calculation"
 msgstr ""
 
-#: includes/admin/settings.php:84
+#: includes/admin/settings.php:73
 msgid "Time-Based Calculation"
 msgstr ""
 
-#: includes/admin/settings.php:86
+#: includes/admin/settings.php:75
 msgid "How are prorations calculated?"
 msgstr ""
 
-#: includes/admin/settings.php:87
+#: includes/admin/settings.php:76
 msgid ""
 "Cost-based calculation is a type of pseudo-proration where the value of an "
 "upgrade is calculated based on the cost difference between the current and "
@@ -1772,127 +1753,144 @@ msgid ""
 "the cost of the new license."
 msgstr ""
 
-#: includes/admin/settings.php:92
+#: includes/admin/settings.php:81
 msgid "Allow Renewals"
 msgstr ""
 
-#: includes/admin/settings.php:93
+#: includes/admin/settings.php:82
 msgid "Check this box if you want customers to be able to renew their license keys."
 msgstr ""
 
-#: includes/admin/settings.php:95
+#: includes/admin/settings.php:84
 msgid "What does 'Allow Renewals' do?"
 msgstr ""
 
-#: includes/admin/settings.php:100
+#: includes/admin/settings.php:89
 msgid "Enforce Email Matching"
 msgstr ""
 
-#: includes/admin/settings.php:101
+#: includes/admin/settings.php:90
 msgid "Check this box if you want to enforce email matching on license renewals."
 msgstr ""
 
-#: includes/admin/settings.php:103
+#: includes/admin/settings.php:92
 msgid "What does 'Email Matching' mean?"
 msgstr ""
 
-#: includes/admin/settings.php:104
+#: includes/admin/settings.php:93
 msgid ""
 "Email matching restricts renewal of licenses to the email address used to "
 "originally purchase the license. This prevents license keys from being "
 "renewed by a different customer than purchased it."
 msgstr ""
 
-#: includes/admin/settings.php:109
+#: includes/admin/settings.php:98
 msgid ""
 "Enter a discount amount as a percentage, such as 10. Or enter 0 for no "
 "discount."
 msgstr ""
 
-#: includes/admin/settings.php:117
+#: includes/admin/settings.php:106
 msgid "Disable Discount Codes on Renewals"
 msgstr ""
 
-#: includes/admin/settings.php:118
+#: includes/admin/settings.php:107
 msgid ""
 "Check this box if you want to prevent customers from using non-renewal "
 "discounts in conjunction with renewals."
 msgstr ""
 
-#: includes/admin/settings.php:120
+#: includes/admin/settings.php:109
 msgid "Disable Discount Codes"
 msgstr ""
 
-#: includes/admin/settings.php:121
+#: includes/admin/settings.php:110
 msgid ""
 "This will disable the option to redeem discount codes when the cart "
 "contains a license renewal."
 msgstr ""
 
-#: includes/admin/settings.php:125
+#: includes/admin/settings.php:128
+msgid ""
+"Renewal Reminders are emails that are automatically sent out to the "
+"customer when their license key is about to expire. These emails will "
+"remind the customer that they need to renew. You can configure those emails "
+"below."
+msgstr ""
+
+#: includes/admin/settings.php:130
+msgid ""
+"NOTE: If the product is a Recurring product and the customer's subscription "
+"is still active, the Renewal Reminders on this page will not be sent. "
+"Instead, the emails on the 'Recurring Payments' page will be used (see "
+"'Recurring Payments' above). However, if the customer's subscription is "
+"cancelled or expired, they will be sent these emails."
+msgstr ""
+
+#: includes/admin/settings.php:136
 msgid "Send Renewal Reminders"
 msgstr ""
 
-#: includes/admin/settings.php:126
+#: includes/admin/settings.php:137
 msgid ""
 "Check this box if you want customers to receive a renewal reminder when "
 "their license key is about to expire."
 msgstr ""
 
-#: includes/admin/settings.php:128
+#: includes/admin/settings.php:139
 msgid "What are Renewal Reminders?"
 msgstr ""
 
-#: includes/admin/settings.php:133
+#: includes/admin/settings.php:144
 msgid "Renewal Notices"
 msgstr ""
 
-#: includes/admin/settings.php:134
+#: includes/admin/settings.php:145
 msgid "Configure the renewal notice emails"
 msgstr ""
 
-#: includes/admin/settings.php:164
+#: includes/admin/settings.php:170
 msgid "Subject"
 msgstr ""
 
-#: includes/admin/settings.php:165
+#: includes/admin/settings.php:171
 msgid "Send Period"
 msgstr ""
 
-#: includes/admin/settings.php:176
+#: includes/admin/settings.php:182
 msgid "Clone"
 msgstr ""
 
-#: includes/admin/settings.php:228 includes/admin/settings.php:276
-#: includes/admin/settings.php:337 includes/admin/settings.php:402
+#: includes/admin/settings.php:234 includes/admin/settings.php:282
+#: includes/admin/settings.php:343 includes/admin/settings.php:408
 msgid "You do not have permission to add renewal notices"
 msgstr ""
 
-#: includes/admin/settings.php:237
+#: includes/admin/settings.php:243
 msgid "Copy"
 msgstr ""
 
-#: includes/admin/settings.php:250
+#: includes/admin/settings.php:256
 msgid "Renewal Notice cloned successfully. You are editing a new notice."
 msgstr ""
 
-#: includes/admin/settings.php:283 includes/admin/settings.php:348
+#: includes/admin/settings.php:289 includes/admin/settings.php:354
 #: includes/classes/class-sl-emails.php:137 includes/license-renewals.php:74
 #: includes/license-renewals.php:122
 msgid "Your License Key is About to Expire"
 msgstr ""
 
-#: includes/admin/settings.php:287 includes/admin/settings.php:352
+#: includes/admin/settings.php:293 includes/admin/settings.php:358
 msgid "Renewal Notice saved successfully."
 msgstr ""
 
-#: includes/admin/settings.php:291 includes/admin/settings.php:356
+#: includes/admin/settings.php:297 includes/admin/settings.php:362
 msgid ""
 "Your message was empty and could not be saved. It has been reset to the "
 "default."
 msgstr ""
 
-#: includes/admin/settings.php:345 includes/admin/settings.php:410
+#: includes/admin/settings.php:351 includes/admin/settings.php:416
 msgid "No renewal notice ID was provided"
 msgstr ""
 
@@ -1908,14 +1906,14 @@ msgstr ""
 msgid "Software Licensing - Upgrades"
 msgstr ""
 
-#: includes/admin/upgrades.php:82
+#: includes/admin/upgrades.php:78
 msgid ""
 "Your Software Licensing database needs an upgrade. Once you have completed "
 "the migration to Easy Digital Downloads 3.0, the upgrade prompt will appear "
 "here."
 msgstr ""
 
-#: includes/admin/upgrades.php:88
+#: includes/admin/upgrades.php:84
 msgid ""
 "Easy Digital Downloads - Software Licensing needs to upgrade the licenses "
 "database, click <a href=\"%s\">here</a> to start the upgrade. <a href=\"#\" "
@@ -1923,7 +1921,7 @@ msgid ""
 "this upgrade</a>."
 msgstr ""
 
-#: includes/admin/upgrades.php:91
+#: includes/admin/upgrades.php:87
 msgid ""
 "<strong>About this upgrade:</strong><br />This is a "
 "<strong><em>mandatory</em></strong> update that will migrate all licenses "
@@ -1931,31 +1929,31 @@ msgid ""
 "provide better performance and scalability."
 msgstr ""
 
-#: includes/admin/upgrades.php:93
+#: includes/admin/upgrades.php:89
 msgid ""
 "<strong>Please back up your database before starting this upgrade.</strong> "
 "This upgrade routine will make irreversible changes to the database."
 msgstr ""
 
-#: includes/admin/upgrades.php:95
+#: includes/admin/upgrades.php:91
 msgid ""
 "<strong>Advanced User?</strong><br />This upgrade can also be run via "
 "WP-CLI with the following command:<br /><code>wp edd-sl "
 "migrate_licenses</code>"
 msgstr ""
 
-#: includes/admin/upgrades.php:97
+#: includes/admin/upgrades.php:93
 msgid "For large sites, this is the recommended method of upgrading."
 msgstr ""
 
-#: includes/admin/upgrades.php:110
+#: includes/admin/upgrades.php:106
 msgid ""
 "Easy Digital Downloads - Software Licensing still needs to complete the "
 "upgrade to the licenses database, click <a href=\"%s\">here</a> to continue "
 "the upgrade."
 msgstr ""
 
-#: includes/admin/upgrades.php:122
+#: includes/admin/upgrades.php:118
 msgid ""
 "Easy Digital Downloads - Software Licensing has <strong>finished upgrading "
 "the licenses database</strong>. The final step is to <a href=\"%s\">remove "
@@ -1964,210 +1962,210 @@ msgid ""
 "this process</a>."
 msgstr ""
 
-#: includes/admin/upgrades.php:125
+#: includes/admin/upgrades.php:121
 msgid ""
 "<strong>Removing legacy data:</strong><br />All licenses have been migrated "
 "to their own custom table. Now all old data needs to be removed."
 msgstr ""
 
-#: includes/admin/upgrades.php:127
+#: includes/admin/upgrades.php:123
 msgid ""
 "<strong>If you have not already, back up your database</strong> as this "
 "upgrade routine will be making changes to the database that are not "
 "reversible."
 msgstr ""
 
-#: includes/admin/upgrades.php:142
+#: includes/admin/upgrades.php:138
 msgid ""
 "Easy Digital Downloads - Software Licensing needs to <a href=\"%s\">update "
 "your license activation records</a>."
 msgstr ""
 
-#: includes/admin/upgrades.php:183
+#: includes/admin/upgrades.php:179
 msgid ""
 "<strong>Migration complete:</strong> You have already completed the "
 "migration of licenses to custom database tables."
 msgstr ""
 
-#: includes/admin/upgrades.php:191
+#: includes/admin/upgrades.php:187
 msgid ""
 "<strong>Database Upgrade Complete:</strong> All database upgrades have been "
 "completed. We recommended you now verify your store's operations are "
 "functioning as expected."
 msgstr ""
 
-#: includes/admin/upgrades.php:193
+#: includes/admin/upgrades.php:189
 msgid "You may now leave this page."
 msgstr ""
 
-#: includes/admin/upgrades.php:202 includes/admin/upgrades.php:493
+#: includes/admin/upgrades.php:198 includes/admin/upgrades.php:489
 msgid ""
 "<strong>Important:</strong> Please leave this screen open and do not "
 "navigate away until the process completes."
 msgstr ""
 
-#: includes/admin/upgrades.php:257
+#: includes/admin/upgrades.php:253
 msgid "Step %d: Upgrade Licenses Database"
 msgstr ""
 
-#: includes/admin/upgrades.php:262
+#: includes/admin/upgrades.php:258
 msgid ""
 "This will upgrade the licenses database for improved performance and "
 "reliability."
 msgstr ""
 
-#: includes/admin/upgrades.php:271 includes/admin/upgrades.php:275
-#: includes/admin/upgrades.php:279
+#: includes/admin/upgrades.php:267 includes/admin/upgrades.php:271
+#: includes/admin/upgrades.php:275
 msgid "Upgrade Database"
 msgstr ""
 
-#: includes/admin/upgrades.php:276
+#: includes/admin/upgrades.php:272
 msgid "Your licenses database has been upgraded."
 msgstr ""
 
-#: includes/admin/upgrades.php:280
+#: includes/admin/upgrades.php:276
 msgid ""
 "Legacy data has already been removed, migration is not possible at this "
 "time."
 msgstr ""
 
-#: includes/admin/upgrades.php:297
+#: includes/admin/upgrades.php:293
 msgid "Step %d: Update Bundled Licenses"
 msgstr ""
 
-#: includes/admin/upgrades.php:302
+#: includes/admin/upgrades.php:298
 msgid "This restores child licenses with their new parent license IDs."
 msgstr ""
 
-#: includes/admin/upgrades.php:311 includes/admin/upgrades.php:315
-#: includes/admin/upgrades.php:319
+#: includes/admin/upgrades.php:307 includes/admin/upgrades.php:311
+#: includes/admin/upgrades.php:315
 msgid "Update Bundles"
 msgstr ""
 
-#: includes/admin/upgrades.php:316
+#: includes/admin/upgrades.php:312
 msgid "Please complete the previous step before updating bundled licenses."
 msgstr ""
 
-#: includes/admin/upgrades.php:320
+#: includes/admin/upgrades.php:316
 msgid "Bundled licenses already updated."
 msgstr ""
 
-#: includes/admin/upgrades.php:338
+#: includes/admin/upgrades.php:334
 msgid "Step %d: Update License Logs"
 msgstr ""
 
-#: includes/admin/upgrades.php:343
+#: includes/admin/upgrades.php:339
 msgid "This updates the license logs with the new license data."
 msgstr ""
 
-#: includes/admin/upgrades.php:352 includes/admin/upgrades.php:356
-#: includes/admin/upgrades.php:360
+#: includes/admin/upgrades.php:348 includes/admin/upgrades.php:352
+#: includes/admin/upgrades.php:356
 msgid "Update License Logs"
 msgstr ""
 
-#: includes/admin/upgrades.php:357
+#: includes/admin/upgrades.php:353
 msgid "Please complete the previous steps before updating the license logs."
 msgstr ""
 
-#: includes/admin/upgrades.php:361
+#: includes/admin/upgrades.php:357
 msgid "License logs have already been updated."
 msgstr ""
 
-#: includes/admin/upgrades.php:379
+#: includes/admin/upgrades.php:375
 msgid "Step %d: Remove Legacy Data"
 msgstr ""
 
-#: includes/admin/upgrades.php:384
+#: includes/admin/upgrades.php:380
 msgid "This will remove all legacy license data."
 msgstr ""
 
-#: includes/admin/upgrades.php:387
+#: includes/admin/upgrades.php:383
 msgid ""
 "<strong>Important:</strong> Please be sure to back up your database prior "
 "to completing this step. The actions taken during this step are "
 "irreversible."
 msgstr ""
 
-#: includes/admin/upgrades.php:396 includes/admin/upgrades.php:399
+#: includes/admin/upgrades.php:392 includes/admin/upgrades.php:395
 msgid "Remove Legacy Data"
 msgstr ""
 
-#: includes/admin/upgrades.php:400
+#: includes/admin/upgrades.php:396
 msgid "Legacy data has already been removed."
 msgstr ""
 
-#: includes/admin/upgrades.php:484
+#: includes/admin/upgrades.php:480
 msgid "This upgrade has already been completed."
 msgstr ""
 
-#: includes/admin/upgrades.php:522
+#: includes/admin/upgrades.php:518
 msgid "Update License Activation Records"
 msgstr ""
 
-#: includes/admin/upgrades.php:527
+#: includes/admin/upgrades.php:523
 msgid ""
 "This will check your license activation counts, and use the activation logs "
 "to correct any discrepancies in the activation counts."
 msgstr ""
 
-#: includes/admin/upgrades.php:535
+#: includes/admin/upgrades.php:531
 msgid "Update Activation Counts"
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:1316
-#: includes/classes/class-edd-software-licensing.php:1364
-#: includes/classes/class-edd-software-licensing.php:1372
+#: includes/classes/class-edd-software-licensing.php:1333
+#: includes/classes/class-edd-software-licensing.php:1390
+#: includes/classes/class-edd-software-licensing.php:1398
 msgid "No item provided"
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:1397
+#: includes/classes/class-edd-software-licensing.php:1423
 #. translators: the singular download label
 msgid "Item name provided does not match a valid %s"
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:1400
+#: includes/classes/class-edd-software-licensing.php:1426
 #. translators: the singular download label
 msgid "License key provided does not match a valid %s"
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:1410
+#: includes/classes/class-edd-software-licensing.php:1436
 msgid "No license key has been provided."
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:1414
+#: includes/classes/class-edd-software-licensing.php:1440
 #. translators: the download name
 msgid "License key is not valid for %s"
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:2457
+#: includes/classes/class-edd-software-licensing.php:2483
 msgid "No changelog found"
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:2477
-#: includes/classes/class-edd-software-licensing.php:2546
+#: includes/classes/class-edd-software-licensing.php:2503
+#: includes/classes/class-edd-software-licensing.php:2572
 msgid "You do not have a valid license for this download."
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:2478
-#: includes/classes/class-edd-software-licensing.php:2547
+#: includes/classes/class-edd-software-licensing.php:2504
+#: includes/classes/class-edd-software-licensing.php:2573
 msgid "No Valid License"
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:2520
+#: includes/classes/class-edd-software-licensing.php:2546
 msgid ""
 "Your license key for this purchase is expired. Renew your license key and "
 "you will be allowed to download your files again."
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:2521
+#: includes/classes/class-edd-software-licensing.php:2547
 msgid "Expired License"
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:2527
+#: includes/classes/class-edd-software-licensing.php:2553
 msgid "Your license key for this purchase has been revoked."
 msgstr ""
 
-#: includes/classes/class-edd-software-licensing.php:2528
+#: includes/classes/class-edd-software-licensing.php:2554
 msgid "Revoked License"
 msgstr ""
 
@@ -2307,15 +2305,15 @@ msgstr ""
 msgid "Sample Product Name"
 msgstr ""
 
-#: includes/classes/class-sl-license.php:773
+#: includes/classes/class-sl-license.php:797
 msgid "LOG - License Key Regenerated: "
 msgstr ""
 
-#: includes/classes/class-sl-license.php:1244
+#: includes/classes/class-sl-license.php:1261
 msgid "Renew this license"
 msgstr ""
 
-#: includes/classes/class-sl-license.php:1244
+#: includes/classes/class-sl-license.php:1261
 msgid "renew now"
 msgstr ""
 
@@ -2635,58 +2633,58 @@ msgstr ""
 msgid "Unsubscribed"
 msgstr ""
 
-#: includes/license-upgrades.php:539
+#: includes/license-upgrades.php:544
 msgid "Your license key is expired. It must be renewed before it can be upgraded."
 msgstr ""
 
-#: includes/license-upgrades.php:543
+#: includes/license-upgrades.php:548
 msgid "Invalid price ID specified for upgrade."
 msgstr ""
 
-#: includes/license-upgrades.php:547
+#: includes/license-upgrades.php:552
 msgid ""
 "License renewals and upgrades must be purchased separately. Please complete "
 "your license renewal before upgrading it."
 msgstr ""
 
-#: includes/license-upgrades.php:594
+#: includes/license-upgrades.php:599
 msgid "Please log into your account to upgrade your license"
 msgstr ""
 
-#: includes/license-upgrades.php:636
+#: includes/license-upgrades.php:641
 msgid "Upgrading"
 msgstr ""
 
-#: includes/license-upgrades.php:659
+#: includes/license-upgrades.php:664
 msgid "<em>license upgrade</em>"
 msgstr ""
 
-#: includes/license-upgrades.php:927
+#: includes/license-upgrades.php:932
 msgid "License Upgraded"
 msgstr ""
 
-#: includes/license-upgrades.php:929
+#: includes/license-upgrades.php:934
 #. translators: the new price ID; payment ID
 msgid "Price ID updated to %1$d via Payment ID %2$s"
 msgstr ""
 
-#: includes/license-upgrades.php:1003
+#: includes/license-upgrades.php:1008
 msgid "License upgraded from %s to %s"
 msgstr ""
 
-#: includes/license-upgrades.php:1054
+#: includes/license-upgrades.php:1059
 msgid "Upgraded from"
 msgstr ""
 
-#: includes/license-upgrades.php:1066
+#: includes/license-upgrades.php:1071
 msgid "Upgraded to"
 msgstr ""
 
-#: includes/license-upgrades.php:1149
+#: includes/license-upgrades.php:1154
 msgid "Upgrade your existing license"
 msgstr ""
 
-#: includes/license-upgrades.php:1153
+#: includes/license-upgrades.php:1158
 msgid "Upgrade license ending in %s"
 msgstr ""
 

@@ -2,7 +2,7 @@
 
     if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
     
-    function TOPluginInterface()
+    function TO_PluginInterface()
         {
             global $wpdb, $wp_locale;
             

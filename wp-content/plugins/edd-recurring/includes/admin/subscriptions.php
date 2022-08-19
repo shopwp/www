@@ -824,6 +824,7 @@ function edd_recurring_process_subscription_creation() {
 		$payment->total       = edd_sanitize_amount( sanitize_text_field( $_POST['initial_amount'] ) );
 		$payment->date        = $created_date;
 		$payment->status      = 'pending';
+		$payment->mode        = edd_is_test_mode() ? 'test' : 'live';
 		$payment->save();
 		$payment->status = 'complete';
 		$payment->save();
@@ -841,7 +842,7 @@ function edd_recurring_process_subscription_creation() {
 		'period'            => sanitize_text_field( $_POST['period'] ),
 		'parent_payment_id' => $payment->ID,
 		'product_id'        => absint( $_POST['product_id'] ),
-		'price_id'          => absint( $_POST['edd_price_option'] ),
+		'price_id'          => isset( $_POST['edd_price_option'] ) ? absint( $_POST['edd_price_option'] ) : null,
 		'customer_id'       => $customer_id
 	);
 

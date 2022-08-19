@@ -39,8 +39,11 @@ class EDD_Recurring_Customer {
 
 		_edd_deprecated_function( __FUNCTION__, '2.4', 'EDD_Recurring_Subscriber', $backtrace );
 
-		$user = new WP_User( $user_id );
-		$user->add_role( 'edd_subscriber' );
+		$user                   = new WP_User( $user_id );
+		$subscriber_role_exists = (bool) $GLOBALS['wp_roles']->is_role( 'edd_subscriber' );
+		if ( $subscriber_role_exists ) {
+			$user->add_role( 'edd_subscriber' );
+		}
 
 		do_action( 'edd_recurring_set_as_subscriber', $user_id );
 

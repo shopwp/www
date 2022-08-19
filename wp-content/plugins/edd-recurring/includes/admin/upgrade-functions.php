@@ -142,6 +142,32 @@ function edd_show_recurring_upgrade_notices() {
 
 	}
 
+	/**
+	 * Update subscription order items to have the correct status.
+	 * @since 2.11.7
+	 */
+	if ( function_exists( 'edd_get_orders' ) && ! edd_has_upgrade_completed( 'recurring_update_order_item_status' ) ) {
+		$order_items = get_transient( 'edd_recurring_order_item_counts' );
+		if ( false === $order_items ) {
+			global $wpdb;
+			$order_items = $wpdb->get_var(
+				"SELECT COUNT(*) FROM {$wpdb->edd_order_items} oi
+				INNER JOIN {$wpdb->edd_orders} o
+				ON( oi.order_id = o.id AND o.status = 'edd_subscription' )
+				WHERE oi.status IN ( 'edd_subscription', 'pending' )"
+			);
+		}
+
+		if ( $order_items ) {
+			set_transient( 'edd_recurring_order_item_counts', (int) $order_items, DAY_IN_SECONDS );
+			printf(
+				'<div class="updated"><p>' . __( 'Easy Digital Downloads needs to update the order items table. <a href="%s">Start the upgrade.</a>', 'edd-recurring' ) . '</p></div>',
+				esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=recurring_update_order_item_status' ) )
+			);
+		} else {
+			edd_set_upgrade_complete( 'recurring_update_order_item_status' );
+		}
+	}
 }
 add_action( 'admin_notices', 'edd_show_recurring_upgrade_notices' );
 
@@ -1566,3 +1592,21 @@ function edd_recurring_wipe_invalid_paypal_plan_ids() {
 }
 
 add_action( 'admin_init', 'edd_recurring_wipe_invalid_paypal_plan_ids' );
+
+/**
+ * Updates the EDD Subscriber role to have the `read` capability.
+ *
+ * @since 2.11.7
+ * @return void
+ */
+function edd_recurring_fix_edd_subscriber_role() {
+	if ( edd_has_upgrade_completed( 'recurring_update_edd_subscriber_role' ) ) {
+		return;
+	}
+	$subscriber_role_exists = (bool) $GLOBALS['wp_roles']->is_role( 'edd_subscriber' );
+	if ( $subscriber_role_exists ) {
+		add_role( 'edd_subscriber', __( 'EDD Subscriber', 'edd-recurring' ), array( 'read' => true ) );
+	}
+	edd_set_upgrade_complete( 'recurring_update_edd_subscriber_role' );
+}
+add_action( 'admin_init', 'edd_recurring_fix_edd_subscriber_role' );

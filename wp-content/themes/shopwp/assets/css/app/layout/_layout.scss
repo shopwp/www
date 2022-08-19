@@ -1,52 +1,21 @@
 .main {
 	width: 100%;
-	margin: 80px 0 0 0;
+	margin: 140px 0 0 0;
+	background: color(backgroundPrimary);
 
-	@include device(1500, 'max') {
-		margin-top: 130px;
+	@include device(700, 'max') {
+		margin: 100px 0 0 0;
 	}
+}
 
-	@include device(1300, 'max') {
-		margin-top: 96px;
-	}
+.blog .main {
+	background: white;
 }
 
 .become-an-affiliate {
 	.page-content {
-		max-width: 60%;
+		max-width: 700px;
 		margin: 0 auto 3em auto;
-	}
-}
-
-.how .main,
-.contact .main,
-.faq .main,
-.examples .main,
-.pro-features .main,
-.features .main,
-.changelog .main,
-.blog .main,
-.login .main,
-.account .main,
-.affiliate-login .main,
-.forgot-password .main,
-.become-an-affiliate .main,
-.affiliates .main,
-.invoice .main,
-.affiliate-terms-of-use .main,
-.edd-failed-transaction .main,
-.reset-password .main,
-.purchase-confirmation .main,
-.try-wp-shopify-for-free .main,
-.post-type-archive-download .main {
-	margin-top: 160px;
-
-	@include device(1500, 'max') {
-		margin-top: 145px;
-	}
-
-	@include device(1300, 'max') {
-		margin-top: 100px;
 	}
 }
 
@@ -59,13 +28,29 @@
 }
 
 .home .main {
+	margin: 120px 0px;
+
 	@include device(1300, 'max') {
-		margin-top: 110px;
+		margin-top: 60px;
+	}
+
+	@include device(1000, 'max') {
+		margin-top: 120px;
 	}
 
 	@include device(600, 'max') {
-		margin-top: 145px;
+		margin-top: 126px;
 	}
+}
+
+.single-faqs .main,
+.checkout .main {
+	background: white;
+}
+
+.checkout .menu-item-back {
+	position: relative;
+	top: -2px;
 }
 
 .purchase-confirmation .page-content {
@@ -78,10 +63,6 @@
 .purchase-confirmation .component-getting-started-inline,
 .login .component-getting-started-inline {
 	display: none;
-}
-
-.purchase-confirmation .page-header h1 {
-	max-width: 866px;
 }
 
 .affiliate-terms-of-use .page-content {
@@ -119,8 +100,15 @@
 
 .features .page-header h1,
 .pro-features .page-header h1 {
-	max-width: 910px;
-	margin-bottom: -10px;
+	margin-bottom: 0;
+
+	@include device(900, 'max') {
+		font-size: 34px;
+	}
+
+	@include device(700, 'max') {
+		font-size: 26px;
+	}
 }
 
 .features .page-header + .page-content,
@@ -134,14 +122,22 @@
 	margin-top: 4em;
 }
 
+.faq.page-template-template-narrow-php .main {
+	max-width: 1100px;
+}
+
 .contact .component.component-faq-secondary,
 .faq .component.component-faq {
-	margin-top: 3em;
 	margin-bottom: 7em;
+	max-width: 1100px;
 
 	@media (max-width: 600px) {
 		margin-top: 1em;
 	}
+}
+
+.faq .component.component-faq {
+	max-width: 800px;
 }
 
 .contact .component.component-faq-secondary h2 {
@@ -158,7 +154,7 @@
 }
 
 .examples .page-header h1 {
-	max-width: 900px;
+	max-width: 1000px;
 }
 
 .page-content {
@@ -238,6 +234,7 @@
 
 		.entry-content {
 			padding: 0 20px;
+
 			p {
 				font-size: 16px;
 			}
@@ -247,7 +244,24 @@
 	.post-single-header {
 		@include device(700, 'max') {
 			margin-top: 0;
+			margin-bottom: 0;
 			padding-top: 0;
+
+			+ .entry-content {
+				margin-top: 0;
+				margin-bottom: 0;
+				padding: 0 15px;
+			}
+
+			> .l-row {
+				flex-direction: column-reverse;
+			}
+
+			.latest-post-info {
+				padding-left: 0;
+				padding-right: 0;
+				margin-top: 20px;
+			}
 		}
 	}
 }
@@ -288,14 +302,13 @@
 }
 
 .component {
-	max-width: 85vw;
+	max-width: 1500px;
 	width: calc(100%);
-	background-color: color(off-white);
+	background-color: color(backgroundPrimary);
 	padding: 0 3em;
 	border: none;
 	margin: 0 auto;
-	border-radius: 20px;
-	// border-radius: 10px;
+	position: relative;
 
 	@include device(700, 'max') {
 		padding: 0 1em;
@@ -303,11 +316,13 @@
 		&.component-mailinglist {
 			padding-left: $space-xl;
 			padding-right: $space-xl;
-			margin: 0;
-			width: 100%;
-			max-width: 100%;
+			margin: 0 auto;
 		}
 	}
+}
+
+.component .component-contact-container {
+	background-color: white;
 }
 
 .component-inner {
@@ -352,6 +367,52 @@
 	padding-bottom: 1em;
 }
 
+.component-examples {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+
+	.btn {
+		margin-top: 20px;
+	}
+
+	.how-wrapper {
+		display: flex;
+		flex-direction: column-reverse;
+		width: 31%;
+		padding: 0;
+		margin-bottom: 40px;
+
+		.inner {
+			border-radius: 0;
+			padding-top: 20px;
+			min-height: 300px;
+			border-bottom-left-radius: 15px;
+			border-bottom-right-radius: 15px;
+
+			@include device(900, 'max') {
+				padding: 20px 10px;
+			}
+		}
+
+		.how-content {
+			position: static;
+			transform: none;
+			margin-top: -18px;
+		}
+
+		img,
+		.how-image {
+			max-width: 100%;
+			filter: none;
+		}
+
+		h2 {
+			font-size: 24px;
+		}
+	}
+}
+
 .error404 {
 	.alert {
 		max-width: $container-width-narrow;
@@ -362,6 +423,11 @@
 
 	.main {
 		margin-bottom: 8em;
+		margin-top: 140px;
+	}
+
+	.page-header h1 {
+		font-size: 80px;
 	}
 }
 
@@ -375,4 +441,27 @@
 
 .post-type-archive-download .page-content {
 	margin-top: -10px;
+}
+
+.ReactModal__Content {
+	background-color: white !important;
+}
+
+.wps-modal-row .wps-product-quantity.wps-form-input {
+	margin-bottom: 0;
+}
+
+.wps-modal-row .wps-component-products-pricing,
+.wpshopify-variant-buttons {
+	margin-top: 0;
+}
+
+.feature-demo-alt .slick-arrow.slick-next {
+	right: -75px !important;
+	top: 48% !important;
+}
+
+.feature-demo-alt .slick-arrow.slick-prev {
+	left: -90px !important;
+	top: 48% !important;
 }

@@ -126,6 +126,18 @@ if (is_page('checkout')) {
 
         get_template_part('components/features-demo/view');
 
+      } else if(get_row_layout() == 'component_generic') {
+
+        get_template_part('components/generic/controller');
+
+      } else if(get_row_layout() == 'component_version_notice') {
+
+        get_template_part('components/version-notice/index');
+
+      } else if(get_row_layout() == 'component_new_release_page') {
+
+        get_template_part('components/new-release-page/index');
+
       }
       
     endwhile;

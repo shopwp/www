@@ -1,229 +1,253 @@
 .component-mailinglist {
-  position: relative;
-  margin-bottom: 1em;
-  color: color(base);
-  border-radius: 20px;
-  background-color: color(off-white);
-  padding: 0 3em;
-  outline: 10px solid #ffffff;
-  outline-offset: -2px;
-  outline-style: solid;
+	position: relative;
+	margin-bottom: 1em;
+	color: color(base);
+	border-radius: 20px;
+	background-color: #dfeaff;
+	padding: 0 3em;
+	margin-top: 70px;
 
-  @include device(1000, 'max') {
-    padding: 0 2em;
-  }
+	@include device(1600, 'max') {
+		#Layer_1,
+		#Layer_2 {
+			display: none;
+		}
+	}
 
-  .component-inner {
-    padding: 2em 0 3em 0;
-  }
+	@include device(1000, 'max') {
+		padding: 0 2em;
+		max-width: 95vw;
+	}
 
-  .form-messages {
-    position: absolute;
-    width: 100%;
-    padding: 10px;
-  }
+	.component-inner {
+		padding: 2.4em 0 2.7em 0;
+	}
 
-  .form-label {
-    color: color(base);
-    font-weight: 100;
-    z-index: 99;
-    top: 1.2em;
-    font-size: 1em;
+	.form-messages {
+		position: absolute;
+		width: 100%;
+		padding: 10px;
+	}
 
-    @include device(1000, 'max') {
-      top: 18px;
-    }
-  }
+	.form-label {
+		color: color(base);
+		font-weight: 100;
+		z-index: 99;
+		top: 1.2em;
+		font-size: 1em;
 
-  .is-focused {
-    .form-label {
-      color: color(base);
-    }
-  }
+		@include device(1000, 'max') {
+			top: 18px;
+		}
+	}
 
-  label.error {
-    margin-top: 0;
-    position: relative;
-    top: 16px;
-  }
+	.is-focused {
+		.form-label {
+			color: color(base);
+		}
+	}
 
-  .is-submitted {
-    .form-success {
-      margin-top: 1em;
-      margin-top: 1em;
-    }
-  }
+	label.error {
+		margin-top: 0;
+		position: relative;
+		top: 16px;
+	}
 
-  .l-contain-narrow {
-    max-width: 1200px;
-    width: 100%;
-    padding-top: 0;
-    padding-bottom: 0;
-  }
+	.is-submitted {
+		.form-success {
+			margin-top: 1em;
+			margin-top: 1em;
+		}
+	}
 
-  .form-control {
-    display: flex;
+	.l-contain-narrow {
+		width: 100%;
+		padding-top: 0;
+		padding-bottom: 0;
+	}
 
-    #mailinglist-email {
-      flex: 1;
-      border-radius: 10px 0 0 10px;
-      font-size: 1em;
-      margin: 0;
+	.form-control {
+		display: flex;
 
-      @include device(1000, 'max') {
-        border-radius: 10px;
-      }
-    }
-    .btn-group {
-      width: 230px;
-      display: flex;
+		#mailinglist-email {
+			flex: 1;
+			border-radius: 10px 0 0 10px;
+			font-size: 1em;
+			margin: 0;
 
-      @include device(1000, 'max') {
-        max-width: 100%;
-        width: 100%;
-      }
+			@include device(1000, 'max') {
+				border-radius: 10px;
+			}
+		}
+		.btn-group {
+			width: 230px;
+			display: flex;
 
-      .btn {
-        border-radius: 0 0.4em 0.4em 0;
-        width: 100%;
-        font-size: 1.2em;
-        background-color: color(base);
-        transform: scale(1) !important;
-        margin: 0;
+			@include device(1000, 'max') {
+				max-width: 100%;
+				width: 100%;
+			}
 
-        @include device(1000, 'max') {
-          border-radius: 0.4em;
-          margin: 1em 0 0 0;
-        }
+			.btn {
+				border-radius: 0 0.4em 0.4em 0;
+				width: 100%;
+				font-size: 1.2em;
+				background-color: color(base);
+				transform: scale(1) !important;
+				margin: 0;
 
-        &:hover {
-          transform: scale(1) !important;
-        }
-      }
-    }
-  }
+				@include device(1000, 'max') {
+					border-radius: 0.4em;
+					margin: 1em 0 0 0;
+				}
+
+				&:hover {
+					transform: scale(1) !important;
+				}
+			}
+		}
+	}
 }
 
 .stylized-border {
-  outline: 10px solid #fff;
-  outline-offset: -2px;
-  outline-style: solid;
+	outline: 10px solid #fff;
+	outline-offset: -2px;
+	outline-style: solid;
 }
 
 .mailinglist-group-copy {
-  color: color(white);
-  z-index: 1;
-  align-items: center;
-  margin-bottom: 10px;
+	color: color(white);
+	background: #dfeaff;
+	z-index: 1;
+	align-items: center;
+	margin-bottom: 10px;
+	margin-top: 0;
 
-  @include device(600, 'max') {
-    z-index: 999;
-  }
+	h4 {
+		font-size: 38px;
+	}
+
+	@include device(600, 'max') {
+		z-index: 999;
+	}
 }
 
 .mailinglist-heading {
-  margin-bottom: 0;
-  color: color(base);
-  font-size: 2.5em;
+	margin-bottom: 0;
+	color: color(base);
+	font-size: 2.2em;
+	margin-top: 0;
+	line-height: 1.3;
 
-  @include device(1000, 'max') {
-    font-size: 2em;
-  }
+	@include device(1000, 'max') {
+		font-size: 28px;
+	}
 
-  @include device(400, 'max') {
-    font-size: $font-xl;
-  }
+	@include device(400, 'max') {
+		font-size: $font-xl;
+	}
 }
 
 .mailinglist-copy {
-  font-size: 16px;
-  text-align: center;
-  color: color(base);
-  margin-top: 20px;
-  font-family: $font-secondary;
-  font-weight: 500;
+	font-size: 17px;
+	text-align: left;
+	color: color(base);
+	margin-top: 20px;
+	font-family: $font-secondary;
 
-  @include device(1000, 'max') {
-    font-size: 16px;
-  }
+	@include device(1000, 'max') {
+		font-size: 16px;
+	}
 }
 
 .mailinglist-form-inline {
-  max-width: 640px;
-  text-align: left;
-  margin: 4em auto;
+	max-width: 640px;
+	text-align: left;
+	margin: 4em auto;
 
-  #email-error {
-    margin-top: 0;
-  }
+	h4 {
+		font-weight: 500;
+		margin-bottom: 0;
+		font-size: 42px;
+		width: 100%;
+		text-align: center;
+		margin-top: 5px;
+	}
 
-  .spinner {
-    right: calc(2% - 0px);
-    top: 3px;
-  }
+	p {
+		text-align: center;
+		font-size: 20px;
+		margin-top: 15px;
+		margin-bottom: 30px;
+		margin-top: 10px;
+		color: #0f0728;
+	}
 
-  .form-messages {
-    width: 100%;
-    max-width: 360px;
-    margin: 1em auto;
-  }
+	#email-error {
+		margin-top: 0;
+	}
 
-  .mailinglist-group-copy {
-    align-items: flex-start;
-    margin-bottom: 11px;
-    display: flex;
-    flex-direction: row;
-  }
+	.spinner {
+		right: calc(2% - 0px);
+		top: 3px;
+	}
 
-  h4 {
-    font-weight: 600;
-    margin-bottom: 0;
-    font-size: 18px;
-  }
+	.form-messages {
+		width: 100%;
+		max-width: 360px;
+		margin: 1em auto;
+	}
 
-  .mailinglist-copy {
-    text-align: left;
-    margin: 0;
-    display: inline;
-    margin-left: 10px;
-    width: auto;
-  }
-  .form-control {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: flex-start;
-  }
+	.mailinglist-group-copy {
+		align-items: flex-start;
+		margin-bottom: 11px;
+		display: flex;
+		flex-direction: row;
+	}
 
-  .mailinglist-email {
-    width: 270px;
-    padding: 9px 1.2em;
-    margin-right: 10px;
-    flex: 1;
-    font-size: 17px;
-  }
+	.mailinglist-copy {
+		text-align: left;
+		margin: 0;
+		display: inline;
+		margin-left: 10px;
+		width: auto;
+	}
+	.form-control {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		justify-content: flex-start;
+	}
 
-  .btn-group,
-  .btn {
-    margin: 0;
-  }
+	.mailinglist-email {
+		width: 270px;
+		padding: 9px 1.2em;
+		margin-right: 10px;
+		flex: 1;
+		font-size: 17px;
+	}
 
-  > .l-row {
-    @include device(900, 'max') {
-      flex-direction: column;
-    }
-  }
+	.btn-group,
+	.btn {
+		margin: 0;
+	}
+
+	> .l-row {
+		@include device(900, 'max') {
+			flex-direction: column;
+		}
+	}
 }
 
 .footer {
-  .mailinglist-form-inline {
-    .mailinglist-group-copy,
-    .form-control {
-      justify-content: center;
-    }
+	.mailinglist-form-inline {
+		.mailinglist-group-copy,
+		.form-control {
+			justify-content: center;
+		}
 
-    .form-message {
-      text-align: center;
-    }
-  }
+		.form-message {
+			text-align: center;
+		}
+	}
 }

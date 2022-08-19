@@ -1,10 +1,11 @@
 === EDD Auto Register ===
-Contributors: easydigitaldownloads, sumobi, mordauk, cklosows, mindctrl
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=EFUPMPEZPGW7L
-Tags: easy digital downloads, digital downloads, e-downloads, edd, sumobi, purchase, auto, register, registration, e-commerce
-Requires at least: 3.3
-Tested up to: 5.5.1
-Stable tag: 1.3.14
+Contributors: easydigitaldownloads, sumobi, mordauk, cklosows, mindctrl, littlerchicken
+Donate link: https://easydigitaldownloads.com/donate/
+Tags: easy digital downloads, digital downloads, e-downloads, edd, purchase, auto, register, registration, e-commerce
+Requires at least: 4.4
+Tested up to: 5.9
+Requires PHP: 5.4
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +13,7 @@ Automatically creates a WP user account at checkout, based on customer's email a
 
 == Description ==
 
-This plugin now requires [Easy Digital Downloads](http://wordpress.org/extend/plugins/easy-digital-downloads/ "Easy Digital Downloads") v2.3 or greater.
+This plugin now requires [Easy Digital Downloads](https://wordpress.org/plugins/easy-digital-downloads/ "Easy Digital Downloads") 2.9 or greater.
 
 Once activated, EDD Auto Register will create a WordPress user account for your customer at checkout, without the need for the customer to enter any additional information. This eliminates the need for the default EDD registration form, and drastically reduces the time it takes your customers to complete their purchase.
 
@@ -20,9 +21,9 @@ Guest checkout is required so the plugin overrides the setting. The registration
 
 There are various filters available for developers, see the FAQ tab for more information.
 
-**More add-ons for Easy Digital Downloads**
+**More extensions for Easy Digital Downloads**
 
-You can find more add-ons (both free and commercial) from [Easy Digital Downloads' website](https://easydigitaldownloads.com/downloads/ "Easy Digital Downloads")
+You can find more extensions (both free and commercial) from [Easy Digital Downloads' website](https://easydigitaldownloads.com/downloads/ "Easy Digital Downloads")
 
 == Installation ==
 
@@ -39,7 +40,7 @@ OR you can just install it with WordPress by going to Plugins >> Add New >> and 
 
 = How can I modify some of the key aspects of the plugin? =
 
-There are filters available to modify the behaviour of the plugin, see the list below:
+There are filters available to modify the behaviour of the plugin:
 
 1. edd_auto_register_email_subject
 1. edd_auto_register_headers
@@ -48,20 +49,21 @@ There are filters available to modify the behaviour of the plugin, see the list 
 1. edd_auto_register_error_must_login
 1. edd_auto_register_login_form
 1. edd_auto_register_disable
+1. edd_auto_register_can_create_user
 
 = Can you provide a filter example of how to change the email's subject? =
 
 Add the following to your child theme's functions.php
 
-    function my_child_theme_edd_auto_register_email_subject( $subject ) {
+	function my_child_theme_edd_auto_register_email_subject( $subject ) {
 
-        // enter your new subject below
-	    $subject = 'Here are your new login details';
+		// enter your new subject below
+		$subject = 'Here are your new login details';
 
-	    return $subject;
+		return $subject;
 
-    }
-    add_filter( 'edd_auto_register_email_subject', 'my_child_theme_edd_auto_register_email_subject' );
+	}
+	add_filter( 'edd_auto_register_email_subject', 'my_child_theme_edd_auto_register_email_subject' );
 
 
 = Can you provide a filter example of how to change the email's body? =
@@ -69,42 +71,54 @@ Add the following to your child theme's functions.php
 Add the following to your child theme's functions.php
 
 	function my_child_theme_edd_auto_register_email_body( $default_email_body, $first_name, $username, $password ) {
+		$user = get_user_by( 'login', $username );
+		$key  = get_password_reset_key( $user );
+		if ( is_wp_error( $key ) ) {
+			return false;
+		}
 
 		// Modify accordingly
-		$default_email_body = __( "Dear", "edd-auto-register" ) . ' ' . $first_name . ",\n\n";
-		$default_email_body .= __( "Below are your login details:", "edd-auto-register" ) . "\n\n";
-		$default_email_body .= __( "Your Username:", "edd-auto-register" ) . ' ' . $username . "\n\n";
-		$default_email_body .= __( "Your Password:", "edd-auto-register" ) . ' ' . $password . "\n\n";
-		$default_email_body .= __( "Login:", "edd-auto-register" ) . ' ' . wp_login_url() . "\r\n";
+		$message  = sprintf( __( 'Dear %s', 'edd-auto-register' ), $first_name ) . ",\n\n";
+		$message .= __( 'Below are your login details:', 'edd-auto-register' ) . "\n\n";
+		$message  = sprintf( __( 'Your Username: %s', 'edd-auto-register' ), sanitize_user( $username, true ) ) . "\r\n\r\n";
+		$message .= __( 'To set your password, visit the following address:' ) . "\r\n\r\n";
+		$message .= network_site_url( 'wp-login.php?action=rp&key=' . $key . '&login=' . rawurlencode( $username ), 'login' ) . "\r\n\r\n";
+		$message .= sprintf( __( 'Login: %s', 'edd-auto-register' ), wp_login_url() ) . "\r\n";
 
-		return $default_email_body;
-
+		return $message;
 	}
 	add_filter( 'edd_auto_register_email_body', 'my_child_theme_edd_auto_register_email_body', 10, 4 );
 
 = Can you provide an example how to disable auto register?
 
-Add the following to your child theme's functions.php
+Add the following to your child theme's functions.php to disable auto register based on the products purchased.
 
-	/*
-	 * Disable auto register for specific products
-	 */
-	function my_child_theme_disable_auto_register() {
-		$cart_contents = edd_get_cart_contents();
-		if ( ! $cart_contents ) {
-			return;
-		}
-		foreach ( $cart_contents as $key => $item ) {
+	add_filter( 'edd_auto_register_can_create_user', 'prefix_auto_register_can_create_user', 10, 3 );
+	/**
+	* Filters whether a user can be created for an order.
+	*
+	* @param bool        $can_create_user
+	* @param EDD_Payment $payment
+	* @param string      $user_name
+	* @return bool
+	*/
+	function prefix_auto_register_can_create_user( $can_create_user, $payment, $user_name ) {
+		// Set up the array of items in the cart.
+		$items = array();
+		foreach ( $payment->cart_details as $item ) {
 			$items[] = $item['id'];
 		}
-		// List of download ids that require auto register
-		$items_for_auto_register = array( '21', '987' );
+
+		// Which items are valid for creating a user account.
+		$items_for_auto_register = array( 2092 );
+
 		// If there are no downloads that require auto register then disable it.
 		if ( ! array_intersect( $items, $items_for_auto_register ) ) {
-			add_filter( 'edd_auto_register_disable', '__return_true', 11 );
+			return false;
 		}
+
+		return $can_create_user;
 	}
-	add_action( 'init', 'my_child_theme_disable_auto_register', 11 );
 
 = How can I disable the email from sending to the customer? =
 
@@ -119,6 +133,27 @@ There's an option under downloads &rarr; settings &rarr; extensions
 == Upgrade Notice ==
 
 == Changelog ==
+= Version 1.4.3, June 23, 2022 =
+* Fix: The customer address is not added by Auto Register in EDD 3.0 as it's done in core.
+* Fix: For sites which had customized the user notification to include the password in plain text, the hashed password was being sent instead.
+
+= Version 1.4.2, May 12, 2022 =
+* New: Added an option to only register new users for off-site gateways when payments are successful.
+* Fix: Auto-registering users on multisite installs would throw an undefined variable notice.
+* Fix: Viewing the Invoices settings would throw an undefined variable notice.
+
+= Version 1.4.1, April 22, 2022 =
+* Fix: Auto Register prevented new subscriptions from being purchased.
+* Fix: A deprecation notice was being shown in PHP 8.0.
+
+= Version 1.4, April 20, 2022 =
+* Fix: Guest checkout settings were confusing when Auto-Register was active.
+* Fix: User address information was not always saved.
+* New: Added email tags to include Auto Register account information in the purchase receipt.
+* New: Run Auto Register on manually created orders.
+* New: Auto Register now works for CSV payment imports.
+* New: `edd_auto_register_can_create_user` filter allows developers to modify whether a user can be created based on the payment data.
+* Dev: Auto Register now implements the extension loader framework.
 
 = Version 1.3.14, October 28, 2020 =
 

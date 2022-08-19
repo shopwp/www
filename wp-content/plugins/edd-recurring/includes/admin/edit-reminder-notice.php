@@ -22,9 +22,8 @@ $notice_id = absint( $_GET['notice'] );
 $notice    = $notices->get_notice( $notice_id );
 ?>
 <div class="wrap">
-	<h1><?php _e( 'Edit Reminder Notice', 'edd-recurring' ); ?> -
-		<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-settings&tab=extensions&section=recurring' ); ?>" class="add-new-h2"><?php _e( 'Go Back', 'edd-recurring' ); ?></a>
-	</h1>
+	<h1><?php esc_html_e( 'Edit Reminder Notice', 'edd-recurring' ); ?></h1>
+	<a href="<?php echo esc_url( edd_recurring_get_email_settings_url() ); ?>"><?php esc_html_e( 'Return to Email Settings', 'edd-recurring' ); ?></a>
 
 	<form id="edd-edit-reminder-notice" action="" method="post">
 		<table class="form-table">
@@ -39,7 +38,7 @@ $notice    = $notices->get_notice( $notice_id );
 							<option value="<?php echo esc_attr( $type ); ?>"<?php selected( $type, $notice['type'] ); ?>><?php echo esc_html( $label ); ?></option>
 						<?php endforeach; ?>
 					</select>
-					
+
 					<p class="description"><?php _e( 'Is this a renewal notice or an expiration notice?', 'edd-recurring' ); ?></p>
 				</td>
 			</tr>

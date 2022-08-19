@@ -3,7 +3,7 @@
  * Plugin Name: Easy Digital Downloads - Software Licensing
  * Plugin URI: https://easydigitaldownloads.com/downloads/software-licensing/
  * Description: Adds a software licensing system to Easy Digital Downloads
- * Version: 3.8.3
+ * Version: 3.8.6
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com/
  * Contributors: easydigitaldownloads, mordauk, cklosows
@@ -24,7 +24,7 @@ if ( ! defined( 'EDD_SL_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_SL_VERSION' ) ) {
-	define( 'EDD_SL_VERSION', '3.8.3' );
+	define( 'EDD_SL_VERSION', '3.8.6' );
 }
 
 require_once EDD_SL_PLUGIN_DIR . 'includes/classes/class-sl-requirements.php';

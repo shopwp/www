@@ -83,7 +83,12 @@ if ( is_user_logged_in() ):
 						<span class="edd_subscriptiontimes_billed"><?php echo $subscription->get_times_billed() . ' / ' . ( ( $subscription->bill_times == 0 ) ? __( 'Until cancelled', 'edd-recurring' ) : $subscription->bill_times ); ?></span>
 					</td>
 					<td>
-						<a href="<?php echo esc_url( add_query_arg( 'payment_key', edd_get_payment_key( $subscription->parent_payment_id ), edd_get_success_page_uri() ) ); ?>" class="edd_subscription_invoice"><?php _e( 'View Invoice', 'edd-recurring' ); ?></a>
+						<a
+							href="<?php echo esc_url( add_query_arg( array( 'action' => 'view_transactions', 'subscription_id' => urlencode( $subscription->id ) ) ) ); ?>"
+							class="edd_subscription_invoice"
+						>
+							<?php esc_html_e( 'View Transactions', 'edd-recurring' ); ?>
+						</a>
 						<?php if( $subscription->can_update() ) : ?>
 							&nbsp;|&nbsp;
 							<a href="<?php echo esc_url( $subscription->get_update_url() ); ?>"><?php _e( 'Update Payment Method', 'edd-recurring' ); ?></a>

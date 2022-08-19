@@ -66,7 +66,7 @@ if ( $keys ) : ?>
 					</span>
 				</td>
 				<td class="edd_sl_license_status edd-sl-<?php echo esc_attr( $license->status ); ?>"><?php echo wp_kses_post( $license->get_display_status() ); ?></td>
-				<td><span class="edd_sl_limit_used"><?php echo esc_html( $license->activation_count ); ?></span><span class="edd_sl_limit_sep">&nbsp;/&nbsp;</span><span class="edd_sl_limit_max"><?php echo esc_html( $license->activation_limit ); ?></span></td>
+				<td><span class="edd_sl_limit_used"><?php echo esc_html( $license->activation_count ); ?></span><span class="edd_sl_limit_sep">&nbsp;/&nbsp;</span><span class="edd_sl_limit_max"><?php echo esc_html( 0 !== $license->activation_limit ? $license->activation_limit : __( 'Unlimited', 'edd_sl' ) ); ?></span></td>
 				<td>
 				<?php if ( $license->is_lifetime ) : ?>
 					<?php esc_html_e( 'Lifetime', 'edd_sl' ); ?>

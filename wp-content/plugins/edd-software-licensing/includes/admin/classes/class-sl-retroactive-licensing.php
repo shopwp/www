@@ -397,7 +397,12 @@ class EDD_SL_Retroactive_Licensing {
 				continue; // We've been told to only generate for a specific download, and this wasn't it
 			}
 			$existing_license_count = 0;
-			if ( $existing_licenses ) {
+			/**
+			 * Count the number of licenses already generated for this payment/download/cart index combination.
+			 *
+			 * @since 3.8.6 (when the filter was added)
+			 */
+			if ( $existing_licenses && apply_filters( 'edd_sl_check_existing_licenses', true ) ) {
 				foreach ( $existing_licenses as $existing_license ) {
 					if ( $existing_license->cart_index !== $cart_key || $existing_license->download_id != $download['id'] ) {
 						continue;

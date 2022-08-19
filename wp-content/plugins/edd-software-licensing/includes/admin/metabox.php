@@ -433,9 +433,9 @@ function edd_sl_licensing_price_section( $download_id, $price_id, $args ) {
 		<span class="edd-custom-price-option-section-title"><?php esc_html_e( 'Software Licensing Settings', 'edd_sl' ); ?></span>
 		<div class="edd-custom-price-option-section-content edd-form-row">
 			<div class="edd-form-group edd-form-row__column">
-				<label for="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][license_limit]" class="edd-form-group__label"><?php esc_html_e( 'Activation Limit', 'edd_sl' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php printf( '<strong>%s</strong>: %s', esc_html__( 'Activation Limit', 'edd_sl' ), esc_html__( 'For each variable pricing option, set the number of activations allowed per license. Use 0 for unlimited. If your product is a bundle, the activation limits set here will override the activation limits set on the individual products.', 'edd_sl' ) ); ?>"></span></label>
+				<label for="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][license_limit]" class="edd-form-group__label"><?php esc_html_e( 'Activation Limit', 'edd_sl' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php printf( '<strong>%s</strong>: %s', esc_html__( 'Activation Limit', 'edd_sl' ), esc_html__( 'For each variable pricing option, set the number of activations allowed per license. Use 0 or leave empty for unlimited. If your product is a bundle, the activation limits set here will override the activation limits set on the individual products.', 'edd_sl' ) ); ?>"></span></label>
 				<div class="edd-form-group__control">
-					<input class="edd-form-group__input small-text" type="number" min="0" step="1" name="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][license_limit]" id="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][license_limit]" value="<?php echo absint( $limit ); ?>">
+					<input class="edd-form-group__input small-text" type="number" min="0" step="1" name="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][license_limit]" id="edd_variable_prices[<?php echo esc_attr( $price_id ); ?>][license_limit]" value="<?php echo false !== $limit ? absint( $limit ) : ''; ?>">
 				</div>
 			</div>
 
@@ -884,7 +884,7 @@ function edd_sl_readme_meta_box_settings( $post_id ) {
 		<span class="howto"><?php _e( 'What is the URL of the readme.txt file for the download?', 'edd_sl' ); ?></span>
 	</p>
 	<p>
-		<input type="text" name="_edd_readme_location" class="widefat" id="edd_readme_location" value="<?php echo esc_attr( $readme_location ); ?>" size="50" placeholder="http://example.com/wp-content/plugins/example/readme.txt"/>
+		<input type="text" name="_edd_readme_location" class="widefat" id="edd_readme_location" value="<?php echo esc_attr( $readme_location ); ?>" size="50" placeholder="https://example.com/wp-content/plugins/example/readme.txt"/>
 	</p>
 <?php
 
@@ -913,7 +913,7 @@ function edd_sl_readme_meta_box_settings( $post_id ) {
 	</p>
 	<p>
 		<div class="edd_sl_banner_container">
-			<input type="text" name="_edd_readme_plugin_banner_high" class="widefat" id="edd_readme_plugin_banner_high" value="<?php echo esc_attr( $plugin_banner_high ); ?>" size="50" placeholder="http://www.example.com/banner-1544x500.jpg"/>
+			<input type="text" name="_edd_readme_plugin_banner_high" class="widefat" id="edd_readme_plugin_banner_high" value="<?php echo esc_attr( $plugin_banner_high ); ?>" size="50" placeholder="https://www.example.com/banner-1544x500.jpg"/>
 			<span class="edd_upload_banner">
 				<a href="#" data-uploader-title="<?php _e( 'Insert Image', 'edd_sl' ); ?>" data-uploader-button-text="<?php _e( 'Insert', 'edd_sl' ); ?>" class="edd_upload_banner_button" onclick="return false;"><?php _e( 'Upload an Image', 'edd_sl' ); ?></a>
 			</span>
@@ -926,7 +926,7 @@ function edd_sl_readme_meta_box_settings( $post_id ) {
 	</p>
 	<p>
 		<div class="edd_sl_banner_container">
-			<input type="text" name="_edd_readme_plugin_banner_low" class="widefat" id="edd_readme_plugin_banner_low" value="<?php echo esc_attr( $plugin_banner_low ); ?>" size="50" placeholder="http://www.example.com/banner-772x250.jpg"/>
+			<input type="text" name="_edd_readme_plugin_banner_low" class="widefat" id="edd_readme_plugin_banner_low" value="<?php echo esc_attr( $plugin_banner_low ); ?>" size="50" placeholder="https://www.example.com/banner-772x250.jpg"/>
 			<span class="edd_upload_banner">
 				<a href="#" data-uploader-title="<?php _e( 'Insert Image', 'edd_sl' ); ?>" data-uploader-button-text="<?php _e( 'Insert', 'edd_sl' ); ?>" class="edd_upload_banner_button" onclick="return false;"><?php _e( 'Upload an Image', 'edd_sl' ); ?></a>
 			</span>
@@ -943,7 +943,7 @@ function edd_sl_readme_meta_box_settings( $post_id ) {
 		<span class="howto"><?php _e('Leave blank to use the default plugin homepage (the URL of this Download page)', 'edd_sl' ); ?></span>
 	</p>
 	<p>
-		<input type="text" name="_edd_readme_plugin_homepage" class="widefat" id="edd_readme_plugin_homepage" value="<?php echo esc_attr( $plugin_homepage ); ?>" size="50" placeholder="http://www.plugin-homepage.com"/>
+		<input type="text" name="_edd_readme_plugin_homepage" class="widefat" id="edd_readme_plugin_homepage" value="<?php echo esc_attr( $plugin_homepage ); ?>" size="50" placeholder="https://www.plugin-homepage.com"/>
 	</p>
 
 	<p><strong><?php _e( 'Plugin Dates:', 'edd_sl' ); ?></strong></p>
@@ -983,7 +983,7 @@ function edd_sl_render_beta_version_meta_box() {
 		echo '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . __( 'Beta Version', 'edd_sl' ) . '</strong>: ' . __( 'Check this and configure your beta version to deliver beta updates to any users who have opted in.', 'edd_sl' ) . '"></span>';
 	echo '</p>';
 
-	echo '<p class="edd_sl_beta_docs_link">' . sprintf( __( 'For information on releasing beta versions, please %s.', 'edd_sl' ), '<a href="http://docs.easydigitaldownloads.com/article/1722-software-licensing-releasing-beta-versions" target="_blank">' . __( 'see our documentation', 'edd_sl' ) . '</a>' ) . '</p>';
+	echo '<p class="edd_sl_beta_docs_link">' . sprintf( __( 'For information on releasing beta versions, please %s.', 'edd_sl' ), '<a href="https://docs.easydigitaldownloads.com/article/1722-software-licensing-releasing-beta-versions" target="_blank">' . __( 'see our documentation', 'edd_sl' ) . '</a>' ) . '</p>';
 
 	$files = get_post_meta( $post->ID, '_edd_sl_beta_files', true );
 

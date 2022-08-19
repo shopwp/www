@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		array(
 			'post_type' => 'download',
 			'page'      => 'edd-settings',
-			'tab'       => 'extensions',
+			'tab'       => 'emails',
 			'section'   => 'software-licensing',
 		),
 		admin_url( 'edit.php' )

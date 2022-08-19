@@ -61,8 +61,13 @@ import { initFAQs } from './faqs/faqs'
 			})
 		})
 
-		jQuery('.component-comparison-chart .chart-label').each(function () {
-			var element = jQuery(this).find('.chart-label-description')
+		jQuery(
+			'.component-comparison-chart .chart-label, .tooltips .tooltip-label'
+		).each(function () {
+			var element = jQuery(this).find(
+				'.tooltip-label-description, .chart-label-description'
+			)
+			console.log('elementttt', element)
 
 			if (!element[0]) {
 				return
@@ -78,11 +83,12 @@ import { initFAQs } from './faqs/faqs'
 				arrowType: 'round',
 				distance: 7,
 				placement: 'right',
-				maxWidth: 450,
+				maxWidth: 380,
 				duration: [280, 0],
 				moveTransition: 'transform 0.2s ease-out',
 				offset: [0, -80],
 				allowHTML: true,
+				appendTo: document.body,
 			})
 		})
 

@@ -115,8 +115,6 @@ function display_sidebar()
 
 function dequeue_superfluous_assets() {
 
-   error_log('--- dequeue_superfluous_assets ---');
-
    // Remove the REST API endpoint.
    remove_action( 'rest_api_init', 'wp_oembed_register_route' );
 
@@ -182,7 +180,7 @@ function assets()
       wp_enqueue_style('ShopWP CSS', Assets\asset_path('prod/app.min.css'), false, filemtime(plugin_dir_path( __DIR__ ) . 'assets/prod/app.min.css'));
 
       if (is_page('purchase-confirmation')) {
-         wp_enqueue_script('confetti-js', Assets\asset_path('js/vendor/confetti.min.js'), [], null, false);
+         wp_enqueue_script('confetti-js', 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js', [], null, false);
       }
 
       wp_enqueue_script('masonry-js', Assets\asset_path('js/vendor/masonry.pkgd.min.js'), [], null, true);

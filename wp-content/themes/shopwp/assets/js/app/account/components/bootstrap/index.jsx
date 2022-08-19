@@ -1,94 +1,115 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Account from '../account';
-import AccountHome from '../account/home';
-import AccountLicenses from '../account/licenses';
-import AccountSubscriptions from '../account/subscriptions';
-import AccountPurchases from '../account/purchases';
-import AccountDownloads from '../account/downloads';
-import AccountAffiliate from '../account/affiliate';
-import { AccountContext } from '../account/_state/context';
-import { useEffect, useContext } from 'react';
-import React from 'react';
+/** @jsx jsx */
+import { jsx, css } from '@emotion/react'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+import Account from '../account'
+import AccountHome from '../account/home'
+import AccountLicenses from '../account/licenses'
+import AccountSubscriptions from '../account/subscriptions'
+import AccountPurchases from '../account/purchases'
+import AccountDownloads from '../account/downloads'
+import AccountAffiliate from '../account/affiliate'
+import { AccountContext } from '../account/_state/context'
+import { useEffect, useContext } from 'react'
 
 function Bootstrap() {
-  const [accountState, accountDispatch] = useContext(AccountContext);
+	const [accountState, accountDispatch] = useContext(AccountContext)
+	const navigate = useNavigate()
 
-  function getActivePage(pathname) {
-    if (pathname === '/') {
-      return 'dashboard';
-    }
-    return pathname.substring(1);
-  }
+	function getActivePage(pathname) {
+		if (pathname === '/') {
+			return 'dashboard'
+		}
 
-  useEffect(() => {
-    accountDispatch({
-      type: 'SET_ACTIVE_PAGE',
-      payload: getActivePage(window.location.pathname),
-    });
-  }, [accountDispatch]);
+		const params = new Proxy(new URLSearchParams(window.location.search), {
+			get: (searchParams, prop) => searchParams.get(prop),
+		})
 
-  return (
-    <BrowserRouter basename='/account'>
-      <Switch>
-        <Route
-          exact
-          path='/'
-          render={() => (
-            <Account>
-              <AccountHome />
-            </Account>
-          )}
-        />
+		let accountPageParam = params.accountpage
 
-        <Route
-          path='/licenses'
-          render={() => (
-            <Account>
-              <AccountLicenses />
-            </Account>
-          )}
-        />
+		if (accountPageParam) {
+			navigate('/' + accountPageParam)
 
-        <Route
-          path='/subscriptions'
-          render={() => (
-            <Account>
-              <AccountSubscriptions />
-            </Account>
-          )}
-        />
+			return
+		}
 
-        <Route
-          path='/purchases'
-          render={() => (
-            <Account>
-              <AccountPurchases />
-            </Account>
-          )}
-        />
+		return pathname.substring(1)
+	}
 
-        <Route
-          path='/downloads'
-          render={() => (
-            <Account>
-              <AccountDownloads />
-            </Account>
-          )}
-        />
+	useEffect(() => {
+		var activePage = getActivePage(window.location.pathname)
 
-        <Route
-          path='/affiliate'
-          render={() => (
-            <Account>
-              <AccountAffiliate />
-            </Account>
-          )}
-        />
+		accountDispatch({
+			type: 'SET_ACTIVE_PAGE',
+			payload: activePage,
+		})
+	}, [accountDispatch])
 
-        <Route>{'No route matched!'}</Route>
-      </Switch>
-    </BrowserRouter>
-  );
+	const AccountInnerCSS = css`
+		height: 100vh;
+	`
+
+	return (
+		<div css={AccountInnerCSS}>
+			<Routes>
+				<Route
+					exact
+					path='/'
+					element={
+						<Account>
+							<AccountHome />
+						</Account>
+					}
+				/>
+
+				<Route
+					path='/licenses'
+					element={
+						<Account>
+							<AccountLicenses />
+						</Account>
+					}
+				/>
+
+				<Route
+					path='/subscriptions'
+					element={
+						<Account>
+							<AccountSubscriptions />
+						</Account>
+					}
+				/>
+
+				<Route
+					path='/purchases'
+					element={
+						<Account>
+							<AccountPurchases />
+						</Account>
+					}
+				/>
+
+				<Route
+					path='/downloads'
+					element={
+						<Account>
+							<AccountDownloads />
+						</Account>
+					}
+				/>
+
+				<Route
+					path='/affiliate'
+					element={
+						<Account>
+							<AccountAffiliate />
+						</Account>
+					}
+				/>
+
+				<Route>{'No route matched!'}</Route>
+			</Routes>
+		</div>
+	)
 }
 
-export default Bootstrap;
+export default Bootstrap

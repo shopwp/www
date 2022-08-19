@@ -613,12 +613,12 @@ function edd_sl_licenses_view( $license ) {
 						$i++;
 					endforeach;
 				else : ?>
-					<tr class="row"><td colspan="2"><?php _e( 'This license has not been activated on any sites', 'edd_sl' ); ?></td></tr>
+					<tr class="row"><td colspan="2"><?php esc_html_e( 'This license has not been activated on any sites.', 'edd_sl' ); ?></td></tr>
 				<?php endif; ?>
 				<tr class="edd-sl-add-licensed-url-row">
 					<td colspan="2" class="edd-sl-add-licensed-url-td">
 						<form method="post">
-							<input type="text" name="site_url" placeholder="<?php _e( 'New site URL (including http://)', 'edd_sl' ); ?>"/>
+							<input type="text" name="site_url" placeholder="<?php esc_html_e( 'New site URL (including https://)', 'edd_sl' ); ?>"/>
 							<?php wp_nonce_field( 'edd_add_site_nonce', 'edd_add_site_nonce' ); ?>
 							<input type="hidden" name="edd_action" value="insert_site"/>
 							<input type="hidden" name="license" value="<?php echo esc_attr( $license->ID ); ?>"/>

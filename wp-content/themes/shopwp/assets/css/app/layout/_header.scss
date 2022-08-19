@@ -3,19 +3,20 @@
 	padding: 0 $space-l;
 	height: 90px;
 	width: 100%;
-	background: white;
+	background: color(backgroundPrimary);
 	transform: translateY(0%);
 	position: fixed;
 	top: 0;
 	will-change: transform;
 	z-index: 3;
-	border-bottom: 1px solid #ddd;
 
 	@include device(1300, 'max') {
 		height: 65px;
 	}
 
 	&.headroom--not-top.headroom--pinned {
+		box-shadow: 0 5px 7px -6px rgb(0 0 0 / 31%);
+
 		.nav > .menu-item > a {
 			padding: 0.4em 1.1em;
 			font-size: 1.1em;
@@ -42,7 +43,7 @@
 			margin: 0 0.3em;
 			border-radius: 0.3em;
 			font-weight: 400;
-			font-size: 1.1em;
+			font-size: 1.2em;
 
 			&:hover {
 				color: #415aff;
@@ -81,15 +82,15 @@
 
 		> li:nth-of-type(1) {
 			a {
-				padding-top: 13px;
+				padding-top: 6px;
 			}
 		}
 
 		a {
 			border-radius: 0;
 			transform: translateZ(0px);
-			font-size: 16px;
-			padding: 0.45em 2.1em;
+			font-size: 15px;
+			padding: 6px 30px;
 			margin: 0;
 			backface-visibility: hidden;
 			-webkit-font-smoothing: subpixel-antialiased;
@@ -101,7 +102,7 @@
 
 		.menu-item:last-child a {
 			border: none;
-			padding-bottom: 13px;
+			padding-bottom: 6px;
 		}
 	}
 
@@ -109,6 +110,10 @@
 		background: none;
 		text-decoration: none;
 	}
+}
+
+.single-faqs .header {
+	background: white;
 }
 
 .is-mobile-active .header {
@@ -179,10 +184,6 @@
 		}
 	}
 
-	.page-header h1 {
-		font-size: 42px;
-	}
-
 	.page-content p:first-of-type {
 		font-size: inherit;
 	}
@@ -209,7 +210,8 @@
 
 	.eddr-cart-item-notice {
 		font-size: 14px !important;
-		background: #c8f9e3;
+		background: #fdecda;
+		border: 1px solid #ddc3a7;
 		padding: 4px 20px;
 		display: block;
 		width: auto;
@@ -240,18 +242,9 @@
 	z-index: 3;
 }
 
-.home.page .component-marquee {
-	max-width: 100%;
-	border-radius: 0;
-
-	@include device(700, 'max') {
-		height: auto;
-	}
-}
-
 .meta-wrapper {
 	border: none;
-	padding-bottom: $space-s;
+	padding-bottom: 10px;
 
 	time,
 	.byline {
@@ -400,7 +393,7 @@ label.error {
 	// margin-top: $space-xl;
 	position: relative;
 	margin: 2.7em 0 $space-m 0;
-	padding-bottom: $space-s;
+	padding-bottom: 10px;
 	text-align: center;
 
 	@include device(1000, 'max') {
@@ -419,15 +412,15 @@ label.error {
 		top: 3px;
 		left: -2px;
 	}
-}
 
-.page-header h1 {
-	max-width: 700px;
-	margin: 0 auto;
+	h1 {
+		max-width: 800px;
+		margin: 0 auto;
+	}
 }
 
 .faq .page-header h1 {
-	margin-bottom: 20px;
+	margin-bottom: 0;
 }
 
 .page .page-header + p {
@@ -529,8 +522,12 @@ label.error {
 		position: relative;
 		top: -15px;
 		display: block;
-		max-width: 40px;
+		max-width: 63px;
 		margin: 0 auto;
+
+		@include device(1500, 'max') {
+			max-width: 25px;
+		}
 	}
 }
 

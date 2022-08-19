@@ -33,7 +33,7 @@ if ( ! isset( $_GET['notice'] ) || ! is_numeric( $_GET['notice'] ) ) {
 		array(
 			'post_type' => 'download',
 			'page'      => 'edd-settings',
-			'tab'       => 'extensions',
+			'tab'       => 'emails',
 			'section'   => 'software-licensing',
 		),
 		admin_url( 'edit.php' )

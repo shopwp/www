@@ -350,7 +350,7 @@ class EDD_Subscription {
 		$parent_payment   = edd_get_payment( $this->parent_payment_id );
 		$ignored_statuses = array( 'refunded', 'pending', 'abandoned', 'failed' );
 
-		if ( false === in_array( $parent_payment->status, $ignored_statuses ) ) {
+		if ( ! empty( $parent_payment->status ) && ! in_array( $parent_payment->status, $ignored_statuses, true ) && ! empty( $parent_payment->cart_details ) ) {
 			foreach ( $parent_payment->cart_details as $cart_item ) {
 				if ( (int) $this->product_id === (int) $cart_item['id'] ) {
 					$amount += $cart_item['price'];
@@ -420,7 +420,7 @@ class EDD_Subscription {
 		$payment->currency       = $parent->currency;
 		$payment->status         = 'edd_subscription';
 		$payment->transaction_id = $args['transaction_id'];
-		$payment->key            = $parent->key;
+		$payment->key            = $this->generate_order_payment_key( $parent->email );
 		$payment->total          = edd_sanitize_amount( sanitize_text_field( $args['amount'] ) );
 		$payment->mode           = $parent->mode;
 		$payment->completed_date = current_time( 'mysql' );
@@ -465,7 +465,7 @@ class EDD_Subscription {
 					continue;
 				}
 
-				$price_id    = isset( $download['options']['price_id'] ) ? $download['options']['price_id'] : null;
+				$price_id    = isset( $download['options']['price_id'] ) && is_numeric( $download['options']['price_id'] ) ? $download['options']['price_id'] : false;
 				$args['tax'] = is_numeric( $args['tax'] ) ? edd_format_amount( $args['tax'] ) : 0;
 
 				// Set the amount for the EDD Payment based on the inclusive/exclusive of tax setting
@@ -481,8 +481,10 @@ class EDD_Subscription {
 					'price_id'   => $price_id
 				) );
 
-				edd_increase_earnings( $download['id'], $args['amount'] );
-				$customer->increase_value( $args['amount'] );
+				if ( ! function_exists( 'edd_get_order' ) ) {
+					edd_increase_earnings( $download['id'], $args['amount'] );
+					$customer->increase_value( $args['amount'] );
+				}
 				break;
 
 			}
@@ -504,6 +506,16 @@ class EDD_Subscription {
 						edd_update_order_meta( $payment->ID, 'tax_rate', sanitize_text_field( $custom_tax_rate ) );
 					}
 				}
+			}
+
+			$renewal_order = edd_get_order( $payment->ID );
+			foreach ( $renewal_order->items as $item ) {
+				edd_update_order_item(
+					$item->id,
+					array(
+						'status' => 'complete',
+					)
+				);
 			}
 		}
 
@@ -1259,5 +1271,34 @@ class EDD_Subscription {
 			$this->add_note( sprintf( __( 'Status changed from %s to %s by %s', 'edd-recurring' ), $old_status, $this->status, $user ) );
 		}
 		do_action( 'edd_subscription_status_change', $old_status, $new_status, $this );
+	}
+
+	/**
+	 * Generates the payment key for the order.
+	 * In EDD 3.0, this just uses edd_generate_order_payment_key.
+	 * In EDD 2.x, this function replicates the code used in edd_generate_order_payment_key.
+	 *
+	 * @since 2.11.7
+	 * @todo  Remove compatibility shim once Recurring minimum is 3.0.
+	 *
+	 * @param string $key The email address for the order.
+	 * @return string
+	 */
+	private function generate_order_payment_key( $key ) {
+		if ( function_exists( 'edd_generate_order_payment_key' ) ) {
+			return edd_generate_order_payment_key( $key );
+		}
+		$auth_key    = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+		$payment_key = strtolower( md5( $key . gmdate( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
+
+		/**
+		 * Filters the payment key
+		 *
+		 * @since 2.11.7
+		 * @param string $payment_key The value to be filtered
+		 * @param string $key Additional string used to help randomize key.
+		 * @return string
+		 */
+		return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
 	}
 }

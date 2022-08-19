@@ -174,7 +174,9 @@ function License({ license }) {
 		<section css={LicenseCSS}>
 			<div css={RowCSS}>
 				<h2 css={LicenseNameCSS}>
-					{license.name === 'ShopWP' ? 'ShopWP Pro' : license.name}
+					{license.name === 'ShopWP' || license.name === 'WP Shopify'
+						? 'ShopWP Pro'
+						: license.name}
 				</h2>
 
 				<input

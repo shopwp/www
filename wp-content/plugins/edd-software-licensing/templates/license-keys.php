@@ -77,7 +77,7 @@ if ( is_user_logged_in() ) :
 						<span class="edd_sl_limit_label"><?php esc_html_e( 'Activations:', 'edd_sl' ); ?>&nbsp;</span>
 						<span class="edd_sl_limit_used"><?php echo esc_html( $license->activation_count ); ?></span>
 						<span class="edd_sl_limit_sep">&nbsp;/&nbsp;</span>
-						<span class="edd_sl_limit_max"><?php echo esc_html( $license->activation_limit ); ?></span>
+						<span class="edd_sl_limit_max"><?php echo esc_html( 0 !== $license->activation_limit ? $license->activation_limit : __( 'Unlimited', 'edd_sl' ) ); ?></span>
 						<?php if ( ! edd_software_licensing()->force_increase() && ( ! in_array( $license->status, array( 'expired', 'disabled' ), true ) ) ) : ?>
 							<br/><a href="<?php echo esc_url( add_query_arg( array( 'license_id' => $license->ID, 'action' => 'manage_licenses', 'payment_id' => $payment_id ), get_permalink( edd_get_option( 'purchase_history_page' ) ) ) ); ?>"><?php _e( 'Manage Sites', 'edd_sl' ); ?></a>
 						<?php elseif ( 'expired' === $license->status ) : ?>

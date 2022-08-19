@@ -17,7 +17,7 @@ function title() {
   } elseif (is_search()) {
     return sprintf(__('Search Results for %s', 'sage'), get_search_query());
   } elseif (is_404()) {
-    return __('Not Found', 'sage');
+    return __('404', 'sage');
   } else {
     return get_the_title();
   }

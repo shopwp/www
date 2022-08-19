@@ -66,17 +66,13 @@ function edd_sl_show_upgrade_notice() {
 		// Check to see if we have licenses in the Database
 		$results      = $wpdb->get_row( "SELECT count(ID) as has_licenses FROM $wpdb->posts WHERE post_type = 'edd_license' LIMIT 0, 1" );
 		$has_licenses = ! empty( $results->has_licenses ) ? true : false;
-		$edd30_to_run = false;
-		if ( function_exists( 'edd_get_orders' ) ) {
-			$edd30_to_run = edd_has_upgrade_completed( 'migrate_orders' ) ? false : true;
-		}
 
-		if ( ! $has_licenses && ! $edd30_to_run ) {
+		if ( ! $has_licenses ) {
 			edd_set_upgrade_complete( 'migrate_licenses' );
 			edd_set_upgrade_complete( 'migrate_license_parent_child' );
 			edd_set_upgrade_complete( 'migrate_license_logs' );
 			edd_set_upgrade_complete( 'remove_legacy_licenses' );
-		} elseif ( $edd30_to_run ) {
+		} elseif ( function_exists( 'edd_get_orders' ) && ! edd_has_upgrade_completed( 'migrate_orders' ) ) {
 			printf(
 				'<div class="notice notice-info"><p>%s</p></div>',
 				esc_html__( 'Your Software Licensing database needs an upgrade. Once you have completed the migration to Easy Digital Downloads 3.0, the upgrade prompt will appear here.', 'edd_sl' )

@@ -27,6 +27,7 @@ class EDD_Notices {
 	public function __construct() {
 		add_action( 'admin_notices', array( $this, 'show_notices' ) );
 		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' ) );
+		add_action( 'wp_ajax_edd_disable_debugging', array( $this, 'edd_disable_debugging' ) );
 	}
 
 	/**
@@ -45,7 +46,7 @@ class EDD_Notices {
 			ob_start();
 			?>
 			<div class="error">
-				<p><?php printf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ); ?></p>
+				<p><?php printf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) ); ?></p>
 				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
 			</div>
 			<?php
@@ -53,7 +54,7 @@ class EDD_Notices {
 		}
 
 		if ( isset( $_GET['page'] ) && 'edd-payment-history' == $_GET['page'] && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
-			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) );
+			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) ) );
 		}
 
 		$show_nginx_notice = apply_filters( 'edd_show_nginx_redirect_notice', true );
@@ -96,7 +97,7 @@ class EDD_Notices {
 			ob_start();
 			?>
 			<div class="error">
-				<p><?php printf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ), admin_url( 'plugins.php' ) ); ?></p>
+				<p><?php printf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ) ), esc_url( admin_url( 'plugins.php' ) ) ); ?></p>
 			</div>
 			<?php
 			echo ob_get_clean();
@@ -171,6 +172,8 @@ class EDD_Notices {
 			echo '</div>';
 		}
 
+		$this->show_debugging_notice();
+
 		/* Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
 		if( ! edd_test_ajax_works() && ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 			echo '<div class="error">';
@@ -221,6 +224,9 @@ class EDD_Notices {
 					case 'email_sent' :
 						$notices['updated']['edd-payment-sent'] = __( 'The purchase receipt has been resent.', 'easy-digital-downloads' );
 						break;
+					case 'email_send_failed':
+						$notices['error']['edd-payment-sent'] = __( 'Failed to send purchase receipt.', 'easy-digital-downloads' );
+						break;
 					case 'refreshed-reports' :
 						$notices['updated']['edd-refreshed-reports'] = __( 'The reports have been refreshed.', 'easy-digital-downloads' );
 						break;
@@ -247,9 +253,6 @@ class EDD_Notices {
 						break;
 					case 'api-key-revoked' :
 						$notices['updated']['edd-api-key-revoked'] = __( 'API keys successfully revoked.', 'easy-digital-downloads' );
-						break;
-					case 'sendwp-connected' :
-						$notices['updated']['edd-sendwp-connected'] = __( 'SendWP has been successfully connected!', 'easy-digital-downloads' );
 						break;
 				}
 			}
@@ -311,6 +314,62 @@ class EDD_Notices {
 	}
 
 	/**
+	 * Show a notice if debugging is enabled in the EDD settings.
+	 * Does not show if only the `EDD_DEBUG_MODE` constant is defined.
+	 *
+	 * @since 2.11.5
+	 * @return void
+	 */
+	private function show_debugging_notice() {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+		if ( ! edd_get_option( 'debug_mode', false ) ) {
+			return;
+		}
+		$view_url = add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-tools',
+				'tab'       => 'debug_log',
+			),
+			admin_url( 'edit.php' )
+		);
+		?>
+		<div id="edd-debug-log-notice" class="notice notice-warning">
+			<p>
+				<?php esc_html_e( 'Easy Digital Downloads debug logging is enabled. Please only leave it enabled for as long as it is needed for troubleshooting.', 'easy-digital-downloads' ); ?>
+			</p>
+			<p>
+				<a class="button button-secondary" href="<?php echo esc_url( $view_url ); ?>"><?php esc_html_e( 'View Debug Log', 'easy-digital-downloads' ); ?></a>
+				<button class="button button-primary" id="edd-disable-debug-log"><?php esc_html_e( 'Delete Log File and Disable Logging', 'easy-digital-downloads' ); ?></button>
+				<?php wp_nonce_field( 'edd_debug_log_delete', 'edd_debug_log_delete' ); ?>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Disables the debug log setting and deletes the existing log file.
+	 *
+	 * @since 2.11.5
+	 * @return void
+	 */
+	public function edd_disable_debugging() {
+		$validate_nonce = ! empty( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'edd_debug_log_delete' );
+		if ( ! current_user_can( 'manage_shop_settings' ) || ! $validate_nonce ) {
+			wp_send_json_error( wpautop( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) ), 403 );
+		}
+		edd_update_option( 'debug_mode', false );
+		global $edd_logs;
+		$edd_logs->clear_log_file();
+		wp_send_json_success( wpautop( __( 'The debug log has been cleared and logging has been disabled.', 'easy-digital-downloads' ) ) );
+	}
+
+	/**
 	 * Dismiss admin notices when Dismiss links are clicked
 	 *
 	 * @since 2.3
@@ -319,7 +378,7 @@ class EDD_Notices {
 	function dismiss_notices() {
 		if( isset( $_GET['edd_notice'] ) ) {
 			update_user_meta( get_current_user_id(), '_edd_' . $_GET['edd_notice'] . '_dismissed', 1 );
-			wp_redirect( remove_query_arg( array( 'edd_action', 'edd_notice' ) ) );
+			wp_safe_redirect( esc_url_raw( remove_query_arg( array( 'edd_action', 'edd_notice' ) ) ) );
 			exit;
 		}
 	}

@@ -6,7 +6,7 @@ if ( $wp_query->current_post == 0 && !is_paged() ) { ?>
 
    <header>
 
-      <div class="l-row">
+      <div class="l-row l-row-reverse">
 
          <div class="l-box-2 latest-post-img">
             <a href="<?php the_permalink(); ?>" class="post-link">
@@ -18,9 +18,9 @@ if ( $wp_query->current_post == 0 && !is_paged() ) { ?>
 
          <div class="l-box-2 latest-post-info">
             <a href="<?php the_permalink(); ?>" class="post-link">
-               <h1 class="entry-title">
+               <h2 class="entry-title">
                   <?php the_title(); ?>
-               </h1>
+               </h2>
             </a>
 
             <div class="post-meta-container">
@@ -40,6 +40,8 @@ if ( $wp_query->current_post == 0 && !is_paged() ) { ?>
             </div>
             
             <?php get_template_part('templates/entry-meta'); ?>
+			
+		<div class="post-excerpt"><?php the_excerpt(); ?></div>
 
             <div class="moretag-wrapper">
                <a class="btn" href="<?= get_permalink(); ?>">Read more →</a>
@@ -62,7 +64,7 @@ if ( $wp_query->current_post == 0 && !is_paged() ) { ?>
 
       <div class="post-thumb" style="background-image: url('<?= get_the_post_thumbnail_url(get_the_ID(), 'full'); ?>');"></div>
 
-         <h2 class="entry-title"><?php the_title(); ?></h2>
+         <h3 class="entry-title"><?php the_title(); ?></h3>
 
       </a>
       

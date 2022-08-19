@@ -118,18 +118,6 @@ function register_route_mailinglist_signup() {
 add_action('rest_api_init', 'register_route_mailinglist_signup');
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 function get_faqs_for_api() {
    
    $faqs = [];

@@ -297,7 +297,17 @@ function edd_update_payment_details( $data ) {
 
 	do_action( 'edd_updated_edited_purchase', $payment_id );
 
-	wp_safe_redirect( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&edd-message=payment-updated&id=' . $payment_id ) );
+	$url = add_query_arg(
+		array(
+			'post_type'   => 'download',
+			'page'        => 'edd-payment-history',
+			'view'        => 'view-order-details',
+			'edd-message' => 'payment-updated',
+			'id'          => urlencode( $payment_id ),
+		),
+		admin_url( 'edit.php' )
+	);
+	wp_safe_redirect( esc_url_raw( $url ) );
 	exit;
 }
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
@@ -319,13 +329,17 @@ function edd_trigger_purchase_delete( $data ) {
 		}
 
 		edd_delete_purchase( $payment_id );
-		wp_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		wp_safe_redirect( esc_url_raw( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) ) );
 		edd_die();
 	}
 }
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 function edd_ajax_store_payment_note() {
+	$nonce = sanitize_text_field( $_POST['nonce'] );
+	if ( ! wp_verify_nonce( $nonce, 'edd_add_payment_note' ) ) {
+		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
 
 	$payment_id = absint( $_POST['payment_id'] );
 	$note       = wp_kses( $_POST['note'], array() );
@@ -334,11 +348,13 @@ function edd_ajax_store_payment_note() {
 		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	if( empty( $payment_id ) )
+	if ( empty( $payment_id ) ) {
 		die( '-1' );
+	}
 
-	if( empty( $note ) )
+	if ( empty( $note ) ) {
 		die( '-1' );
+	}
 
 	$note_id = edd_insert_payment_note( $payment_id, $note );
 	die( edd_get_payment_note_html( $note_id ) );
@@ -365,7 +381,7 @@ function edd_trigger_payment_note_deletion( $data ) {
 
 	edd_delete_payment_note( $data['note_id'], $data['payment_id'] );
 
-	wp_redirect( $edit_order_url );
+	wp_safe_redirect( esc_url_raw( $edit_order_url ) );
 }
 add_action( 'edd_delete_payment_note', 'edd_trigger_payment_note_deletion' );
 

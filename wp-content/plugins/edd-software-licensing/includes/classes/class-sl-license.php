@@ -194,25 +194,19 @@ class EDD_SL_License {
 
 		}
 
-		$this->ID     = absint( $license->id );
-		$this->_ID    = absint( $license->id );
-
-		$this->payment_ids = $this->get_payment_ids();
+		$this->ID  = absint( $license->id );
+		$this->_ID = absint( $license->id );
 
 		$this->price_id   = is_numeric( $this->price_id ) ? $this->price_id : false;
 		$this->expiration = (int) $this->expiration;
 
 		$this->key         = $license->license_key;
-		$this->is_lifetime = 0 === $this->expiration ? true : false;
+		$this->is_lifetime = (bool) ( 0 === $this->expiration );
 
-		$this->sites            = $this->get_sites();
-		$this->activation_limit = $this->get_activation_limit();
-		$this->user_id          = $this->get_user_id();
+		$this->user_id = $this->get_user_id();
 
 		$this->maybe_backfill_customer();
 		$this->maybe_backfill_payment();
-
-		$this->user_id = $this->get_user_id();
 
 		$this->exists = true;
 
@@ -234,23 +228,24 @@ class EDD_SL_License {
 	public function create( $download_id = 0, $payment_id = 0, $price_id = false, $cart_index = 0, $options = array() ) {
 		$keys = array();
 
-		$payment              = new EDD_Payment( $payment_id );
-		$purchased_download   = new EDD_SL_Download( $download_id );
-		$licensing_enabled    = $purchased_download->licensing_enabled();
-		$has_variable_prices  = $purchased_download->has_variable_prices();
-		$is_bundle            = $purchased_download->is_bundled_download();
-		$bundle_licensing     = ( $is_bundle && $licensing_enabled );
-		$existing_license_ids = isset( $options['existing_license_ids'] ) ? $options['existing_license_ids'] : array();
-		$parent_license_id    = isset( $options['parent_license_id'] ) ? $options['parent_license_id'] : 0;
-		$activation_limit     = isset( $options['activation_limit'] )  ? $options['activation_limit']  : false;
-		$license_length       = isset( $options['license_length'] )    ? $options['license_length']    : false;
-		$expiration_date      = isset( $options['expiration_date'] )   ? $options['expiration_date']   : false;
-		$is_lifetime          = isset( $options['is_lifetime'] ) && ! is_null( $options['is_lifetime'] )   ? $options['is_lifetime']       : null;
-		$downloads            = array();
-
-		if ( ! $purchased_download->is_bundled_download() && ! $purchased_download->licensing_enabled() ) {
+		$purchased_download = new EDD_SL_Download( $download_id );
+		$is_bundle          = $purchased_download->is_bundled_download();
+		$licensing_enabled  = $purchased_download->licensing_enabled();
+		if ( ! $is_bundle && ! $licensing_enabled ) {
 			return $keys;
 		}
+
+		$payment              = new EDD_Payment( $payment_id );
+		$has_variable_prices  = $purchased_download->has_variable_prices();
+		$bundle_licensing     = ( $is_bundle && $licensing_enabled );
+		$options              = $this->get_license_creation_options( $options, $purchased_download, $payment );
+		$existing_license_ids = $options['existing_license_ids'];
+		$parent_license_id    = $options['parent_license_id'];
+		$activation_limit     = $options['activation_limit'];
+		$license_length       = $options['license_length'];
+		$expiration_date      = $options['expiration_date'];
+		$is_lifetime          = $options['is_lifetime'];
+		$downloads            = array();
 
 		// If the correct number of licenses have already been generated for this payment, don't generate another license.
 		if ( ! empty( $options['existing_license_count'] ) ) {
@@ -368,10 +363,6 @@ class EDD_SL_License {
 
 				$keys[] = $this->ID;
 
-				if ( $parent_license_id && false !== $activation_limit ) {
-					$this->update_meta( '_edd_sl_limit', $activation_limit );
-				}
-
 				// Only need this for backwards compatible hooks.
 				$type = $is_bundle ? 'bundle' : 'default';
 				do_action( 'edd_sl_store_license', $this->ID, $purchased_download->ID, $payment->ID, $type );
@@ -479,6 +470,39 @@ class EDD_SL_License {
 		}
 
 		return $keys;
+	}
+
+	/**
+	 * Gets the array of options for creating a new license.
+	 *
+	 * @since 3.8.6
+	 * @param array        $options            The array of options for this license.
+	 * @param EDD_Download $purchased_download The EDD Download object.
+	 * @param EDD_Payment  $payment            The EDD Payment object.
+	 * @return array
+	 */
+	private function get_license_creation_options( $options, $purchased_download, $payment ) {
+		$options = wp_parse_args(
+			$options,
+			array(
+				'existing_license_ids' => array(),
+				'parent_license_id'    => 0,
+				'activation_limit'     => false,
+				'license_length'       => false,
+				'expiration_date'      => false,
+				'is_lifetime'          => null,
+			)
+		);
+
+		/**
+		 * Allow developers to modify the options for the license.
+		 *
+		 * @since 3.8.6
+		 * @param array        $options            The array of options for this license.
+		 * @param EDD_Download $purchased_download The EDD Download object.
+		 * @param EDD_Payment  $payment            The EDD Payment object.
+		 */
+		return apply_filters( 'edd_sl_license_creation_options', $options, $purchased_download, $payment );
 	}
 
 	/**
@@ -1004,13 +1028,6 @@ class EDD_SL_License {
 
 		do_action( 'edd_sl_post_set_activation_limit', $this->ID, $limit );
 
-		$child_licenses = $this->get_child_licenses();
-		if ( ! empty( $child_licenses ) ) {
-			foreach ( $child_licenses as $child_license ) {
-				$child_license->set_activation_limit( $limit );
-			}
-		}
-
 		return true;
 	}
 
@@ -1302,7 +1319,7 @@ class EDD_SL_License {
 			'number' => - 1,
 		);
 
-		$this->child_licenses = edd_software_licensing()->licenses_db->get_licenses( $args );;
+		$this->child_licenses = edd_software_licensing()->licenses_db->get_licenses( $args );
 
 		return apply_filters( 'edd_sl_get_child_licenses', $this->child_licenses, $this->ID );
 	}
@@ -1869,18 +1886,12 @@ class EDD_SL_License {
 			$this->price_id = $price_id;
 			$this->reset_activation_limit();
 
-			if ( ! empty( $this->child_licenses ) ) {
-
-				foreach ( $this->child_licenses as $child_license ) {
-
-					if ( $child_license->get_download()->has_variable_prices() ) {
-						$child_license->set_price_id( $price_id );
-					}
-
+			$child_licenses = $this->get_child_licenses();
+			if ( ! empty( $child_licenses ) ) {
+				foreach ( $child_licenses as $child_license ) {
+					$child_license->reset_activation_limit();
 				}
-
 			}
-
 		}
 
 		return $updated;
@@ -2009,11 +2020,12 @@ class EDD_SL_License {
 
 			}
 
+			$payment_ids = $this->get_payment_ids();
 			// If we do not have a user ID or no customer record was found via the user ID, look for a customer from the associated payments
-			if( ! empty( $this->payment_ids ) && ( empty( $this->user_id ) || empty( $customer->id ) ) ) {
+			if ( ! empty( $payment_ids ) && ( empty( $this->user_id ) || empty( $customer->id ) ) ) {
 
 				// Remove any payment IDs that came in as zero during migration
-				$this->payment_ids = array_filter( $this->payment_ids );
+				$this->payment_ids = array_filter( $payment_ids );
 				foreach( $this->payment_ids as $payment_id ) {
 
 					$customer_id = edd_get_payment_customer_id( $payment_id );
@@ -2042,10 +2054,14 @@ class EDD_SL_License {
 	 */
 	private function maybe_backfill_payment() {
 
-		if( empty( $this->payment_id ) && ! empty( $this->payment_ids ) ) {
+		if ( empty( $this->payment_id ) ) {
+			$payment_ids = $this->get_payment_ids();
+			if ( empty( $payment_ids ) ) {
+				return;
+			}
 
 			// Remove any payment IDs that came in as zero during migration
-			$this->payment_ids = array_filter( $this->payment_ids );
+			$this->payment_ids = array_filter( $payment_ids );
 			$this->payment_id  = current( $this->payment_ids );
 
 			$this->update( array( 'payment_id' => $this->payment_id ) );

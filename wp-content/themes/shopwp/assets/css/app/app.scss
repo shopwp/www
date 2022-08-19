@@ -73,6 +73,8 @@ Author URI:     https://simpleblend.net
 @import 'components/current-version';
 @import 'components/getting-started-inline';
 @import 'components/extensions';
+@import 'components/feature-highlights';
+@import 'components/generic';
 
 // State
 @import 'state/state';
@@ -83,6 +85,9 @@ Author URI:     https://simpleblend.net
 }
 
 .component-demo {
+	padding-top: 50px;
+	margin: 0em auto 7em auto;
+
 	@include device(600, 'max') {
 		.row {
 			flex-direction: column;
@@ -120,17 +125,11 @@ Author URI:     https://simpleblend.net
 	}
 }
 
-.home .component-demo {
-	@include device(600, 'max') {
-		margin-top: 2em;
+.wps-cart {
+	* + * {
+		margin-top: 0;
 	}
 }
-
-.component-how-it-works + .component-demo {
-	margin-top: -2em;
-	margin-bottom: 10em;
-}
-
 .wps-cart-icon-fixed {
 	display: none !important;
 }
@@ -191,10 +190,6 @@ body.testimonials {
 	margin: 0px;
 }
 
-.component-testimonials + .component-faq-secondary {
-	margin-top: 4.5em;
-}
-
 .edd-payment-icons {
 	top: 94px;
 }
@@ -233,7 +228,19 @@ body.testimonials {
 	}
 }
 
+.features .component-features-demo .demo-header h3 {
+	font-size: 40px;
+}
+
+.features .component-features-demo .demo-header {
+	max-width: 100%;
+	text-align: center;
+}
+
 .component.component-features-demo {
+	padding: 3em 0 8em 0;
+	margin-bottom: 0;
+
 	@media (max-width: 700px) {
 		margin: 3em auto;
 
@@ -256,6 +263,7 @@ body.testimonials {
 
 		.demo-header {
 			margin-bottom: 0;
+			padding: 10px;
 		}
 
 		.features {
@@ -265,14 +273,16 @@ body.testimonials {
 	}
 }
 
-// Can remove
-.component-testimonials {
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
 body.testimonials {
 	height: auto !important;
+
+	.component-testimonials {
+		padding-top: 0;
+
+		h2 {
+			font-size: 44px;
+		}
+	}
 }
 
 #wps-input-terms {
@@ -282,21 +292,17 @@ body.testimonials {
 
 .component-testimonials + .component-faq-secondary {
 	margin-top: 4.5em;
+	padding-top: 45px;
 }
 
 .edd-payment-icons {
 	top: 94px;
 }
 
-.purchase .component-purchase {
-	background-image: linear-gradient(0deg, #fdf0ff 0, #f0f0ff);
-}
-
 .page-template-template-narrow-php .main {
 	max-width: 700px;
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: 9em;
 }
 
 .page-template-template-narrow-php .main p,
@@ -307,8 +313,16 @@ body.testimonials {
 	text-align: left;
 }
 
+.purchase-confirmation.page-template-template-narrow-php
+	.main
+	.has-text-align-center {
+	text-align: center;
+}
+
 .page-template-template-narrow-php .main h2 {
-	font-size: 1.65em;
+	font-size: 1.35em;
+	margin-bottom: 0;
+	margin-top: 30px;
 }
 
 .page-template-template-narrow-php .main h3 {
@@ -350,14 +364,6 @@ body.testimonials {
 	padding: 0 !important;
 }
 
-.header .menu-item a {
-	padding: 0.9em 1.1em !important;
-}
-
-.header .sub-menu a {
-	padding: 0.65em 2.1em !important;
-}
-
 .blog #someone-purchased,
 .single-post #someone-purchased {
 	display: none !important;
@@ -376,10 +382,6 @@ body.testimonials {
 
 .byline.author .logo-header {
 	top: -1px;
-}
-
-.single-post .post .l-contain-narrow {
-	max-width: 730px;
 }
 
 .single-post .entry-content h2 {
@@ -437,6 +439,7 @@ div[data-tippy-root] div.tippy-box[data-theme~='dark'] .tippy-arrow {
 
 .component-testimonials .btn {
 	margin-top: 30px;
+	font-size: 19px;
 }
 
 .page-content .receipt-account-wrapper {
@@ -495,16 +498,16 @@ div[data-tippy-root] div.tippy-box[data-theme~='dark'] .tippy-arrow {
 }
 
 .component-marquee + .component-testimonials {
-	margin-top: 10em;
-}
-
-.page-template-template-narrow-php.faq .main {
-	margin-top: 180px;
+	margin-top: 5em;
 }
 
 .is-showing-notices.home .main,
 .is-showing-notices.testimonials .main {
 	margin: 165px 0 0;
+}
+
+.testimonials .main {
+	padding-bottom: 0;
 }
 
 .page-template-template-narrow-php.checkout .main {
@@ -522,7 +525,7 @@ figcaption {
 }
 
 .post-categories {
-	background: #c9e0fa;
+	background: #ffeab4;
 }
 
 .post .entry-content p code {
@@ -543,17 +546,9 @@ figcaption {
 	margin-top: 20px;
 }
 
-.blog .post .meta-wrapper {
-	display: none;
-}
-
 .component-marquee [data-tippy-root],
 .header [data-tippy-root] {
 	display: none !important;
-}
-
-.plan-features ul {
-	max-width: 360px;
 }
 
 .extension-single .extension-notes {
@@ -562,7 +557,7 @@ figcaption {
 
 .extension-single .extension-single-header {
 	padding-top: 45px;
-	background-image: linear-gradient(0deg, #fdf0ff 0, #f0f0ff);
+	background-image: linear-gradient(0deg, #fcf6fd, #f2f2ff);
 }
 
 .checkout .header .menu-item a {
@@ -571,6 +566,11 @@ figcaption {
 
 .checkout .header {
 	height: 70px;
+	background: white;
+}
+
+.blog .header {
+	background: white;
 }
 
 .page-template-template-narrow-php.checkout .main {
@@ -582,9 +582,9 @@ figcaption {
 }
 
 .logged-in.edd-checkout #edd_secure_site_wrapper {
-	font-size: 14px;
-	top: -85px;
+	font-size: 16px;
 	right: -9px;
+	top: -69px;
 }
 
 .shopwp-radio-text .css-1hpq27b-PriceCSS.css-1hpq27b-PriceCSS {
@@ -619,10 +619,21 @@ figcaption {
 
 .single .main {
 	margin-top: 90px;
+
+	@include device(700, 'max') {
+		margin-top: 75px;
+	}
 }
 
+#shopwp-root + [data-wpshopify-component-type='cart'],
 .wps-account #shopwp-root {
 	display: none;
+	margin: 0 !important;
+	display: none !important;
+}
+
+#shopwp-root {
+	margin: 0;
 }
 
 .shopwp-skeleton-product-buy-button-value {
@@ -648,4 +659,73 @@ figcaption {
 .page-id-194205.page-template-template-narrow-php .main h2 + ul li {
 	font-family: Metropolis, helvetica;
 	font-size: 16px;
+}
+
+.ReactModalPortal {
+	z-index: 999999999999;
+	position: relative;
+}
+
+.component-demo {
+	background: white;
+	width: 100%;
+	max-width: 100%;
+	margin-bottom: 0;
+	padding-bottom: 50px;
+
+	.inner {
+		max-width: 1120px;
+		margin: 0 auto;
+	}
+}
+.component-demo .row {
+	display: flex;
+}
+
+.component-demo .demo {
+	width: 470px;
+}
+
+.component-demo .content > .btn {
+	font-size: 1em;
+}
+
+.component-demo .content {
+	flex: 1;
+	padding-top: 10vw;
+	font-size: 20px;
+}
+
+.component-demo .demo .wpshopify-loading-placeholder + div {
+	max-width: 300px;
+	margin: 0 auto;
+	position: relative;
+	left: 5vw;
+}
+
+.component-demo .content .form-error .error {
+	margin-top: 0;
+}
+
+.component-demo .content h2 {
+	position: relative;
+}
+
+.component-demo .content h2 svg {
+	position: absolute;
+	top: -95px;
+	font-size: 75px;
+	left: -53px;
+	transform: rotate(-23deg);
+}
+
+.component-demo .wps-product-from-price,
+.component-demo .wps-pricing-sale-notice,
+.component-demo .wps-pricing-sale-price {
+	font-style: normal;
+}
+
+.component-demo label[for='wps-product-quantity'] {
+	font-weight: normal;
+	font-size: 15px;
 }

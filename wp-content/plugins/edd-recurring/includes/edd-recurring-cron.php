@@ -43,7 +43,7 @@ class EDD_Recurring_Cron {
 	public function check_for_expired_subscriptions() {
 
 		$args = array(
-			'status'     => 'active',
+			'status'     => array( 'active', 'trialling' ),
 			'number'     => 999999,
 			'expiration' => array(
 				'start'  => date( 'Y-n-d 00:00:00', strtotime( '-1 day', current_time( 'timestamp' ) ) ),

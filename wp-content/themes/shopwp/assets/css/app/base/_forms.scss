@@ -2,717 +2,731 @@
 .edd_form,
 .search-form,
 .affwp-form {
-  width: 100%;
-  max-width: 600px;
-  position: relative;
-  text-align: left;
-  margin: 0 auto 2em auto;
+	width: 100%;
+	max-width: 600px;
+	position: relative;
+	text-align: left;
+	margin: 0 auto 2em auto;
 
-  .description {
-    display: block;
-    margin-top: $space-l;
-  }
+	.description {
+		display: block;
+		margin-top: $space-l;
+	}
 }
 
 .edd-login-username + .edd-login-password {
-  margin-top: 1.5em;
+	margin-top: 1.5em;
 }
 
 .form-control {
-  position: relative;
-  margin-right: 10px;
-  margin-top: 0;
+	position: relative;
+	margin-right: 10px;
+	margin-top: 0;
 
-  p {
-    margin: 0;
-  }
+	p {
+		margin: 0;
+	}
 
-  input {
-    margin: 0;
-    border-radius: 0.4em;
-  }
+	input {
+		margin: 0;
+		border-radius: 0.4em;
+	}
 }
 
 .form-label {
-  position: absolute;
-  left: $space-m;
-  top: 1.1em;
-  font-size: $font-m;
-  opacity: $opacity-hard;
-  transition: all 0.2s ease;
+	position: absolute;
+	left: $space-m;
+	top: 1.1em;
+	font-size: $font-m;
+	opacity: $opacity-hard;
+	transition: all 0.2s ease;
 
-  @include device(900, 'max') {
-    top: 15px;
-  }
+	@include device(900, 'max') {
+		top: 15px;
+	}
 
-  &:hover {
-    cursor: text;
-  }
+	&:hover {
+		cursor: text;
+	}
 }
 
 .form-label-l {
-  font-size: $font-l;
+	font-size: $font-l;
 
-  @include device(900, 'max') {
-    font-size: $font-m;
-  }
+	@include device(900, 'max') {
+		font-size: $font-m;
+	}
 }
 
 .is-focused {
-  .form-label {
-    opacity: 0;
-    // left: 2px;
-    // top: -6px;
-    font-size: 0.6em;
-    color: color(white);
-    padding: 10px 15px;
-    border-radius: 0.4em;
-    font-weight: 100;
+	.form-label {
+		opacity: 0;
+		// left: 2px;
+		// top: -6px;
+		font-size: 0.6em;
+		color: color(white);
+		padding: 10px 15px;
+		border-radius: 0.4em;
+		font-weight: 100;
 
-    @include device(800, 'max') {
-      left: -10px;
-      top: -40px;
-      font-size: 16px;
-    }
+		@include device(800, 'max') {
+			left: -10px;
+			top: -40px;
+			font-size: 16px;
+		}
 
-    &:hover {
-      cursor: text;
-    }
-  }
+		&:hover {
+			cursor: text;
+		}
+	}
 }
 
 .form-input {
-  position: relative;
+	position: relative;
 }
 
 .form-input-s {
-  font-size: 16px;
-  padding: 0.9em;
+	font-size: 16px;
+	padding: 0.9em;
 }
 
 .affwp-payout-service-tos {
-  a {
-    color: #1f1f23;
-    font-weight: normal;
-    text-decoration: none;
+	a {
+		color: #1f1f23;
+		font-weight: normal;
+		text-decoration: none;
 
-    &:hover {
-      opacity: 1;
-    }
-  }
+		&:hover {
+			opacity: 1;
+		}
+	}
 }
 
 input,
 textarea,
 select,
 .form-input,
-.affwp-form input:not([type='checkbox']):not([type='radio']):not([type='submit']) {
-  width: 100%;
-  padding: 9px 18px;
-  border-radius: 0.4em;
-  font-size: 16px;
-  border: none;
-  background: color(white);
-  color: color(base);
-  margin-top: 0;
-  border: 1px solid color(base);
-  font-weight: normal;
-  font-family: $font-secondary;
+.affwp-form
+	input:not([type='checkbox']):not([type='radio']):not([type='submit']) {
+	width: 100%;
+	padding: 9px 18px;
+	border-radius: 0.4em;
+	font-size: 16px;
+	border: none;
+	background: color(white);
+	color: color(base);
+	margin-top: 0;
+	border: 1px solid color(base);
+	font-weight: normal;
+	font-family: $font-secondary;
 
-  &:focus:not([type='checkbox']):not([type='radio']) {
-    outline: none;
-    border-color: #1f1f23;
-    box-shadow: 0px 0px 0px 1px #1f1f23;
-  }
+	&:focus:not([type='checkbox']):not([type='radio']) {
+		outline: none;
+		border-color: #1f1f23;
+		box-shadow: 0px 0px 0px 1px #1f1f23;
+	}
 
-  &[type='submit']:focus {
-    box-shadow: 0 0 0 0.24em #e4eaff;
-  }
+	&[type='submit']:focus {
+		box-shadow: 0 0 0 0.24em #e4eaff;
+	}
 
-  &.valid:not([type='submit']) {
-    @include validInput();
-  }
+	&.valid:not([type='submit']) {
+		@include validInput();
+	}
 
-  @include device(600, 'max') {
-    font-size: 16px;
-  }
+	@include device(600, 'max') {
+		font-size: 16px;
+	}
 
-  &:disabled {
-    background-color: #ececec;
-    // @include dim($opacity-hard);
-    opacity: 1;
-    box-shadow: none;
-    border-color: #415aff;
+	&:disabled {
+		background-color: #ececec;
+		// @include dim($opacity-hard);
+		opacity: 1;
+		box-shadow: none;
+		border-color: #415aff;
 
-    &:hover {
-      // opacity: $opacity-hard;
-      cursor: not-allowed;
-      background-color: #ececec;
-      // transform: scale(1);
-    }
-  }
+		&:hover {
+			// opacity: $opacity-hard;
+			cursor: not-allowed;
+			background-color: #ececec;
+			// transform: scale(1);
+		}
+	}
 }
 
 .affwp-form input[type='checkbox'] {
-  width: auto;
-  margin-right: 10px;
-  height: auto !important;
+	width: auto;
+	margin-right: 10px;
+	height: auto !important;
 }
 
 input[type='number'] {
-  max-width: 50px;
-  text-align: center;
+	max-width: 50px;
+	text-align: center;
 }
 
-.edd-stripe-card-radio-item {
-  > label {
-    display: flex !important;
+#edd_cc_fields .edd-stripe-card-radio-item {
+	> label {
+		display: flex !important;
 
-    span {
-      margin: 0;
-    }
+		span {
+			margin: 0;
+		}
 
-    &:hover {
-      cursor: pointer;
-    }
-  }
+		&:hover {
+			cursor: pointer;
+		}
+	}
 
-  input[type='radio'] {
-    width: auto;
-    margin-top: 5px;
-    margin-right: 10px;
+	input[type='radio'] {
+		width: auto;
+		margin-top: 5px;
+		margin-right: 10px;
 
-    &:hover {
-      cursor: pointer;
-    }
-  }
+		&:hover {
+			cursor: pointer;
+		}
+	}
 
-  &.new-card-wrapper {
-    display: flex;
+	&.new-card-wrapper {
+		display: flex;
+		// padding-top: 0;
 
-    > label {
-      flex: 1;
-    }
-  }
+		&.selected {
+			padding-top: 15px;
+
+			input {
+				margin-top: 0;
+			}
+		}
+
+		> label {
+			flex: 1;
+		}
+	}
 }
 
 .StripeElement--complete.StripeElement {
-  @include validInput();
+	@include validInput();
 }
 
 input[type='submit'] {
-  width: auto;
-  border: none;
-  height: auto;
+	width: auto;
+	border: none;
+	height: auto;
 }
 
 #form-account-profile-general,
 #form-account-profile-password {
-  margin-bottom: 2em;
+	margin-bottom: 2em;
 
-  input[type='submit'] {
-    font-size: 1.2em;
-  }
+	input[type='submit'] {
+		font-size: 1.2em;
+	}
 }
 
 input[type='search'] {
-  border-radius: 0.4em;
+	border-radius: 0.4em;
 }
 
 input.valid {
-  animation-duration: 2s;
+	animation-duration: 2s;
 }
 
 form input:read-only {
-  // @include validInput();
-  // opacity: $opacity-hard;
+	// @include validInput();
+	// opacity: $opacity-hard;
 
-  + .is-valid {
-    &:after {
-      // opacity: $opacity-hard;
-    }
-  }
+	+ .is-valid {
+		&:after {
+			// opacity: $opacity-hard;
+		}
+	}
 }
 
 select[aria-invalid='true'],
 input[aria-invalid='true'] {
-  @include invalidInput();
+	@include invalidInput();
 }
 
 select[aria-invalid='false'],
 input[aria-invalid='false'] {
-  @include validInput();
+	@include validInput();
 }
 
 label {
-  font-weight: bold;
-  margin-bottom: $space-s;
-  display: block;
+	font-weight: bold;
+	margin-bottom: 10px;
+	display: block;
 
-  & + small {
-    margin-bottom: 10px;
-    display: block;
-    margin-top: 0;
-  }
+	& + small {
+		margin-bottom: 10px;
+		display: block;
+		margin-top: 0;
+	}
 }
 
 label[for='wps_customer_password_new'] {
-  margin-top: 1.2em;
+	margin-top: 1.2em;
 }
 
 .notice-inline {
-  margin-top: 0;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  transition: 0.5s all ease;
-  opacity: 0;
+	margin-top: 0;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	transition: 0.5s all ease;
+	opacity: 0;
 
-  &.is-notifying {
-    opacity: 1;
-    transform: translateY(-50px);
-  }
+	&.is-notifying {
+		opacity: 1;
+		transform: translateY(-50px);
+	}
 }
 
 .view-key-wrapper {
-  // position: relative;
-  // padding: 0.7em 0 0.8em 0;
+	// position: relative;
+	// padding: 0.7em 0 0.8em 0;
 
-  .fa {
-    position: absolute;
-    right: 15px;
-    top: -6px;
-    // opacity: 0.6;
-    color: color(warning);
-    // font-weight: bold;
-  }
+	.fa {
+		position: absolute;
+		right: 15px;
+		top: -6px;
+		// opacity: 0.6;
+		color: color(warning);
+		// font-weight: bold;
+	}
 }
 
 #license-key {
-  user-select: all;
-  font-size: 16px;
+	user-select: all;
+	font-size: 16px;
 
-  + svg {
-    font-size: 20px;
-    margin: 0;
-  }
+	+ svg {
+		font-size: 20px;
+		margin: 0;
+	}
 
-  &:hover {
-    cursor: text;
-  }
+	&:hover {
+		cursor: text;
+	}
 }
 
 .msg-error,
 .edd-alert-error,
 .edd_errors,
 label.error {
-  background: color(error);
-  display: inline-block !important;
-  color: color(base);
-  padding: 0.59444em 2.4em;
-  border-radius: 0.4em;
-  font-weight: normal;
-  text-align: center;
-  margin: 0;
-  position: relative;
-  width: 100%;
+	background: color(error);
+	display: inline-block !important;
+	color: color(base);
+	padding: 0.59444em 2.4em;
+	border-radius: 0.4em;
+	font-weight: normal;
+	text-align: center;
+	margin: 0;
+	position: relative;
+	width: 100%;
 
-  &:after {
-    content: '';
-    display: block;
-  }
+	&:after {
+		content: '';
+		display: block;
+	}
 
-  a {
-    color: color(base);
-  }
+	a {
+		color: color(base);
+	}
 
-  &:empty {
-    padding: 0;
-    display: none !important;
-  }
+	&:empty {
+		padding: 0;
+		display: none !important;
+	}
 }
 
 legend {
-  font-size: $heading-2;
-  margin: 0 auto;
-  border: none;
-  padding-bottom: $space-xs;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  font-weight: bold;
-  font-family: $font-secondary;
+	font-size: $heading-2;
+	margin: 0 auto;
+	border: none;
+	padding-bottom: $space-xs;
+	width: 100%;
+	text-align: center;
+	position: relative;
+	font-weight: bold;
+	font-family: $font-secondary;
 
-  p {
-    font-size: $font-xxxs;
-    font-style: italic;
-  }
+	p {
+		font-size: $font-xxxs;
+		font-style: italic;
+	}
 
-  &:after {
-    content: '';
-    margin: $space-s auto 0 auto;
-    display: block;
-    height: 1px;
-    width: 100px;
-    background-color: color(base);
-  }
+	&:after {
+		content: '';
+		margin: 10px auto 0 auto;
+		display: block;
+		height: 1px;
+		width: 100px;
+		background-color: color(base);
+	}
 
-  @include device(600, 'max') {
-    font-size: $heading-4;
-  }
+	@include device(600, 'max') {
+		font-size: $heading-4;
+	}
 }
 
 select {
-  height: 55px;
-  text-indent: 10px;
+	appearance: none;
+	background: transparent;
+	background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+	background-repeat: no-repeat;
+	background-position-x: 96%;
+	background-position-y: 8px;
 }
 
 .form-input-l {
-  font-size: $font-l;
+	font-size: $font-l;
 
-  @include device(900, 'max') {
-    font-size: $font-m;
-  }
+	@include device(900, 'max') {
+		font-size: $font-m;
+	}
 }
 
 #mailinglist-email {
-  width: 100%;
-  // outline: none;
-  margin-bottom: 1em;
+	width: 100%;
+	// outline: none;
+	margin-bottom: 1em;
 }
 
 .mailinglist-form,
 #mailinglist-form {
-  margin-top: 0;
-  width: 100%;
-  max-width: 100%;
+	margin-top: 0;
+	width: 100%;
+	max-width: 100%;
 
-  .form-control {
-    margin-right: 0;
-  }
+	.form-control {
+		margin-right: 0;
+	}
 }
 
 .form-message {
-  text-align: center;
+	text-align: center;
 
-  &:empty {
-    margin: 0;
-    padding: 0;
-  }
+	&:empty {
+		margin: 0;
+		padding: 0;
+	}
 
-  &.is-visible {
-    text-align: left;
-    margin: 10px 0 0 0;
-  }
+	&.is-visible {
+		text-align: left;
+		margin: 10px 0 0 0;
+	}
 }
 
 .form-error {
-  color: color(error);
+	color: color(error);
 }
 
 .form-valid {
-  + .form-messages {
-    .form-error {
-      display: none;
-    }
-  }
+	+ .form-messages {
+		.form-error {
+			display: none;
+		}
+	}
 }
 
 .form-error,
 .form-success {
-  background: color(success);
-  border-radius: 0.4em;
-  text-align: center;
-  color: black;
+	background: color(success);
+	border-radius: 0.4em;
+	text-align: center;
+	color: black;
 
-  svg {
-    margin-right: 6px;
-    margin-top: 0;
-  }
+	svg {
+		margin-right: 6px;
+		margin-top: 0;
+	}
 
-  label,
-  .error,
-  label.error {
-    padding: 10px 25px;
-    font-weight: normal;
-    font-size: 15px;
-    margin-top: 0;
-  }
+	label,
+	.error,
+	label.error {
+		padding: 10px 25px;
+		font-weight: normal;
+		font-size: 15px;
+		margin-top: 0;
+	}
 }
 
 .form-error {
-  background: color(error);
+	background: color(error);
 }
 
 .form-messages {
-  margin: 0;
+	margin: 0;
 }
 
 .is-submitted {
-  .form-messages,
-  .form-message {
-    margin-top: 0;
+	.form-messages,
+	.form-message {
+		margin-top: 0;
 
-    .fa {
-      margin-top: 0;
-    }
-  }
+		.fa {
+			margin-top: 0;
+		}
+	}
 
-  .form-control {
-    display: none;
-  }
+	.form-control {
+		display: none;
+	}
 
-  .form-success.is-visible {
-    // min-height: 200px;
-  }
+	.form-success.is-visible {
+		// min-height: 200px;
+	}
 }
 
 .is-submitting {
-  .form-label {
-    display: none !important;
-  }
+	.form-label {
+		display: none !important;
+	}
 
-  .spinner {
-    display: block;
-  }
+	.spinner {
+		display: block;
+	}
 }
 
 #edd_profile_submit_wrap {
-  margin-top: $space-xl;
+	margin-top: $space-xl;
 }
 
 .edd-login-remember {
-  label {
-    display: block;
-    padding-left: 15px;
-    text-indent: -15px;
-    margin-bottom: 0;
-    font-weight: normal;
+	label {
+		display: block;
+		padding-left: 15px;
+		text-indent: -15px;
+		margin-bottom: 0;
+		font-weight: normal;
 
-    &:hover {
-      cursor: pointer;
-    }
-  }
+		&:hover {
+			cursor: pointer;
+		}
+	}
 
-  input[type='checkbox'] {
-    width: 22px;
-    height: 22px;
-    padding: 0;
-    margin: 0 10px 0 0;
-    vertical-align: bottom;
-    position: relative;
-    top: -3px;
-    *overflow: hidden;
-  }
+	input[type='checkbox'] {
+		width: 22px;
+		height: 22px;
+		padding: 0;
+		margin: 0 10px 0 0;
+		vertical-align: bottom;
+		position: relative;
+		top: -3px;
+		*overflow: hidden;
+	}
 }
 
 #form-forgot-pass {
-  width: 100%;
-  margin-bottom: 7em;
+	width: 100%;
+	margin-bottom: 7em;
 
-  > .form-input {
-    border: none;
-  }
+	> .form-input {
+		border: none;
+	}
 
-  .form-note {
-    font-size: 16px;
-    margin-bottom: -1em;
-  }
+	.form-note {
+		font-size: 16px;
+		margin-bottom: -1em;
+	}
 }
 
 #edd-stripe-payment-errors {
-  text-align: center;
+	text-align: center;
 }
 
 .form-note {
-  width: 100%;
-  display: block;
-  text-align: center;
-  margin-top: $space-xxs;
-  margin-bottom: $space-m;
-  font-size: 90%;
+	width: 100%;
+	display: block;
+	text-align: center;
+	margin-top: $space-xxs;
+	margin-bottom: $space-m;
+	font-size: 90%;
 }
 
 .form-note-invalid-field {
-  text-align: center;
-  color: color(base);
-  margin-bottom: $space-xxs;
+	text-align: center;
+	color: color(base);
+	margin-bottom: $space-xxs;
 }
 
 .edd-apply-discount.edd-submit,
 #edd-add-license-renewal {
-  font-size: 17px;
+	font-size: 17px;
 }
 #edd-cancel-license-renewal {
-  margin-left: 10px;
-  color: #0f0728;
-  text-decoration: underline;
-  font-size: 15px;
+	margin-left: 10px;
+	color: #0f0728;
+	text-decoration: underline;
+	font-size: 15px;
 }
 
 .edd-sl-renewal-actions {
-  margin-bottom: 1.6em;
+	margin-bottom: 1.6em;
 }
 
 #edd-discount-error-wrap {
-  margin-top: 10px;
+	margin-top: 10px;
 }
 
 #affwp-login-form {
-  fieldset {
-    p:nth-of-type(4) {
-      text-align: center;
-      margin-bottom: 3px;
-    }
-  }
+	fieldset {
+		p:nth-of-type(4) {
+			text-align: center;
+			margin-bottom: 3px;
+		}
+	}
 }
 
 #edd_login_form {
-  legend {
-    display: none;
-  }
+	legend {
+		display: none;
+	}
 
-  .edd-login-remember {
-    margin-bottom: 0;
+	.edd-login-remember {
+		margin-bottom: 0;
 
-    @media (max-width: 600px) {
-      margin-bottom: 15px;
-    }
-  }
+		@media (max-width: 600px) {
+			margin-bottom: 15px;
+		}
+	}
 
-  .edd-login-submit {
-    text-align: center;
-    margin-bottom: $space-xxs;
-  }
+	.edd-login-submit {
+		text-align: center;
+		margin-bottom: $space-xxs;
+	}
 }
 
 .affwp-lost-password a,
 .edd-lost-password a,
 #edd-user-login-submit + a {
-  width: 100%;
-  text-align: center;
-  display: inline-block;
-  margin-top: 10px;
-  color: #1f1f23;
-  font-size: 16px;
-  text-decoration: none;
+	width: 100%;
+	text-align: center;
+	display: inline-block;
+	margin-top: 10px;
+	color: #1f1f23;
+	font-size: 16px;
+	text-decoration: none;
 
-  &:hover {
-    text-decoration: underline;
-    opacity: 1;
-  }
+	&:hover {
+		text-decoration: underline;
+		opacity: 1;
+	}
 }
 
 #edd_checkout_form_wrap {
-  margin-top: 1.1em;
+	margin-top: 1.1em;
 
-  @include device(500, 'max') {
-    padding: 0 20px;
-  }
+	@include device(500, 'max') {
+		padding: 0 20px;
+	}
 }
 
 .wps-cart-contents > h2 {
-  font-weight: 400;
+	font-weight: 400;
 }
 
 .wps-total-amount,
 .wps-total-prefix {
-  font-family: $font-secondary;
+	font-family: $font-secondary;
 }
 
 .wps-checkout-login-spacer {
-  display: none;
-  margin-top: 0;
+	display: none;
+	margin-top: 0;
 
-  &.is-stuck {
-    display: block;
-  }
+	&.is-stuck {
+		display: block;
+	}
 }
 
 #edd_sl_license_keys2 {
-  @include device(600, 'max') {
-    display: flex;
-    flex-direction: column;
-  }
+	@include device(600, 'max') {
+		display: flex;
+		flex-direction: column;
+	}
 }
 
 #edd_sl_license_keys {
-  @include device(600, 'max') {
-    display: flex;
-    flex-direction: column;
-  }
+	@include device(600, 'max') {
+		display: flex;
+		flex-direction: column;
+	}
 }
 
 #edd-discount-code-wrap {
-  display: block !important;
+	display: block !important;
 
-  label {
-    margin-top: 2em;
-    font-size: 16px;
-    margin-bottom: 0;
-    display: none;
-  }
+	label {
+		margin-top: 2em;
+		font-size: 16px;
+		margin-bottom: 0;
+		display: none;
+	}
 
-  .edd-discount-code-field-wrap {
-    display: flex;
-    margin-top: 10px;
+	.edd-discount-code-field-wrap {
+		display: flex;
+		margin-top: 10px;
 
-    @include device(600, 'max') {
-      flex-direction: column;
-    }
+		@include device(600, 'max') {
+			flex-direction: column;
+		}
 
-    #edd-discount {
-      font-size: 16px;
-    }
+		#edd-discount {
+			font-size: 16px;
+		}
 
-    .edd-apply-discount {
-      margin-top: 0;
-      margin-left: 1em;
+		.edd-apply-discount {
+			margin-top: 0;
+			margin-left: 1em;
 
-      @include device(600, 'max') {
-        margin: 0;
-        margin-top: 1em;
-      }
-    }
-  }
+			@include device(600, 'max') {
+				margin: 0;
+				margin-top: 1em;
+			}
+		}
+	}
 
-  .edd-description {
-    display: none;
-  }
+	.edd-description {
+		display: none;
+	}
 }
 
 .affwp-errors,
 .affwp-notice {
-  margin: 0 auto 2em auto;
-  max-width: 800px;
-  text-align: center;
-  font-size: 18px !important;
+	margin: 0 auto 2em auto;
+	max-width: 800px;
+	text-align: center;
+	font-size: 18px !important;
 }
 
 .affwp-errors {
-  background-color: color(error);
-  border-color: color(error);
+	background-color: color(error);
+	border-color: color(error);
 }
 
 #password-reset-form .heading-center {
-  display: none;
+	display: none;
 }
 
 #form-reset-pass .description {
-  font-size: 14px;
-  max-width: 648px;
-  margin: 0 auto;
+	font-size: 14px;
+	max-width: 648px;
+	margin: 0 auto;
 }
 
 #form-forgot-pass .is-valid:after {
-  bottom: 30px;
-  right: 2em;
+	bottom: 30px;
+	right: 2em;
 }
 
 #form-forgot-pass .btn-wrap .spinner {
-  top: 23px;
+	top: 23px;
 }
 
 #form-reset-pass .form-input {
-  border: none;
+	border: none;
 }

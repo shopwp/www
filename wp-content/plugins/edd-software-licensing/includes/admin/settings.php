@@ -6,13 +6,14 @@ function edd_sl_register_license_section( $sections ) {
 	return $sections;
 }
 add_filter( 'edd_settings_sections_extensions', 'edd_sl_register_license_section', 10, 1 );
+add_filter( 'edd_settings_sections_emails', 'edd_sl_register_license_section' );
 
 /**
- * Registers the new Software Licensing license options in Misc
+ * Registers the Software Licensing license options under the extensions tab.
  * *
  * @access      private
  * @since       1.0
- * @param 		$settings array the existing plugin settings
+ * @param       $settings array the existing plugin settings
  * @return      array
 */
 
@@ -23,25 +24,13 @@ function edd_sl_license_settings( $settings ) {
 		$edd_sl_renewals_tt_desc = __( 'Checking this will give customers the ability to enter their license key on the checkout page and renew it. They\'ll also get renewal reminders to their email, and can also renew from their account page (if that page uses the [edd_license_keys] shortcode). NOTE: If the product is a Recurring product and the customer\'s subscription is still active, it will automatically renew even if this option is disabled.', 'edd_sl' );
 
 		$edd_sl_renewal_discount_tt_desc = __( 'When the user is on the checkout page renewing their license, this discount will be automatically applied to their renewal purchase. NOTE: If the product is a Recurring product and the customer\'s subscription is still active, it will automatically renew with this discount applied.', 'edd_sl' );
-
-		$edd_sl_send_renewal_reminders_tt_desc = __( 'Renewal Reminders are emails that are automatically sent out to the customer when their license key is about to expire. These emails will remind the customer that they need to renew. You can configure those emails below. NOTE: If the product is a Recurring product and the customer\'s subscription is still active, the Renewal Reminders on this page will not be sent. Instead, the emails on the \'Recurring Payments\' page will be used (see \'Recurring Payments\' above). However, if the customer\'s subscription is cancelled or expired, they will be sent these emails.', 'edd_sl' );
-
 	} else {
 		$edd_sl_renewals_tt_desc = __( 'Checking this will give customers the ability to enter their license key on the checkout page and renew it. They\'ll also get renewal reminders to their email, and can also renew from their account page (if that page uses the [edd_license_keys] shortcode).', 'edd_sl' );
 
 		$edd_sl_renewal_discount_tt_desc = __( 'When the user is on the checkout page renewing their license, this discount will be automatically applied to their renewal purchase.', 'edd_sl' );
-
-		$edd_sl_send_renewal_reminders_tt_desc = __( 'Renewal Reminders are emails that are automatically sent out to the customer when their license key is about to expire. These emails will remind the customer that they need to renew. You can configure those emails below.', 'edd_sl' );
 	}
 
 	$license_settings = array(
-		array(
-			'id'   => 'edd_sl_header',
-			'name' => '<strong>' . __( 'Software Licensing', 'edd_sl' ) . '</strong>',
-			'desc' => '',
-			'type' => 'header',
-			'size' => 'regular'
-		),
 		array(
 			'id'            => 'edd_sl_force_increase',
 			'name'          => __( 'Disable URL Checking?', 'edd_sl' ),
@@ -120,30 +109,47 @@ function edd_sl_license_settings( $settings ) {
 			'tooltip_title' => __( 'Disable Discount Codes', 'edd_sl' ),
 			'tooltip_desc'  => __( 'This will disable the option to redeem discount codes when the cart contains a license renewal.', 'edd_sl' )
 		),
+	);
+
+	return array_merge( $settings, array( 'software-licensing' => $license_settings ) );
+
+}
+add_filter( 'edd_settings_extensions', 'edd_sl_license_settings' );
+
+/**
+ * Registers the SL email settings under the emails tab.
+ *
+ * @since 3.8.5
+ * @param array $settings
+ * @return array
+ */
+function edd_sl_renewal_notices_settings_array( $settings ) {
+
+	$edd_sl_send_renewal_reminders_tt_desc = __( 'Renewal Reminders are emails that are automatically sent out to the customer when their license key is about to expire. These emails will remind the customer that they need to renew. You can configure those emails below.', 'edd_sl' );
+	if ( class_exists( 'EDD_Recurring' ) ) {
+		$edd_sl_send_renewal_reminders_tt_desc .= ' ' . __( 'NOTE: If the product is a Recurring product and the customer\'s subscription is still active, the Renewal Reminders on this page will not be sent. Instead, the emails on the \'Recurring Payments\' page will be used (see \'Recurring Payments\' above). However, if the customer\'s subscription is cancelled or expired, they will be sent these emails.', 'edd_sl' );
+	}
+
+	$sl_settings = array(
 		array(
 			'id'            => 'edd_sl_send_renewal_reminders',
 			'name'          => __( 'Send Renewal Reminders', 'edd_sl' ),
 			'desc'          => __( 'Check this box if you want customers to receive a renewal reminder when their license key is about to expire.', 'edd_sl' ),
 			'type'          => 'checkbox',
 			'tooltip_title' => __( 'What are Renewal Reminders?', 'edd_sl' ),
-			'tooltip_desc'  => $edd_sl_send_renewal_reminders_tt_desc
+			'tooltip_desc'  => $edd_sl_send_renewal_reminders_tt_desc,
 		),
 		array(
 			'id'   => 'sl_renewal_notices',
 			'name' => __( 'Renewal Notices', 'edd_sl' ),
 			'desc' => __( 'Configure the renewal notice emails', 'edd_sl' ),
-			'type' => 'hook'
+			'type' => 'hook',
 		),
 	);
 
-	if ( version_compare( EDD_VERSION, 2.5, '>=' ) ) {
-		$license_settings = array( 'software-licensing' => $license_settings );
-	}
-
-	return array_merge( $settings, $license_settings );
-
+	return array_merge( $settings, array( 'software-licensing' => $sl_settings ) );
 }
-add_filter('edd_settings_extensions', 'edd_sl_license_settings');
+add_filter( 'edd_settings_emails', 'edd_sl_renewal_notices_settings_array' );
 
 /**
  * Displays the renewal notices options

@@ -139,11 +139,11 @@ class EDD_SL_Package_Download {
 
 		$download = new EDD_SL_Download( $download_id );
 
-		$download_name  = $download->get_name();
-		if ( $download_beta ) {
-			$file_key      = $download->get_beta_upgrade_file_key();
+		$download_name = $download->get_name();
+		if ( $download_beta && $download->has_beta() ) {
+			$file_key = $download->get_beta_upgrade_file_key();
 		} else {
-			$file_key      = $download->get_upgrade_file_key();
+			$file_key = $download->get_upgrade_file_key();
 		}
 
 		$computed_hash = md5( $download_name . $file_key . $download_id . $license_key . (int) $expires );
@@ -194,10 +194,10 @@ class EDD_SL_Package_Download {
 			$hours         = '+' . absint( edd_get_option( 'download_link_expiration', 24 ) ) . ' hours';
 			$expires       = strtotime( $hours, current_time( 'timestamp' ) );
 
-			if ( $download_beta ) {
-				$file_key      = $download->get_beta_upgrade_file_key();
+			if ( $download_beta && $download->has_beta() ) {
+				$file_key = $download->get_beta_upgrade_file_key();
 			} else {
-				$file_key      = $download->get_upgrade_file_key();
+				$file_key = $download->get_upgrade_file_key();
 			}
 
 			$hash          = md5( $download_name . $file_key . $download_id . $license_key . (int) $expires );
@@ -393,7 +393,7 @@ class EDD_SL_Package_Download {
 
 		$download = new EDD_SL_Download( $download_id );
 
-		if ( $download_beta ) {
+		if ( $download_beta && $download->has_beta() ) {
 			$file_key  = $download->get_beta_upgrade_file_key();
 			$all_files = get_post_meta( $download_id, '_edd_sl_beta_files', true );
 		} else {

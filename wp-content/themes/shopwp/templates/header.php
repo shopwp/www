@@ -38,10 +38,10 @@
         <div class="header-account l-row l-row-right l-col-center">
 
           <?php if (is_user_logged_in()) {  ?>
-            <a href="/account" class="btn btn-account">My Account</a>
+            <a href="/account" class="btn btn-account btn-secondary btn-s">My Account</a>
             <a href="<?= wp_logout_url('/login'); ?>" class="menu-item-manual">Logout</a>
           <?php } else { ?>
-            <span class="btn btn-download-free getting-started-trigger" target="_blank">Start for free</span>
+            <a href="/pricing" class="btn btn-s btn-secondary">View pricing</a>
             <a href="/login" class="menu-item-manual">Login</a>
           <?php } ?>
 

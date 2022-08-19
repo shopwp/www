@@ -1,9 +1,18 @@
-<section class="component component-testimonials">
-   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 962 115" xml:space="preserve" preserveAspectRatio="none" class="svg replaced-svg">
-   <path class="st0" d="M0,0c0,0,100,94,481,95C862,94,962,0,962,0v115H0V0z"></path>
-   </svg>
+<section class="component component-testimonials" style="<?= is_page('testimonials') ? '' : 'background:white'; ?>">
 
-  <h2>Over 6,000+ WordPress sites are currently using ShopWP. Here's what they have to say!</h2>
+<?php if (!is_page('testimonials')) { ?>
+   <div class="stage">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 962 115" xml:space="preserve" preserveAspectRatio="none" class="svg replaced-svg">
+         <path d="M0,0c0,0,100,94,481,95C862,94,962,0,962,0v115H0V0z"></path>
+      </svg>
+   </div>
+<?php } ?>
+   <?php if (is_page('testimonials')) { ?>
+      <h1 style="max-width: 800px;margin: 20px auto 40px auto;text-align: center;">Over 5,000+ WordPress sites are currently using ShopWP.<br>Here's what they have to say!</h1>
+   <?php } else { ?>
+
+      <h3 style="font-size: 40px;margin: 0 auto 1em;max-width: 920px;padding-top: 0;text-align: center;">Over 5,000+ WordPress sites are currently using ShopWP. Here's what they have to say!</h3>
+   <?php } ?>
 
   <div class="testimonials">
      <div class="grid-sizer"></div>
@@ -37,7 +46,7 @@
 
   <?php if (!$show_all) { ?>
    <div class="l-row l-row-center">
-      <a class="btn" href="/testimonials">View all testimonials</a>
+      <a class="btn btn-l" href="/testimonials/">View all testimonials</a>
    </div>
   <?php } ?>
 

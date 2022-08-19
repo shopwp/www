@@ -1045,6 +1045,23 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 
 				case 'customer.subscription.created' :
 
+					if (
+						! empty( $data->status ) &&
+						'active' === $data->status &&
+						$subscription->id &&
+						! $subscription->is_active()
+					) {
+						edd_debug_log( sprintf(
+							'Activating subscription #%d via webhook. Current status: %s.',
+							$subscription->id,
+							$subscription->status
+						) );
+
+						$subscription->update( array(
+							'status' => empty( $subscription->trial_period ) ? 'active' : 'trialling',
+						) );
+					}
+
 					do_action( 'edd_recurring_stripe_event_' . $event->type, $event );
 
 					die( 'EDD Recurring: ' . $event->type );
@@ -1688,10 +1705,9 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 		}
 
 		$payment = edd_get_payment( $subscription->get_original_payment_id() );
-		$status  = $payment->status;
 
 		// Can't reactivate with a refunded or revoked original payment.
-		if ( 'publish' !== $status && 'revoked' !== $status ) {
+		if ( ! in_array( $payment->status, array( 'complete', 'publish' ), true ) ) {
 			return false;
 		}
 
@@ -2139,7 +2155,7 @@ class EDD_Recurring_Stripe extends EDD_Recurring_Gateway {
 			echo '<input type="hidden" name="edd_recurring_stripe_profile_id" value="' . esc_attr( $stripe_subscription->id ) . '" />';
 			echo '<input type="hidden" name="edd_recurring_stripe_default_payment_method" value="' . esc_attr( $stripe_subscription->default_payment_method ) . '" />';
 
-			edds_credit_card_form();
+			do_action( 'edd_stripe_cc_form' );
 		} catch ( \Exception $e ) {
 			echo esc_html( $e->getMessage() );
 		}

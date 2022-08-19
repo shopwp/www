@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Easy Digital Downloads - Recurring Payments
- * Plugin URI: http://easydigitaldownloads.com/downloads/edd-recurring/
+ * Plugin URI: https://easydigitaldownloads.com/downloads/edd-recurring/
  * Description: Sell subscriptions with Easy Digital Downloads
- * Author: Sandhills Development, LLC
- * Author URI: https://sandhillsdev.com
- * Version: 2.11.3
+ * Author: Easy Digital Downloads
+ * Author URI: https://easydigitaldownloads.com
+ * Version: 2.11.7
  * Text Domain: edd-recurring
  * Domain Path: languages
  */
@@ -31,7 +31,7 @@ if ( ! defined( 'EDD_RECURRING_PLUGIN_FILE' ) ) {
 }
 
 if ( ! defined( 'EDD_RECURRING_VERSION' ) ) {
-	define( 'EDD_RECURRING_VERSION', '2.11.3' );
+	define( 'EDD_RECURRING_VERSION', '2.11.7' );
 }
 
 final class EDD_Recurring {
@@ -279,10 +279,15 @@ final class EDD_Recurring {
 			'settings.php',
 			'scripts.php',
 			'class-reports-filters.php',
+			'notices.php',
 		);
 
 		foreach ( $files as $file ) {
 			require_once( sprintf( '%s/includes/admin/%s', self::$plugin_path, $file ) );
+		}
+
+		if ( function_exists( 'edd_get_order_item' ) && ! edd_has_upgrade_completed( 'recurring_update_order_item_status' ) ) {
+			require_once trailingslashit( self::$plugin_path ) . 'includes/admin/upgrades/order-items-status.php';
 		}
 	}
 
@@ -336,7 +341,12 @@ final class EDD_Recurring {
 	 */
 	private function actions() {
 
-		if ( class_exists( 'EDD_License' ) && is_admin() ) {
+		// @todo The `elseif` can be removed once EDD minimum is 2.11.4.
+		if ( class_exists( '\\EDD\\Extensions\\ExtensionRegistry' ) ) {
+			add_action( 'edd_extension_license_init', function( \EDD\Extensions\ExtensionRegistry $registry ) {
+				$registry->addExtension( __FILE__, EDD_RECURRING_PRODUCT_NAME, 28530, EDD_RECURRING_VERSION, 'recurring_license_key' );
+			} );
+		} elseif ( class_exists( 'EDD_License' ) ) {
 			$recurring_license = new EDD_License( __FILE__, EDD_RECURRING_PRODUCT_NAME, EDD_RECURRING_VERSION, 'Easy Digital Downloads', 'recurring_license_key', null, 28530 );
 		}
 
@@ -417,8 +427,12 @@ final class EDD_Recurring {
 		// Don't count renewals towards a customer purchase count when using recount
 		add_filter( 'edd_customer_recount_sholud_increase_count', array( $this, 'maybe_increase_customer_sales' ), 10, 2 );
 
-		// Add edd_subscription to payment stats in EDD Core
+		// Add edd_subscription to payment/order statuses in EDD Core
 		add_filter( 'edd_payment_stats_post_statuses', array( $this, 'edd_payment_stats_post_status' ) );
+		add_filter( 'edd_gross_order_statuses', array( $this, 'edd_payment_stats_post_status' ) );
+		add_filter( 'edd_net_order_statuses', array( $this, 'edd_payment_stats_post_status' ) );
+		add_filter( 'edd_complete_order_statuses', array( $this, 'edd_payment_stats_post_status' ) );
+		add_filter( 'edd_get_refundable_order_statuses', array( $this, 'edd_payment_stats_post_status' ) );
 
 		// Ensure Authorize.net 2.0+ is available.
 		if ( defined( 'EDDA_VERSION' ) ) {
@@ -532,11 +546,14 @@ final class EDD_Recurring {
 	 * @return bool               If the file should be delivered or not.
 	 */
 	public function allow_file_access( $has_access, $payment_id, $args ) {
-		$payment = edd_get_payment( $payment_id );
-		if ( 'edd_subscription' === $payment->status ) {
-			$has_access = true;
+		if ( ! $payment_id ) {
+			return $has_access;
 		}
 
+		$payment = edd_get_payment( $payment_id );
+		if ( $payment && 'edd_subscription' === $payment->status ) {
+			$has_access = true;
+		}
 
 		return $has_access;
 	}
@@ -1548,6 +1565,7 @@ final class EDD_Recurring {
 
 	/**
 	 * Add edd_subscription post type to EDD Payment Stats
+	 * @since 2.11.7 This is now also used to update EDD 3.0's list of net/gross order statuses.
 	 *
 	 * @since  2.6.10
 	 * @param  array $statuses Post statuses.
@@ -1992,6 +2010,11 @@ final class EDD_Recurring {
 			case 'update':
 				edd_get_template_part( 'shortcode', 'subscription-update' );
 				break;
+
+			case 'view_transactions':
+				edd_get_template_part( 'shortcode', 'subscription-transactions' );
+				break;
+
 			case 'list':
 			default:
 				edd_get_template_part( 'shortcode', 'subscriptions' );
@@ -2122,8 +2145,6 @@ function edd_recurring_install() {
 		$db = new EDD_Subscriptions_DB;
 		@$db->create_table();
 
-		add_role( 'edd_subscriber', __( 'EDD Subscriber', 'edd-recurring' ), array( 'read' ) );
-
 		$version = get_option( 'edd_recurring_version' );
 
 		if( ! is_admin() ) {
@@ -2159,6 +2180,7 @@ function edd_recurring_install() {
 			edd_set_upgrade_complete( 'recurring_27_subscription_meta' );
 			edd_set_upgrade_complete( 'recurring_increase_transaction_profile_id_cols_and_collate' );
 			edd_set_upgrade_complete( 'recurring_wipe_invalid_paypal_plan_ids' );
+			edd_set_upgrade_complete( 'recurring_update_order_item_status' );
 		}
 
 		if ( false === edd_recurring_needs_24_stripe_fix() ) {

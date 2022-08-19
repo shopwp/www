@@ -4,10 +4,11 @@
    </div>
 
    <div class="page-content" itemprop="description">
-      <p class="has-text-align-center">Gain super powers by using one of the below extensions for <a href="/purchase" target="_blank">ShopWP Pro</a>.</p>
+      <p class="has-text-align-center">Gain super powers by purchasing one of the below extension plugins for <a href="/purchase/" target="_blank">ShopWP Pro</a>.</p>
    </div>
 </div>
 
 <?php 
 
 get_template_part('components/extensions/controller');
+get_template_part('components/contact/view');

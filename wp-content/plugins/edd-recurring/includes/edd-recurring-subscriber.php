@@ -264,7 +264,10 @@ class EDD_Recurring_Subscriber extends EDD_Customer {
 		$user = new WP_User( $this->user_id );
 
 		if ( $user ) {
-			$user->add_role( 'edd_subscriber' );
+			$subscriber_role_exists = (bool) $GLOBALS['wp_roles']->is_role( 'edd_subscriber' );
+			if ( $subscriber_role_exists ) {
+				$user->add_role( 'edd_subscriber' );
+			}
 			do_action( 'edd_recurring_set_as_subscriber', $this->user_id );
 		}
 

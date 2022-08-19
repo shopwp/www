@@ -9,6 +9,12 @@
 <link rel="preconnect" href="https://scripts.blog" crossorigin>
 <link rel="dns-prefetch" href="https://scripts.blog">
 
+<link rel="preconnect" href="https://static.hsappstatic.net" crossorigin>
+<link rel="dns-prefetch" href="https://static.hsappstatic.net">
+
+<link rel="preconnect" href="https://ka-p.fontawesome.com" crossorigin>
+<link rel="dns-prefetch" href="https://ka-p.fontawesome.com">
+
 <link rel="preconnect" href="https://fonts.gstatic.com">
 
 <?php wp_head(); ?>
@@ -46,5 +52,15 @@
    <script src="https://unpkg.com/headroom.js"></script>
 <?php } ?>
 
+
+<?php if (is_post_type_archive('download')) { ?>
+	<meta name="title" content="Extension plugins for ShopWP">
+	<meta name="description" content="ShopWP provides plugin extensions to add more functionality to your WordPress store. Sell subscription products with Recharge or add Elementor support.">
+<?php } ?>
+
+<?php if (is_post_type_archive('faqs')) { ?>
+	<meta name="title" content="The ShopWP WordPress plugin FAQ">
+	<meta name="description" content="These are the most frequently asked questions for the ShopWP WordPress plugin. Whether you're experincing a syncing issue or have general questions.">
+<?php } ?>
 
 </head>

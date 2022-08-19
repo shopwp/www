@@ -71,11 +71,16 @@
 .headroom--pinned {
 	transform: translateY(0%);
 	height: 70px;
-	border-bottom: 1px solid #ddd;
-	background: white !important;
+	background: color(backgroundPrimary) !important;
+	z-index: 9999999;
+
+	&.header {
+		border: none;
+	}
 
 	&.headroom--top {
 		height: 80px;
+		box-shadow: none;
 
 		@include device(1500, 'max') {
 			height: 90px;
@@ -120,10 +125,9 @@
 	padding: 0;
 	top: 0;
 	width: 100%;
-	background: #1d144f;
+	background: #39489b;
 	color: white;
 	font-size: 17px;
-	font-weight: bold;
 	position: fixed;
 	border-radius: 0;
 	max-width: 100%;
@@ -132,6 +136,7 @@
 	p {
 		margin: 0;
 		color: white;
+		font-family: Metropolis, helvetica;
 	}
 
 	a {
@@ -154,7 +159,7 @@
 }
 
 .notice-inner {
-	padding: $space-s 0;
+	padding: 10px 0;
 	text-align: center;
 }
 

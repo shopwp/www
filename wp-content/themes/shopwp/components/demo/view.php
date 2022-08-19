@@ -1,40 +1,22 @@
 <section class="component component-demo">
+
+<div class="inner">
+
    <div class="row">
+      
       <div class="demo">
          <?= do_shortcode('[wps_products title="Super awesome jacket" variant_style="buttons" show_zoom="true" show_compare_at="true"]'); ?>
       </div>
+      
       <div class="content">
-         <h2>See it in action!</h2>
-         <p>ShopWP provides a completely seamless way to embed your products. Display a single buy button, or a whole list of products with ease.</p>
-         <p>No need to worry about the checkout or cart experience either. ShopWP creates these for you out of the box.</p>
-         <span class="btn btn-l btn-download-free getting-started-trigger">Try for free</span>
+            <h2>See it in action!</h2>
+            <p>ShopWP provides a completely seamless way to embed your Shopify products on WordPress. Display a single buy button, or a whole list of products with zero code.</p>
+            <p>No need to worry about the checkout or cart functionality either. ShopWP creates a beautiful fly-out cart experience for you automatically.</p>
+            <a href="/purchase/" class="btn btn-download-free">Purchase ShopWP Pro 6.0 🚀</a>
+         </div>
       </div>
-   </div>
-   <style>
-
-      .component-demo {
-         background: white;
-         margin: 7em auto;
-         max-width: 1120px;
-      }
-      .component-demo .row {
-         display: flex;
-      }
-
-      .component-demo .demo {
-         width: 470px;
-      }
-
-      .component-demo .content > .btn {
-         font-size: 1em;
-      }
-
-      .component-demo .content {
-         flex: 1;
-         padding-top: 10vw;
-         font-size: 20px;
-      }
-
+      <style>
+         
       .wps-cart-icon-fixed {display: none;}
       .wps-component-products-images-thumbnail {margin-top: 0;}
       .wps-item *+* {
@@ -52,53 +34,22 @@
       .wps-cart *+* {
          margin-top: 0;
       }
-      
-      .component-demo .demo .wpshopify-loading-placeholder + div {
-         max-width: 300px;
-         margin: 0 auto;
-         position: relative;
-         left: 5vw;
-      }
 
       .wpshopify .wps-cart-item__quantity, .wpshopify .wps-cart-lineitem-quantity {
          padding: 0;
       }
 
-      .component-demo .content .form-error .error {
-         margin-top: 0;
+      .wps-component.wps-component-products-title .wps-products-title {
+         font-size: 26px;
       }
 
-      .component-demo .content h2 {
-         position: relative;
+      .wps-component-products-pricing .wps-product-prices-compare-at {
+         margin-top: 10px;
       }
-
-      .component-demo .content h2 svg {
-         position: absolute;
-         top: -95px;
-         font-size: 75px;
-         left: -53px;
-         transform: rotate(-23deg);
-      }
-
-      .component-demo .wps-product-from-price,
-      .component-demo .wps-pricing-sale-notice,
-      .component-demo .wps-pricing-sale-price {
-         font-style: normal;
-      }
-
-      .component-demo label[for="wps-product-quantity"] {
-         font-weight: normal;
-         font-size: 15px;         
-      }
-
-.wps-component.wps-component-products-title .wps-products-title {
-font-size: 26px;
-}
-
-.wps-component-products-pricing .wps-product-prices-compare-at {
-margin-top: 10px;
-}
 
    </style>
 
+
+
+   </div>
 </section>

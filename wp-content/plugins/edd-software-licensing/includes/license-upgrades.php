@@ -70,60 +70,65 @@ function edd_sl_get_license_upgrades( $license_id = 0 ) {
 	$upgrade_paths = array();
 
 	if ( ! empty( $license_id ) ) {
-		$license    = edd_software_licensing()->get_license( $license_id );
-		$payment    = edd_get_payment( $license->payment_id );
 
-		if ( ! empty( $payment->status ) && in_array( $payment->status, array( 'complete', 'publish' ), true ) ) {
+		$license              = edd_software_licensing()->get_license( $license_id );
+		$status_is_upgradable = false;
 
-			$upgrade_paths = edd_sl_get_upgrade_paths( $license->download_id );
+		// In EDD 3.0, we check for an order item which is deliverable.
+		if ( function_exists( 'edd_get_order_items' ) ) {
+			$order_items = edd_get_order_items(
+				array(
+					'order_id'   => $license->payment_id,
+					'status'     => edd_get_deliverable_order_item_statuses(),
+					'product_id' => $license->download_id,
+				)
+			);
 
-			if ( is_array( $upgrade_paths ) ) {
-
-				foreach ( $upgrade_paths as $key => $path ) {
-
-					if ( $license->get_download()->has_variable_prices() ) {
-
-						// If there is a different product in the upgrade paths, upgrade is available
-						if ( (int) $path['download_id'] === (int) $license->download_id ) {
-
-							// If same download but with a more expensive price ID is in upgrade paths, upgrade is available
-							if ( (int) $path['price_id'] !== (int) $license->price_id ) {
-
-								if ( edd_get_price_option_amount( $path['download_id'], $path['price_id'] ) <= edd_get_price_option_amount( $license->download_id, $license->price_id ) ) {
-
-									unset( $upgrade_paths[ $key ] );
-
-								}
-
-							} else {
-
-								if ( edd_get_price_option_amount( $path['download_id'], $path['price_id'] ) <= edd_get_price_option_amount( $license->download_id, $license->price_id ) ) {
-
-									unset( $upgrade_paths[ $key ] );
-
-								}
-
-							}
-
-						}
-
-					} else {
-
-						// If there is a different product in the upgrade paths, upgrade is available
-						if ( (int) $path['download_id'] === (int) $license->download_id ) {
-
-							unset( $upgrade_paths[ $key ] );
-
-						}
-
-					}
-
-				}
-
+			if ( ! empty( $order_items ) ) {
+				$status_is_upgradable = true;
 			}
-
+		} else {
+			// In EDD 2.x, we just need the payment status.
+			$payment = edd_get_payment( $license->payment_id );
+			if ( ! empty( $payment->status ) && in_array( $payment->status, array( 'complete', 'publish' ), true ) ) {
+				$status_is_upgradable = true;
+			}
+		}
+		if ( $status_is_upgradable ) {
+			$upgrade_paths = edd_sl_get_upgrade_paths( $license->download_id );
 		}
 
+		if ( ! empty( $upgrade_paths ) && is_array( $upgrade_paths ) ) {
+
+			foreach ( $upgrade_paths as $key => $path ) {
+
+				if ( $license->get_download()->has_variable_prices() ) {
+
+					// If there is a different product in the upgrade paths, upgrade is available
+					if ( (int) $path['download_id'] === (int) $license->download_id ) {
+
+						// If same download but with a more expensive price ID is in upgrade paths, upgrade is available
+						if ( (int) $path['price_id'] !== (int) $license->price_id ) {
+
+							if ( edd_get_price_option_amount( $path['download_id'], $path['price_id'] ) <= edd_get_price_option_amount( $license->download_id, $license->price_id ) ) {
+								unset( $upgrade_paths[ $key ] );
+							}
+						} else {
+
+							if ( edd_get_price_option_amount( $path['download_id'], $path['price_id'] ) <= edd_get_price_option_amount( $license->download_id, $license->price_id ) ) {
+								unset( $upgrade_paths[ $key ] );
+							}
+						}
+					}
+				} else {
+
+					// If there is a different product in the upgrade paths, upgrade is available
+					if ( (int) $path['download_id'] === (int) $license->download_id ) {
+						unset( $upgrade_paths[ $key ] );
+					}
+				}
+			}
+		}
 	}
 
 	return apply_filters( 'edd_sl_get_license_upgrade_paths', $upgrade_paths, $license_id );

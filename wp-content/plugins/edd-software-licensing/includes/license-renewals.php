@@ -977,7 +977,7 @@ function edd_sl_get_renewal_discount_percentage( $license_id = 0, $download_id =
 		$renewal_discount *= 100;
 	}
 
-	return (int) apply_filters( 'edd_sl_renewal_discount_percentage', $renewal_discount, $license_id );
+	return floatval( apply_filters( 'edd_sl_renewal_discount_percentage', (int) $renewal_discount, $license_id ) );
 }
 
 /**

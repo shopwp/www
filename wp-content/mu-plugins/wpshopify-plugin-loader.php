@@ -154,7 +154,6 @@ add_filter( 'option_active_plugins', function($plugins) {
          'svg-support/svg-support.php',
          'taxonomy-terms-order/taxonomy-terms-order.php',
          'wpshop-cpts/wpshop-cpts.php',
-         'wordpress-seo/wp-seo.php',
          'wp-shopify-pro/wp-shopify.php'
       ];
 

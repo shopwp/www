@@ -1,12 +1,16 @@
 .component-purchase {
-	//   background-color: #f8f7fc;
-	background-image: linear-gradient(0deg, #f0f0ff, #fff1f1);
 	text-align: center;
 	margin: 0 auto;
 	width: 100%;
 	max-width: 100%;
 	border-radius: 0;
-	padding: 3em 0;
+	padding: 0;
+	position: relative;
+
+	.stage {
+		top: 485px;
+		height: 500px;
+	}
 
 	h2 {
 		font-size: 2.4em;
@@ -21,23 +25,16 @@
 			margin: 0 auto;
 		}
 	}
-}
 
-.purchase .component-purchase {
-	margin: -3em auto 0 auto;
-	padding: 7em 0 4em 0;
+	@include device(1200, 'max') {
+		.screen-two {
+			display: none;
+		}
 
-	@include device(1500, 'max') {
-		padding: 3em 0 4em 0;
+		.game7 {
+			display: none;
+		}
 	}
-
-	@include device(700, 'max') {
-		padding: 3em 0 2em 0;
-	}
-}
-
-.purchase .component-faq-secondary {
-	margin-bottom: 7em;
 }
 
 .plans {
@@ -60,57 +57,79 @@
 .plan {
 	width: 31.3%;
 	background: white;
-	padding: 15px 20px 30px 20px;
+	padding: 0;
 	border-radius: 0.6em;
 	border: 1px solid #ddd9d9;
 	box-shadow: 0px 0px 21px -10px rgba(9, 35, 58, 0.25);
 	margin: 0 10px;
+	z-index: 1;
+
+	@include device(1200, 'max') {
+		width: 42%;
+	}
 
 	@include device(900, 'max') {
 		width: 100%;
 		padding: 25px 10px 40px;
-		margin-bottom: 1em;
+		margin: 0 0 20px 0;
 	}
 
 	@include device(600, 'max') {
-		width: calc(100% - 20px);
+		width: 100%;
 		padding-top: 16px;
+	}
+}
+
+.plan-short-description {
+	margin: 0 0 5px 0;
+
+	p {
+		font-size: 15px;
+		margin: 0 auto;
+		max-width: 90%;
+		background: #f7f6f6;
+		padding: 10px 20px;
+		border-radius: 10px;
 	}
 }
 
 .plan-names {
 	display: flex;
-	margin-bottom: 25px;
-	border-bottom: 1px solid #ddd;
+	margin-bottom: 0px;
 	justify-content: center;
 	padding-bottom: 12px;
+	padding-top: 25px;
+
+	@include device(900, 'max') {
+		padding-top: 0;
+	}
 }
 
 .plan-name {
-	font-size: 22px;
+	font-size: 24px;
 	font-family: $font-secondary;
-
-	@include device(1500, 'max') {
-		font-size: 20px;
-	}
+	font-weight: bold;
+	margin-top: -5px;
 
 	@include device(600, 'max') {
-		font-size: 17px;
+		font-size: 20px;
 	}
 }
 
 .plan-cta {
-	margin-top: 15px;
+	margin: 0;
 
 	small {
 		display: block;
-		margin-top: 15px;
+		margin-top: 10px;
+		font-size: 14px;
 		color: #636363;
 	}
 }
 
 .plan-pricing {
-	margin-top: 0;
+	margin: 0;
+	padding: 20px 0;
 }
 
 .plan-terms {
@@ -131,11 +150,12 @@
 	font-size: 16px;
 	color: #6b6b6b;
 	margin-left: 15px;
-	margin-top: 5px;
+	margin-top: 2px;
 	font-family: $font-secondary;
 
 	@include device(600, 'max') {
-		margin-top: 0;
+		margin-top: -1px;
+		font-size: 15px;
 	}
 }
 
@@ -174,8 +194,13 @@
 .plan-cta-link-month {
 	width: auto;
 	display: inline-block;
-	padding: 0.6em 1.5em;
-	font-size: 20px;
+	padding: 0.6em 55px 0.6em 1.5em;
+	font-size: 23px;
+	margin-top: 0;
+
+	@include device(600, 'max') {
+		font-size: 20px;
+	}
 }
 
 .plan-cta .plan-cta-link-month,
@@ -205,33 +230,80 @@
 	}
 }
 
+.plans .plan-pricing .plan-price-month,
+.plans .plan-pricing .plan-price-year {
+	font-size: 28px;
+}
+
+p.whats-included {
+	font-size: 16px;
+	font-weight: 500;
+	margin-bottom: 0;
+	position: relative;
+	padding-top: 20px;
+	font-family: Metropolis, helvetica;
+
+	&:before {
+		content: '';
+		position: absolute;
+		left: calc(50% - 20px);
+		position: absolute;
+		height: 1px;
+		top: -5px;
+		width: 40px;
+		background: #afafaf;
+	}
+}
+
 .plan-features {
 	position: relative;
-	left: -6px;
+	margin-top: 30px;
+	padding-bottom: 40px;
 
 	ul {
 		text-align: left;
-		max-width: 330px;
-		margin: 0 auto;
-		padding: 0 0 0 25px;
 		list-style: none;
+		padding: 0;
+		margin: 0;
+		width: 100%;
+		max-width: 100%;
 	}
+
 	li {
-		margin-top: 2px;
+		margin: 0;
 		font-size: 16px;
 		position: relative;
-		padding-left: 13px;
-		margin-bottom: 10px;
-		font-family: $font-primary;
+		padding-left: 50px;
+		padding-right: 20px;
+		padding-bottom: 5px;
+		padding-top: 5px;
+		font-family: $font-secondary;
+		border: none;
+
+		&:hover {
+			background: #f7f6f6;
+			cursor: help;
+		}
+
+		p {
+			font-size: 15px;
+			font-family: Metropolis, helvetica;
+			margin: 0;
+		}
+
+		&:first-of-type {
+			border: none;
+			margin-top: 0;
+		}
 
 		&:before {
 			position: absolute;
-			top: 4px;
-			left: -11px;
+			top: 10px;
+			left: 25px;
 			content: '';
 			background-image: url('../imgs/icon-check-regular.svg');
-			width: 17px;
-			height: 17px;
+			width: 15px;
+			height: 15px;
 			background-size: contain;
 		}
 	}
@@ -270,17 +342,66 @@
 	}
 }
 
-.purchase-confirmation #edd_subscription_receipt {
-	width: 100%;
-	margin-bottom: 3em;
+.purchase-confirmation {
+	.stage {
+		left: 0;
+		top: 485px;
+		height: 500px;
+	}
 
-	thead,
-	tbody {
-		border-color: #cdcbcb;
+	#winding1 {
+		height: auto;
+		left: 75vw;
+		position: absolute;
+		top: 345px;
+		width: 489px;
+		z-index: 1;
 
-		th,
-		td {
-			font-size: 14px;
+		.st1 {
+			fill: #c64f4b;
+		}
+		.st2 {
+			fill: #030207;
+		}
+		.st3 {
+			fill: #0083c8;
+		}
+		.st4 {
+			fill: #fcce44;
+		}
+		.st5,
+		.st6 {
+			fill: none;
+			stroke-width: 3;
+		}
+		.st5 {
+			stroke: #111323;
+			stroke-miterlimit: 10;
+		}
+		.st6 {
+			stroke: #fff;
+			stroke-linejoin: bevel;
+		}
+		.st7 {
+			fill: #fff;
+		}
+		.st8 {
+			fill: #170c2c;
+		}
+	}
+
+	#edd_subscription_receipt {
+		width: 100%;
+		margin-bottom: 3em;
+
+		thead,
+		tbody {
+			border-color: #cdcbcb;
+
+			th,
+			td {
+				font-size: 14px;
+			}
 		}
 	}
 }

@@ -1,15 +1,30 @@
 .component.component-faq {
-	margin-bottom: $space-xxxl;
-	background: transparent;
+	background: white;
+	border: 1px solid #d3d3d3;
+	border-radius: 20px;
+
+	.stage {
+		position: absolute;
+		height: 100%;
+		left: 0;
+		top: 185px;
+		z-index: -1;
+	}
 }
 
 .faqs {
 	margin-left: 0;
-	max-width: 780px;
+	max-width: 100%;
 	margin: 0 auto;
 
 	> div {
 		margin-top: 0;
+
+		&:last-child {
+			dt {
+				border-bottom: none;
+			}
+		}
 	}
 }
 
@@ -30,28 +45,33 @@
 }
 
 .faq-question {
-	padding: $space-l 0;
+	padding: 0;
 	font-size: 1.1em;
 	border-bottom: 1px solid color(medium-grey);
 
 	> div {
 		width: 100%;
 		position: relative;
-		font-size: 18px;
+		font-size: 19px;
 		font-family: $font-secondary;
 		padding: 20px 0;
 
-		@media (max-width: 600px) {
+		@media (max-width: 700px) {
 			font-size: 15px;
+			padding: 5px 0;
 		}
 	}
 
 	.fa-plus-square,
 	.fa-minus-square {
-		font-size: $font-l;
 		position: absolute;
-		top: 3px;
+		top: 25px;
+		font-size: 24px;
 		right: 0;
+
+		@include device(700, 'max') {
+			font-size: 18px;
+		}
 
 		path {
 			fill: #415aff;
@@ -89,7 +109,7 @@
 .faq-answer {
 	margin-left: 0;
 	margin-top: 0;
-	padding-top: $space-l;
+	padding-top: 40px;
 	display: none;
 	font-size: 16px;
 	opacity: 0;
@@ -99,17 +119,17 @@
 	}
 
 	ol {
-		margin-left: $space-l;
+		margin-left: 40px;
 	}
 
 	&.is-open {
 		display: block;
-		margin-bottom: $space-xxl;
-		background: color(off-white);
-		padding: 30px 40px 20px 40px;
+		background: #f9f9f9;
 		opacity: 1;
 		border-bottom-right-radius: 15px;
 		border-bottom-left-radius: 15px;
+		margin-bottom: 25px;
+		padding: 25px 30px 15px 30px;
 
 		@include device(700, 'max') {
 			padding: 20px;
@@ -139,10 +159,24 @@
 	}
 }
 
+.component-faq .faqs-group .faqs-heading {
+	margin-top: 50px;
+	margin-bottom: 10px;
+}
+
 .component-faq-secondary {
-	padding: 0;
-	background: none;
-	border-radius: 0;
+	background: white;
+	border-radius: 30px;
+	padding: 20px 50px 40px;
+	box-shadow: 0 0 21px -13px rgb(0 0 0 / 42%);
+	max-width: 860px;
+	margin-bottom: 60px;
+	border: 1px solid #dfdfdf;
+
+	@media (max-width: 900px) {
+		max-width: 92vw;
+		padding: 20px 30px 40px;
+	}
 
 	img {
 		width: 400px;
@@ -164,14 +198,19 @@
 	.faqs-wrap {
 		p {
 			max-width: 700px;
+			font-size: 18px;
 		}
 		.faqs {
 			padding-left: 0;
 		}
+
+		h2 {
+			margin-top: 20px;
+		}
 	}
 
 	+ .component-contact {
-		margin-top: 6em;
+		margin-top: 0;
 	}
 
 	+ .component-affiliate {
@@ -187,7 +226,11 @@
 	margin: 5em auto;
 }
 
-.page .component-contact .content-inner .fa-long-arrow-alt-right {
+.component-extensions + .component-contact {
+	margin-top: 70px;
+}
+
+.component-contact .fa-long-arrow-alt-right {
 	display: none;
 }
 
@@ -199,6 +242,9 @@
 }
 
 @media (max-width: 700px) {
+	.component-contact .content-inner {
+		top: 0;
+	}
 	.component-contact .content-inner h2 {
 		font-size: 35px !important;
 	}
@@ -208,11 +254,7 @@
 	}
 
 	.component-contact .content-inner svg {
-		max-width: 144px !important;
-	}
-
-	.component-contact .l-col-6.col-two {
-		padding-top: 20px !important;
+		max-width: 300px !important;
 	}
 }
 
@@ -220,12 +262,9 @@
 	h2 {
 		text-align: center;
 		font-size: 36px;
-		@include device(1500, 'max') {
-			font-size: 32px;
-		}
 
-		@include device(500, 'max') {
-			font-size: 28px;
+		@include device(1500, 'max') {
+			font-size: 24px;
 		}
 	}
 }
@@ -235,5 +274,5 @@
 }
 
 .component-purchase + .component-faq-secondary {
-	margin-top: 4em;
+	margin-top: 14em;
 }

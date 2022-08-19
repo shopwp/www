@@ -11,7 +11,6 @@ get_template_part('templates/page', 'header'); ?>
   <?php get_search_form(); ?>
 <?php endif; ?>
 
-
 <?php if ($post->post_type === 'post') { ?>
    <div class="articles-wrapper">
 <?php } ?>
@@ -25,3 +24,9 @@ get_template_part('templates/page', 'header'); ?>
 <?php } ?>
 
 <?php the_posts_navigation(); ?>
+
+<ul id="article-cats">
+<?php wp_list_categories([
+'title_li' => ''
+]); ?>
+</ul>
