@@ -13,14 +13,14 @@ margin-bottom: 0;
 }
 
 .save-percent {
-font-weight: 100;
-font-size: 15px;
-background-image: linear-gradient(0deg,#ffd29a 0,#ffccb9);
-padding: 5px 10px;
-border-radius: 5px;
-    max-width: 528px;
-	width: 100%;
-    margin: 2em auto 0px auto;
+   font-weight: 100;
+   font-size: 15px;
+   background-image: linear-gradient(0deg,#ffd29a 0,#ffccb9);
+   padding: 5px 10px;
+   border-radius: 5px;
+   max-width: 528px;
+   width: 100%;
+   margin: 2em auto 0px auto;
 }
 
 #icon-1 {
@@ -121,7 +121,7 @@ border-radius: 5px;
                   <li class="tooltip-label">
                      <p>Access to our private Slack Channel for live plugin support</p>
                      <div class="tooltip-label-description">
-                        <p>After purchasing ShopWP Pro, you'll gain access to our private Slack channel. You'll receive live plugin support without having to wait days for an email response.</p>
+                        <p>Gain access to our private Slack channel and experience the best product support out there. Skip waiting days for email response and ticket replies. We go the extra mile in helping you solve your problem quickly.</p>
                      </div>
                   </li>
                </ul>
