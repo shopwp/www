@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/Fees
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Fees Class
@@ -338,5 +338,22 @@ class EDD_Fees {
 		}
 
 		return $payment_meta;
+	}
+
+	/**
+	 * Gets the tax to be added to a fee.
+	 *
+	 * @since 3.0
+	 * @param  array   $fee
+	 * @param  float   $tax_rate
+	 * @return float
+	 */
+	public function get_calculated_tax( $fee, $tax_rate ) {
+		$tax = 0.00;
+		if ( ! ( $tax_rate || empty( $fee['no_tax'] ) ) || $fee['amount'] < 0 ) {
+			return $tax;
+		}
+
+		return ( floatval( $fee['amount'] ) * $tax_rate ) / 100;
 	}
 }

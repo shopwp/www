@@ -4,15 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Settings
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Settings contextual help.
@@ -30,7 +28,7 @@ function edd_settings_contextual_help() {
 
 	$screen->set_help_sidebar(
 		'<p><strong>' . __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
-		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'http://docs.easydigitaldownloads.com/' ) ) . '</p>' .
+		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'https://docs.easydigitaldownloads.com/' ) ) . '</p>' .
 		'<p>' . sprintf(
 			__( 'Need more from your Easy Digital Downloads store? <a href="%s">Upgrade Now!</a>.', 'easy-digital-downloads' ),
 			esc_url( 'https://easydigitaldownloads.com/pricing/?utm_source=plugin-settings-page&utm_medium=contextual-help-sidebar&utm_term=pricing&utm_campaign=ContextualHelp' )
@@ -58,7 +56,7 @@ function edd_settings_contextual_help() {
 		'title'	    => __( 'Emails', 'easy-digital-downloads' ),
 		'content'	=>
 			'<p>' . __( "This screen allows you to customize how emails act throughout your store. You can choose a premade template, set the sender's name, email address, and subject.", 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( 'A set of email tags has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>. A description of each of these tags appears below the editor.', 'easy-digital-downloads' ) . '</p>'
+			'<p>' . __( 'A set of email tag markers has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(
@@ -83,12 +81,20 @@ function edd_settings_contextual_help() {
 			'<p>' . __( 'If you do not wish to charge any tax on purchase, simply leave the Enable Taxes option unchecked.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Default Tax Rate</strong>: The default tax rate is the tax rate charged to customers located in your base country / state or province.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Base Country</strong>: This determines the country that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( '<strong>Base State / Province</strong>: This determines the state / province that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( '<strong>Base State / Province</strong>: This determines the region that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Prices Entered with Tax</strong>: if enabled, this means that the price entered on the product edit screens is the total amount the customer will pay after taxes. For example, if enabled and the price of a product is $20, the customer will pay 20$ at checkout. The exact amount charged in tax will be calculated automatically.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Display Tax Rate on Prices</strong>: when enabled, the amount the customer is expected to pay in tax will be displayed below purchase buttons.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Display During Checkout</strong>: This determines whether prices are shown with taxes or without taxes on checkout. If set to Including Tax, a $10 product with a 10% tax will be shown as $11.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Calculate Tax After Discounts</strong>: If enabled, this option will make it so that tax is calculated on the after-discount amount. If a purchase of $20 is made and a 20% discount is applied, tax will be calculated off of $16 instead of $20.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Additional Tax Rates</strong>: This section lets you add tax rates for specific countries and/or states/provinces in those countries.', 'easy-digital-downloads' ) . '</p>'
+	) );
+
+	$screen->add_help_tab( array(
+		'id'      => 'edd-settings-privacy',
+		'title'   => __( 'Policies', 'easy-digital-downloads' ),
+		'content' =>
+			'<p>' . __( 'This screen provides access to customer privacy policies, terms & agreements, and how to display them on the front of your site.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'You may also override what happens to order records when a customer exercises their right to be forgotten from your site.',        'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(

@@ -5,14 +5,14 @@
  * This class handles Sales logs export
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2016, Sunny Ratilal
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.7
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_Sales_Export Class
@@ -43,6 +43,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 			'first_name'  => __( 'First Name', 'easy-digital-downloads' ),
 			'last_name'   => __( 'Last Name', 'easy-digital-downloads' ),
 			'download'    => edd_get_label_singular(),
+			'quantity'    => __( 'Quantity', 'easy-digital-downloads' ),
 			'amount'      => __( 'Item Amount', 'easy-digital-downloads' ),
 			'payment_id'  => __( 'Payment ID', 'easy-digital-downloads' ),
 			'price_id'    => __( 'Price ID', 'easy-digital-downloads' ),
@@ -56,124 +57,91 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	 * Get the Export Data
 	 *
 	 * @since 2.7
- 	 * @global object $edd_logs EDD Logs Object
-	 * @return array $data The data for the CSV file
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return array|bool The data for the CSV file, false if no data to return.
 	 */
 	public function get_data() {
-		global $edd_logs;
-
 		$data = array();
 
 		$args = array(
-			'log_type'       => 'sale',
-			'posts_per_page' => 30,
-			'paged'          => $this->step,
-			'orderby'        => 'ID',
-			'order'          => 'ASC',
+			'number' => 30,
+			'offset' => ( $this->step * 30 ) - 30,
+			'order'  => 'ASC',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		if ( 0 !== $this->download_id ) {
-			$args['post_parent'] = $this->download_id;
+			$args['product_id'] = $this->download_id;
 		}
 
-		$logs = $edd_logs->get_connected_logs( $args );
+		$items = edd_get_order_items( $args );
 
-		if ( $logs ) {
-			foreach ( $logs as $log ) {
-				$payment_id = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-				$payment    = new EDD_Payment( $payment_id );
-				$download    = new EDD_Download( $log->post_parent );
+		foreach ( $items as $item ) {
+			/** @var EDD\Orders\Order_Item $item */
+			$order     = edd_get_order( $item->order_id );
+			$download  = edd_get_download( $item->product_id );
+			$user_info = $order->get_user_info();
 
-				if ( ! empty( $payment->ID ) ) {
-					$customer   = new EDD_Customer( $payment->customer_id );
-					$cart_items = $payment->cart_details;
-					$amount     = 0;
+			$download_title = $item->product_name;
 
-					if ( is_array( $cart_items ) ) {
-						foreach ( $cart_items as $item ) {
-							$log_price_id = null;
-							if ( $item['id'] == $log->post_parent ) {
-								if ( isset( $item['item_number']['options']['price_id'] ) ) {
-									$log_price_id = get_post_meta( $log->ID, '_edd_log_price_id', true );
+			// Maybe append variable price name.
+			if ( $download->has_variable_prices() ) {
+				$price_option = edd_get_price_option_name( $item->product_id, $item->price_id, $order->id );
 
-									if ( (int) $item['item_number']['options']['price_id'] !== (int) $log_price_id ) {
-										continue;
-									}
-								}
-
-								$amount = isset( $item['price'] ) ? $item['price'] : $item['item_price'];
-								break;
-							}
-						}
-					}
-				}
-				$data[] = array(
-					'ID'          => $log->ID,
-					'user_id'     => $customer->user_id,
-					'customer_id' => $customer->id,
-					'email'       => $payment->email,
-					'first_name'  => $payment->first_name,
-					'last_name'   => $payment->last_name,
-					'download'    => $download->post_title,
-					'amount'      => $amount,
-					'payment_id'  => $payment->ID,
-					'price_id'    => $log_price_id,
-					'date'        => get_post_field( 'post_date', $payment_id ),
-				);
+				$download_title .= ! empty( $price_option )
+					? ' - ' . $price_option
+					: '';
 			}
 
-			$data = apply_filters( 'edd_export_get_data', $data );
-			$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
-
-			return $data;
+			$data[] = array(
+				'ID'          => $item->product_id,
+				'user_id'     => $order->user_id,
+				'customer_id' => $order->customer_id,
+				'email'       => $order->email,
+				'first_name'  => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
+				'last_name'   => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
+				'download'    => $download_title,
+				'quantity'    => $item->quantity,
+				'amount'      => $order->total,
+				'payment_id'  => $order->id,
+				'price_id'    => $item->price_id,
+				'date'        => $order->date_created,
+			);
 		}
 
-		return false;
-	}
+		$data = apply_filters( 'edd_export_get_data', $data );
+		$data = apply_filters( 'edd_export_get_data_' . $this->export_type, $data );
 
+		return ! empty( $data )
+			? $data
+			: false;
+	}
 	/**
-	 * Return the calculated completion percentage
+	 * Return the calculated completion percentage.
 	 *
 	 * @since 2.7
+	 * @since 3.0 Updated to use new query methods.
+	 *
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-		global $edd_logs;
-
 		$args = array(
-			'post_type'		   => 'edd_log',
-			'posts_per_page'   => -1,
-			'post_status'	   => 'publish',
-			'fields'           => 'ids',
-			'post_parent'      => $this->download_id,
-			'tax_query'        => array(
-				array(
-					'taxonomy' 	=> 'edd_log_type',
-					'field'		=> 'slug',
-					'terms'		=> 'sale'
-				)
-			),
-			'date_query'        => array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			)
+			'fields' => 'ids',
 		);
 
-		$logs       = new WP_Query( $args );
-		$total      = (int) $logs->post_count;
+		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
+			$args['date_query'] = $this->get_date_query();
+		}
+
+		if ( 0 !== $this->download_id ) {
+			$args['product_id'] = $this->download_id;
+		}
+
+		$total = edd_count_order_items( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {
@@ -188,8 +156,8 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	}
 
 	public function set_properties( $request ) {
-		$this->start       = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end         = isset( $request['end'] )   ? sanitize_text_field( $request['end'] ) . ' 23:59:59'  : '';
-		$this->download_id = isset( $request['download_id'] )   ? absint( $request['download_id'] )        : 0;
+		$this->start       = isset( $request['orders-export-start'] ) ? sanitize_text_field( $request['orders-export-start'] ) : '';
+		$this->end         = isset( $request['orders-export-end'] ) ? sanitize_text_field( $request['orders-export-end'] ) . ' 23:59:59' : '';
+		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
 	}
 }

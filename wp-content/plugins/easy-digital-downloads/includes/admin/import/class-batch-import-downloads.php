@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Import
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.6
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_Downloads_Import Class
@@ -550,7 +550,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	 * @return string
 	 */
 	public function get_list_table_url() {
-		return admin_url( 'edit.php?post_type=download' );
+		return edd_get_admin_base_url();
 	}
 
 	/**

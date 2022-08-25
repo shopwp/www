@@ -1,41 +1,41 @@
 <?php
 /**
- * Payment History Table Class
+ * Order History Table.
  *
  * @package     EDD
  * @subpackage  Admin/Payments
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
+use EDD\Admin\List_Table;
 
 /**
  * EDD_Payment_History_Table Class
  *
- * Renders the Payment History table on the Payment History page
+ * Displays a list of orders on the 'Orders' page.
  *
  * @since 1.4
+ * @since 3.0 Updated to use new query methods.
+ *            Updated to use new nomenclature.
  */
-class EDD_Payment_History_Table extends WP_List_Table {
+class EDD_Payment_History_Table extends List_Table {
 
 	/**
-	 * Number of results to show per page
+	 * Determines the current Order type.
 	 *
-	 * @var string
-	 * @since 1.4
+	 * @since 3.0
+	 *
+	 * @var string $type Order type
 	 */
-	public $per_page = 30;
+	protected $type;
 
 	/**
-	 * URL of this page
+	 * URL of this page.
 	 *
 	 * @var string
 	 * @since 1.4.1
@@ -43,107 +43,122 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	public $base_url;
 
 	/**
-	 * Total number of payments
+	 * Constructor.
 	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $total_count;
-
-	/**
-	 * Total number of complete payments
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $complete_count;
-
-	/**
-	 * Total number of pending payments
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $pending_count;
-
-	/**
-	 * Total number of processing payments
-	 *
-	 * @var int
-	 * @since 2.8
-	 */
-	public $processing_count;
-
-	/**
-	 * Total number of refunded payments
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $refunded_count;
-
-	/**
-	 * Total number of failed payments
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $failed_count;
-
-	/**
-	 * Total number of revoked payments
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $revoked_count;
-
-	/**
-	 * Total number of abandoned payments
-	 *
-	 * @var int
-	 * @since 1.6
-	 */
-	public $abandoned_count;
-
-	/**
-	 * Get things started
-	 *
-	 * @since 1.4
-	 * @uses EDD_Payment_History_Table::get_payment_counts()
 	 * @see WP_List_Table::__construct()
+	 *
+	 * @since 1.4
 	 */
 	public function __construct() {
 
-		global $status, $page;
-
 		// Set parent defaults
 		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
+			'singular' => 'order',
+			'plural'   => 'orders',
+			'ajax'     => false
 		) );
 
+		// Use registered types
+		$types = array_keys( edd_get_order_types() );
+		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
+			$this->type = sanitize_key( $_GET['order_type'] );
+
+		// Default to 'sale' if type is unrecognized
+		} else {
+			$this->type = 'sale';
+		}
+
+		$this->set_base_url();
+		$this->filter_bar_hooks();
 		$this->get_payment_counts();
-		$this->process_bulk_action();
-		$this->base_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history' );
 	}
 
+	/**
+	 * Set the base URL.
+	 *
+	 * This retains the current order-type, or 'sale' by default.
+	 *
+	 * @since 3.0
+	 */
+	private function set_base_url() {
+		// Carry the type over to the base URL
+		$this->base_url = edd_get_admin_url( array(
+			'page'       => 'edd-payment-history',
+			'order_type' => sanitize_key( $this->type ),
+		) );
+	}
+
+	/**
+	 * Hook in filter bar actions
+	 *
+	 * @since 3.0
+	 */
+	private function filter_bar_hooks() {
+		add_action( 'edd_admin_filter_bar_orders',       array( $this, 'filter_bar_items'     ) );
+		add_action( 'edd_after_admin_filter_bar_orders', array( $this, 'filter_bar_searchbox' ) );
+	}
+
+	/**
+	 * Display advanced filters.
+	 *
+	 * @since 1.4
+	 * @since 3.0 Add a filter for modes.
+	 *            Display 'Advanced Filters'
+	 */
 	public function advanced_filters() {
-		$start_date = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
-		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : null;
-		$status     = isset( $_GET['status'] )      ? $_GET['status'] : '';
+		// Hide when viewing Refunds.
+		if ( 'refund' === $this->type ) {
+			return;
+		}
 
-		$all_gateways     = edd_get_payment_gateways();
-		$gateways         = array();
-		$selected_gateway = isset( $_GET['gateway'] ) ? sanitize_text_field( $_GET['gateway'] ) : 'all';
+		edd_admin_filter_bar( 'orders' );
+	}
 
-		if ( ! empty( $all_gateways ) ) {
-			$gateways['all'] = __( 'All Gateways', 'easy-digital-downloads' );
+	/**
+	 * Output filter bar items
+	 *
+	 * @since 3.0
+	 */
+	public function filter_bar_items() {
 
-			foreach( $all_gateways as $slug => $admin_label ) {
-				$gateways[ $slug ] = $admin_label['admin_label'];
-			}
+		// Get values
+		$start_date                = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
+		$end_date                  = isset( $_GET['end-date'] ) ? sanitize_text_field( $_GET['end-date'] ) : null;
+		$gateway                   = isset( $_GET['gateway'] ) ? sanitize_key( $_GET['gateway'] ) : 'all';
+		$mode                      = isset( $_GET['mode'] ) ? sanitize_key( $_GET['mode'] ) : 'all';
+		$order_total_filter_type   = isset( $_GET['order-amount-filter-type'] ) ? sanitize_text_field( $_GET['order-amount-filter-type'] ) : false;
+		$order_total_filter_amount = isset( $_GET['order-amount-filter-value'] ) ? sanitize_text_field( $_GET['order-amount-filter-value'] ) : '';
+		$country                   = isset( $_GET['order-country-filter-value'] ) ? sanitize_text_field( $_GET['order-country-filter-value'] ) : '';
+		$region                    = isset( $_GET['order-region-filter-value'] ) ? sanitize_text_field( $_GET['order-region-filter-value'] ) : '';
+		$product_id                = ! empty( $_GET['product-id'] ) ? sanitize_text_field( $_GET['product-id'] ) : false;
+
+		$status     = $this->get_status();
+		$clear_url  = $this->base_url;
+
+		// Filters
+		$all_modes    = edd_get_payment_modes();
+		$all_gateways = edd_get_payment_gateways();
+
+		// No modes
+		if ( empty( $all_modes ) ) {
+			$modes = array();
+
+		// Add "All" and pluck labels
+		} else {
+			$modes = array_merge( array(
+				'all' => __( 'All modes', 'easy-digital-downloads' )
+			), wp_list_pluck( $all_modes, 'admin_label' ) );
+		}
+
+		// No gateways
+		if ( empty( $all_gateways ) ) {
+			$gateways = array();
+
+		// Add "All" and pluck labels
+		} else {
+			$gateways = array_merge( array(
+				'all' => __( 'All gateways', 'easy-digital-downloads' )
+			), wp_list_pluck( $all_gateways, 'admin_label' ) );
 		}
 
 		/**
@@ -152,146 +167,260 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		 * @since 2.8.11
 		 */
 		$gateways = apply_filters( 'edd_payments_table_gateways', $gateways );
-		?>
-		<div id="edd-payment-filters">
-			<span id="edd-payment-date-filters">
-				<span>
-					<label for="start-date"><?php _e( 'Start Date:', 'easy-digital-downloads' ); ?></label>
-					<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo esc_attr( $start_date ); ?>" placeholder="mm/dd/yyyy"/>
-				</span>
-				<span>
-					<label for="end-date"><?php _e( 'End Date:', 'easy-digital-downloads' ); ?></label>
-					<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo esc_attr( $end_date ); ?>" placeholder="mm/dd/yyyy"/>
-				</span>
-			</span>
-			<span id="edd-payment-gateway-filter">
-				<?php
-				if ( ! empty( $gateways ) ) {
-					echo EDD()->html->select( array(
-						'options'          => $gateways,
-						'name'             => 'gateway',
-						'id'               => 'gateway',
-						'selected'         => $selected_gateway,
-						'show_option_all'  => false,
-						'show_option_none' => false
-					) );
-				}
-				?>
-			</span>
-			<span id="edd-payment-after-core-filters">
-				<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
-				<input type="submit" class="button-secondary" value="<?php _e( 'Apply', 'easy-digital-downloads' ); ?>"/>
-			</span>
-			<?php if( ! empty( $status ) ) : ?>
-				<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
-			<?php endif; ?>
-			<?php if( ! empty( $start_date ) || ! empty( $end_date ) || 'all' !== $selected_gateway ) : ?>
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ); ?>" class="button-secondary"><?php _e( 'Clear Filter', 'easy-digital-downloads' ); ?></a>
-			<?php endif; ?>
-			<?php do_action( 'edd_payment_advanced_filters_row' ); ?>
-			<?php $this->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-payments' ); ?>
-		</div>
 
-<?php
+		// Output the items
+		if ( ! empty( $modes ) ) : ?>
+
+			<span id="edd-mode-filter">
+				<?php echo EDD()->html->select( array(
+					'options'          => $modes,
+					'name'             => 'mode',
+					'id'               => 'mode',
+					'selected'         => $mode,
+					'show_option_all'  => false,
+					'show_option_none' => false
+				) ); ?>
+			</span>
+
+		<?php endif; ?>
+
+		<span id="edd-date-filters" class="edd-from-to-wrapper">
+			<?php
+
+			echo EDD()->html->date_field( array(
+				'id'          => 'start-date',
+				'name'        => 'start-date',
+				'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+				'value'       => $start_date
+			) );
+
+			echo EDD()->html->date_field( array(
+				'id'          => 'end-date',
+				'name'        => 'end-date',
+				'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+				'value'       => $end_date
+			) );
+
+		?></span><?php
+
+		if ( ! empty( $gateways ) ) : ?>
+
+			<span id="edd-gateway-filter">
+				<?php echo EDD()->html->select( array(
+					'options'          => $gateways,
+					'name'             => 'gateway',
+					'id'               => 'gateway',
+					'selected'         => $gateway,
+					'show_option_all'  => false,
+					'show_option_none' => false
+				) ); ?>
+			</span>
+
+		<?php endif; ?>
+
+		<span id="edd-advanced-filters">
+			<input type="button" class="button edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
+
+			<div class="inside">
+				<fieldset>
+					<legend for="order-amount-filter-type"><?php esc_html_e( 'Total is', 'easy-digital-downloads' ); ?></legend>
+					<?php
+					$options = array(
+						'eq' => __( 'equal to', 'easy-digital-downloads' ),
+						'gt' => __( 'greater than', 'easy-digital-downloads' ),
+						'lt' => __( 'less than', 'easy-digital-downloads' ),
+					);
+
+					echo EDD()->html->select( array(
+						'id'               => 'order-amount-filter-type',
+						'name'             => 'order-amount-filter-type',
+						'options'          => $options,
+						'selected'         => $order_total_filter_type,
+						'show_option_all'  => false,
+						'show_option_none' => false,
+					) );
+					?>
+
+					<input type="number" name="order-amount-filter-value" min="0" step="0.01" value="<?php echo esc_attr( $order_total_filter_amount ); ?>"/>
+				</fieldset>
+
+				<fieldset>
+					<legend><?php esc_html_e( 'Product', 'easy-digital-downloads' ); ?></legend>
+					<?php
+					echo EDD()->html->product_dropdown( array(
+						'id'         => 'orders-filter-product-id',
+						'name'       => 'product-id',
+						'chosen'     => true,
+						'selected'   => $product_id,
+						'variations' => true
+					) );
+					?>
+				</fieldset>
+
+				<fieldset>
+					<legend><?php esc_html_e( 'Country & Region', 'easy-digital-downloads' ); ?></legend>
+					<?php
+					echo EDD()->html->country_select(
+						array(
+							'name' => 'order-country-filter-value',
+						),
+						esc_html( $country )
+					);
+					echo EDD()->html->region_select(
+						array(
+							'name' => 'order-region-filter-value',
+						),
+						esc_html( $country ),
+						esc_html( $region )
+					);
+				?>
+				</fieldset>
+
+				<?php
+
+				// Third party plugin support
+				if ( has_action( 'edd_payment_advanced_filters_after_fields' ) ) : ?>
+
+					<fieldset class="edd-add-on-filters">
+						<legend><?php esc_html_e( 'Extras', 'easy-digital-downloads' ); ?></legend>
+
+						<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
+
+					</fieldset>
+
+				<?php endif; ?>
+			</div>
+		</span>
+
+		<span id="edd-after-core-filters">
+			<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+
+			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
+				<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
+					<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
+				</a>
+			<?php endif; ?>
+		</span>
+
+		<?php if ( ! empty( $status ) ) : ?>
+			<input type="hidden" name="status" value="<?php echo esc_attr( $status ); ?>"/>
+		<?php endif;
 	}
 
 	/**
-	 * Show the search field
+	 * Output the filter bar searchbox
+	 *
+	 * @since 3.0
+	 */
+	public function filter_bar_searchbox() {
+		do_action( 'edd_payment_advanced_filters_row' );
+
+		$this->search_box( esc_html__( 'Search', 'easy-digital-downloads' ), 'edd-payments' );
+	}
+
+	/**
+	 * Show the search field.
 	 *
 	 * @since 1.4
 	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
+	 * @param string $text     Label for the search box.
+	 * @param string $input_id ID of the search box.
 	 */
 	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
+
+		// Bail if no customers and no search.
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
 			return;
+		}
 
 		$input_id = $input_id . '-search-input';
 
-		if ( ! empty( $_REQUEST['orderby'] ) )
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		if ( ! empty( $_REQUEST['order'] ) )
+		}
+
+		if ( ! empty( $_REQUEST['order'] ) ) {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-?>
-		<p class="search-box">
+		}
+
+		?>
+
+		<p class="search-form">
 			<?php do_action( 'edd_payment_history_search' ); ?>
-			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?><br/>
+			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
+			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" placeholder="<?php esc_html_e( 'Search orders...', 'easy-digital-downloads' ); ?>" value="<?php _admin_search_query(); ?>" />
 		</p>
-<?php
+
+		<?php
 	}
 
 	/**
-	 * Retrieve the view types
+	 * Message to be displayed when there are no items.
 	 *
-	 * @since 1.4
-	 * @return array $views All the views available
+	 * @since 3.0
 	 */
-	public function get_views() {
-
-		$current          = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$total_count      = '&nbsp;<span class="count">(' . $this->total_count    . ')</span>';
-		$complete_count   = '&nbsp;<span class="count">(' . $this->complete_count . ')</span>';
-		$pending_count    = '&nbsp;<span class="count">(' . $this->pending_count  . ')</span>';
-		$processing_count = '&nbsp;<span class="count">(' . $this->processing_count  . ')</span>';
-		$refunded_count   = '&nbsp;<span class="count">(' . $this->refunded_count . ')</span>';
-		$failed_count     = '&nbsp;<span class="count">(' . $this->failed_count   . ')</span>';
-		$abandoned_count  = '&nbsp;<span class="count">(' . $this->abandoned_count . ')</span>';
-		$revoked_count    = '&nbsp;<span class="count">(' . $this->revoked_count   . ')</span>';
-
-		$url   = remove_query_arg( 'paged' );
-		$views = array(
-			'all'        => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( array( 'status', 'paged' ) ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __('All','easy-digital-downloads' ) . $total_count ),
-			'publish'    => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'publish' ), $url ) ), $current === 'publish' ? ' class="current"' : '', __('Completed','easy-digital-downloads' ) . $complete_count ),
-			'pending'    => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'pending' ), $url ) ), $current === 'pending' ? ' class="current"' : '', __('Pending','easy-digital-downloads' ) . $pending_count ),
-			'processing' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'processing' ), $url ) ), $current === 'processing' ? ' class="current"' : '', __('Processing','easy-digital-downloads' ) . $processing_count ),
-			'refunded'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'refunded' ), $url ) ), $current === 'refunded' ? ' class="current"' : '', __('Refunded','easy-digital-downloads' ) . $refunded_count ),
-			'revoked'    => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'revoked' ), $url ) ), $current === 'revoked' ? ' class="current"' : '', __('Revoked','easy-digital-downloads' ) . $revoked_count ),
-			'failed'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'failed' ), $url ) ), $current === 'failed' ? ' class="current"' : '', __('Failed','easy-digital-downloads' ) . $failed_count ),
-			'abandoned'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( array( 'status' => 'abandoned' ), $url ) ), $current === 'abandoned' ? ' class="current"' : '', __('Abandoned','easy-digital-downloads' ) . $abandoned_count ),
-		);
-
-		return apply_filters( 'edd_payments_table_views', $views );
+	public function no_items() {
+		if ( ! edd_has_upgrade_completed( 'migrate_orders' ) ) {
+			global $wpdb;
+			$orders = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
+			if ( ! empty( $orders ) ) {
+				esc_html_e( 'Easy Digital Downloads needs to upgrade the database. Orders will be available when that has completed.', 'easy-digital-downloads' );
+				return;
+			}
+		}
+		esc_html_e( 'No orders found.', 'easy-digital-downloads' );
 	}
 
 	/**
-	 * Retrieve the table columns
+	 * Retrieve the table columns.
 	 *
 	 * @since 1.4
-	 * @return array $columns Array of all the list table columns
+	 *
+	 * @return array $columns Array of all the list table columns.
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'       => '<input type="checkbox" />', //Render a checkbox instead of text
-			'ID'       => __( 'ID', 'easy-digital-downloads' ),
-			'email'    => __( 'Email', 'easy-digital-downloads' ),
-			'details'  => __( 'Details', 'easy-digital-downloads' ),
-			'amount'   => __( 'Amount', 'easy-digital-downloads' ),
+			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
+			'number'   => __( 'Number',    'easy-digital-downloads' ),
+			'customer' => __( 'Customer',  'easy-digital-downloads' ),
+			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
+			'amount'   => __( 'Total',    'easy-digital-downloads' ),
 			'date'     => __( 'Date', 'easy-digital-downloads' ),
-			'customer' => __( 'Customer', 'easy-digital-downloads' ),
 			'status'   => __( 'Status', 'easy-digital-downloads' ),
 		);
 
-		return apply_filters( 'edd_payments_table_columns', $columns );
+		if ( 'refund' === $this->type ) {
+			unset( $columns['status'] );
+		}
+
+		/**
+		 * Filters the columns for Orders and Refunds table.
+		 *
+		 * @since unknown
+		 *
+		 * @param array $columns Table columns.
+		 */
+		$columns = apply_filters( 'edd_payments_table_columns', $columns );
+
+		return $columns;
 	}
 
 	/**
-	 * Retrieve the table's sortable columns
+	 * Retrieve the sortable columns.
 	 *
 	 * @since 1.4
-	 * @return array Array of all the sortable columns
+	 *
+	 * @return array Array of all the sortable columns.
 	 */
 	public function get_sortable_columns() {
-		$columns = array(
-			'ID'     => array( 'ID', true ),
-			'amount' => array( 'amount', false ),
-			'date'   => array( 'date', false ),
-		);
-		return apply_filters( 'edd_payments_table_sortable_columns', $columns );
+		return apply_filters( 'edd_payments_table_sortable_columns', array(
+			'number'   => array( 'id',           true  ),
+			'status'   => array( 'status',       false ),
+			'customer' => array( 'customer_id',  false ),
+			'gateway'  => array( 'gateway',      false ),
+			'amount'   => array( 'total',        false ),
+			'date'     => array( 'date_created', false )
+		) );
 	}
 
 	/**
@@ -303,334 +432,371 @@ class EDD_Payment_History_Table extends WP_List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'ID';
+		return 'number';
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
 	 * @since 1.4
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
-	 * @param array $payment Contains all the data of the payment
-	 * @param string $column_name The name of the column
+	 * @param EDD\Orders\Order $order       Order object.
+	 * @param string           $column_name The name of the column.
 	 *
-	 * @return string Column Name
+	 * @return string Column name.
 	 */
-	public function column_default( $payment, $column_name ) {
+	public function column_default( $order, $column_name ) {
+		$timezone_abbreviation = edd_get_timezone_abbr();
 		switch ( $column_name ) {
-			case 'amount' :
-				$amount  = $payment->total;
-				$amount  = ! empty( $amount ) ? $amount : 0;
-				$value   = edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $payment->ID ) );
+			case 'amount':
+				$currency = ! empty( $order->currency ) ? $order->currency : edd_get_currency();
+				$value    = edd_display_amount( $order->total, $currency );
 				break;
-			case 'date' :
-				$date    = strtotime( $payment->date );
-				$value   = date_i18n( get_option( 'date_format' ), $date );
+			case 'date':
+				$value = '<time datetime="' . esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) . '">' . edd_date_i18n( $order->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';
 				break;
-			case 'status' :
-				$payment = get_post( $payment->ID );
-				$value   = edd_get_payment_status( $payment, true );
+			case 'gateway':
+				$value = edd_get_gateway_admin_label( $order->gateway );
+
+				if ( empty( $value ) ) {
+					$value = '&mdash;';
+				}
+
 				break;
-			case 'details' :
-				$url   = add_query_arg(
-					array(
-						'post_type' => 'download',
-						'page'      => 'edd-payment-history',
-						'view'      => 'view-order-details',
-						'id'        => urlencode( $payment->ID ),
-					),
-					admin_url( 'edit.php' )
-				);
-				$value = '<a href="' . esc_url( $url ) . '">' . __( 'View Order Details', 'easy-digital-downloads' ) . '</a>';
+			case 'status':
+				$value = edd_get_order_status_badge( $order->status );
 				break;
 			default:
-				$value = isset( $payment->$column_name ) ? $payment->$column_name : '';
+				$value = method_exists( $order, 'get_' . $column_name )
+					? call_user_func( array( $order, 'get_' . $column_name ) )
+					: '';
 				break;
-
 		}
-		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, $column_name );
+
+		return apply_filters( 'edd_payments_table_column', $value, $order->id, $column_name );
 	}
 
 	/**
-	 * Render the Email Column
+	 * Render the checkbox column.
 	 *
 	 * @since 1.4
-	 * @param array $payment Contains all the data of the payment
-	 * @return string Data shown in the Email column
-	 */
-	public function column_email( $payment ) {
-
-		$row_actions = array();
-
-		$email = edd_get_payment_user_email( $payment->ID );
-
-		// Add search term string back to base URL
-		$search_terms = isset( $_GET['s'] ) ? wp_unslash( trim( $_GET['s'] ) ) : '';
-		if ( ! empty( $search_terms ) ) {
-			$this->base_url = add_query_arg(
-				array(
-					's' => urlencode( $search_terms ),
-				),
-				$this->base_url
-			);
-		}
-
-		// Add the payment ID to the URL.
-		$base_url = add_query_arg(
-			array(
-				'purchase_id' => urlencode( $payment->ID ),
-			),
-			$this->base_url
-		);
-
-		if ( edd_is_payment_complete( $payment->ID ) && ! empty( $email ) ) {
-			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array( 'edd-action' => 'email_links' ), $base_url ) ) . '">' . __( 'Resend Purchase Receipt', 'easy-digital-downloads' ) . '</a>';
-		}
-
-		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'delete_payment' ), $base_url ) ), 'edd_payment_nonce') . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
-
-		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
-
-		if ( empty( $email ) ) {
-			$email = __( '(unknown)', 'easy-digital-downloads' );
-		}
-
-		$value = $email . $this->row_actions( $row_actions );
-
-		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'email' );
-	}
-
-	/**
-	 * Render the checkbox column
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
-	 * @since 1.4
-	 * @param array $payment Contains all the data for the checkbox column
-	 * @return string Displays a checkbox
+	 * @param EDD\Orders\Order $order Order object.
+	 * @return string Displays a checkbox.
 	 */
-	public function column_cb( $payment ) {
+	public function column_cb( $order ) {
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			'payment',
-			absint( $payment->ID )
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
+			'order',
+			absint( $order->id ),
+			/* translators: the order number */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_number ) )
 		);
 	}
 
 	/**
-	 * Render the ID column
+	 * Render the ID column.
 	 *
 	 * @since 2.0
-	 * @param array $payment Contains all the data for the checkbox column
-	 * @return string Displays a checkbox
-	 */
-	public function column_ID( $payment ) {
-		return edd_get_payment_number( $payment->ID );
-	}
-
-	/**
-	 * Render the Customer Column
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
 	 *
-	 * @since 2.4.3
-	 * @param array $payment Contains all the data of the payment
-	 * @return string Data shown in the User column
+	 * @param EDD\Orders\Order $order Order object.
+	 * @return string Displays a checkbox.
 	 */
-	public function column_customer( $payment ) {
+	public function column_number( $order ) {
+		$status = $this->get_status();
 
-		$customer_id = edd_get_payment_customer_id( $payment->ID );
+		// View URL
+		$view_url = edd_get_admin_url( array(
+			'page' => 'edd-payment-history',
+			'view' => 'sale' === $order->type
+				? 'view-order-details'
+				: 'view-refund-details',
+			'id'   => absint( $order->id ),
+		) );
 
-		if( ! empty( $customer_id ) ) {
-			$customer = new EDD_Customer( $customer_id );
-			$url      = add_query_arg(
-				array(
-					'post_type' => 'download',
-					'page'      => 'edd-customers',
-					'view'      => 'overview',
-					'id'        => absint( $customer_id ),
-				),
-				admin_url( 'edit.php' )
-			);
-			$value    = '<a href="' . esc_url( $url ) . '">' . esc_html( $customer->name ) . '</a>';
-		} else {
-			$url   = add_query_arg(
-				array(
-					'post_type' => 'download',
-					'page'      => 'edd-payment-history',
-					's'         => rawurlencode( edd_get_payment_user_email( $payment->ID ) ),
-				),
-				admin_url( 'edit.php' )
-			);
-			$value = '<a href="' . esc_url( $url ) . '">' . __( '(customer missing)', 'easy-digital-downloads' ) . '</a>';
-		}
-		return apply_filters( 'edd_payments_table_column', $value, $payment->ID, 'user' );
-	}
-
-	/**
-	 * Retrieve the bulk actions
-	 *
-	 * @since 1.4
-	 * @return array $actions Array of the bulk actions
-	 */
-	public function get_bulk_actions() {
-		$actions = array(
-			'delete'                 => __( 'Delete',                'easy-digital-downloads' ),
-			'set-status-publish'     => __( 'Set To Completed',      'easy-digital-downloads' ),
-			'set-status-pending'     => __( 'Set To Pending',        'easy-digital-downloads' ),
-			'set-status-processing'  => __( 'Set To Processing',     'easy-digital-downloads' ),
-			'set-status-refunded'    => __( 'Set To Refunded',       'easy-digital-downloads' ),
-			'set-status-revoked'     => __( 'Set To Revoked',        'easy-digital-downloads' ),
-			'set-status-failed'      => __( 'Set To Failed',         'easy-digital-downloads' ),
-			'set-status-abandoned'   => __( 'Set To Abandoned',      'easy-digital-downloads' ),
-			'set-status-preapproval' => __( 'Set To Preapproval',    'easy-digital-downloads' ),
-			'set-status-cancelled'   => __( 'Set To Cancelled',      'easy-digital-downloads' ),
-			'resend-receipt'         => __( 'Resend Email Receipts', 'easy-digital-downloads' )
+		// Default row actions
+		$row_actions = array(
+			'view' => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'Edit', 'easy-digital-downloads' ) . '</a>',
 		);
 
-		return apply_filters( 'edd_payments_table_bulk_actions', $actions );
-	}
-
-	/**
-	 * Process the bulk actions
-	 *
-	 * @since 1.4
-	 * @return void
-	 */
-	public function process_bulk_action() {
-		$ids    = isset( $_GET['payment'] ) ? $_GET['payment'] : false;
-		$action = $this->current_action();
-
-		if ( ! is_array( $ids ) )
-			$ids = array( $ids );
-
-
-		if( empty( $action ) )
-			return;
-
-		foreach ( $ids as $id ) {
-			// Detect when a bulk action is being triggered...
-			if ( 'delete' === $this->current_action() ) {
-				edd_delete_purchase( $id );
-			}
-
-			if ( 'set-status-publish' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'publish' );
-			}
-
-			if ( 'set-status-pending' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'pending' );
-			}
-
-			if ( 'set-status-processing' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'processing' );
-			}
-
-			if ( 'set-status-refunded' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'refunded' );
-			}
-
-			if ( 'set-status-revoked' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'revoked' );
-			}
-
-			if ( 'set-status-failed' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'failed' );
-			}
-
-			if ( 'set-status-abandoned' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'abandoned' );
-			}
-
-			if ( 'set-status-preapproval' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'preapproval' );
-			}
-
-			if ( 'set-status-cancelled' === $this->current_action() ) {
-				edd_update_payment_status( $id, 'cancelled' );
-			}
-
-			if( 'resend-receipt' === $this->current_action() ) {
-				edd_email_purchase_receipt( $id, false );
-			}
-
-			do_action( 'edd_payments_table_do_bulk_action', $id, $this->current_action() );
+		// Resend Receipt
+		if ( 'sale' === $this->type && 'complete' === $order->status && ! empty( $order->email ) ) {
+			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array(
+					'edd-action'  => 'email_links',
+					'purchase_id' => absint( $order->id )
+				), $this->base_url ) ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
 		}
 
+		// Keep Delete at the end
+		if ( edd_is_order_trashable( $order->id ) ) {
+			$trash_url = wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'trash_order',
+				'purchase_id' => absint( $order->id ),
+			), $this->base_url ), 'edd_payment_nonce' );
+			$row_actions['trash'] = '<a href="' . esc_url( $trash_url ) . '">' . esc_html__( 'Trash', 'easy-digital-downloads' ) . '</a>';
+		} elseif ( edd_is_order_restorable( $order->id ) ) {
+			$restore_url = wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'restore_order',
+				'purchase_id' => absint( $order->id ),
+			), $this->base_url ), 'edd_payment_nonce' );
+			$row_actions['restore'] = '<a href="' . esc_url( $restore_url ) . '">' . esc_html__( 'Restore', 'easy-digital-downloads' ) . '</a>';
+
+			$delete_url = wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'delete_order',
+				'purchase_id' => absint( $order->id ),
+			), $this->base_url ), 'edd_payment_nonce' );
+			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete Permanently', 'easy-digital-downloads' ) . '</a>';
+
+			unset( $row_actions['view'] );
+		}
+
+		if ( has_filter( 'edd_payment_row_actions' ) ) {
+			$payment = edd_get_payment( $order->id );
+
+			/**
+			 * Filters the row actions.
+			 *
+			 * @deprecated 3.0
+			 *
+			 * @param array             $row_actions
+			 * @param EDD_Payment|false $payment
+			 */
+			$row_actions = apply_filters_deprecated( 'edd_payment_row_actions', array( $row_actions, $payment ), '3.0', 'edd_order_row_actions' );
+		}
+
+		/**
+		 * Filters the row actions.
+		 *
+		 * @param array            $row_actions Array of row actions.
+		 * @param EDD\Orders\Order $order       Order object.
+		 *
+		 * @since 3.0
+		 */
+		$row_actions = apply_filters( 'edd_order_row_actions', $row_actions, $order );
+
+		// Row actions
+		$actions = $this->row_actions( $row_actions );
+
+		// Primary link
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
+		$link         = edd_is_order_restorable( $order->id ) ? '<span class="row-title">' . esc_html( $order_number ) . '</span>' : '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>';
+
+		// Concatenate & return the results
+		return $link . $actions;
 	}
 
 	/**
-	 * Retrieve the payment counts
+	 * Render the Customer column.
+	 *
+	 * @since 2.4.3
+	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
+	 *
+	 * @param EDD\Orders\Order $order Order object.
+	 * @return string Data shown in the Customer column.
+	 */
+	public function column_customer( $order ) {
+		$customer_id = $order->customer_id;
+		$customer    = edd_get_customer( $customer_id );
+
+		// Actions if exists
+		if ( ! empty( $customer ) ) {
+
+			// Use customer name, if exists
+			$name = ! empty( $customer->name )
+				? $customer->name
+				: $order->email;
+
+			// Link to View Customer
+			$url = edd_get_admin_url( array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => absint( $customer_id ),
+			) );
+
+			$name = '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
+			if ( ! empty( $customer->name ) ) {
+				$name .= '<div class="order-list-email">' . $order->email . '</div>';
+			}
+		} else {
+			$name = $order->email;
+		}
+
+		/**
+		 * Filters the output of the Email column in the Payments table.
+		 *
+		 * @since 1.4
+		 * @since 3.0 Run manually inside of the `customer` column for backwards compatibility.
+		 *
+		 * @param string $name Customer name.
+		 * @param int    $order_id ID of the Payment/Order.
+		 * @param string $column_name Name of the current column (email).
+		 */
+		$name = apply_filters( 'edd_payments_table_column', $name, $order->id, 'email' );
+
+		return $name;
+	}
+
+	/**
+	 * Retrieve the bulk actions.
 	 *
 	 * @since 1.4
-	 * @return void
+	 *
+	 * @return array $actions Bulk actions.
+	 */
+	public function get_bulk_actions() {
+		if ( 'refund' !== $this->type ) {
+			$action = array(
+				'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
+				'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
+				'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
+				'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
+				'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
+				'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
+				'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
+				'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
+				'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
+			);
+		} else {
+			$action = array();
+		}
+
+		if ( 'trash' === $this->get_status() ) {
+			$action = array(
+				'restore' => __( 'Restore', 'easy-digital-downloads' ),
+			);
+		} else {
+			$action['trash'] = __( 'Move to Trash', 'easy-digital-downloads' );
+		}
+
+		return apply_filters( 'edd_payments_table_bulk_actions', $action );
+	}
+
+	/**
+	 * Process the bulk actions.
+	 *
+	 * @since 1.4
+	 * @since 3.0 Updated to display _doing_it_wrong().
+	 *
+	 * @see edd_orders_list_table_process_bulk_actions()
+	 */
+	public function process_bulk_action() {
+		_doing_it_wrong( __FUNCTION__, 'Orders list table bulk actions are now handled by edd_orders_list_table_process_bulk_actions(). Please do not call this method directly.', 'EDD 3.0' );
+	}
+
+	/**
+	 * Retrieve the payment counts.
+	 *
+	 * @since 1.4
 	 */
 	public function get_payment_counts() {
 
-		global $wp_query;
+		// Get the args (without pagination)
+		$args = $this->parse_args( false );
 
-		$args = array();
+		unset( $args['status'], $args['status__not_in'], $args['status__in'] );
 
-		if( isset( $_GET['user'] ) ) {
-			$args['user'] = urldecode( $_GET['user'] );
-		} elseif( isset( $_GET['customer'] ) ) {
-			$args['customer'] = absint( $_GET['customer'] );
-		} elseif( isset( $_GET['s'] ) ) {
-
-			$is_user  = strpos( $_GET['s'], strtolower( 'user:' ) ) !== false;
-
-			if ( $is_user ) {
-				$args['user'] = absint( trim( str_replace( 'user:', '', strtolower( $_GET['s'] ) ) ) );
-				unset( $args['s'] );
-			} else {
-				$args['s'] = sanitize_text_field( $_GET['s'] );
-			}
-		}
-
-		if ( ! empty( $_GET['start-date'] ) ) {
-			$args['start-date'] = urldecode( $_GET['start-date'] );
-		}
-
-		if ( ! empty( $_GET['end-date'] ) ) {
-			$args['end-date'] = urldecode( $_GET['end-date'] );
-		}
-
-		if ( ! empty( $_GET['gateway'] ) && $_GET['gateway'] !== 'all' ) {
-			$args['gateway'] = $_GET['gateway'];
-		}
-
-		$payment_count          = edd_count_payments( $args );
-		$this->complete_count   = $payment_count->publish;
-		$this->pending_count    = $payment_count->pending;
-		$this->processing_count = $payment_count->processing;
-		$this->refunded_count   = $payment_count->refunded;
-		$this->failed_count     = $payment_count->failed;
-		$this->revoked_count    = $payment_count->revoked;
-		$this->abandoned_count  = $payment_count->abandoned;
-
-		foreach( $payment_count as $count ) {
-			$this->total_count += $count;
-		}
+		// Get order counts by type
+		$this->counts = edd_get_order_counts( $args );
 	}
 
 	/**
-	 * Retrieve all the data for all the payments
+	 * Retrieves all the data for all the orders.
 	 *
 	 * @since 1.4
-	 * @return array $payment_data Array of all the data for the payments
+	 * @deprecated 3.0 Use get_data()
+	 *
+	 * @return array $payment_data Array of all the data for the orders.
 	 */
 	public function payments_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Payment_History_Table::get_data()' );
 
-		$per_page   = $this->per_page;
-		$orderby    = isset( $_GET['orderby'] )     ? urldecode( $_GET['orderby'] )              : 'ID';
-		$order      = isset( $_GET['order'] )       ? $_GET['order']                             : 'DESC';
-		$user       = isset( $_GET['user'] )        ? $_GET['user']                              : null;
-		$customer   = isset( $_GET['customer'] )    ? $_GET['customer']                          : null;
-		$status     = isset( $_GET['status'] )      ? $_GET['status']                            : edd_get_payment_status_keys();
-		$meta_key   = isset( $_GET['meta_key'] )    ? $_GET['meta_key']                          : null;
-		$year       = isset( $_GET['year'] )        ? $_GET['year']                              : null;
-		$month      = isset( $_GET['m'] )           ? $_GET['m']                                 : null;
-		$day        = isset( $_GET['day'] )         ? $_GET['day']                               : null;
-		$search     = isset( $_GET['s'] )           ? sanitize_text_field( $_GET['s'] )          : null;
-		$start_date = isset( $_GET['start-date'] )  ? sanitize_text_field( $_GET['start-date'] ) : null;
-		$end_date   = isset( $_GET['end-date'] )    ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
-		$gateway    = isset( $_GET['gateway'] )     ? sanitize_text_field( $_GET['gateway'] )    : null;
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the orders data based on current filters.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Orders table data.
+	 */
+	public function get_data() {
+
+		// Parse args (with pagination)
+		$this->args = $this->parse_args( true );
+
+		// Force EDD\Orders\Order objects to be returned
+		$this->args['output'] = 'orders';
+
+		if ( empty( $this->args['status'] ) ) {
+			$this->args['status__not_in'] = array( 'trash' );
+		}
+
+		// Get data
+		$items = edd_get_orders( $this->args );
+
+		// Get customer IDs and count from payments
+		$customer_ids = array_unique( wp_list_pluck( $items, 'customer_id' ) );
+		$cust_count   = count( $customer_ids );
+
+		// Maybe prime customer objects (if more than number of queries)
+		if ( $cust_count > 1 ) {
+			edd_get_customers( array(
+				'id__in'        => $customer_ids,
+				'no_found_rows' => true,
+				'number'        => $cust_count
+			) );
+		}
+
+		// Return items
+		return $items;
+	}
+
+	/**
+	 * Retrieves the Payments table views.
+	 *
+	 * @since 1.4
+	 *
+	 * @return array $views Available views.
+	 */
+	public function get_views() {
+		$views = parent::get_views();
+
+		/**
+		 * Filters the Payment table's views.
+		 *
+		 * @since 1.4
+		 *
+		 * @param array $views Payment table's views.
+		 */
+		$views = apply_filters( 'edd_payments_table_views', $views );
+
+		return $views;
+	}
+
+	/**
+	 * Builds an array of arguments for getting orders for the list table, counts, and pagination.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $paginate Whether to add pagination arguments
+	 *
+	 * @return array Array of arguments to use for querying orders.
+	 */
+	private function parse_args( $paginate = true ) {
+		$status     = $this->get_status();
+		$user       = isset( $_GET['user'] )       ? absint( $_GET['user'] )                    : null;
+		$customer   = isset( $_GET['customer'] )   ? absint( $_GET['customer'] )                : null;
+		$search     = isset( $_GET['s'] )          ? sanitize_text_field( $_GET['s'] )          : null;
+		$start_date = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
+		$end_date   = isset( $_GET['end-date'] )   ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
+		$gateway    = isset( $_GET['gateway'] )    ? sanitize_text_field( $_GET['gateway'] )    : null;
+		$mode       = isset( $_GET['mode'] )       ? sanitize_text_field( $_GET['mode'] )       : null;
+		$type       = isset( $_GET['order_type'] ) ? sanitize_text_field( $_GET['order_type'] ) : 'sale';
 
 		/**
 		 * Introduced as part of #6063. Allow a gateway to specified based on the context.
@@ -642,107 +808,241 @@ class EDD_Payment_History_Table extends WP_List_Table {
 		 */
 		$gateway = apply_filters( 'edd_payments_table_search_gateway', $gateway );
 
-		if( ! empty( $search ) ) {
-			$status = 'any'; // Force all payment statuses when searching
-		}
-
 		if ( $gateway === 'all' ) {
 			$gateway = null;
 		}
 
-		$args = array(
-			'output'     => 'payments',
-			'number'     => $per_page,
-			'page'       => isset( $_GET['paged'] ) ? $_GET['paged'] : null,
-			'orderby'    => $orderby,
-			'order'      => $order,
-			'user'       => $user,
-			'customer'   => $customer,
-			'status'     => $status,
-			'meta_key'   => $meta_key,
-			'year'       => $year,
-			'month'      => $month,
-			'day'        => $day,
-			's'          => $search,
-			'start_date' => $start_date,
-			'end_date'   => $end_date,
-			'gateway'    => $gateway
-		);
-
-		if( is_string( $search ) && false !== strpos( $search, 'txn:' ) ) {
-
-			$args['search_in_notes'] = true;
-			$args['s'] = trim( str_replace( 'txn:', '', $args['s'] ) );
-
+		if ( $mode === 'all' ) {
+			$mode = null;
 		}
 
-		$p_query  = new EDD_Payments_Query( $args );
+		$args = array_filter( array(
+			'user_id'     => $user,
+			'customer_id' => $customer,
+			'status'      => $status,
+			'gateway'     => $gateway,
+			'mode'        => $mode,
+			'type'        => $type,
+		) );
 
-		return $p_query->get_payments();
+		// Update args by search query.
+		if ( ! empty( $search ) ) {
+			$args = $this->parse_search( $search, $args );
+		}
 
+		// Date query
+		if ( ! empty( $start_date ) || ! empty( $end_date ) ) {
+
+			// start AND end
+			$args['date_query'] = array(
+				'relation'  => 'AND'
+			);
+
+			// Start (of day)
+			if ( ! empty( $start_date ) ) {
+
+				$start_date_obj   = EDD()->utils->date( $start_date, edd_get_timezone_id(), false )->copy()->startOfDay();
+				$query_start_date = edd_get_utc_equivalent_date( $start_date_obj->copy() );
+
+				$args['date_query'][] = array(
+					'column' => 'date_created',
+					'after'  => $query_start_date->format( 'mysql' ),
+				);
+			}
+
+			// End (of day)
+			if ( ! empty( $end_date ) ) {
+				$end_date_obj   = EDD()->utils->date( $end_date, edd_get_timezone_id(), false )->copy()->endOfDay();
+				$query_end_date = edd_get_utc_equivalent_date( $end_date_obj->copy() );
+
+				$args['date_query'][] = array(
+					'column'  => 'date_created',
+					'before'  => $query_end_date->format( 'mysql' ),
+				);
+			}
+		}
+
+		// Maybe filter by order amount.
+		if ( isset( $_GET['order-amount-filter-type'] ) && ! empty( $_GET['order-amount-filter-value'] ) ) {
+			$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
+
+			switch ( $_GET['order-amount-filter-type'] ) {
+				case 'lt':
+					$filter_type = '<';
+					break;
+				case 'gt':
+					$filter_type = '>';
+					break;
+				default:
+					$filter_type = '=';
+					break;
+			}
+
+			$args['compare_query'] = array(
+				array(
+					'key'     => 'total',
+					'value'   => $filter_amount,
+					'compare' => $filter_type,
+				),
+			);
+		}
+
+		// Maybe filter by product.
+		if ( ! empty( $_GET['product-id'] ) ) {
+			if ( false !== strpos( $_GET['product-id'], '_' ) ) {
+				$product_pieces           = explode( '_', $_GET['product-id'] );
+				$args['product_id']       = absint( $product_pieces[0] );
+				$args['product_price_id'] = absint( $product_pieces[1] );
+			} else {
+				$args['product_id'] = absint( $_GET['product-id'] );
+			}
+		}
+
+		// Maybe filter by country.
+		if ( ! empty( $_GET['order-country-filter-value'] ) ) {
+			$args['country'] = sanitize_text_field( $_GET['order-country-filter-value'] );
+		}
+
+		// Maybe filter by region.
+		if ( ! empty( $_GET['order-region-filter-value'] ) ) {
+			$args['region'] = sanitize_text_field( $_GET['order-region-filter-value'] );
+		}
+
+		// Maybe filter by discount ID.
+		if ( ! empty( $_GET['discount_id'] ) ) {
+			$args['discount_id'] = absint( $_GET['discount_id'] );
+		}
+
+		/**
+		 * Filters array of arguments for getting orders for the list table, counts, and pagination.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array  $args Array of arguments to use for querying orders.
+		 * @param bool   $paginate $paginate Whether to add pagination arguments
+		 */
+		$args = apply_filters( 'edd_payments_table_parse_args', $args, $paginate );
+
+		// Return args, possibly with pagination
+		return ( true === $paginate )
+			? $this->parse_pagination_args( $args )
+			: $args;
 	}
 
 	/**
-	 * Setup the final data for the table
+	 * Parse the search query.
 	 *
-	 * @since 1.4
-	 * @uses EDD_Payment_History_Table::get_columns()
-	 * @uses EDD_Payment_History_Table::get_sortable_columns()
-	 * @uses EDD_Payment_History_Table::payments_data()
-	 * @uses WP_List_Table::get_pagenum()
-	 * @uses WP_List_Table::set_pagination_args()
-	 * @return void
+	 * @since 3.0.2
+	 * @param string $search
+	 * @param array $args
+	 * @return array
 	 */
-	public function prepare_items() {
+	private function parse_search( $search, $args ) {
 
-		wp_reset_vars( array( 'action', 'payment', 'orderby', 'order', 's' ) );
+		// Transaction ID
+		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
+			$args['txn'] = trim( str_replace( 'txn:', '', $search ) );
 
-		$columns  = $this->get_columns();
-		$hidden   = array(); // No hidden columns
-		$sortable = $this->get_sortable_columns();
-		$data     = $this->payments_data();
-		$status   = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
-
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		switch ( $status ) {
-			case 'publish':
-				$total_items = $this->complete_count;
-				break;
-			case 'pending':
-				$total_items = $this->pending_count;
-				break;
-			case 'processing':
-				$total_items = $this->processing_count;
-				break;
-			case 'refunded':
-				$total_items = $this->refunded_count;
-				break;
-			case 'failed':
-				$total_items = $this->failed_count;
-				break;
-			case 'revoked':
-				$total_items = $this->revoked_count;
-				break;
-			case 'abandoned':
-				$total_items = $this->abandoned_count;
-				break;
-			case 'any':
-				$total_items = $this->total_count;
-				break;
-			default:
-				// Retrieve the count of the non-default-EDD status
-				$count       = wp_count_posts( 'edd_payment' );
-				$total_items = $count->{$status};
+			return $args;
 		}
 
-		$this->items = $data;
+		// Email
+		if ( is_email( $search ) ) {
+			$args['email'] = $search;
+
+			return $args;
+		}
+
+		// Download ID
+		if ( is_string( $search ) && ( false !== strpos( $search, '#' ) ) ) {
+			$args['product_id'] = absint( $search );
+
+			return $args;
+		}
+
+		// Order ID
+		if ( is_numeric( $search ) ) {
+			$args['id'] = $search;
+
+			return $args;
+		}
+
+		// The customer’s name or ID prefixed by customer:
+		if ( ! is_array( $search ) && ( false !== strpos( $search, 'customer:' ) ) ) {
+			$search = trim( str_replace( 'customer:', '', $search ) );
+
+			// Search by customer ID.
+			if ( is_numeric( $search ) ) {
+				$args['customer_id'] = absint( $search );
+
+				return $args;
+			}
+
+			// Get customer IDs that match the search string.
+			$customers = edd_get_customers(
+				array(
+					'search' => $search,
+					'fields' => 'ids',
+				)
+			);
+			if ( ! empty( $customers ) ) {
+				$args['customer_id__in'] = $customers;
+			} else {
+				$args['customer_id__in'] = array( null );
+			}
+
+			return $args;
+		}
+
+		// The user ID prefixed by user:
+		if ( ! is_array( $search ) && ( false !== strpos( $search, 'user:' ) ) ) {
+			$search = trim( str_replace( 'user:', '', $search ) );
+			if ( is_numeric( $search ) ) {
+				$args['user_id'] = absint( $search );
+
+				return $args;
+			}
+		}
+
+		// The Discount Code prefixed by discount:
+		if ( is_string( $search ) && ( false !== strpos( $search, 'discount:' ) ) ) {
+			$discount = edd_get_discount_by_code( trim( str_replace( 'discount:', '', $search ) ) );
+			if ( ! empty( $discount->id ) ) {
+				$args['discount_id'] = $discount->id;
+			}
+
+			return $args;
+		}
+
+		// Default search
+		$args['search'] = $search;
+
+		return $args;
+	}
+
+	/**
+	 * Setup the final data for the table.
+	 *
+	 * @since 1.4
+	 */
+	public function prepare_items() {
+		wp_reset_vars( array( 'action', 'order', 'orderby', 'order', 's' ) );
+
+		$hidden      = array(); // No hidden columns
+		$columns     = $this->get_columns();
+		$sortable    = $this->get_sortable_columns();
+		$status      = $this->get_status( 'total' );
+		$this->items = $this->get_data();
+
+		$this->_column_headers = array( $columns, $hidden, $sortable );
+		if ( empty( $this->counts[ $status ] ) ) {
+			return;
+		}
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $total_items / $this->per_page ),
-			)
-		);
+			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
+			'total_items' => $this->counts[ $status ],
+			'per_page'    => $this->per_page,
+		) );
 	}
 }

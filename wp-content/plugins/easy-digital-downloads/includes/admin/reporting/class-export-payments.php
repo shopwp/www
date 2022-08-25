@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Payments_Export Class
@@ -34,18 +34,15 @@ class EDD_Payments_Export extends EDD_Export {
 	 * @return void
 	 */
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) )
-			set_time_limit( 0 );
+		edd_set_time_limit();
 
 		$month = isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' );
 		$year  = isset( $_POST['year']  ) ? absint( $_POST['year']  ) : date( 'Y' );
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . apply_filters( 'edd_payments_export_filename', 'edd-export-' . $this->export_type . '-' . $month . '-' . $year ) . '.csv' );
-		header( "Expires: 0" );
+		header( 'Content-Disposition: attachment; filename="' . apply_filters( 'edd_payments_export_filename', 'edd-export-' . $this->export_type . '-' . $month . '-' . $year ) . '.csv"' );
+		header( 'Expires: 0' );
 	}
 
 	/**
@@ -69,8 +66,9 @@ class EDD_Payments_Export extends EDD_Export {
 			'zip'      => __( 'Zip / Postal Code', 'easy-digital-downloads' ),
 			'products' => __( 'Products', 'easy-digital-downloads' ),
 			'skus'     => __( 'SKUs', 'easy-digital-downloads' ),
-			'amount'   => __( 'Amount', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
-			'tax'      => __( 'Tax', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
+			'currency' => __( 'Currency', 'easy-digital-downloads' ),
+			'amount'   => __( 'Amount', 'easy-digital-downloads' ),
+			'tax'      => __( 'Tax', 'easy-digital-downloads' ),
 			'discount' => __( 'Discount Code', 'easy-digital-downloads' ),
 			'gateway'  => __( 'Payment Method', 'easy-digital-downloads' ),
 			'trans_id' => __( 'Transaction ID', 'easy-digital-downloads' ),
@@ -105,7 +103,7 @@ class EDD_Payments_Export extends EDD_Export {
 
 		$payments = edd_get_payments( array(
 			'offset' => 0,
-			'number' => -1,
+			'number' => 9999999,
 			'mode'   => edd_is_test_mode() ? 'test' : 'live',
 			'status' => isset( $_POST['edd_export_payment_status'] ) ? $_POST['edd_export_payment_status'] : 'any',
 			'month'  => isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' ),
@@ -165,22 +163,25 @@ class EDD_Payments_Export extends EDD_Export {
 				$user = false;
 			}
 
+			$currency_code = edd_get_payment_currency_code( $payment->ID );
+
 			$data[] = array(
 				'id'       => $payment->ID,
 				'seq_id'   => edd_get_payment_number( $payment->ID ),
 				'email'    => $payment_meta['email'],
 				'first'    => $user_info['first_name'],
 				'last'     => $user_info['last_name'],
-				'address1' => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
-				'address2' => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
-				'city'     => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
-				'state'    => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+				'address1' => isset( $user_info['address']['line1'] ) ? $user_info['address']['line1'] : '',
+				'address2' => isset( $user_info['address']['line2'] ) ? $user_info['address']['line2'] : '',
+				'city'     => isset( $user_info['address']['city'] ) ? $user_info['address']['city'] : '',
+				'state'    => isset( $user_info['address']['state'] ) ? $user_info['address']['state'] : '',
 				'country'  => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
-				'zip'      => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
+				'zip'      => isset( $user_info['address']['zip'] ) ? $user_info['address']['zip'] : '',
 				'products' => $products,
 				'skus'     => $skus,
-				'amount'   => html_entity_decode( edd_format_amount( $total ) ),
-				'tax'      => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ) ) ),
+				'currency' => $currency_code,
+				'amount'   => html_entity_decode( edd_format_amount( $total, $currency_code ) ),
+				'tax'      => html_entity_decode( edd_format_amount( edd_get_payment_tax( $payment->ID, $payment_meta ), $currency_code ) ),
 				'discount' => isset( $user_info['discount'] ) && $user_info['discount'] != 'none' ? $user_info['discount'] : __( 'none', 'easy-digital-downloads' ),
 				'gateway'  => edd_get_gateway_admin_label( edd_get_payment_meta( $payment->ID, '_edd_payment_gateway', true ) ),
 				'trans_id' => edd_get_payment_transaction_id( $payment->ID ),

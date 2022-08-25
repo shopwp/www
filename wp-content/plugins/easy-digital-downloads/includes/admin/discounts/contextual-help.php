@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Discounts
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2.3
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Adds the Contextual Help for the Discount Codes Page
@@ -23,7 +23,7 @@ function edd_discounts_contextual_help() {
 
 	$screen->set_help_sidebar(
 		'<p><strong>' . __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
-		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'http://docs.easydigitaldownloads.com/' ) ) . '</p>' .
+		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'https://docs.easydigitaldownloads.com/' ) ) . '</p>' .
 		'<p>' . sprintf(
 			__( 'Need more from your Easy Digital Downloads store? <a href="%s">Upgrade Now</a>!', 'easy-digital-downloads' ),
 			esc_url( 'https://easydigitaldownloads.com/pricing/?utm_source=plugin-settings-page&utm_medium=contextual-help-sidebar&utm_term=pricing&utm_campaign=ContextualHelp' )
@@ -36,7 +36,8 @@ function edd_discounts_contextual_help() {
 		'content'	=>
 			'<p>' . __( 'Discount codes allow you to offer buyers special discounts by having them enter predefined codes during checkout.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'Discount codes that are set to "inactive" cannot be redeemed.', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( 'Discount codes are setup to only be used only one time by each customer. If a customer attempts to use a code a second time, they will be given an error.', 'easy-digital-downloads' ) . '</p>'
+			'<p>' . __( 'Discount codes can be setup to only be used only one time by each customer. If a customer attempts to use a code a second time, they will be given an error.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'Discount codes that have already been used cannot be deleted for data integrity and reporting purposes.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(

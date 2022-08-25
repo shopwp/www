@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Email the download link(s) and payment confirmation to the buyer in a
@@ -91,11 +91,11 @@ function edd_email_test_purchase_receipt() {
 	$subject     = wp_specialchars_decode( edd_do_email_tags( $subject, 0 ) );
 
 	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
-	$heading     = apply_filters( 'edd_purchase_heading', $heading, 0, array() );
+	$heading     = edd_email_preview_template_tags( apply_filters( 'edd_purchase_heading', $heading, 0, array() ) );
 
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), 0, array() );
 
-	$message     = edd_do_email_tags( edd_get_email_body_content( 0, array() ), 0 );
+	$message     = edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ), 0 );
 
 	$emails = EDD()->emails;
 	$emails->__set( 'from_name' , $from_name );
@@ -228,12 +228,16 @@ function edd_get_email_names( $user_info, $payment = false ) {
 
 	if ( $payment instanceof EDD_Payment ) {
 
+		$email_names['name']     = $payment->email;
+		$email_names['username'] = $payment->email;
 		if ( $payment->user_id > 0 ) {
 
-			$user_data = get_userdata( $payment->user_id );
-			$email_names['name']      = $payment->first_name;
-			$email_names['fullname']  = trim( $payment->first_name . ' ' . $payment->last_name );
-			$email_names['username']  = $user_data->user_login;
+			$user_data               = get_userdata( $payment->user_id );
+			$email_names['name']     = $payment->first_name;
+			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
+			if ( ! empty( $user_data->user_login ) ) {
+				$email_names['username'] = $user_data->user_login;
+			}
 
 		} elseif ( ! empty( $payment->first_name ) ) {
 
@@ -241,13 +245,7 @@ function edd_get_email_names( $user_info, $payment = false ) {
 			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
 			$email_names['username'] = $payment->first_name;
 
-		} else {
-
-			$email_names['name']     = $payment->email;
-			$email_names['username'] = $payment->email;
-
 		}
-
 	} else {
 
 		if ( is_serialized( $user_info ) ) {
@@ -388,11 +386,14 @@ function maybe_add_recapture_notice_to_abandoned_payment( $payment_id ) {
 					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
 					'<a href="',
 					esc_url(
-						add_query_arg(
-							array(
-								'edd_action' => 'dismiss_notices',
-								'edd_notice' => 'try_recapture',
-							)
+						wp_nonce_url(
+							add_query_arg(
+								array(
+									'edd_action' => 'dismiss_notices',
+									'edd_notice' => 'try_recapture',
+								)
+							),
+							'edd_notice_nonce'
 						)
 					),
 					'" type="button" class="notice-dismiss">',

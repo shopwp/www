@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Export
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Export Class
@@ -20,6 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 2.4
  */
 class EDD_Batch_Export extends EDD_Export {
+
+	/**
+	 * Whether or not we're done processing.
+	 *
+	 * @var bool
+	 */
+	public $done;
 
 	/**
 	 * The file the data is stored in
@@ -99,6 +106,14 @@ class EDD_Batch_Export extends EDD_Export {
 	public $is_empty = false;
 
 	/**
+	 * The data to return to the script.
+	 *
+	 * @since 3.0
+	 * @var array
+	 */
+	public $result_data = array();
+
+	/**
 	 * Get things started
 	 *
 	 * @param $_step int The step to process
@@ -134,7 +149,9 @@ class EDD_Batch_Export extends EDD_Export {
 		if( $this->step < 2 ) {
 
 			// Make sure we start with a fresh file on step 1
-			@unlink( $this->file );
+			if ( file_exists( $this->file ) ) {
+				unlink( $this->file );
+			}
 			$this->print_csv_cols();
 		}
 
@@ -285,7 +302,7 @@ class EDD_Batch_Export extends EDD_Export {
 
 		echo $file;
 
-		edd_die();
+		die();
 	}
 
 	/*
@@ -303,5 +320,21 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @return void
 	 */
 	public function pre_fetch() {}
+
+	/**
+	 * Gets the date query.
+	 *
+	 * @since 3.0
+	 * @return array
+	 */
+	protected function get_date_query() {
+		return array(
+			array(
+				'after'     => $this->start ? date( 'Y-m-d 00:00:00', strtotime( $this->start ) ) : '',
+				'before'    => $this->end ? date( 'Y-m-d 23:59:59', strtotime( $this->end ) ) : '',
+				'inclusive' => true,
+			),
+		);
+	}
 
 }

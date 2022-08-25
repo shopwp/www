@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0.8.2
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Triggers Purchase Receipt to be sent after the payment status is updated
@@ -26,6 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $customer = null ) {
 	// Make sure we don't send a purchase receipt while editing a payment
 	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] ) {
+		return;
+	}
+	if ( null === $payment ) {
+		$payment = new EDD_Payment( $payment_id );
+	}
+	if ( $payment->order instanceof \EDD\Orders\Order && 'refund' === $payment->order->type ) {
 		return;
 	}
 
@@ -75,7 +81,7 @@ function edd_resend_purchase_receipt( $data ) {
 		}
 	}
 
-	wp_safe_redirect(
+	edd_redirect(
 		add_query_arg(
 			array(
 				'edd-message' => $sent ? 'email_sent' : 'email_send_failed',
@@ -84,7 +90,6 @@ function edd_resend_purchase_receipt( $data ) {
 			)
 		)
 	);
-	exit;
 }
 add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
 
@@ -103,8 +108,14 @@ function edd_send_test_email( $data ) {
 	// Send a test email
 	edd_email_test_purchase_receipt();
 
-	// Remove the test email query arg
-	wp_safe_redirect( esc_url_raw( remove_query_arg( 'edd_action' ) ) );
-	exit;
+	$url = edd_get_admin_url(
+		array(
+			'page'        => 'edd-settings',
+			'tab'         => 'emails',
+			'section'     => 'purchase_receipts',
+			'edd-message' => 'test-purchase-email-sent',
+		)
+	);
+	edd_redirect( $url );
 }
 add_action( 'edd_send_test_email', 'edd_send_test_email' );

@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Notices
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.3
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Notices Class
@@ -20,297 +20,691 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class EDD_Notices {
 
 	/**
+	 * @var array Array of notices to output to the current user
+	 */
+	private $notices = array();
+
+	/**
 	 * Get things started
 	 *
 	 * @since 2.3
 	 */
 	public function __construct() {
-		add_action( 'admin_notices', array( $this, 'show_notices' ) );
-		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' ) );
+		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' )     );
+		add_action( 'admin_init',          array( $this, 'add_notices'     ), 20 );
+		add_action( 'admin_notices',       array( $this, 'display_notices' ), 30 );
 		add_action( 'wp_ajax_edd_disable_debugging', array( $this, 'edd_disable_debugging' ) );
 	}
 
 	/**
-	 * Show relevant notices
+	 * Add a notice to the notices array
+	 *
+	 * @since 3.0
+	 *
+	 * @param string          $id             Unique ID for each message
+	 * @param string|WP_Error $message        A message to be displayed or {@link WP_Error}
+	 * @param string          $class          Optional. A class to be added to the message div
+	 * @param bool            $is_dismissible Optional. True to dismiss, false to persist
+	 *
+	 * @return void
+	 */
+	public function add_notice( $args = array() ) {
+
+		// Parse args
+		$r = wp_parse_args( $args, array(
+			'id'             => '',
+			'message'        => '',
+			'class'          => false,
+			'is_dismissible' => true
+		) );
+
+		$default_class ='updated';
+
+		// One message as string
+		if ( is_string( $r['message'] ) ) {
+			$message       = '<p>' . $this->esc_notice( $r['message'] ) . '</p>';
+
+		} elseif ( is_array( $r['message'] ) ) {
+			$message       = '<p>' . implode( '</p><p>', array_map( array( $this, 'esc_notice' ), $r['message'] ) ) . '</p>';
+
+			// Messages as objects
+		} elseif ( is_wp_error( $r['message'] ) ) {
+			$default_class = 'is-error';
+			$errors        = $r['message']->get_error_messages();
+
+			switch ( count( $errors ) ) {
+				case 0:
+					return false;
+
+				case 1:
+					$message = '<p>' . $this->esc_notice( $errors[0] ) . '</p>';
+					break;
+
+				default:
+					$escaped = array_map( array( $this, 'esc_notice' ), $errors );
+					$message = '<ul>' . "\n\t" . '<li>' . implode( '</li>' . "\n\t" . '<li>', $escaped ) . '</li>' . "\n" . '</ul>';
+					break;
+			}
+
+			// Message is an unknown format, so bail
+		} else {
+			return false;
+		}
+
+		// CSS Classes
+		$classes = ! empty( $r['class'] )
+			? array( $r['class'] )
+			: array( $default_class );
+
+		// Add dismissible class
+		if ( ! empty( $r['is_dismissible'] ) ) {
+			array_push( $classes, 'is-dismissible' );
+		}
+
+		// Assemble the message
+		$message = '<div class="notice ' . implode( ' ', array_map( 'sanitize_html_class', $classes ) ) . '">' . $message . '</div>';
+		$message = str_replace( "'", "\'", $message );
+
+		// Avoid malformed notices variable
+		if ( ! is_array( $this->notices ) ) {
+			$this->notices = array();
+		}
+
+		// Add notice to notices array
+		$this->notices[] = $message;
+	}
+
+	/**
+	 * Add all admin area notices
+	 *
+	 * @since 3.0
+	 */
+	public function add_notices() {
+
+		// User can edit pages
+		if ( current_user_can( 'edit_pages' ) ) {
+			$this->add_page_notices();
+		}
+
+		// User can view shop reports
+		if ( current_user_can( 'view_shop_reports' ) ) {
+			$this->add_reports_notices();
+		}
+
+		// User can manage the entire shop
+		if ( current_user_can( 'manage_shop_settings' ) ) {
+			$this->add_system_notices();
+			$this->add_data_notices();
+			$this->add_settings_notices();
+		}
+
+		// Generic notices
+		if ( ! empty( $_REQUEST['edd-message'] ) ) {
+			$this->add_user_action_notices( $_REQUEST['edd-message'] );
+		}
+	}
+
+	/**
+	 * Dismiss admin notices when dismiss links are clicked
 	 *
 	 * @since 2.3
 	 */
-	public function show_notices() {
-		$notices = array(
-			'updated' => array(),
-			'error'   => array(),
-		);
+	public function dismiss_notices() {
 
-		// Global (non-action-based) messages
-		if ( ( edd_get_option( 'purchase_page', '' ) == '' || 'trash' == get_post_status( edd_get_option( 'purchase_page', '' ) ) ) && current_user_can( 'edit_pages' ) && ! get_user_meta( get_current_user_id(), '_edd_set_checkout_dismissed' ) ) {
-			ob_start();
-			?>
-			<div class="error">
-				<p><?php printf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) ); ?></p>
-				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'set_checkout' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
-			</div>
-			<?php
-			echo ob_get_clean();
+		// Bail if no notices to dismiss
+		if ( empty( $_GET['edd_notice'] ) || empty( $_GET['_wpnonce'] ) ) {
+			return;
 		}
 
-		if ( isset( $_GET['page'] ) && 'edd-payment-history' == $_GET['page'] && current_user_can( 'view_shop_reports' ) && edd_is_test_mode() ) {
-			$notices['updated']['edd-payment-history-test-mode'] = sprintf( __( 'Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways' ) ) );
+		// Construct key we are dismissing
+		$key = sanitize_key( $_GET['edd_notice'] );
+
+		// Bail if sanitized notice is empty
+		if ( empty( $key ) ) {
+			return;
 		}
 
-		$show_nginx_notice = apply_filters( 'edd_show_nginx_redirect_notice', true );
-		$server_software   = isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : false;
-
-		if ( $show_nginx_notice && stristr( $server_software, 'nginx' ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
-
-			ob_start();
-			?>
-			<div class="error">
-				<p><?php printf( __( 'The download files in %s are not currently protected due to your site running on NGINX.', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
-				<p><?php _e( 'To protect them, you must add a redirect rule as explained in <a href="http://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">this guide</a>.', 'easy-digital-downloads' ); ?></p>
-				<p><?php _e( 'If you have already added the redirect rule, you may safely dismiss this notice', 'easy-digital-downloads' ); ?></p>
-				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'nginx_redirect' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
-			</div>
-			<?php
-			echo ob_get_clean();
+		// Bail if nonce does not verify
+		if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_notice_nonce' ) ) {
+			return;
 		}
 
-		if( ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
-			if( ! stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) ) {
-				return; // Bail if we aren't using Apache... nginx doesn't use htaccess!
-			}
+		// Dismiss notice
+		update_user_meta( get_current_user_id(), "_edd_{$key}_dismissed", 1 );
+		edd_redirect( remove_query_arg( array( 'edd_action', 'edd_notice', '_wpnonce' ) ) );
+	}
 
-			ob_start();
-			?>
-			<div class="error">
-				<p><?php printf( __( 'The Easy Digital Downloads .htaccess file is missing from %s!', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
-				<p><?php printf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . edd_get_upload_dir() . '</strong>' ); ?></p>
-				<p><pre><?php echo edd_get_htaccess_rules(); ?></pre></p>
-				<p><a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'htaccess_missing' ) ) ); ?>"><?php _e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
-			</div>
-			<?php
-			echo ob_get_clean();
-		}
-
-
-		if ( class_exists( 'EDD_Recount_Earnings' ) && current_user_can( 'manage_shop_settings' ) ) {
-
-			ob_start();
-			?>
-			<div class="error">
-				<p><?php printf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ) ), esc_url( admin_url( 'plugins.php' ) ) ); ?></p>
-			</div>
-			<?php
-			echo ob_get_clean();
-
-		}
-
-		/**
-		 * Notice for users running PHP < 5.6.
-		 * @since 2.10
-		 */
-		if ( version_compare( PHP_VERSION, '5.6', '<' ) && ! get_user_meta( get_current_user_id(), '_edd_upgrade_php_56_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
-			echo '<div class="notice notice-warning is-dismissible edd-notice">';
-			printf(
-				'<h2>%s</h2>',
-				esc_html__( 'Upgrade PHP to Prepare for Easy Digital Downloads 3.0', 'easy-digital-downloads' )
-			);
-			echo wp_kses_post(
-				sprintf(
-					/* translators:
-					%1$s Opening paragraph tag, do not translate.
-					%2$s Current PHP version
-					%3$s Opening strong tag, do not translate.
-					%4$s Closing strong tag, do not translate.
-					%5$s Opening anchor tag, do not translate.
-					%6$s Closing anchor tag, do not translate.
-					%7$s Closing paragraph tag, do not translate.
-					*/
-					__( '%1$sYour site is running an outdated version of PHP (%2$s), which requires an update. Easy Digital Downloads 3.0 will require %3$sPHP 5.6 or greater%4$s in order to keep your store online and selling. While 5.6 is the minimum version we will be supporting, we encourage you to update to the most recent version of PHP that your hosting provider offers. %5$sLearn more about updating PHP.%6$s%7$s', 'easy-digital-downloads' ),
-					'<p>',
-					PHP_VERSION,
-					'<strong>',
-					'</strong>',
-					'<a href="https://wordpress.org/support/update-php/" target="_blank" rel="noopener noreferrer">',
-					'</a>',
-					'</p>'
-				)
-			);
-			echo wp_kses_post(
-				sprintf(
-					/* translators:
-					%1$s Opening paragraph tag, do not translate.
-					%2$s Opening anchor tag, do not translate.
-					%3$s Closing anchor tag, do not translate.
-					%4$s Closing paragraph tag, do not translate.
-					*/
-					__( '%1$sMany web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. If you need to change hosts, please see %2$sour hosting recommendations%3$s.', 'easy-digital-downloads' ),
-					'<p>',
-					'<a href="https://easydigitaldownloads.com/recommended-wordpress-hosting/" target="_blank" rel="noopener noreferrer">',
-					'</a>',
-					'</p>'
-				)
-			);
-			echo wp_kses_post(
-				sprintf(
-					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
-					__( '%1$s%2$s%3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
-					'<a href="',
-					esc_url(
-						add_query_arg(
-							array(
-								'edd_action' => 'dismiss_notices',
-								'edd_notice' => 'upgrade_php_56',
-							)
-						)
-					),
-					'" type="button" class="notice-dismiss">',
-					'<span class="screen-reader-text">',
-					'</span>
-					</a>'
-				)
-			);
-			echo '</div>';
-		}
+	/**
+	 * Output all admin area notices
+	 *
+	 * @since 2.6.0 bbPress (r6771)
+	 */
+	public function display_notices() {
 
 		$this->show_debugging_notice();
 
-		/* Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
-		if( ! edd_test_ajax_works() && ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
-			echo '<div class="error">';
-				echo '<p>' . __( 'Your site appears to be blocking the WordPress ajax interface. This may causes issues with your store.', 'easy-digital-downloads' ) . '</p>';
-				echo '<p>' . sprintf( __( 'Please see <a href="%s" target="_blank">this reference</a> for possible solutions.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/docs/admin-ajax-blocked' ) . '</p>';
-				echo '<p><a href="' . add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'admin_ajax_inaccessible' ) ) . '">' . __( 'Dismiss Notice', 'easy-digital-downloads' ) . '</a></p>';
-			echo '</div>';
-		}
-		*/
-
-		if ( isset( $_GET['edd-message'] ) ) {
-			// Shop discounts errors
-			if( current_user_can( 'manage_shop_discounts' ) ) {
-				switch( $_GET['edd-message'] ) {
-					case 'discount_added' :
-						$notices['updated']['edd-discount-added'] = __( 'Discount code added.', 'easy-digital-downloads' );
-						break;
-					case 'discount_add_failed' :
-						$notices['error']['edd-discount-add-fail'] = __( 'There was a problem adding your discount code, please try again.', 'easy-digital-downloads' );
-						break;
-					case 'discount_exists' :
-						$notices['error']['edd-discount-exists'] = __( 'A discount with that code already exists, please use a different code.', 'easy-digital-downloads' );
-						break;
-					case 'discount_updated' :
-						$notices['updated']['edd-discount-updated'] = __( 'Discount code updated.', 'easy-digital-downloads' );
-						break;
-					case 'discount_update_failed' :
-						$notices['error']['edd-discount-updated-fail'] = __( 'There was a problem updating your discount code, please try again.', 'easy-digital-downloads' );
-						break;
-					case 'discount_validation_failed' :
-						$notices['error']['edd-discount-validation-fail'] = __( 'The discount code could not be added because one or more of the required fields was empty, please try again.', 'easy-digital-downloads' );
-						break;
-					case 'discount_invalid_code':
-						$notices['error']['edd-discount-invalid-code'] = __( 'The discount code entered is invalid; only alphanumeric characters are allowed, please try again.', 'easy-digital-downloads' );
-						break;
-					case 'discount_invalid_amount' :
-						$notices['error']['edd-discount-invalid-amount'] = __( 'The discount amount must be a valid percentage or numeric flat amount. Please try again.', 'easy-digital-downloads' );
-						break;
-				}
-			}
-
-			// Shop reports errors
-			if( current_user_can( 'view_shop_reports' ) ) {
-				switch( $_GET['edd-message'] ) {
-					case 'payment_deleted' :
-						$notices['updated']['edd-payment-deleted'] = __( 'The payment has been deleted.', 'easy-digital-downloads' );
-						break;
-					case 'email_sent' :
-						$notices['updated']['edd-payment-sent'] = __( 'The purchase receipt has been resent.', 'easy-digital-downloads' );
-						break;
-					case 'email_send_failed':
-						$notices['error']['edd-payment-sent'] = __( 'Failed to send purchase receipt.', 'easy-digital-downloads' );
-						break;
-					case 'refreshed-reports' :
-						$notices['updated']['edd-refreshed-reports'] = __( 'The reports have been refreshed.', 'easy-digital-downloads' );
-						break;
-					case 'payment-note-deleted' :
-						$notices['updated']['edd-payment-note-deleted'] = __( 'The payment note has been deleted.', 'easy-digital-downloads' );
-						break;
-				}
-			}
-
-			// Shop settings errors
-			if( current_user_can( 'manage_shop_settings' ) ) {
-				switch( $_GET['edd-message'] ) {
-					case 'settings-imported' :
-						$notices['updated']['edd-settings-imported'] = __( 'The settings have been imported.', 'easy-digital-downloads' );
-						break;
-					case 'api-key-generated' :
-						$notices['updated']['edd-api-key-generated'] = __( 'API keys successfully generated.', 'easy-digital-downloads' );
-						break;
-					case 'api-key-exists' :
-						$notices['error']['edd-api-key-exists'] = __( 'The specified user already has API keys.', 'easy-digital-downloads' );
-						break;
-					case 'api-key-regenerated' :
-						$notices['updated']['edd-api-key-regenerated'] = __( 'API keys successfully regenerated.', 'easy-digital-downloads' );
-						break;
-					case 'api-key-revoked' :
-						$notices['updated']['edd-api-key-revoked'] = __( 'API keys successfully revoked.', 'easy-digital-downloads' );
-						break;
-				}
-			}
-
-			// Shop payments errors
-			if( current_user_can( 'edit_shop_payments' ) ) {
-				switch( $_GET['edd-message'] ) {
-					case 'note-added' :
-						$notices['updated']['edd-note-added'] = __( 'The payment note has been added successfully.', 'easy-digital-downloads' );
-						break;
-					case 'payment-updated' :
-						$notices['updated']['edd-payment-updated'] = __( 'The payment has been successfully updated.', 'easy-digital-downloads' );
-						break;
-				}
-			}
-
-			// Customer Notices
-			if ( current_user_can( 'edit_shop_payments' ) ) {
-				switch( $_GET['edd-message'] ) {
-					case 'customer-deleted' :
-						$notices['updated']['edd-customer-deleted'] = __( 'Customer successfully deleted', 'easy-digital-downloads' );
-						break;
-					case 'user-verified' :
-						$notices['updated']['edd-user-verified'] = __( 'User successfully verified', 'easy-digital-downloads' );
-						break;
-					case 'email-added' :
-						$notices['updated']['edd-customer-email-added'] = __( 'Customer email added', 'easy-digital-downloads' );
-						break;
-					case 'email-removed' :
-						$notices['updated']['edd-customer-email-removed'] = __( 'Customer email removed', 'easy-digital-downloads');
-						break;
-					case 'email-remove-failed' :
-						$notices['error']['edd-customer-email-remove-failed'] = __( 'Failed to remove customer email', 'easy-digital-downloads');
-						break;
-					case 'primary-email-updated' :
-						$notices['updated']['edd-customer-primary-email-updated'] = __( 'Primary email updated for customer', 'easy-digital-downloads');
-						break;
-					case 'primary-email-failed' :
-						$notices['error']['edd-customer-primary-email-failed'] = __( 'Failed to set primary email', 'easy-digital-downloads');
-						break;
-				}
-			}
-
+		// Bail if no notices
+		if ( empty( $this->notices ) || ! is_array( $this->notices ) ) {
+			return;
 		}
 
-		if ( count( $notices['updated'] ) > 0 ) {
-			foreach( $notices['updated'] as $notice => $message ) {
-				add_settings_error( 'edd-notices', $notice, $message, 'updated' );
+		// Start an output buffer
+		ob_start();
+
+		// Loop through notices, and add them to buffer
+		foreach ( $this->notices as $notice ) {
+			echo $notice;
+		}
+
+		// Output the current buffer
+		$notices = ob_get_clean();
+
+		// Only echo if not empty
+		if ( ! empty( $notices ) ) {
+			echo $notices;
+		}
+	}
+
+	/** Private Methods *******************************************************/
+
+	/**
+	 * Notices about missing pages
+	 *
+	 * @since 3.0
+	 */
+	private function add_page_notices() {
+
+		// Checkout page is missing
+		$purchase_page = edd_get_option( 'purchase_page', '' );
+		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) ) {
+			$this->add_notice( array(
+				'id'             => 'edd-no-purchase-page',
+				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), esc_url( edd_get_admin_url( array( 'page' => 'edd-settings', 'tab' => 'general', 'section' => 'pages' ) ) ) ),
+				'class'          => 'error',
+				'is_dismissible' => false
+			) );
+		}
+	}
+
+	/**
+	 * Notices about reports
+	 *
+	 * @since 3.0
+	 */
+	private function add_reports_notices() {
+
+	}
+
+	/**
+	 * Notices for the entire shop
+	 *
+	 * @since 3.0
+	 */
+	private function add_system_notices() {
+
+		// Bail if not an EDD admin page
+		if ( ! edd_is_admin_page() || edd_is_dev_environment() || edd_is_admin_page( 'index.php' ) ) {
+			return;
+		}
+
+		// Bail if user cannot manage options
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+
+		// Bail if uploads directory is protected
+		if ( edd_is_uploads_url_protected() ) {
+			return;
+		}
+
+		// Get the upload directory
+		$upload_directory   = edd_get_upload_dir();
+
+		// Running NGINX
+		$show_nginx_notice = apply_filters( 'edd_show_nginx_redirect_notice', true );
+		if ( $show_nginx_notice && ! empty( $GLOBALS['is_nginx'] ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) ) {
+			$dismiss_notice_url = wp_nonce_url( add_query_arg( array(
+				'edd_action' => 'dismiss_notices',
+				'edd_notice' => 'nginx_redirect'
+			) ), 'edd_notice_nonce' );
+
+			$this->add_notice( array(
+				'id'             => 'edd-nginx',
+				'class'          => 'error',
+				'is_dismissible' => false,
+				'message'        => array(
+					sprintf( __( 'The files in %s are not currently protected.', 'easy-digital-downloads' ), '<code>' . $upload_directory . '</code>' ),
+					__( 'To protect them, you must add this <a href="https://docs.easydigitaldownloads.com/article/682-protected-download-files-on-nginx">NGINX redirect rule</a>.', 'easy-digital-downloads' ),
+					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' )
+				)
+			) );
+		}
+
+		// Running Apache
+		if ( ! empty( $GLOBALS['is_apache'] ) && ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
+			$dismiss_notice_url = wp_nonce_url( add_query_arg( array(
+				'edd_action' => 'dismiss_notices',
+				'edd_notice' => 'htaccess_missing'
+			) ), 'edd_notice_nonce' );
+
+			$this->add_notice( array(
+				'id'             => 'edd-apache',
+				'class'          => 'error',
+				'is_dismissible' => false,
+				'message'        => array(
+					sprintf( __( 'The .htaccess file is missing from: %s', 'easy-digital-downloads' ), '<strong>' . $upload_directory . '</strong>' ),
+					sprintf( __( 'First, please resave the Misc settings tab a few times. If this warning continues to appear, create a file called ".htaccess" in the %s directory, and copy the following into it:', 'easy-digital-downloads' ), '<strong>' . $upload_directory . '</strong>' ),
+					sprintf( __( 'If you have already done this, or it does not apply to your site, you may permenently %s.', 'easy-digital-downloads' ), '<a href="' . esc_url( $dismiss_notice_url ) . '">' . __( 'dismiss this notice', 'easy-digital-downloads' ) . '</a>' ),
+					'<pre>' . edd_get_htaccess_rules() . '</pre>'
+				)
+			) );
+		}
+	}
+
+	/**
+	 * Notices about data (migrations, etc...)
+	 *
+	 * @since 3.0
+	 */
+	private function add_data_notices() {
+
+		// Recount earnings
+		if ( class_exists( 'EDD_Recount_Earnings' ) ) {
+			$this->add_notice( array(
+				'id'             => 'edd-recount-earnings',
+				'class'          => 'error',
+				'is_dismissible' => false,
+				'message'        => sprintf(
+					__( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ),
+					esc_url( edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'general' ) ) ),
+					esc_url( admin_url( 'plugins.php' ) )
+				)
+			) );
+		}
+	}
+
+	/**
+	 * Adds a notice about the deprecated Default Rate for Taxes.
+	 *
+	 * @since 3.0
+	 * @since 3.0.2 - We've found a way to add default tax rates. Leaving the method in case anyone (for some reason) is calling it.
+	 */
+	private function add_tax_rate_notice() {
+
+		// Default tax rate not detected.
+		if ( false === edd_get_option( 'tax_rate' ) ) {
+			return;
+		}
+
+		// On Rates page, settings notice is shown.
+		if ( ! empty( $_GET['page'] ) && 'edd-settings' === $_GET['page'] && ! empty( $_GET['section'] ) && 'rates' === $_GET['section'] ) {
+			return;
+		}
+
+		// URL to fix this
+		$url = edd_get_admin_url( array(
+			'page'      => 'edd-settings',
+			'tab'       => 'taxes',
+			'section'   => 'rates'
+		) );
+
+		// Link
+		$link = '<a href="' . esc_url( $url ) . '" class="button button-secondary">' . __( 'Review Tax Rates', 'easy-digital-downloads' ) . '</a>';
+
+		// Add the notice
+		$this->add_notice( array(
+			'id'             => 'edd-default-tax-rate',
+			'class'          => 'error',
+			/* translators: Link to review existing tax rates. */
+			'message'        => '<strong>' . __( 'A default tax rate was detected.', 'easy-digital-downloads' ) . '</strong></p><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured and update tax settings to remove this notice.', 'easy-digital-downloads' ) . '</p><p>' . $link,
+			'is_dismissible' => false
+		) );
+	}
+
+	/**
+	 * Notices about settings (updating, etc...)
+	 *
+	 * @since 3.0
+	 */
+	private function add_settings_notices() {
+
+		// Settings area
+		if ( ! empty( $_GET['page'] ) && ( 'edd-settings' === $_GET['page'] ) ) {
+
+			// Settings updated
+			if ( ! empty( $_GET['settings-updated'] ) ) {
+				$this->add_notice( array(
+					'id'      => 'edd-notices',
+					'message' => __( 'Settings updated.', 'easy-digital-downloads' )
+				) );
+			}
+
+			// No payment gateways are enabled
+			if ( ! edd_get_option( 'gateways' ) && edd_is_test_mode() ) {
+
+				// URL to fix this
+				$url = edd_get_admin_url(
+					array(
+						'page' => 'edd-settings',
+						'tab'  => 'gateways',
+					)
+				);
+
+				// Link
+				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Fix this', 'easy-digital-downloads' ) . '</a>';
+
+				// Add the notice
+				$this->add_notice( array(
+					'id'             => 'edd-gateways',
+					'class'          => 'error',
+					'message'        => sprintf( __( 'No payment gateways are enabled. %s.', 'easy-digital-downloads' ), $link ),
+					'is_dismissible' => false
+				) );
+			}
+		}
+	}
+
+	/**
+	 * Notices about actions that the user has taken
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $notice
+	 */
+	private function add_user_action_notices( $notice = '' ) {
+
+		// Sanitize notice key
+		$notice = sanitize_key( $notice );
+
+		// Bail if notice is empty
+		if ( empty( $notice ) ) {
+			return;
+		}
+
+		// Shop discounts errors
+		if ( current_user_can( 'manage_shop_discounts' ) ) {
+			switch ( $notice ) {
+				case 'discount_added' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-added',
+						'message' => __( 'Discount code added.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'discount_add_failed' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-add-fail',
+						'message' => __( 'There was a problem adding that discount code, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_exists' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-exists',
+						'message' => __( 'A discount with that code already exists, please use a different code.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_updated' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-updated',
+						'message' => __( 'Discount code updated.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'discount_not_changed' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-not-changed',
+						'message' => __( 'No changes were made to that discount code.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'discount_update_failed' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-updated-fail',
+						'message' => __( 'There was a problem updating that discount code, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_validation_failed' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-validation-fail',
+						'message' => __( 'The discount code could not be added because one or more of the required fields was empty, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_invalid_code':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-invalid-code',
+						'message' => __( 'The discount code entered is invalid; only alphanumeric characters are allowed, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_invalid_amount' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-invalid-amount',
+						'message' => __( 'The discount amount must be a valid percentage or numeric flat amount. Please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_deleted':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-deleted',
+						'message' => __( 'Discount code deleted.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'discount_delete_failed':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-delete-fail',
+						'message' => __( 'There was a problem deleting that discount code, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_activated':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-activated',
+						'message' => __( 'Discount code activated.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'discount_activation_failed':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-activation-fail',
+						'message' => __( 'There was a problem activating that discount code, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'discount_deactivated':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-deactivated',
+						'message' => __( 'Discount code deactivated.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'discount_deactivation_failed':
+					$this->add_notice( array(
+						'id'      => 'edd-discount-deactivation-fail',
+						'message' => __( 'There was a problem deactivating that discount code, please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
 			}
 		}
 
-		if ( count( $notices['error'] ) > 0 ) {
-			foreach( $notices['error'] as $notice => $message ) {
-				add_settings_error( 'edd-notices', $notice, $message, 'error' );
+		// Shop reports errors
+		if ( current_user_can( 'view_shop_reports' ) ) {
+			switch( $notice ) {
+				case 'refreshed-reports' :
+					$this->add_notice( array(
+						'id'      => 'edd-refreshed-reports',
+						'message' => __( 'The reports have been refreshed.', 'easy-digital-downloads' )
+					) );
+					break;
 			}
 		}
 
-		settings_errors( 'edd-notices' );
+		// Shop settings errors
+		if ( current_user_can( 'manage_shop_settings' ) ) {
+			switch( $notice ) {
+				case 'settings-imported' :
+					$this->add_notice( array(
+						'id'      => 'edd-settings-imported',
+						'message' => __( 'The settings have been imported.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'api-key-generated' :
+					$this->add_notice( array(
+						'id'      => 'edd-api-key-generated',
+						'message' => __( 'API keys successfully generated.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'api-key-exists' :
+					$this->add_notice( array(
+						'id'      => 'edd-api-key-exists',
+						'message' => __( 'The specified user already has API keys.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
+				case 'api-key-regenerated' :
+					$this->add_notice( array(
+						'id'      => 'edd-api-key-regenerated',
+						'message' => __( 'API keys successfully regenerated.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'api-key-revoked' :
+					$this->add_notice( array(
+						'id'      => 'edd-api-key-revoked',
+						'message' => __( 'API keys successfully revoked.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'test-purchase-email-sent':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-test-purchase-receipt-sent',
+							'message' => __( 'The test email was sent successfully.', 'easy-digital-downloads' )
+						)
+					);
+					break;
+			}
+		}
+
+		// Shop payments errors
+		if ( current_user_can( 'edit_shop_payments' ) ) {
+			switch( $notice ) {
+				case 'note-added' :
+					$this->add_notice( array(
+						'id'      => 'edd-note-added',
+						'message' => __( 'The note has been added successfully.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'payment-updated' :
+					$this->add_notice( array(
+						'id'      => 'edd-payment-updated',
+						'message' => __( 'The order has been updated successfully.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'order_added' :
+					$this->add_notice( array(
+						'id'      => 'edd-order-added',
+						'message' => __( 'Order successfully created.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'order_trashed' :
+					$this->add_notice( array(
+						'id'      => 'edd-order-trashed',
+						'message' => __( 'The order has been moved to the trash.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'order_restored' :
+					$this->add_notice( array(
+						'id'      => 'edd-order-restored',
+						'message' => __( 'The order has been restored.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'payment_deleted' :
+					$this->add_notice( array(
+						'id'      => 'edd-payment-deleted',
+						'message' => __( 'The order has been deleted.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'email_sent' :
+					$this->add_notice( array(
+						'id'      => 'edd-payment-sent',
+						'message' => __( 'The purchase receipt has been resent.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'email_send_failed':
+					$this->add_notice( array(
+						'id'      => 'edd-payment-sent',
+						'message' => __( 'Failed to send purchase receipt.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'payment-note-deleted' :
+					$this->add_notice( array(
+						'id'      => 'edd-note-deleted',
+						'message' => __( 'The order note has been deleted.', 'easy-digital-downloads' )
+					) );
+					break;
+			}
+		}
+
+		// Customer Notices
+		if ( current_user_can( 'edit_shop_payments' ) ) {
+			switch( $notice ) {
+				case 'customer-deleted' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-deleted',
+						'message' => __( 'Customer successfully deleted.', 'easy-digital-downloads' ),
+					) );
+					break;
+				case 'user-verified' :
+					$this->add_notice( array(
+						'id'      => 'edd-user-verified',
+						'message' => __( 'User successfully verified.', 'easy-digital-downloads' ),
+					) );
+					break;
+				case 'email-added' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-email-added',
+						'message' => __( 'Customer email added.', 'easy-digital-downloads' ),
+					) );
+					break;
+				case 'email-removed' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-email-removed',
+						'message' => __( 'Customer email deleted.', 'easy-digital-downloads' ),
+					) );
+					break;
+				case 'email-remove-failed' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-email-remove-failed',
+						'message' => __( 'Failed to delete customer email.', 'easy-digital-downloads' ),
+						'class'   => 'error',
+					) );
+					break;
+				case 'primary-email-updated' :
+					$this->add_notice( array(
+						'id'      => 'eddedd-customer-primary-email-updated',
+						'message' => __( 'Primary email updated for customer.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'primary-email-failed' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-primary-email-failed',
+						'message' => __( 'Failed to set primary email.', 'easy-digital-downloads' ),
+						'class'   => 'error',
+					) );
+					break;
+				case 'address-removed' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-address-removed',
+						'message' => __( 'Customer address deleted.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'address-remove-failed' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-address-remove-failed',
+						'message' => __( 'Failed to delete customer address.', 'easy-digital-downloads' ),
+						'class'   => 'error',
+					) );
+					break;
+			}
+		}
 	}
 
 	/**
@@ -330,6 +724,14 @@ class EDD_Notices {
 		if ( ! edd_get_option( 'debug_mode', false ) ) {
 			return;
 		}
+
+		/**
+		 * The notices JS needs to be output wherever the notice is displayed, not just EDD screens.
+		 * If more notices add to the script then this enqueue will need to be moved.
+		 *
+		 * @since 3.0
+		 */
+		wp_enqueue_script( 'edd-admin-notices', EDD_PLUGIN_URL . 'assets/js/edd-admin-notices.js', array( 'jquery' ), EDD_VERSION, true );
 		$view_url = add_query_arg(
 			array(
 				'post_type' => 'download',
@@ -370,17 +772,18 @@ class EDD_Notices {
 	}
 
 	/**
-	 * Dismiss admin notices when Dismiss links are clicked
+	 * Escape message string output
 	 *
-	 * @since 2.3
-	 * @return void
+	 * @since 2.6.0 bbPress (r6775)
+	 *
+	 * @param string $message
+	 *
+	 * @return string
 	 */
-	function dismiss_notices() {
-		if( isset( $_GET['edd_notice'] ) ) {
-			update_user_meta( get_current_user_id(), '_edd_' . $_GET['edd_notice'] . '_dismissed', 1 );
-			wp_safe_redirect( esc_url_raw( remove_query_arg( array( 'edd_action', 'edd_notice' ) ) ) );
-			exit;
-		}
+	private function esc_notice( $message = '' ) {
+		$tags = wp_kses_allowed_html( 'post' );
+		$text = wp_kses( $message, $tags );
+
+		return $text;
 	}
 }
-new EDD_Notices;
