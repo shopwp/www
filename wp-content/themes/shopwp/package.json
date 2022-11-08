@@ -87,7 +87,7 @@
 		"react-loaders": "^3.0.1",
 		"react-modal": "^3.14.4",
 		"react-router-dom": "^6.0.2",
-		"react-scripts": "^4.0.3",
+		"react-scripts": "^5.0.1",
 		"styled-components": "^5.3.3",
 		"tippy.js": "^6.3.7"
 	}
