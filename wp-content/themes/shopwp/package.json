@@ -72,7 +72,7 @@
 		"@emotion/react": "^11.7.0",
 		"@tippyjs/react": "^4.2.6",
 		"animejs": "^3.2.1",
-		"babel-loader": "^8.2.3",
+		"babel-loader": "^8.3.0",
 		"clipboard-copy": "^4.0.1",
 		"confetti-js": "0.0.18",
 		"customize-cra": "^1.0.0",
@@ -87,7 +87,7 @@
 		"react-loaders": "^3.0.1",
 		"react-modal": "^3.14.4",
 		"react-router-dom": "^6.0.2",
-		"react-scripts": "^4.0.3",
+		"react-scripts": "^5.0.1",
 		"styled-components": "^5.3.3",
 		"tippy.js": "^6.3.7"
 	}
