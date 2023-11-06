@@ -1,0 +1,45 @@
+.component-features-list {
+	.btn {
+		margin-top: 80px;
+	}
+}
+
+.component-features-list {
+	h3 {
+		display: flex;
+		font-size: 20px;
+	}
+}
+
+.component-testimonials + .component-features-list {
+	margin-top: -50px;
+}
+
+.features {
+	margin-top: 30px;
+}
+
+.feature-icon {
+	width: 20px;
+	margin-right: 20px;
+
+	path {
+		fill: #9ca4ff;
+	}
+}
+
+.feature-arrow {
+	position: absolute;
+	top: 26px;
+	right: 20px;
+
+	path {
+		fill: #969696;
+	}
+}
+
+.theme-light {
+	.feature-icon path {
+		fill: #fcb174;
+	}
+}

@@ -1,0 +1,220 @@
+@use '../vars';
+
+.extension {
+	padding: 0;
+	border-top-right-radius: 0.4em;
+	border-top-left-radius: 0.4em;
+}
+
+.extension-link {
+	text-decoration: none;
+}
+
+.extension-name {
+	font-size: 24px;
+	color: white;
+}
+
+.extension-inner {
+	padding: 20px;
+}
+
+.extension-image img {
+	border-top-right-radius: 0.4em;
+	border-top-left-radius: 0.4em;
+}
+
+.extension-single {
+	margin-top: 40px;
+	border-top: 1px solid #22233c;
+	padding-top: 40px;
+
+	figure.wp-block-image {
+		display: inline-block;
+	}
+
+	.entry-content {
+		margin-bottom: 100px;
+
+		> .l-row {
+			flex-wrap: inherit;
+		}
+	}
+}
+
+.extension-purchase-inner {
+	background: #13162b;
+	padding: 20px;
+	margin: -25px;
+	border-radius: 0.4em;
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.08), 0 12px 24px 1px rgba(0, 0, 0, 0.08);
+}
+
+.extension-purchase {
+	width: 485px;
+	position: relative;
+	padding: 0;
+	margin-right: 20px;
+
+	.shape,
+	.card {
+		width: 100%;
+		max-width: 450px;
+	}
+
+	.card {
+		z-index: 2;
+		top: 120px;
+		position: sticky;
+
+		.shape {
+			top: 0;
+			z-index: -1;
+		}
+	}
+
+	.card-dark .extension-purchase-inner {
+		background: vars.$primary;
+	}
+}
+
+.extension-excerpt {
+	color: white;
+}
+
+.extension-breadcrumbs-separator svg {
+	width: 8px;
+	height: 8px;
+	display: inline-block;
+	margin: 0 6px;
+	position: relative;
+	top: -1px;
+	left: 1px;
+}
+
+.extension-breadcrumbs {
+	margin-bottom: 30px;
+}
+
+.extension-content {
+	padding-right: 50px;
+	margin-bottom: 100px;
+	width: 60%;
+}
+
+.extension-content-inner {
+	> p:first-child {
+		margin-bottom: 20px;
+	}
+
+	h3 {
+		margin-top: 40px;
+	}
+
+	img {
+		display: inline-block;
+		margin: 1em;
+		height: auto;
+		max-width: 700px;
+	}
+}
+
+.extension-add-to-cart {
+	.btn {
+		width: 100%;
+		display: block;
+		text-align: center;
+	}
+}
+
+.extension-notes,
+.extension-terms {
+	margin-top: 30px;
+	padding: 20px 0 10px 0;
+	font-size: 17px;
+	font-style: italic;
+	border-top: 1px solid #262626;
+	color: #e7e7e7;
+}
+
+.extension-notes {
+	margin-top: 0;
+	padding-bottom: 0;
+}
+
+.extension-selection-icon {
+	flex: 0 0 25px;
+	height: 25px;
+	margin: 0;
+	max-width: 25px;
+	position: relative;
+	width: 25px;
+	border-radius: 5px;
+	border: 1px solid #8e8e8e;
+	margin-right: 8px;
+	position: relative;
+	top: 3px;
+
+	&:before {
+		background-image: url('../imgs/icon-check-not-selected.svg');
+		background-size: cover;
+		content: '';
+		height: 100%;
+		opacity: 0.6;
+		position: absolute;
+		width: 100%;
+	}
+}
+
+.extension-selection-icon.is-selected {
+	border: none;
+
+	&:before {
+		background-image: url('../imgs/icon-check-selected.svg');
+		opacity: 1;
+	}
+}
+
+.extension-prices {
+	padding: 10px;
+	margin-top: 10px;
+}
+
+.extension-price,
+.extension-tier {
+	font-size: 20px;
+	margin-right: 3px;
+	margin-bottom: 0;
+}
+
+.extension-tier {
+	font-weight: bold;
+}
+
+.extension-button {
+	margin-bottom: 15px;
+
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+.theme-light {
+	.extension-purchase .card-dark .extension-purchase-inner {
+		background: white;
+	}
+
+	.extension-excerpt {
+		color: vars.$primary;
+	}
+
+	.extension-notes {
+		color: #0c0e1b;
+	}
+
+	.extension-notes,
+	.extension-terms,
+	.extension-single {
+		border-color: #e0e0e0;
+	}
+}

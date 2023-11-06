@@ -1,0 +1,60 @@
+@use '../vars';
+
+#header {
+	padding: 12px 20px;
+	margin-top: 0;
+	z-index: 214748365;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	background: rgb(12 14 27 / 45%);
+	position: fixed;
+	backdrop-filter: blur(6px);
+
+	.nav-wrap {
+		padding-left: 30px;
+	}
+
+	.nav-actions {
+		margin-left: auto;
+
+		a:not(.btn) {
+			transition: none;
+			color: white;
+			padding: 6px;
+			margin: 0 10px;
+			font-size: 18px;
+			line-height: 1;
+			text-decoration: none;
+		}
+	}
+
+	.nav-link[data-is-selected] {
+		background: none;
+	}
+}
+
+.edd-checkout #header {
+	backdrop-filter: none;
+	position: static;
+	background: transparent;
+}
+
+.logged-in-name {
+	margin-right: 15px;
+	font-size: 18px;
+	position: relative;
+	top: 1px;
+}
+
+.theme-light {
+	#header {
+		background: rgb(255 255 255 / 74%);
+
+		.nav-actions {
+			a:not(.btn) {
+				color: vars.$primary;
+			}
+		}
+	}
+}

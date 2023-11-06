@@ -1,0 +1,60 @@
+{
+	"name": "shopwp",
+	"version": "1.0.0",
+	"description": "ShopWP",
+	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"main": "webpack.config.babel.js",
+	"scripts": {
+		"dev": "webpack --config webpack.config.babel.js --progress --mode development --performance-hints warning",
+		"build": "webpack --config webpack.config.babel.js --progress --mode production"
+	},
+	"author": "ShopWP https://wpshop.io",
+	"license": "MIT",
+	"devDependencies": {
+		"@babel/core": "^7.23.2",
+		"@babel/plugin-proposal-json-strings": "^7.18.6",
+		"@babel/preset-env": "^7.23.2",
+		"@babel/preset-react": "^7.22.15",
+		"@babel/register": "^7.22.15",
+		"await-to-js": "^3.0.0",
+		"babel-loader": "^9.1.3",
+		"browser-sync": "^2.29.3",
+		"browser-sync-webpack-plugin": "^2.3.0",
+		"del": "^7.1.0",
+		"mini-css-extract-plugin": "^2.7.6",
+		"progress-bar-webpack-plugin": "^2.1.0",
+		"sass": "^1.69.5",
+		"sass-loader": "^13.3.2",
+		"url": "^0.11.3",
+		"webpack": "^5.89.0",
+		"webpack-cli": "^5.1.4"
+	},
+	"dependencies": {
+		"@emotion/babel-plugin": "^11.11.0",
+		"@emotion/react": "^11.11.1",
+		"@tippyjs/react": "^4.2.6",
+		"clipboard-copy": "^4.0.1",
+		"css-loader": "^6.8.1",
+		"file-loader": "^6.2.0",
+		"immutability-helper": "^3.1.1",
+		"is-base64": "^1.1.0",
+		"ismounted": "^0.1.8",
+		"js-cookie": "^3.0.5",
+		"normalize-url": "^8.0.0",
+		"react-content-loader": "^6.2.1",
+		"react-countdown": "^2.3.5",
+		"react-country-region-selector": "^3.6.1",
+		"react-credit-card-input": "^1.1.5",
+		"react-hook-form": "^7.48.2",
+		"react-intersection-observer": "^9.5.2",
+		"react-modal": "^3.16.1",
+		"react-router-dom": "^6.18.0",
+		"replace-in-file": "^7.0.2",
+		"style-loader": "^3.3.3",
+		"tippy.js": "^6.3.7"
+	}
+}

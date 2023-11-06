@@ -1,0 +1,42 @@
+@use '../vars';
+
+.component-changelog {
+	&.component {
+		max-width: 725px;
+		margin-top: 40px;
+	}
+
+	h3 {
+		font-weight: normal;
+		margin-bottom: 15px;
+		color: vars.$complementary;
+		font-weight: bold;
+		border-bottom: 1px solid #414154;
+		padding-bottom: 10px;
+		font-size: 18px;
+	}
+
+	li {
+		margin-bottom: 0;
+		font-size: 18px;
+	}
+
+	ul {
+		margin-bottom: 30px;
+		padding-left: 25px;
+	}
+
+	code {
+		font-size: 14px;
+		padding: 2px 6px 3px 6px;
+	}
+}
+
+.theme-light {
+	.component-changelog {
+		h3 {
+			border-color: #c8c8c8;
+			color: vars.$primary;
+		}
+	}
+}

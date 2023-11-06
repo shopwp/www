@@ -1,0 +1,52 @@
+.component-about {
+	p {
+		font-size: 20px;
+	}
+	small {
+		color: #c6c6c6;
+	}
+
+	.btn {
+		margin-top: 20px;
+		display: inline-block;
+	}
+}
+
+.about-img {
+	opacity: 0.6;
+}
+
+.about-me {
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+}
+
+.about-heading {
+	position: relative;
+	top: -113px;
+	text-align: left;
+	max-width: 890px;
+	margin: 0 auto -100px auto;
+	border-radius: 10px;
+	padding: 30px 20px 10px 45px;
+	background: #0c0e1b;
+	font-size: 38px;
+	text-wrap: balance;
+}
+
+.theme-light {
+	.component-about {
+		small {
+			color: #717171;
+		}
+	}
+
+	.about-img {
+		opacity: 1;
+	}
+
+	.about-heading {
+		background: white;
+	}
+}

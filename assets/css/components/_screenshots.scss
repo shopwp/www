@@ -1,0 +1,46 @@
+@use '../vars';
+
+.component-screenshots {
+	.nav-link {
+		font-size: 20px;
+	}
+
+	.nav-main {
+		margin-top: 30px;
+	}
+}
+
+.screenshots-wrapper {
+	margin-top: -15px;
+}
+
+.screenshots-wrapper .next,
+.screenshots-wrapper .prev {
+	width: 40px;
+	height: 40px;
+}
+
+.screenshots {
+	margin-top: 25px;
+
+	img {
+		width: 100%;
+		max-width: 100%;
+		height: auto;
+		border: 2px solid #252734;
+	}
+}
+
+.theme-light {
+	.next path,
+	.prev path {
+		fill: vars.$primary;
+	}
+
+	.screenshots {
+		img {
+			border: 1px solid #bababa;
+			border-radius: 12px;
+		}
+	}
+}

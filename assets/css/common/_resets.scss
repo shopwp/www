@@ -1,0 +1,73 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	line-height: calc(1em + 0.5rem);
+	-webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	height: auto;
+	display: block;
+	max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	overflow-wrap: break-word;
+}
+
+table {
+	width: 100%;
+	margin-bottom: 50px;
+	border: 1px solid #414154;
+	padding: 10px;
+	border-radius: 10px;
+	border-collapse: collapse;
+}
+
+tr {
+	border-bottom: 1px solid #414154;
+}
+
+th {
+	text-align: left;
+	padding: 10px;
+}
+
+td {
+	padding: 7px 10px;
+}
+
+#root,
+#__next {
+	isolation: isolate;
+}

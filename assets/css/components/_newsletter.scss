@@ -1,0 +1,30 @@
+@use '../vars';
+
+.component-newsletter {
+	.card {
+		width: auto;
+	}
+
+	> div {
+		padding: 30px 30px 40px 30px;
+		background-color: vars.$cardBackground;
+	}
+}
+.newsletter-wrapper {
+	input {
+		width: 100%;
+		flex: 1;
+		border: none;
+		margin-right: 10px;
+		font-size: 18px;
+	}
+
+	+ .notice {
+		svg {
+			width: 17px;
+			height: 17px;
+			top: 4px;
+			position: relative;
+		}
+	}
+}

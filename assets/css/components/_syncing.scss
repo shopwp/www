@@ -1,0 +1,48 @@
+@use '../vars';
+
+.component-syncing {
+	position: relative;
+	margin: 150px auto;
+
+	svg {
+		position: absolute;
+		top: -40px;
+		left: -25px;
+		width: 50px;
+		transform: rotate(-90deg);
+
+		path {
+			fill: white;
+		}
+	}
+
+	.screen {
+		max-width: 650px;
+		display: block;
+		width: 100%;
+		height: auto;
+		z-index: 2;
+		position: relative;
+		border: solid 12px white;
+		border-radius: vars.$borderRadius;
+		background-image: linear-gradient(white, white),
+			radial-gradient(circle at top left, #cc54da, #3020ff);
+		background-origin: border-box;
+		background-clip: padding-box, border-box;
+		border-image-outset: 2.5;
+	}
+}
+
+.theme-light {
+	.component-syncing {
+		.shape {
+			display: none;
+		}
+
+		.screen {
+			background-image: none;
+			background: none;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+		}
+	}
+}

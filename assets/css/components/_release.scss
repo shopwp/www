@@ -1,0 +1,71 @@
+@use '../vars';
+
+.component-release {
+	&.component {
+		padding: 0;
+		background-color: #13162b;
+	}
+
+	p {
+		margin: 0;
+		text-align: center;
+		font-size: 26px;
+		background-color: #13162b;
+		padding: 0px 20px 30px 20px;
+		line-height: 1;
+	}
+
+	a {
+		transition: ease all vars.$animationSpeed;
+		color: vars.$complementary;
+
+		svg {
+			top: 2px;
+			left: 8px;
+			width: 20px;
+			height: 20px;
+
+			path {
+				fill: vars.$complementary;
+			}
+		}
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
+	.l-contain {
+		position: relative;
+	}
+
+	svg {
+		width: 50px;
+		height: 50px;
+		display: inline;
+		top: 13px;
+		left: -1px;
+		position: relative;
+
+		path {
+			fill: vars.$complementary;
+		}
+	}
+}
+
+.theme-light {
+	.component-release {
+		p,
+		&.component {
+			background-color: #ffe9d7;
+		}
+
+		a {
+			color: vars.$blue;
+		}
+
+		a svg path,
+		svg path {
+			fill: vars.$blue;
+		}
+	}
+}

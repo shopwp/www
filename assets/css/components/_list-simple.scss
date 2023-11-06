@@ -1,0 +1,30 @@
+@use '../vars';
+
+.list-simple {
+	list-style: none;
+
+	li {
+		margin-bottom: 20px;
+	}
+	dt {
+		font-size: 20px;
+		font-weight: bold;
+
+		a {
+			color: white;
+		}
+	}
+
+	dd {
+		font-size: 19px;
+		margin-top: 5px;
+	}
+}
+
+.theme-light {
+	.list-simple {
+		a {
+			color: vars.$blue;
+		}
+	}
+}

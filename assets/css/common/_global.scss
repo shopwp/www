@@ -1,0 +1,159 @@
+@use '../vars';
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	font-family: vars.$fontPrimary;
+	font-weight: 100;
+	font-size: 20px;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	background-color: vars.$primary;
+	color: white;
+	height: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: vars.$fontSecondary;
+	margin-bottom: 15px;
+	line-height: 1.2;
+	color: #fff;
+}
+
+h1 {
+	font-size: 40px;
+}
+
+h2 {
+	font-size: 28px;
+}
+
+h3 {
+	font-size: 22px;
+}
+
+button {
+	font-family: vars.$fontSecondary;
+}
+
+a {
+	word-wrap: break-word;
+	color: #c5cbff;
+	transition: all ease vars.$animationSpeed;
+
+	&[target='_blank'] {
+		position: relative;
+		// padding-right: 10px;
+
+		&:after {
+			content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+			margin: 0 3px 0 6px;
+			font-size: 0.8em;
+		}
+	}
+
+	&[class*='wps-products-link'] {
+		&:after {
+			display: none;
+		}
+	}
+
+	&:hover {
+		opacity: 0.7;
+	}
+}
+
+.theme-dark [target='_blank']:after {
+	filter: invert(1);
+}
+
+.page-id-30 a.btn[target='_blank']:after {
+	filter: brightness(0) invert(1);
+}
+
+.edd-checkout .btn-s {
+	padding: 0.55em 1.3em 0.7em 1.3em;
+}
+
+p {
+	margin-bottom: 15px;
+	line-height: 1.5;
+}
+
+html.theme-light,
+.theme-light body {
+	background: white;
+	color: vars.$primary;
+}
+
+code {
+	font-size: 15px;
+	padding: 4px 6px 6px 9px;
+	background: #151c31;
+	border-radius: 0.4em;
+	word-wrap: break-word;
+}
+
+pre code {
+	padding: 6px 13px;
+}
+
+.page figcaption,
+.single figcaption {
+	margin-top: -25px;
+	color: #c3c3c3;
+	font-style: italic;
+	text-align: center;
+	font-size: 16px;
+	margin-bottom: 30px;
+
+	&:before {
+		content: '(';
+	}
+
+	&:after {
+		content: ')';
+	}
+}
+
+.page figcaption {
+	margin-top: 8px;
+}
+
+.theme-light {
+	body {
+		background-color: white;
+		color: vars.$primary;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		color: vars.$primary;
+	}
+
+	a {
+		color: vars.$blue;
+	}
+
+	code {
+		background: #f2f2f2;
+	}
+
+	.page figcaption,
+	.single figcaption {
+		color: vars.$primary;
+	}
+}

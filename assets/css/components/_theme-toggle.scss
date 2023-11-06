@@ -1,0 +1,55 @@
+@use '../vars';
+
+.theme-light [data-theme='dark'].theme-toggle,
+.theme-dark [data-theme='light'].theme-toggle {
+	display: block;
+}
+
+.theme-dark [data-theme='dark'].theme-toggle,
+.theme-light [data-theme='light'].theme-toggle {
+	display: none;
+}
+
+.theme-toggle {
+	padding: 8px;
+	border-radius: 50%;
+	transition: all ease vars.$animationSpeed;
+}
+
+.theme-toggle:hover {
+	cursor: pointer;
+	background-color: rgb(22 26 51);
+}
+
+.theme-toggles {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+}
+
+.theme-toggle {
+	padding: 8px;
+	border-radius: 50%;
+	transition: all ease vars.$animationSpeed;
+
+	&:hover {
+		background-color: rgb(22 26 51);
+	}
+}
+
+.theme-toggle:hover {
+	cursor: pointer;
+	background-color: rgb(22 26 51);
+}
+
+.theme-toggle:hover {
+	cursor: pointer;
+}
+
+.theme-light .theme-toggle:hover {
+	background-color: #ececec;
+}
+
+.theme-light .theme-toggle path {
+	fill: vars.$primary;
+}

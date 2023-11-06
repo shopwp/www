@@ -1,0 +1,48 @@
+@use '../vars';
+
+.notice {
+	background-color: #b1edb1;
+	color: vars.$primary;
+	padding: 5px 20px 7px 20px;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 0;
+	border-radius: 0.4em;
+	border: 1px solid #46d06c;
+	width: 100%;
+	position: relative;
+	display: flex;
+	justify-content: center;
+
+	&.notice {
+		font-size: 16px;
+		color: vars.$primary;
+	}
+
+	&.notice-error {
+		background-color: #833a3a;
+		border: 1px solid #b15050;
+		color: white;
+	}
+
+	svg {
+		width: 20px;
+		height: 20px;
+		display: inline-block;
+		position: static;
+		margin-right: 8px;
+		margin-top: 2px;
+
+		path {
+			fill: #122912;
+		}
+	}
+}
+
+.theme-light {
+	.notice-error {
+		background-color: #ffcccc;
+		border-color: #c76a6a;
+		color: vars.$primary;
+	}
+}

@@ -1,0 +1,22 @@
+@use '../vars';
+
+.logo {
+	&:hover {
+		opacity: 1;
+	}
+}
+
+.theme-light {
+	.logo {
+		circle {
+			fill: vars.$primary;
+		}
+		path {
+			fill: vars.$primary;
+
+			&:first-of-type {
+				fill: white;
+			}
+		}
+	}
+}

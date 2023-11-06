@@ -1,0 +1,10 @@
+@use '../vars';
+
+.icon-stars {
+	width: 125px;
+	margin: 0 0 20px 0;
+
+	path {
+		fill: vars.$complementary;
+	}
+}

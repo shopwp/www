@@ -1,0 +1,42 @@
+@use '../vars';
+
+.component-buy-buttons {
+	&.component {
+		margin: 70px auto 180px auto;
+	}
+
+	.wps-item {
+		border-radius: vars.$borderRadius;
+		margin: 0 20px;
+		padding: 15px 15px 10px 15px;
+		z-index: 2;
+		background: rgb(19 22 43);
+		box-shadow: 0 0 0 1px vars.$shopWPComponentBackground;
+	}
+}
+
+.component-buy-buttons .demo {
+	margin-top: 50px;
+}
+
+.buy-button-wrapper > p {
+	font-size: 16px;
+	color: #e7e7e7;
+	position: relative;
+	left: 21px;
+}
+
+.theme-light {
+	.component-buy-buttons {
+		margin-top: 10px;
+
+		.wps-item {
+			background: white;
+			box-shadow: 0 0 0 1px #b5b5b5;
+		}
+	}
+
+	.buy-button-wrapper > p {
+		color: vars.$primary;
+	}
+}

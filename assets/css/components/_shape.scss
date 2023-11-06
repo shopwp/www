@@ -1,0 +1,33 @@
+@use '../vars';
+
+.shape {
+	width: 400px;
+	height: 500px;
+	background-color: #432ddc;
+	position: absolute;
+	top: 19%;
+	left: 0;
+	filter: blur(100px);
+	opacity: 0.5;
+	z-index: 1;
+}
+
+.shape-c {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.shape-small {
+	width: 68px;
+	top: 3%;
+	left: -8px;
+	opacity: 0.8;
+}
+
+.theme-light {
+	.shape {
+		display: none;
+	}
+}

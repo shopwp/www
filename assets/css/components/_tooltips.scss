@@ -1,0 +1,83 @@
+@use '../vars';
+
+.tooltip-label-description {
+	display: none;
+}
+
+.tooltip-label {
+	padding-bottom: 5px;
+	padding-left: 25px;
+	position: relative;
+
+	&:hover {
+		cursor: help;
+
+		> p {
+			opacity: 0.7;
+		}
+	}
+
+	&:before {
+		content: '✓';
+		color: rgb(104, 247, 104);
+		position: absolute;
+		left: -2px;
+		top: 1px;
+	}
+
+	p {
+		margin-bottom: 0;
+		font-size: 18px;
+	}
+
+	a {
+		color: white;
+	}
+}
+
+.tippy-content {
+	background-color: #2d2d7e;
+	padding: 10px 15px;
+	// border-radius: 10px;
+	z-index: 9999;
+	border: 1px solid #8181de;
+
+	p {
+		font-size: 16px;
+	}
+
+	a {
+		color: white;
+	}
+}
+
+.tippy-arrow {
+	color: #8181de;
+}
+
+.tippy-content,
+.tippy-box {
+	border-radius: 10px;
+}
+
+.theme-light {
+	.tooltip-label {
+		&:before {
+			color: rgb(6, 203, 6);
+		}
+	}
+
+	.tippy-arrow {
+		color: vars.$complementary;
+	}
+
+	.tippy-content {
+		background-color: #fff;
+		border-color: vars.$complementary;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+
+		a {
+			color: vars.$blue;
+		}
+	}
+}

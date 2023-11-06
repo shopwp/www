@@ -1,0 +1,26 @@
+.version {
+	display: flex;
+	background: transparent;
+	padding: 4px 15px;
+	border-radius: 10px;
+	line-height: 1.4;
+	font-weight: bold;
+	font-size: 15px;
+	border-radius: 0.4em;
+	border: 1px solid #55557f;
+	margin-left: 15px;
+	margin-top: 0;
+	transition: all ease 0.2s;
+
+	a {
+		color: #55557f;
+		text-decoration: none;
+		display: flex;
+		align-items: center;
+	}
+
+	span {
+		position: relative;
+		top: 1px;
+	}
+}

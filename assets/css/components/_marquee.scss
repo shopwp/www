@@ -1,0 +1,183 @@
+@use '../vars';
+
+@keyframes spring {
+	0% {
+		transform: translateX(-35px);
+	}
+	50% {
+		transform: translateX(-60px);
+	}
+	100% {
+		transform: translateX(-35px);
+	}
+}
+
+.component-marquee {
+	min-height: 100vh;
+	padding-top: 45px;
+	margin-top: 0;
+	background: linear-gradient(180deg, vars.$primary 0%, #13162b 100%);
+	padding-bottom: 120px;
+
+	h1 {
+		font-size: 80px;
+		line-height: 1;
+		margin-top: 50px;
+		margin-bottom: 20px;
+	}
+
+	svg {
+		position: absolute;
+		top: 10px;
+		left: 0;
+
+		path {
+			fill: #6c748f;
+		}
+	}
+
+	.btn-demo-click {
+		.desktop {
+			position: absolute;
+			animation: spring 0.4s ease-out;
+			transform: translateX(-35px);
+			animation-delay: 0.6s;
+		}
+	}
+
+	.btn {
+		margin-top: 30px;
+		display: inline-block;
+	}
+
+	.shopwp-skeleton-row .shopwp-skeleton-products {
+		width: 100%;
+		flex: 1;
+		height: 400px;
+	}
+
+	.shopwp-skeleton-products .shopwp-skeleton-product-description {
+		width: 100%;
+		height: 400px;
+	}
+
+	.shopwp-skeleton-row > div:nth-of-type(2),
+	.shopwp-skeleton-row > div:nth-of-type(3) {
+		display: none;
+	}
+}
+
+.marquee-content {
+	max-width: 1200px;
+	margin: 0px auto 0 auto;
+	position: relative;
+}
+
+.marquee-demo {
+	width: 450px;
+	position: relative;
+
+	.wps-item {
+		background: transparent;
+		border-radius: 10px;
+		margin: 0;
+		padding: 0;
+		z-index: 2;
+	}
+}
+
+.marquee-demo-inner {
+	background: #13162b;
+	border-radius: 10px;
+	margin: 0 20px 0 0px;
+	padding: 15px 15px 0;
+	z-index: 99999;
+	box-shadow: 0 0 0 1px #2d2d7e;
+	min-height: 400px;
+	position: relative;
+	width: 380px;
+	min-height: 80vh;
+
+	.shopwp-skeleton-component {
+		background: #252943 !important;
+	}
+}
+
+.marquee-text {
+	width: 540px;
+	position: relative;
+	padding-top: 5px;
+	text-wrap: balance;
+
+	p {
+		font-size: 26px;
+	}
+}
+
+.marquee-buttons {
+	margin-top: 50px;
+	padding-left: 35px;
+
+	p,
+	a,
+	.btn {
+		margin: 0;
+	}
+
+	.link {
+		span {
+			margin: 0 5px;
+		}
+	}
+
+	.mobile {
+		display: none;
+	}
+
+	> span {
+		color: vars.$complementary;
+		margin: 0 24px 0 15px;
+		font-size: 20px;
+	}
+
+	.btn {
+		font-size: 24px;
+		margin: 0px;
+		padding: 0.6em 0.7em 0.7em 0.7em;
+		font-weight: bold;
+	}
+}
+
+.theme-light {
+	.marquee-text p {
+		color: vars.$primary;
+	}
+
+	.marquee-text svg path {
+		fill: #333 !important;
+	}
+
+	.marquee-demo .wps-item {
+		background: #fff;
+	}
+
+	.component-marquee {
+		background: #fff;
+	}
+
+	.marquee-demo-inner {
+		background: white;
+		box-shadow: none;
+		border: 1px solid #c3c3c3;
+
+		.shopwp-skeleton-component {
+			background: #e4e4e4 !important;
+		}
+	}
+
+	.marquee-buttons {
+		> span {
+			color: vars.$primary;
+		}
+	}
+}
