@@ -63,6 +63,7 @@
                         <li class="nav-item">
                             <p class="link nav-link nav-link-parent" href="/extensions">Plugin <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" style="enable-background:new 0 0 200 200" viewBox="0 0 200 200"><path fill="white" d="M101 129.6c5.3-5.7 10.1-11.3 15.3-16.5 19.4-19.5 38.9-38.9 58.3-58.4 1.7-1.7 3.4-3.4 5.3-4.8 4.7-3.2 9.6-3.2 13.7.9 4 4.1 4 9 .6 13.7-1.1 1.5-2.5 2.9-3.8 4.2-26.4 26.4-52.7 52.8-79.1 79.2-8.9 8.9-13.4 8.9-22.3 0L10.4 69.3c-1.5-1.5-3-3.1-4.3-4.8-3.4-4.7-3.4-9.5.7-13.6 4.4-4.3 9.4-4.1 14.2-.5 1.9 1.4 3.5 3.2 5.2 4.9l68 68c1.9 1.8 3.9 3.5 6.8 6.3z"/></svg></p>
                             <ul class="sub-nav">
+                                <li><a class="sub-nav-link" href="/purchase">Pricing</a></li>
                                 <li><a class="sub-nav-link" href="/extensions">Extensions</a></li>
                                 <li><a class="sub-nav-link" href="/examples">Examples</a></li>
                                 <li><a class="sub-nav-link" href="/slack">Our private Slack channel</a></li>

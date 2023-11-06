@@ -191,8 +191,6 @@ function Subscriptions({ subscriptions }) {
 		max-width: 100%;
 	`
 
-	console.log('subscriptions', subscriptions)
-
 	return (
 		<Table extraCSS={SubscriptionsTableCSS}>
 			<TableHeader>

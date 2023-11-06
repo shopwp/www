@@ -3,7 +3,7 @@
 .wps-btn,
 .wps-btn-secondary,
 .wps-btn-next-page {
-	font-family: 'Space Grotesk', sans-serif !important;
+	font-family: vars.$fontPrimary;
 	background-color: vars.$buttonsPrimary !important;
 }
 

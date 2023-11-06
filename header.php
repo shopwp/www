@@ -26,6 +26,19 @@ if (is_home()) {
 
 <head>
 
+<!-- 
+	
+Fonts
+
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;700&display=swap" rel="stylesheet" crossorigin>
+
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -98,11 +111,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 		<link rel="preload" as="image" href="https://cdn.shopify.com/s/files/1/0147/3639/2240/products/brooke-cagle-bAELYn2cQlo-unsplash_400x400_crop_center.jpg" />
 
-		<!-- Include the CSS & JS.. (This could be direct from the package or bundled) -->
-		<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/assets/vendor/lite-yt-embed.css" />
-
-		<script src="<?php echo get_stylesheet_directory_uri() ?>/assets/vendor/lite-yt-embed.js"></script>
-
 	<?php } ?>
 
 	<?php if (is_front_page() || is_page('features')) { ?>
@@ -118,20 +126,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 	<link rel="dns-prefetch" href="https://cdn.shopify.com">
 
-	<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-	<link rel="dns-prefetch" href="https://fonts.googleapis.com">
-
 	<link rel="preconnect" href="https://wpstest.myshopify.com" crossorigin>
 	<link rel="dns-prefetch" href="https://wpstest.myshopify.com">
 
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link rel="dns-prefetch" href="https://fonts.gstatic.com">
-
 	<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 	<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-
-	<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glider-js@1/glider.min.css">
 	
 	<link media="(prefers-color-scheme: dark)" rel="apple-touch-icon" sizes="152x152" href="<?php echo get_stylesheet_directory_uri() ?>/assets/imgs/favicon/apple-touch-icon-dark.png">
 	<link media="(prefers-color-scheme: dark)" rel="icon" type="image/png" sizes="16x16" href="<?php echo get_stylesheet_directory_uri() ?>/assets/imgs/favicon/favicon-16x16-dark.png">
@@ -165,6 +164,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	<?php } ?>
 
 	<?php wp_head(); ?>
+
+	<?php if (is_front_page()) { ?>
+
+		<!-- Include the CSS & JS.. (This could be direct from the package or bundled) -->
+		<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/assets/vendor/lite-yt-embed.css" />
+
+		<script src="<?php echo get_stylesheet_directory_uri() ?>/assets/vendor/lite-yt-embed.js"></script>
+
+	<?php } ?>
 
 </head>
 

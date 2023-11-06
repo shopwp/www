@@ -97,8 +97,6 @@ function ModalContentSubscriptionCancel({ accountState, accountDispatch }) {
 		}, 5500)
 	}
 
-	console.log('accountState.subscription.name', accountState.subscription.name)
-
 	return (
 		<div>
 			<ModalHeader

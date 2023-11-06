@@ -97,7 +97,6 @@ function ModalContentSubscriptionReactivate({ accountState, accountDispatch }) {
 		})
 	}
 
-	console.log('accountState.subscription.name', accountState.subscription.name)
 	return (
 		<div>
 			<ModalHeader text='Reactivate subscription' />
