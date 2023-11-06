@@ -21,11 +21,10 @@ if (is_home()) {
 
 ?>
 <!doctype html>
+
 <html itemscope itemtype="https://schema.org/<?= $type; ?>" <?php language_attributes(); ?> class="theme-<?= $theme; ?>">
 
 <head>
-
-
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -74,6 +73,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 } ?>
 
+<?php if (is_front_page()) { ?>
+   <link rel="preload" as="image" href="https://cdn.shopify.com/s/files/1/0147/3639/2240/products/brooke-cagle-bAELYn2cQlo-unsplash_400x400_crop_center.jpg" />
+<?php } ?>
 
 	<!-- Facebook Meta Tags -->
 	<meta property="og:url" content="https://wpshop.io/">
@@ -93,13 +95,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	<meta itemprop="name" content="<?= get_the_title(); ?>"/>
 
 	<?php if (is_front_page()) { ?>
-		
+
 		<link rel="preload" as="image" href="https://cdn.shopify.com/s/files/1/0147/3639/2240/products/brooke-cagle-bAELYn2cQlo-unsplash_400x400_crop_center.jpg" />
 
 		<!-- Include the CSS & JS.. (This could be direct from the package or bundled) -->
-		<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/dist/lite-yt-embed.css" />
+		<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/assets/vendor/lite-yt-embed.css" />
 
-		<script src="<?php echo get_stylesheet_directory_uri() ?>/dist/lite-yt-embed.js"></script>
+		<script src="<?php echo get_stylesheet_directory_uri() ?>/assets/vendor/lite-yt-embed.js"></script>
 
 	<?php } ?>
 

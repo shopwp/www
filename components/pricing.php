@@ -34,7 +34,7 @@
                     <span class="plan-name" itemprop="name">Standard</span>
                     <span class="plan-description" itemprop="description">Install on up to 3 WP sites</span>
                     <div class="plan-short-description">
-                        <p>Perfect for startups or a small sites</p>
+                        <p>Perfect for startups or small sites</p>
                     </div>                    
                 </div>
 

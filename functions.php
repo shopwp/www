@@ -506,8 +506,6 @@ function remove_duplicates_from_cart($cart) {
 
 function shopwp_edd_checkout_form_shortcode( $atts, $content = null ) {
 	
-	error_log('--- shopwp_edd_checkout_form_shortcode ---');
-	
 	$payment_mode 	= edd_get_chosen_gateway();
 	$form_action  	= edd_get_checkout_uri( 'payment-mode=' . $payment_mode );
 	$cart_stuff 	= edd_get_cart_contents();

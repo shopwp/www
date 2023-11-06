@@ -1,7 +1,5 @@
 <?php 
 
-header("Access-Control-Allow-Origin: *");
-
 global $wp;
 
 if ($wp->request === 'account/licenses') {   

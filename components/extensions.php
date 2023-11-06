@@ -27,7 +27,7 @@ $extensions = get_posts([
             <li class="extension card">
                 <a href="/extensions/<?= $extension->post_name; ?>/" class="extension-link">
                     <div class="extension-image">
-                        <img src="<?= get_the_post_thumbnail_url($extension->ID, 'large'); ?>" alt="<?= $extension->post_title ?>" />
+                        <img src="<?= get_the_post_thumbnail_url($extension->ID, 'large'); ?>" alt="<?= $extension->post_title ?>" width="370" height="185" />
                     </div>
 
                     <div class="extension-inner">
